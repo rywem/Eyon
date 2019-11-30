@@ -67,7 +67,7 @@
         @if (Model.Category.Id != 0)
         {
             <div class="col-3">
-                <img src="@Model.Image" width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
+                <img src="@Model.SiteImage.GetImage()" width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
             </div>
         }
     </div>
