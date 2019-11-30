@@ -20,12 +20,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Areas\Seller\Controllers\" />
-    <Folder Include="Areas\Seller\Views\" />
-  </ItemGroup>
-
-
-  <ItemGroup>
     <ProjectReference Include="..\Eyon.DataAccess\Eyon.DataAccess.csproj" />
   </ItemGroup>
 
