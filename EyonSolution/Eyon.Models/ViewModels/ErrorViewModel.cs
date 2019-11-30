@@ -1,6 +1,6 @@
 using System;
 
-namespace Eyon.Site.Models
+namespace Eyon.Models.ViewModels
 {
     public class ErrorViewModel
     {

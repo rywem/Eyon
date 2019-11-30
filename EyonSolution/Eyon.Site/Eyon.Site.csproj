@@ -20,14 +20,13 @@
 
 
   <ItemGroup>
-    <Folder Include="Areas\Customer\Controllers\" />
-    <Folder Include="Areas\Customer\Data\" />
-    <Folder Include="Areas\Customer\Models\" />
-    <Folder Include="Areas\Customer\Views\" />
     <Folder Include="Areas\Seller\Controllers\" />
-    <Folder Include="Areas\Seller\Data\" />
-    <Folder Include="Areas\Seller\Models\" />
     <Folder Include="Areas\Seller\Views\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Eyon.DataAccess\Eyon.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>
