@@ -2,7 +2,7 @@
 
 namespace Eyon.Models
 {
-    public class Category
+    public class Class1
     {
     }
 }
