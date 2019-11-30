@@ -9,11 +9,12 @@ namespace Eyon.DataAccess.Data.Repository
     {
         private readonly ApplicationDbContext _db;
         public ICategoryRepository Category { get; private set; }
-
+        public ISiteImageRepository SiteImage { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             this._db = db;
             this.Category = new CategoryRepository(this._db);
+            this.SiteImage = new SiteImageRepository(this._db);
         }
         public bool SaveTransaction()
         {

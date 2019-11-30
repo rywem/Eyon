@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Eyon.DataAccess.Migrations
 {
-    public partial class AddCategoryToDatabase : Migration
+    public partial class AddSiteImageCategoryToDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -47,17 +47,18 @@ namespace Eyon.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Category",
+                name: "SiteImage",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: false),
-                    DisplayOrder = table.Column<int>(nullable: false)
+                    Title = table.Column<string>(nullable: true),
+                    FileType = table.Column<string>(nullable: true),
+                    Encoded = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Category", x => x.Id);
+                    table.PrimaryKey("PK_SiteImage", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -166,6 +167,27 @@ namespace Eyon.DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: false),
+                    DisplayOrder = table.Column<int>(nullable: false),
+                    SiteImageId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Category_SiteImage_SiteImageId",
+                        column: x => x.SiteImageId,
+                        principalTable: "SiteImage",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -204,6 +226,11 @@ namespace Eyon.DataAccess.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Category_SiteImageId",
+                table: "Category",
+                column: "SiteImageId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -231,6 +258,9 @@ namespace Eyon.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "SiteImage");
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Eyon.Site
             services.AddControllersWithViews()
                 .AddNewtonsoftJson()
                 .AddRazorRuntimeCompilation();
-
+            
             services.AddRazorPages();
         }
 

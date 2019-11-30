@@ -22,7 +22,7 @@ namespace Eyon.DataAccess.Data.Repository
             dbSet.Add(entity);
         }
 
-        public T Get(int id)
+        public T Get(long id)
         {
             return dbSet.Find(id);
         }
@@ -71,13 +71,12 @@ namespace Eyon.DataAccess.Data.Repository
 
             return query.FirstOrDefault();
         }
-
-        public void Remove(int id)
+        
+        public void Remove(long id)
         {
             T entityToRemove = dbSet.Find(id);
             Remove(entityToRemove);
         }
-
         public void Remove(T entity)
         {
             dbSet.Remove(entity);

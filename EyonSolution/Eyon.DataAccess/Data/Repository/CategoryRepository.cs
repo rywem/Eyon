@@ -32,6 +32,14 @@ namespace Eyon.DataAccess.Data.Repository
 
             objFromDb.Name = category.Name;
             objFromDb.DisplayOrder = category.DisplayOrder;
+            if (objFromDb.SiteImageId != category.SiteImageId)
+            {
+                var imageFromDb = _db.SiteImage.FirstOrDefault(s => s.Id == category.SiteImageId);
+                if (imageFromDb != null)
+                    _db.SiteImage.Remove(imageFromDb);
+            }
+
+            objFromDb.SiteImageId = category.SiteImageId;
 
             _db.SaveChanges();
         }

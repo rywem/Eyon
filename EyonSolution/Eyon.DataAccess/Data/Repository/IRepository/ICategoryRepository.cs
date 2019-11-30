@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface ICategoryRepository : IRepository<Category>
+    public interface ICategoryRepository : IRepository<Models.Category>
     {
         IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> GetCategoryListForDropDown();
 
