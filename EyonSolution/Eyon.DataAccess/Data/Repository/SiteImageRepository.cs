@@ -27,6 +27,7 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.Encoded = siteImage.Encoded;
             objFromDb.FileType = siteImage.FileType;
             objFromDb.Title = siteImage.Title;
+            objFromDb.Alt = siteImage.Alt;
             _db.SaveChanges();
         }
     }    

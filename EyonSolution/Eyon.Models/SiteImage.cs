@@ -13,7 +13,8 @@ namespace Eyon.Models
         public string Title { get; set; }
         public string FileType { get; set; }
         public string Encoded { get; set; }
-
+        public string Alt { get; set; }
+        
         
         public string GetImage()
         {

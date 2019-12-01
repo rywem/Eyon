@@ -46,6 +46,24 @@
                 <div class="col-8">
                     <input type="file" name="files" id="uploadBox" multiple class="form-control" accept="image/gif, image/jpeg, image/png" />
                     <span asp-validation-for="Category.SiteImageId" class="text-danger"></span>
+                    <div class="row ">
+                        <div class="col-3">
+                            <label asp-for="SiteImage.Title" class="form-control border-0" />Title</label>
+                        </div>
+                        <div class="col-5">
+                            <input asp-for="SiteImage.Title" class="form-control" />
+                            <span asp-validation-for="SiteImage.Title" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-3">
+                            <label asp-for="SiteImage.Alt" class="form-control border-0" />Alt Text</label>
+                        </div>
+                        <div class="col-5">
+                            <input asp-for="SiteImage.Alt" class="form-control" />
+                            <span asp-validation-for="SiteImage.Alt" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -66,8 +84,10 @@
         </div>
         @if (Model.Category.Id != 0)
         {
-            <div class="col-3">
-                <img src="@Model.SiteImage.GetImage()" width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
+            <div class="col-3">                
+                <div style="border-radius:5px; border:1px solid #bbb9b9" width="100%">
+                    <partial name="_ViewImage" model="@Model.SiteImage"/>
+                </div>
             </div>
         }
     </div>
