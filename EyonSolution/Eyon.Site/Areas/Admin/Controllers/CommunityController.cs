@@ -14,7 +14,13 @@ namespace Eyon.Site.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         [BindProperty]
-        public Community Community { get; set; }
+        public Community community { get; set; }
+
+        public CommunityController(IUnitOfWork unitOfWork)
+        {
+            this._unitOfWork = unitOfWork;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -23,6 +29,38 @@ namespace Eyon.Site.Areas.Admin.Controllers
         public IActionResult Add()
         {
             return View();
+        }
+
+        public IActionResult Upsert(long? id)
+        {
+            Community community = new Community();
+
+            if (id == null)
+                return View(community);
+
+            community = _unitOfWork.Community.Get(id.GetValueOrDefault());
+
+            if (community == null)
+                return NotFound();
+
+            return View(community);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert()
+        {
+            if (ModelState.IsValid)
+            {
+                if (community.Id == 0)
+                    _unitOfWork.Community.Add(community);
+                else
+                    _unitOfWork.Community.Update(community);
+
+                _unitOfWork.Save();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(community);
         }
 
         public IActionResult Submit()
@@ -41,6 +79,27 @@ namespace Eyon.Site.Areas.Admin.Controllers
         public IActionResult Reject()
         {
             return View();
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var objFromDb = _unitOfWork.Community.Get(id);
+
+            if (objFromDb == null)
+                return Json(new { success = false, message = "Error while deleting, Id does not exist. " });
+
+            _unitOfWork.Community.Remove(objFromDb);
+            _unitOfWork.Save();
+
+            return Json(new { success = true, message = "Delete successful." });
+        }
+
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Json(new { data = _unitOfWork.Community.GetAll() });
         }
     }
 }

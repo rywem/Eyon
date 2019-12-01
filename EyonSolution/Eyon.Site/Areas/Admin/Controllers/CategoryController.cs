@@ -91,7 +91,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
                             if (files.Count > 0)
                             {
                                 categoryFromDb.SiteImage.FileType = Path.GetExtension(files[0].FileName).Trim('.');
-                                categoryFromDb.SiteImage.Encoded = files[0].ConvertToBase64();                                
+                                categoryFromDb.SiteImage.Encoded = files[0].ConvertToBase64();
                             }
                             Category.SiteImage = categoryFromDb.SiteImage;
                             _unitOfWork.SiteImage.Update(Category.SiteImage);
