@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eyon.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191130232857_AddAltSiteImageToDatabase")]
-    partial class AddAltSiteImageToDatabase
+    [Migration("20191201185748_AddStarterMigration")]
+    partial class AddStarterMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,101 @@ namespace Eyon.DataAccess.Migrations
                     b.HasIndex("SiteImageId");
 
                     b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("Eyon.Models.Community", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("County")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StateProvince")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WikipediaURL")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WikipediaURL")
+                        .IsUnique();
+
+                    b.ToTable("Community");
+                });
+
+            modelBuilder.Entity("Eyon.Models.Cookbook", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Copyright")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ISBN")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cookbook");
+                });
+
+            modelBuilder.Entity("Eyon.Models.Relationship.CommunityCookbooks", b =>
+                {
+                    b.Property<long>("CookbookId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CommunityId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CookbookId", "CommunityId");
+
+                    b.HasIndex("CommunityId");
+
+                    b.ToTable("CommunityCookbooks");
+                });
+
+            modelBuilder.Entity("Eyon.Models.Relationship.CookbookCategories", b =>
+                {
+                    b.Property<long>("CookbookId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CookbookId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("CookbookCategories");
                 });
 
             modelBuilder.Entity("Eyon.Models.SiteImage", b =>
@@ -270,6 +365,36 @@ namespace Eyon.DataAccess.Migrations
                     b.HasOne("Eyon.Models.SiteImage", "SiteImage")
                         .WithMany()
                         .HasForeignKey("SiteImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Eyon.Models.Relationship.CommunityCookbooks", b =>
+                {
+                    b.HasOne("Eyon.Models.Community", "Community")
+                        .WithMany("CommunityCookbooks")
+                        .HasForeignKey("CommunityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Eyon.Models.Cookbook", "Cookbook")
+                        .WithMany("CommunityCookbooks")
+                        .HasForeignKey("CookbookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Eyon.Models.Relationship.CookbookCategories", b =>
+                {
+                    b.HasOne("Eyon.Models.Category", "Category")
+                        .WithMany("CookbookCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Eyon.Models.Cookbook", "Cookbook")
+                        .WithMany("CookbookCategories")
+                        .HasForeignKey("CookbookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

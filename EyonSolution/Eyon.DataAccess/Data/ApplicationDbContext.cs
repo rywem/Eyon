@@ -15,7 +15,11 @@ namespace Eyon.DataAccess.Data
         {
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {                
+        {
+            modelBuilder.Entity<Community>()
+                .HasIndex(u => u.WikipediaURL)
+                .IsUnique();
+
             modelBuilder.Entity<CommunityCookbooks>()
                 .HasKey(bc => new { bc.CookbookId, bc.CommunityId });
             modelBuilder.Entity<CommunityCookbooks>()
