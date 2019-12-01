@@ -33,7 +33,8 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.Country = community.Country;
             objFromDb.County = community.County;
             objFromDb.StateProvince = community.StateProvince;
-            objFromDb.WikipediaURL = community.WikipediaURL;            
+            objFromDb.WikipediaURL = community.WikipediaURL;
+            objFromDb.Active = community.Active;
             _db.SaveChanges();
         }
     }
