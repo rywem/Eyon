@@ -15,7 +15,14 @@ namespace Eyon.Models
         public string Encoded { get; set; }
         public string Alt { get; set; }
         
-        
+        [NotMapped]
+        public string Image 
+        {
+            get
+            {
+                return GetImage();
+            }
+        }
         public string GetImage()
         {
             string imgSrc = string.Empty;

@@ -149,8 +149,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         [HttpGet]
         public IActionResult GetAll()
-        {
-            return Json(new { data = _unitOfWork.Category.GetAll() });
+        {            
+            return Json(new { data = _unitOfWork.Category.GetAll(includeProperties:"SiteImage") });
         }
     }
 }

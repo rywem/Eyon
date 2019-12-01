@@ -13,8 +13,18 @@ function loadDataTable() {
             "datatype": "json"
         },
         "columns": [
-            { "data": "name", "width": "50%" },
+            { "data": "name", "width": "30%" },
             { "data": "displayOrder", "width": "20%" },
+            { "data": "siteImage.image", 
+               "render": function (data) {
+
+                   return ` <div class="img-thumbnail">
+                                <img src="${data}" class="inherit" />
+                            </div>
+                            `;
+                
+                }, "width": "20%"
+            },
             {
                 "data": "id",
                 "render": function (data) {
