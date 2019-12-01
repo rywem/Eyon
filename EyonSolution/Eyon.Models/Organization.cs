@@ -8,6 +8,7 @@ namespace Eyon.Models
 {
     public class Organization
     {
+        /*
         [Key]
         public long Id { get; set; }
         [Required]
@@ -16,5 +17,6 @@ namespace Eyon.Models
         public string Description { get; set; }
         public ICollection<CommunityOrganizations> CommunityOrganizations { get; set; }
         public ICollection<OrganizationRecipes> OrganizationRecipes { get; set; }
+        */
     }
 }

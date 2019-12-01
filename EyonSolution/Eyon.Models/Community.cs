@@ -18,8 +18,8 @@ namespace Eyon.Models
         public string StateProvince { get; set; }
         [Required]
         public string Country { get; set; }
-        public ICollection<CommunityOrganizations> CommunityOrganizations { get; set; }
         public ICollection<CommunityCookbooks> CommunityCookbooks { get; set; }
-        public ICollection<Recipe> Recipes { get; set; }
+        //public ICollection<CommunityOrganizations> CommunityOrganizations { get; set; }
+        //public ICollection<Recipe> Recipes { get; set; }
     }
 }

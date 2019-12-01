@@ -7,11 +7,13 @@ namespace Eyon.Models.Relationship
 {
     public class CookbookSiteImages
     {
+        /*
         public long CookbookId { get; set; }
         [ForeignKey("CookbookId")]
         public Cookbook Cookbook { get; set; }
         public long SiteImageId { get; set; }
         [ForeignKey("SiteImageId")]
         public SiteImage SiteImage { get; set; }
+        */
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eyon.Models.Relationship;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,6 +21,9 @@ namespace Eyon.Models
         public long SiteImageId { get; set; }
         [ForeignKey("SiteImageId")]
         public SiteImage SiteImage { get; set; }
-        
+
+        public ICollection<CookbookCategories> CookbookCategories { get; set; }
+        //public ICollection<RecipeCategories> RecipeCategories { get; set; }
+
     }
 }

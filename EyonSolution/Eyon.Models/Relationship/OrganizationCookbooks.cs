@@ -7,12 +7,13 @@ namespace Eyon.Models.Relationship
 {
     public class OrganizationCookbooks
     {
+        /*
         public long CookbookId { get; set; }
         [ForeignKey("CookbookId")]
         public Cookbook Cookbook { get; set; }
         public long OrganizationId { get; set; }
         [ForeignKey("OrganizationId")]
         public Organization Organization { get; set; }
-
+        */
     }
 }

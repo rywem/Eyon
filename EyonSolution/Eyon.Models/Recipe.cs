@@ -7,8 +7,9 @@ using System.Text;
 
 namespace Eyon.Models
 {
-    public class Recipe
+    /*public class Recipe
     {
+        
         [Key]
         public long Id { get; set; }
         [Required]
@@ -20,6 +21,8 @@ namespace Eyon.Models
         [ForeignKey("CommunityId")]
         public Community Community { get; set; }
         public ICollection<RecipeSiteImages> RecipeSiteImages { get; set; }
+        
+        
 
-    }
+    }*/
 }
