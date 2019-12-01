@@ -1,4 +1,4 @@
-﻿@model Eyon.Models.ViewModels.CategoryViewModel
+﻿@model Eyon.Models.Category
 
 @{
     var title = "Create Category";
@@ -9,9 +9,9 @@
     <div class="row px-2 mx-2 backgroundWhite border">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        @if (Model.Category.Id != 0)
+        @if (Model.Id != 0)
         {
-            <input type="hidden" asp-for="Category.Id" />
+            <input type="hidden" asp-for="Id" />
             title = "Edit Category";
         }
 
@@ -22,21 +22,21 @@
         <div class="col-9">
             <div class="form-group row">
                 <div class="col-4">
-                    <label asp-for="Category.Name"></label>
+                    <label asp-for="Name"></label>
                 </div>
                 <div class="col-8">
-                    <input asp-for="Category.Name" class="form-control" />
-                    <span asp-validation-for="Category.Name" class="text-danger"></span>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="form-group row">
                 <div class="col-4">
-                    <label asp-for="Category.DisplayOrder"></label>
+                    <label asp-for="DisplayOrder"></label>
                 </div>
                 <div class="col-8">
-                    <input asp-for="Category.DisplayOrder" class="form-control" />
-                    <span asp-validation-for="Category.DisplayOrder" class="text-danger"></span>
+                    <input asp-for="DisplayOrder" class="form-control" />
+                    <span asp-validation-for="DisplayOrder" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
@@ -45,7 +45,7 @@
                 </div>
                 <div class="col-8">
                     <input type="file" name="files" id="uploadBox" multiple class="form-control" accept="image/gif, image/jpeg, image/png" />
-                    <span asp-validation-for="Category.SiteImageId" class="text-danger"></span>
+                    <span asp-validation-for="SiteImageId" class="text-danger"></span>
                     <div class="row ">
                         <div class="col-3">
                             <label asp-for="SiteImage.Title" class="form-control border-0" />Title</label>
@@ -69,10 +69,10 @@
 
             <div class="form-group row">
                 <div class="col-8 offset-4">
-                    @if (Model.Category.Id != 0)
+                    @if (Model.Id != 0)
                     {
                         // Edit button and back to list button
-                        <partial name="_EditAndBackToListButton" model="Model.Category.Id" />
+                        <partial name="_EditAndBackToListButton" model="Model.Id" />
                     }
                     else
                     {
@@ -82,7 +82,7 @@
                 </div>
             </div>
         </div>
-        @if (Model.Category.Id != 0)
+        @if (Model.Id != 0)
         {
             <div class="col-3">                
                 <div style="border-radius:5px; border:1px solid #bbb9b9" width="100%">

@@ -20,5 +20,6 @@ namespace Eyon.Models
         public long SiteImageId { get; set; }
         [ForeignKey("SiteImageId")]
         public SiteImage SiteImage { get; set; }
+        
     }
 }

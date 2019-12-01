@@ -17,7 +17,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         private readonly IUnitOfWork _unitOfWork;
 
         [BindProperty]
-        public CategoryViewModel categoryViewModel { get; set; }
+        public Category Category { get; set; }        
         public CategoryController(IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
@@ -28,27 +28,22 @@ namespace Eyon.Site.Areas.Admin.Controllers
         }
 
         public IActionResult Upsert(long? id)
-        {
-
-            CategoryViewModel categoryViewModel = new CategoryViewModel()
-            {
-                Category = new Models.Category(),
-                SiteImage = new Models.SiteImage()
-            };
+        {            
+            Category category = new Category();
+            category.SiteImage = new SiteImage();
 
             if (id == null)
-                return View(categoryViewModel);
+                return View(category);
 
             if (id != null)
             {
-                categoryViewModel.Category = _unitOfWork.Category.Get(id.GetValueOrDefault());
-                categoryViewModel.SiteImage = _unitOfWork.SiteImage.Get(categoryViewModel.Category.SiteImageId);
+                category = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == id.GetValueOrDefault(), includeProperties: "SiteImage");                
             }
 
-            if (categoryViewModel.Category == null || categoryViewModel.SiteImage == null)
+            if (category == null || category.SiteImage == null)
                 return NotFound();
 
-            return View(categoryViewModel);
+            return View(category);
         }
 
         [HttpPost]
@@ -63,17 +58,16 @@ namespace Eyon.Site.Areas.Admin.Controllers
                     {
                         var files = HttpContext.Request.Form.Files;
                         string s = string.Empty;
-                        SiteImage image = null;
-                        if (categoryViewModel.Category.Id == 0)
+                        if (Category.Id == 0)
                         {
 
                             if (files[0].Length > 0)
                             {
-                                image = new SiteImage()
+                                Category.SiteImage = new SiteImage()
                                 {
-                                    Title = categoryViewModel.SiteImage.Title,
-                                    Alt = categoryViewModel.SiteImage.Alt,
-                                    FileType = Path.GetExtension(files[0].FileName),
+                                    Title = Category.SiteImage.Title,
+                                    Alt = Category.SiteImage.Alt,
+                                    FileType = Path.GetExtension(files[0].FileName).Trim('.'),
                                     Encoded = files[0].ConvertToBase64()
 
                                 };
@@ -81,25 +75,29 @@ namespace Eyon.Site.Areas.Admin.Controllers
                             else
                             {
                                 ModelState.AddModelError("SiteImageId", "Please add an image file");
-                                return View(categoryViewModel);
+                                return View(Category);
                             }
-                            _unitOfWork.SiteImage.Add(image);
+                            _unitOfWork.SiteImage.Add(Category.SiteImage);
                             _unitOfWork.Save();
-                            categoryViewModel.Category.SiteImageId = image.Id;
-                            _unitOfWork.Category.Add(categoryViewModel.Category);
+                            Category.SiteImageId = Category.SiteImage.Id;
+                            _unitOfWork.Category.Add(Category);
                         }
                         else
                         {
-                            var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == categoryViewModel.Category.Id, includeProperties: "SiteImage");
+                            var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == Category.Id, includeProperties: "SiteImage");
 
-                            if (files != null && files[0].Length > 0)
+                            categoryFromDb.SiteImage.Alt = Category.SiteImage.Alt;
+                            categoryFromDb.SiteImage.Title = Category.SiteImage.Title;
+                            if (files.Count > 0)
                             {
-                                image = CreateImage(files[0]);
-                                _unitOfWork.SiteImage.Add(image);
-                                _unitOfWork.Save();
-                                categoryViewModel.Category.SiteImageId = image.Id;
+                                categoryFromDb.SiteImage.FileType = Path.GetExtension(files[0].FileName).Trim('.');
+                                categoryFromDb.SiteImage.Encoded = files[0].ConvertToBase64();                                
                             }
-                            _unitOfWork.Category.Update(categoryViewModel.Category);
+                            Category.SiteImage = categoryFromDb.SiteImage;
+                            _unitOfWork.SiteImage.Update(Category.SiteImage);
+                            _unitOfWork.Save();
+                            Category.SiteImageId = Category.SiteImage.Id;
+                            _unitOfWork.Category.Update(Category);
                         }
                         _unitOfWork.Save();
                         transaction.Commit();
@@ -111,24 +109,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(categoryViewModel);
-        }
-
-        private SiteImage CreateImage(IFormFile file)
-        {
-            string s;
-            using (var ms = new MemoryStream())
-            {
-                file.CopyTo(ms);
-                var fileBytes = ms.ToArray();
-                s = Convert.ToBase64String(fileBytes);
-            }
-            return new SiteImage()
-            {
-                Title = file.FileName,
-                FileType = Path.GetExtension(file.FileName),
-                Encoded = s
-            };
+            return View(Category);
         }
 
         [HttpDelete]
@@ -162,7 +143,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
                     transaction.Rollback();
                 }
             }
-            return Json(new { success = true, message = "Success!" });
+            return Json(new { success = true, message = "Success" });
 
         }
 
