@@ -16,24 +16,10 @@ namespace Eyon.DataAccess.Data.Repository
             this.Category = new CategoryRepository(this._db);
             this.SiteImage = new SiteImageRepository(this._db);
         }
-        public bool SaveTransaction()
+
+        public IDatabaseTransaction BeginTransaction()
         {
-            bool returnValue = true;
-            using (var dbContextTransaction = _db.Database.BeginTransaction())
-            {
-                try
-                {
-                    _db.SaveChanges();
-                    dbContextTransaction.Commit();
-                }
-                catch (Exception)
-                {
-                    //Log Exception Handling message                      
-                    returnValue = false;
-                    dbContextTransaction.Rollback();
-                }
-            }
-            return returnValue;
+            return new EntityDatabaseTransaction(_db);
         }
 
         public void Save()
@@ -46,4 +32,4 @@ namespace Eyon.DataAccess.Data.Repository
             this._db.Dispose();
         }
     }
-    }
+}

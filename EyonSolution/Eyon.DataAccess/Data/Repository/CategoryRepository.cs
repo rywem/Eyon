@@ -38,9 +38,7 @@ namespace Eyon.DataAccess.Data.Repository
                 if (imageFromDb != null)
                     _db.SiteImage.Remove(imageFromDb);
             }
-
             objFromDb.SiteImageId = category.SiteImageId;
-
             _db.SaveChanges();
         }
     }

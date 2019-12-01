@@ -6,9 +6,9 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 {
     public interface IUnitOfWork : IDisposable
     {
-        ICategoryRepository Category { get; }        
+        ICategoryRepository Category { get; }
         ISiteImageRepository SiteImage { get; }
-        void Save();
-        bool SaveTransaction();
+        IDatabaseTransaction BeginTransaction();
+        void Save();        
     }
 }
