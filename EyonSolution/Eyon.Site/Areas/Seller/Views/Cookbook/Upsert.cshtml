@@ -1,8 +1,79 @@
-﻿
+﻿@model Eyon.Models.Cookbook
 @{
-    ViewData["Title"] = "Upsert";
+    var title = "Create Cookbook";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+    <form method="post" asp-action="Upsert" enctype="multipart/form-data">
+        <div class="row px-2 mx-2 backgroundWhite border">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<h1>Upsert</h1>
+            @if (Model.Id != 0)
+            {
+                <input type="hidden" asp-for="Id" />
+                title = "Edit Cookbook";
+            }
 
+            <div class="col-12">
+                <h2 class="text-primary">@title</h2>
+                <br />
+            </div>
+            <div class="col-9">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Description" class="form-control" />                        
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Author"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Author" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Copyright"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Copyright" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="ISBN"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="ISBN" class="form-control" />                        
+                    </div>
+                </div>                
+                <div class="form-group row">
+                    <div class="col-8 offset-4">
+                        @if (Model.Id != 0)
+                        {
+                            // Edit button and back to list button
+                            <partial name="_EditAndBackToListButton" model="Model.Id" />
+                        }
+                        else
+                        {
+                            // Create button and back to list button
+                            <partial name="_CreateAndBackToListButton" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
