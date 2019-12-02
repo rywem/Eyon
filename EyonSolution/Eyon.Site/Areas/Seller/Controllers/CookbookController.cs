@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
+using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eyon.Site.Areas.Seller.Controllers
@@ -14,7 +15,7 @@ namespace Eyon.Site.Areas.Seller.Controllers
         private readonly IUnitOfWork _unitOfWork;
 
         [BindProperty]
-        public Cookbook cookbook { get; set; }
+        public CookbookViewModel cookbookViewModel { get; set; }
         public CookbookController(IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
@@ -26,18 +27,29 @@ namespace Eyon.Site.Areas.Seller.Controllers
 
         public IActionResult Upsert(long? id)
         {
-            Cookbook cookbook = new Cookbook();            
+            cookbookViewModel = new CookbookViewModel();
             if (id == null)
-                return View(cookbook);
+                return View(cookbookViewModel);
 
             if (id != null)
             {
-                cookbook = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == id.GetValueOrDefault());
+                cookbookViewModel.Cookbook = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == id.GetValueOrDefault(), includeProperties: "CommunityCookbooks,CookbookCategories");
+                if (cookbookViewModel.Cookbook == null)
+                    return NotFound();
+                if (cookbookViewModel.Cookbook.CookbookCategories != null)
+                {
+                    var categories = cookbookViewModel.Cookbook.CookbookCategories.Select(x => x.Category).ToList();
+                    if (categories != null)
+                        cookbookViewModel.Categories = categories;
+                }
+                if (cookbookViewModel.Cookbook.CommunityCookbooks != null)
+                {
+                    var communities = cookbookViewModel.Cookbook.CommunityCookbooks.Select(x => x.Community).ToList();
+                    if (communities != null)
+                        cookbookViewModel.Communities = communities;
+                }
             }
-
-            if (cookbook == null )
-                return NotFound();
-            return View(cookbook);
+            return View(cookbookViewModel);
         }
 
         [HttpPost]
@@ -46,15 +58,15 @@ namespace Eyon.Site.Areas.Seller.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (cookbook.Id == 0)
-                    _unitOfWork.Cookbook.Add(cookbook);
+                if (cookbookViewModel.Cookbook.Id == 0)
+                    _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
                 else
-                    _unitOfWork.Cookbook.Update(cookbook);
+                    _unitOfWork.Cookbook.Update(cookbookViewModel.Cookbook);
 
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(cookbook);
+            return View(cookbookViewModel.Cookbook);
         }
 
 

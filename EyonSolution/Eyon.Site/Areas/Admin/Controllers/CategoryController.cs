@@ -27,6 +27,32 @@ namespace Eyon.Site.Areas.Admin.Controllers
             return View();
         }
 
+        [Area("Seller")]
+        [HttpGet]
+        public ActionResult Search()
+        {
+            return PartialView("_SearchCategoryFormPartial");
+        }
+
+        [Area("Seller")]
+        [HttpPost]
+        public ActionResult Search(string query)
+        {
+            if (query != null)
+            {
+                try
+                {                    
+                    var searchlist = _unitOfWork.Category.Search(query);
+                    return PartialView("_SearchCategoryResultsPartial", searchlist);
+                }
+                catch (Exception e)
+                {
+                    // handle exception
+                }
+            }
+            return PartialView("Error");
+        }
+
         public IActionResult Upsert(long? id)
         {            
             Category category = new Category();

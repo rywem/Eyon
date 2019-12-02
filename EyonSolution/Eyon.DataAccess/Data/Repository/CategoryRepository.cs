@@ -26,6 +26,12 @@ namespace Eyon.DataAccess.Data.Repository
             });
         }
 
+        public IEnumerable<Category> Search(string query)
+        {
+            var results = _db.Category.Where(x => x.Name.Contains(query));
+            return results;
+        }
+
         public void Update(Category category)
         {
             var objFromDb = _db.Category.FirstOrDefault(s => s.Id == category.Id);
