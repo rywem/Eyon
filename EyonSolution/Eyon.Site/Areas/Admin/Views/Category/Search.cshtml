@@ -1,0 +1,75 @@
+﻿@model Eyon.Models.ViewModels.SearchCategoryViewModel
+@{
+    ViewData["Title"] = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 0;
+}
+
+
+<form asp-controller="Category" asp-action="Search">
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="SearchString"><h3>Search</h3></label>
+                </div>
+                <div class="col-6">
+                    <input asp-for="SearchString" class="form-control" style="border: 1px solid black;" />
+                    <span asp-validation-for="SearchString" class="text-danger"></span>
+                </div>
+                <div class="col-2">
+                    <button type="submit" value="Filter" class="btn btn-primary form-control"><i class="fas fa-search"></i>&nbsp;Filter</button>
+                </div>
+            </div>           
+        </div>
+    </div>
+</form>
+
+@if (Model.ResultsCategories != null && Model.ResultsCategories.Count > 0)
+{
+    <table class="table table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" width="10%">
+                    #
+                </th>
+                <th scope="col" width="10%">
+                    Select
+                </th>                
+                <th scope="col" width="20%">
+                    Category Name
+                </th>
+                <th scope="col">
+                    Display Order
+                </th>
+                <th scope="col" width="20%">
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ResultsCategories)
+            {
+                <tr>
+                    <th scope="row">@item.Id</th>
+                    <td>
+                        <input type="checkbox" />
+                    </td>>                    
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.DisplayOrder
+                    </td>
+                    <td>
+                        <div style="border-radius:5px; border:1px solid #bbb9b9" width="100%">
+                            <partial name="_ViewImage" model="@item.SiteImage" />
+                        </div>
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+
+}

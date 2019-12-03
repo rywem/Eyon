@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Eyon.DataAccess.Data.Repository
 {
@@ -26,10 +27,19 @@ namespace Eyon.DataAccess.Data.Repository
             });
         }
 
-        public IEnumerable<Category> Search(string query)
+        public IEnumerable<Category> Search(string searchString, string includeProperties = null)
         {
-            var results = _db.Category.Where(x => x.Name.Contains(query));
-            return results;
+            IQueryable<Category> query = _db.Category.Where(x => x.Name.Contains(searchString));            
+                        
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }            
+
+            return query.ToList();            
         }
 
         public void Update(Category category)

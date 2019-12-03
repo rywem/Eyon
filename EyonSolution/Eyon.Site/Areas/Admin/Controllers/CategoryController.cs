@@ -9,6 +9,7 @@ using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Eyon.Site.Extensions;
+
 namespace Eyon.Site.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -16,8 +17,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        [BindProperty]
-        public Category Category { get; set; }        
+        //[BindProperty]
+        //public Category Category { get; set; }        
         public CategoryController(IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
@@ -27,34 +28,33 @@ namespace Eyon.Site.Areas.Admin.Controllers
             return View();
         }
 
-        [Area("Seller")]
+        //[Area("Seller")]
         [HttpGet]
         public ActionResult Search()
         {
-            return PartialView("_SearchCategoryFormPartial");
+            return View(new SearchCategoryViewModel());            
         }
 
-        [Area("Seller")]
+        //[Area("Seller")]
         [HttpPost]
-        public ActionResult Search(string query)
+        [ValidateAntiForgeryToken]
+        public IActionResult Search(SearchCategoryViewModel searchCategoryViewModel)
         {
-            if (query != null)
+            //TODO make async
+            if (!String.IsNullOrEmpty(searchCategoryViewModel.SearchString))
             {
-                try
-                {                    
-                    var searchlist = _unitOfWork.Category.Search(query);
-                    return PartialView("_SearchCategoryResultsPartial", searchlist);
-                }
-                catch (Exception e)
-                {
-                    // handle exception
-                }
-            }
-            return PartialView("Error");
+                searchCategoryViewModel.ResultsCategories = _unitOfWork.Category.Search(searchCategoryViewModel.SearchString, includeProperties: "SiteImage").ToList();
+            }            
+            return View(searchCategoryViewModel);
+        }        
+
+        public ActionResult SearchResults(SearchCategoryViewModel searchCategoryViewModel)
+        {
+            return View("SearchResults", searchCategoryViewModel);
         }
 
         public IActionResult Upsert(long? id)
-        {            
+        {
             Category category = new Category();
             category.SiteImage = new SiteImage();
 
@@ -63,7 +63,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
             if (id != null)
             {
-                category = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == id.GetValueOrDefault(), includeProperties: "SiteImage");                
+                category = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == id.GetValueOrDefault(), includeProperties: "SiteImage");
             }
 
             if (category == null || category.SiteImage == null)
@@ -74,7 +74,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert()
+        public IActionResult Upsert(Category Category)
         {
             if (ModelState.IsValid)
             {
@@ -128,7 +128,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
                         _unitOfWork.Save();
                         transaction.Commit();
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         transaction.Rollback();
                     }
@@ -164,7 +164,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
                     _unitOfWork.Save();
                     transaction.Commit();
                 }
-                catch( Exception)
+                catch (Exception)
                 {
                     transaction.Rollback();
                 }
@@ -175,8 +175,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         [HttpGet]
         public IActionResult GetAll()
-        {            
-            return Json(new { data = _unitOfWork.Category.GetAll(includeProperties:"SiteImage") });
+        {
+            return Json(new { data = _unitOfWork.Category.GetAll(includeProperties: "SiteImage") });
         }
     }
 }

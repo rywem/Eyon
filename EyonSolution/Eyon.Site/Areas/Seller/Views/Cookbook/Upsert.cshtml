@@ -60,7 +60,8 @@
                     <input asp-for="Cookbook.ISBN" class="form-control" />
                 </div>
             </div>
-            <partial name="_SelectedCategories" model="Model.Categories" />
+            <partial name="_SearchCategories" model="@new Eyon.Models.ViewModels.SearchCategoryViewModel()" />
+            
             <div class="form-group row">
                 <div class="col-8 offset-4">
                     @if (Model.Cookbook.Id != 0)

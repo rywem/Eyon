@@ -1,0 +1,26 @@
+﻿@model Eyon.Models.ViewModels.SearchCategoryViewModel
+
+<div class="card" width="400px">
+    <div class="card-header">
+        <h3>Search Categories</h3>
+    </div>
+    <div class="card-body">
+        <form asp-controller="Category" asp-action="Search">
+            <div class="row px-2 mx-2 backgroundWhite border">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="SearchString">Name</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="SearchString" class="form-control" />
+                    </div>
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary form-control" asp-controller="Category" asp-action="Search">Search</button>
+                </div>
+            </div>
+        </form>
+        <table class="table">
+            <thead>
+    </div>
+</div>
