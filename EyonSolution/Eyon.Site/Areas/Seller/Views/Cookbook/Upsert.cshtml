@@ -3,6 +3,16 @@
     var title = "Create Cookbook";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
+<style>
+    #box {
+        width: 200px;
+        height: 200px;
+        border: 2px solid black;
+        background-color: purple;
+    }
+</style>
 <form method="post" asp-action="Upsert" enctype="multipart/form-data">
     <div class="row px-2 mx-2 backgroundWhite border">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -60,8 +70,9 @@
                     <input asp-for="Cookbook.ISBN" class="form-control" />
                 </div>
             </div>
-            <partial name="_SearchCategories" model="@new Eyon.Models.ViewModels.SearchCategoryViewModel()" />
-            
+            <div id="partial">
+                <partial name="_SearchCategories" />
+            </div>
             <div class="form-group row">
                 <div class="col-8 offset-4">
                     @if (Model.Cookbook.Id != 0)
@@ -79,3 +90,6 @@
         </div>
     </div>
 </form>
+@section Scripts{
+    <script src="~/js/search_categories.js"></script>    
+}

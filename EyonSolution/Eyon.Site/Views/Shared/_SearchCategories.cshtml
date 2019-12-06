@@ -1,26 +1,43 @@
-﻿@model Eyon.Models.ViewModels.SearchCategoryViewModel
-
-<div class="card" width="400px">
-    <div class="card-header">
-        <h3>Search Categories</h3>
-    </div>
-    <div class="card-body">
-        <form asp-controller="Category" asp-action="Search">
-            <div class="row px-2 mx-2 backgroundWhite border">
-                <div class="form-group row">
-                    <div class="col-4">
-                        <label asp-for="SearchString">Name</label>
-                    </div>
-                    <div class="col-8">
-                        <input asp-for="SearchString" class="form-control" />
-                    </div>
-                </div>
-                <div class="col">
-                    <button type="submit" class="btn btn-primary form-control" asp-controller="Category" asp-action="Search">Search</button>
-                </div>
+﻿
+<label id="selectedCategoryItem"></label>
+     
+<div class="row" id="filterForm">
+    <div class="col-12">
+        <div class="form-group row">
+            <div class="col-2">
+                <label for="filter"><h3>Search</h3></label>
             </div>
-        </form>
-        <table class="table">
-            <thead>
+            <div class="col-6">
+                <input type="text" id="filter" class = "form-control" style = "border: 1px solid black;" />                                        
+            </div>
+            <div class="col-2">
+                <div value="Filter" class="btn btn-primary form-control" id="btnFilter"><i class="fas fa-search"></i>&nbsp;Filter</div>
+            </div>
+        </div>
     </div>
 </div>
+<table class="table table-striped" id="tableResults">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col" width="10%">
+                #
+            </th>
+            <th scope="col" width="10%">
+                Select
+            </th>
+            <th scope="col" width="20%">
+                Category Name
+            </th>
+            <th scope="col">
+                Display Order
+            </th>
+            <th scope="col" width="20%">
+
+            </th>
+        </tr>
+    </thead>
+    <tbody id="bodyResults">                
+    </tbody>
+</table>
+    
+

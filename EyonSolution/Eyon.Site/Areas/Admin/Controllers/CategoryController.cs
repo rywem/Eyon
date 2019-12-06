@@ -28,30 +28,42 @@ namespace Eyon.Site.Areas.Admin.Controllers
             return View();
         }
 
-        //[Area("Seller")]
+        [Area("Seller")]
         [HttpGet]
         public ActionResult Search()
         {
             return View(new SearchCategoryViewModel());            
         }
 
-        //[Area("Seller")]
-        [HttpPost]
+        [HttpGet]
         [ValidateAntiForgeryToken]
-        public IActionResult Search(SearchCategoryViewModel searchCategoryViewModel)
+        public PartialViewResult Search(SearchCategoryViewModel searchCategoryViewModel)
         {
             //TODO make async
             if (!String.IsNullOrEmpty(searchCategoryViewModel.SearchString))
             {
                 searchCategoryViewModel.ResultsCategories = _unitOfWork.Category.Search(searchCategoryViewModel.SearchString, includeProperties: "SiteImage").ToList();
             }            
-            return View(searchCategoryViewModel);
-        }        
-
-        public ActionResult SearchResults(SearchCategoryViewModel searchCategoryViewModel)
-        {
-            return View("SearchResults", searchCategoryViewModel);
+            return PartialView("_SearchCategories", searchCategoryViewModel);
         }
+
+        [HttpGet]
+        public IActionResult SearchCategories(string filter)
+        {
+            var x = (from p in _unitOfWork.Category.Search(filter, includeProperties: "SiteImage")
+                     select new
+                     {
+                         name = p.Name,
+                         displayOrder = p.DisplayOrder,
+                         id = p.Id,
+                         imageTitle = p.SiteImage.Title,
+                         imageAlt = p.SiteImage.Alt,
+                         image = p.SiteImage.Image
+                     });
+                     
+
+            return Json(new { categories = x });            
+        }        
 
         public IActionResult Upsert(long? id)
         {
