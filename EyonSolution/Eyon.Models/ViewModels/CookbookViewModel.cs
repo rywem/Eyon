@@ -8,7 +8,9 @@ namespace Eyon.Models.ViewModels
     {
         public Cookbook Cookbook { get; set; }
         public List<Category> Categories { get; set; }
-        public List<Community> Communities { get; set; }        
+        public List<Community> Communities { get; set; }
+
+        public string CategoryIds { get; set; }
         public CookbookViewModel()
         {
             this.Categories = new List<Category>();
