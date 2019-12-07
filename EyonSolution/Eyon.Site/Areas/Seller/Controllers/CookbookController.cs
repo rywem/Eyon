@@ -85,7 +85,7 @@ namespace Eyon.Site.Areas.Seller.Controllers
                                 }
                                 else
                                 {                                    
-                                    throw new Exception("Invalid category selected.");
+                                    throw new Errors.UserSafeException("Invalid category selected.");
                                 }
                             }
                         }
@@ -103,7 +103,7 @@ namespace Eyon.Site.Areas.Seller.Controllers
                                 }
                                 else
                                 {                                    
-                                    throw new Exception("Invalid category selected.");
+                                    throw new Errors.UserSafeException("Invalid category selected.");
                                 }
                             }
                             // find existing categories to remove
@@ -135,10 +135,16 @@ namespace Eyon.Site.Areas.Seller.Controllers
                         }
                         transaction.Commit();
                     }
+                    catch(Errors.UserSafeException usEx)
+                    {
+                        transaction.Rollback();
+                        ModelState.AddModelError("CategoryIds", usEx.Message);
+                        return View(cookbookViewModel);
+                    }
                     catch (Exception ex)
                     {
-                        ModelState.AddModelError("CategoryIds", ex.Message);
                         transaction.Rollback();
+                        ModelState.AddModelError("CategoryIds", "An error occurred.");
                         return View(cookbookViewModel);
                     }
                 }
