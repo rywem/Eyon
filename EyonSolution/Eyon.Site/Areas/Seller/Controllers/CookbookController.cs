@@ -62,20 +62,19 @@ namespace Eyon.Site.Areas.Seller.Controllers
             if (ModelState.IsValid)
             {
                 string[] categories = cookbookViewModel.CategoryIds.Split(',');
-
-                if (cookbookViewModel.Cookbook.Id == 0)
+                using (var transaction = _unitOfWork.BeginTransaction())
                 {
-                    using (var transaction = _unitOfWork.BeginTransaction())
+                    try
                     {
-                        try
-                        {                        
+                        if (cookbookViewModel.Cookbook.Id == 0) //New cookbook
+                        {
                             _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
                             _unitOfWork.Save();
                             for (int i = 0; i < categories.Length; i++)
                             {
                                 long id = 0;
-                                if(long.TryParse(categories[i], out id))
-                                {                                    
+                                if (long.TryParse(categories[i], out id))
+                                {
                                     _unitOfWork.CookbookCategories.Add(new Eyon.Models.Relationship.CookbookCategories()
                                     {
                                         CategoryId = id,
@@ -83,19 +82,55 @@ namespace Eyon.Site.Areas.Seller.Controllers
                                     });
                                     _unitOfWork.Save();
                                 }
-                            }
-                            transaction.Commit();
+                            }                            
                         }
-                        catch( Exception ex)
+                        else
                         {
-                            transaction.Rollback();
+                            var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == cookbookViewModel.Cookbook.Id, includeProperties: "CommunityCookbooks,CookbookCategories,CookbookCategories.Category");
+                            
+                            List<long> newCategories = new List<long>();
+                            for (int i = 0; i < categories.Length; i++)
+                            {
+                                long id = 0;
+                                if (long.TryParse(categories[i], out id))
+                                {
+                                    newCategories.Add(id);
+                                }
+                            }
+                            // find existing categories to remove
+                            foreach (var item in objFromDb.CookbookCategories)
+                            {
+                                if (newCategories.Contains(item.CategoryId))
+                                    continue;
+                                else
+                                    _unitOfWork.CookbookCategories.Remove(item);
+                            }
+                            _unitOfWork.Save();
+
+                            //Find new categories to add
+                            foreach(var item in newCategories)
+                            {
+                                var exist = objFromDb.CookbookCategories.FirstOrDefault(x => x.CategoryId == item);
+                                if( exist == null )
+                                {
+                                    _unitOfWork.CookbookCategories.Add(new Eyon.Models.Relationship.CookbookCategories()
+                                    {
+                                        CategoryId = item,
+                                        CookbookId = objFromDb.Id
+                                    });
+                                }
+                            }
+                            _unitOfWork.Save();
+                            _unitOfWork.Cookbook.Update(cookbookViewModel.Cookbook);
+                            _unitOfWork.Save();
                         }
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
                     }
                 }
-                else
-                    _unitOfWork.Cookbook.Update(cookbookViewModel.Cookbook);
-
-                _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(cookbookViewModel.Cookbook);
