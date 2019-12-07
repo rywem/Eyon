@@ -62,6 +62,7 @@ namespace Eyon.Site.Areas.Seller.Controllers
             if (ModelState.IsValid)
             {
                 string[] categories = cookbookViewModel.CategoryIds.Split(',');
+
                 using (var transaction = _unitOfWork.BeginTransaction())
                 {
                     try
@@ -73,7 +74,7 @@ namespace Eyon.Site.Areas.Seller.Controllers
                             for (int i = 0; i < categories.Length; i++)
                             {
                                 long id = 0;
-                                if (long.TryParse(categories[i], out id))
+                                if (long.TryParse(categories[i], out id) && id != 0)
                                 {
                                     _unitOfWork.CookbookCategories.Add(new Eyon.Models.Relationship.CookbookCategories()
                                     {
@@ -82,12 +83,16 @@ namespace Eyon.Site.Areas.Seller.Controllers
                                     });
                                     _unitOfWork.Save();
                                 }
-                            }                            
+                                else
+                                {                                    
+                                    throw new Exception("Invalid category selected.");
+                                }
+                            }
                         }
                         else
                         {
-                            var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == cookbookViewModel.Cookbook.Id, includeProperties: "CommunityCookbooks,CookbookCategories,CookbookCategories.Category");
-                            
+                            var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == cookbookViewModel.Cookbook.Id, includeProperties: "CommunityCookbooks,CookbookCategories");
+
                             List<long> newCategories = new List<long>();
                             for (int i = 0; i < categories.Length; i++)
                             {
@@ -95,6 +100,10 @@ namespace Eyon.Site.Areas.Seller.Controllers
                                 if (long.TryParse(categories[i], out id))
                                 {
                                     newCategories.Add(id);
+                                }
+                                else
+                                {                                    
+                                    throw new Exception("Invalid category selected.");
                                 }
                             }
                             // find existing categories to remove
@@ -108,10 +117,10 @@ namespace Eyon.Site.Areas.Seller.Controllers
                             _unitOfWork.Save();
 
                             //Find new categories to add
-                            foreach(var item in newCategories)
+                            foreach (var item in newCategories)
                             {
                                 var exist = objFromDb.CookbookCategories.FirstOrDefault(x => x.CategoryId == item);
-                                if( exist == null )
+                                if (exist == null)
                                 {
                                     _unitOfWork.CookbookCategories.Add(new Eyon.Models.Relationship.CookbookCategories()
                                     {
@@ -128,26 +137,44 @@ namespace Eyon.Site.Areas.Seller.Controllers
                     }
                     catch (Exception ex)
                     {
+                        ModelState.AddModelError("CategoryIds", ex.Message);
                         transaction.Rollback();
+                        return View(cookbookViewModel);
                     }
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(cookbookViewModel.Cookbook);
+            return View(cookbookViewModel);
         }
 
 
         [HttpDelete]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(long id)
         {
-            var objFromDb = _unitOfWork.Cookbook.Get(id);
+            var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == id, includeProperties: "CommunityCookbooks,CookbookCategories");
 
             if (objFromDb == null)
                 return Json(new { success = false, message = "Error while deleting, Id does not exist. " });
 
-            _unitOfWork.Cookbook.Remove(objFromDb);
-            _unitOfWork.Save();
+            using (var transaction = _unitOfWork.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var item in objFromDb.CookbookCategories)
+                    {
+                        _unitOfWork.CookbookCategories.Remove(item);
 
+                    }
+                    _unitOfWork.Save();
+                    _unitOfWork.Cookbook.Remove(objFromDb);
+                    _unitOfWork.Save();                    
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
             return Json(new { success = true, message = "Delete successful." });
         }
 

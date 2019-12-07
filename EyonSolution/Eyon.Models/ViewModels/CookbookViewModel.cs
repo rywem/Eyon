@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Eyon.Models.ViewModels
@@ -10,6 +11,8 @@ namespace Eyon.Models.ViewModels
         public List<Category> Categories { get; set; }
         public List<Community> Communities { get; set; }
 
+        [Required(AllowEmptyStrings = false, ErrorMessage = "At least one category is required.")]
+        [Display(Name ="Selected Category(s)")]        
         public string CategoryIds { get; set; }
 
         public string CategoryNames { get; set; }

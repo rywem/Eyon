@@ -72,8 +72,8 @@
                 </div>
                 <div class="col-6" style="margin: 0; padding-bottom: 10px;">
                     <span id="categoryNames" class="selectedCategoryNames">@Model.CategoryNames</span>
+                    <span asp-validation-for="CategoryIds" class="text-danger"></span>
                     <input asp-for="CategoryIds" class="form-control" hidden="hidden" />
-                    
                 </div>
             </div>
             <div class="form-group row col-12">
