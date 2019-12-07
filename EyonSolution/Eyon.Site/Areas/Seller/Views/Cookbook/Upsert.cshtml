@@ -80,28 +80,31 @@
                     </button>
                 </div>
                 <div class="col-6" style="margin: 0; padding-bottom: 10px;">
-                    <span id="selected">Choose Categories</span>      
-                    <input asp-for="CategoryIds" class="form-control" />
+                    <span id="categoryNames" class="selectedCategoryNames">@Model.CategoryNames</span>
+                    <input asp-for="CategoryIds" class="form-control" hidden="hidden" />
+                    
                 </div>
-                
             </div>
-            <div class="form-group row">
-                <div class="col-8 offset-4">
-                    @if (Model.Cookbook.Id != 0)
-                    {
-                        // Edit button and back to list button
-                        <partial name="_EditAndBackToListButton" model="Model.Cookbook.Id" />
-                    }
-                    else
-                    {
-                        // Create button and back to list button
-                        <partial name="_CreateAndBackToListButton" />
-                    }
+            <div class="form-group row col-12">
+                <partial name="_SearchCategories" />
+            </div>
+                <div class="form-group row">
+                    <div class="col-8 offset-4">
+                        @if (Model.Cookbook.Id != 0)
+                        {
+                            // Edit button and back to list button
+                            <partial name="_EditAndBackToListButton" model="Model.Cookbook.Id" />
+                        }
+                        else
+                        {
+                            // Create button and back to list button
+                            <partial name="_CreateAndBackToListButton" />
+                        }
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <partial name="_SearchCategories" />    
+    
 </form>
 @section Scripts{
     <script src="~/js/search_categories.js"></script>

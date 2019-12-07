@@ -11,11 +11,49 @@ namespace Eyon.Models.ViewModels
         public List<Community> Communities { get; set; }
 
         public string CategoryIds { get; set; }
+
+        public string CategoryNames { get; set; }
         public CookbookViewModel()
         {
             this.Categories = new List<Category>();
             this.Communities = new List<Community>();
             this.Cookbook = new Cookbook();
-    }
+        }
+
+
+        public void SetCategoryIds()
+        {
+            if(Categories != null && Categories.Count > 0 )
+            {
+                foreach (var cat in Categories)
+                {
+                    if (string.IsNullOrEmpty(CategoryIds))
+                    {
+                        CategoryIds += cat.Id.ToString();
+                    }
+                    else
+                    {
+                        CategoryIds += string.Format(",{0}", cat.Id);
+                    }
+                }
+            }
+        }
+        public void SetCategoryNames()
+        {
+            if (Categories != null && Categories.Count > 0)
+            {
+                foreach (var cat in Categories)
+                {
+                    if (string.IsNullOrEmpty(CategoryIds))
+                    {
+                        CategoryNames += string.Format("#{0}", cat.Name);
+                    }
+                    else
+                    {
+                        CategoryNames += string.Format(" #{0}", cat.Name);
+                    }
+                }
+            }
+        }
     }
 }

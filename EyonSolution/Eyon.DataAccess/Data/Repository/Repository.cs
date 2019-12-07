@@ -17,10 +17,10 @@ namespace Eyon.DataAccess.Data.Repository
             this.dbSet = context.Set<T>();
         }
 
-        public void Add(T entity)
+        public virtual void Add(T entity)
         {
             dbSet.Add(entity);
-        }
+        }        
 
         public T Get(long id)
         {
@@ -52,6 +52,15 @@ namespace Eyon.DataAccess.Data.Repository
             return query.ToList();
         }
 
+        public bool Exists(Expression<Func<T, bool>> filter)
+        {
+            IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return query.FirstOrDefault() != null ? true : false;
+        }
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)
         {
             IQueryable<T> query = dbSet;
@@ -80,6 +89,11 @@ namespace Eyon.DataAccess.Data.Repository
         public void Remove(T entity)
         {
             dbSet.Remove(entity);
+        }
+
+        public void RemoveRange(IEnumerable<T> entitiesToRemove)
+        {
+            dbSet.RemoveRange(entitiesToRemove);
         }
     }
 }
