@@ -13,7 +13,7 @@
 *.userprefs
 
 # Ignore image files 
-*/Images/*.jpg
+Images/*.jpg
 */Images/*.gif
 */Images/*.png
 */Images/*.jpeg
