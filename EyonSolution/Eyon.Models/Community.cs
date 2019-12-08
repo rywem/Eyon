@@ -16,10 +16,7 @@ namespace Eyon.Models
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string WikipediaURL { get; set; }
-        public string County { get; set; }
-        public string StateProvince { get; set; }
-        [Required]
-        public string Country { get; set; }
+        public string County { get; set; }        
         public bool Active { get; set; } = false;
         public ICollection<CommunityCookbooks> CommunityCookbooks { get; set; }
         //public ICollection<CommunityOrganizations> CommunityOrganizations { get; set; }
