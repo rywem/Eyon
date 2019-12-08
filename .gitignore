@@ -12,11 +12,7 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-# Ignore image files 
-Images/*.jpg
-*/Images/*.gif
-*/Images/*.png
-*/Images/*.jpeg
+
 
 # Build results
 [Dd]ebug/
@@ -334,4 +330,3 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-*.jpg
