@@ -13,10 +13,10 @@
 *.userprefs
 
 # Ignore image files 
-Images/*.jpg
-Images/*.gif
-Images/*.png
-Images/*.jpeg
+*/Images/*.jpg
+*/Images/*.gif
+*/Images/*.png
+*/Images/*.jpeg
 
 # Build results
 [Dd]ebug/
