@@ -19,6 +19,8 @@ namespace Eyon.Models
         public string County { get; set; }        
         public bool Active { get; set; } = false;
         public ICollection<CommunityCookbooks> CommunityCookbooks { get; set; }
+
+        public CommunityState CommunityState { get; set; }
         //public ICollection<CommunityOrganizations> CommunityOrganizations { get; set; }
         //public ICollection<Recipe> Recipes { get; set; }
     }

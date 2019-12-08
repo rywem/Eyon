@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
+using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eyon.Site.Areas.Admin.Controllers
@@ -14,7 +15,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         [BindProperty]
-        public Community community { get; set; }
+        public CommunityStateCountryViewModel communityStateCountryViewModel { get; set; }
 
         public CommunityController(IUnitOfWork unitOfWork)
         {
@@ -50,7 +51,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert()
         {
-            if (ModelState.IsValid)
+            /*if (ModelState.IsValid)
             {
                 if (community.Id == 0)
                     _unitOfWork.Community.Add(community);
@@ -60,7 +61,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(community);
+            */
+            return View(communityStateCountryViewModel);
         }
 
         public IActionResult Submit()

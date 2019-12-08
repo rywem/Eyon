@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eyon.Models.Relationship;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,5 +21,7 @@ namespace Eyon.Models
         public long CountryId { get; set; }
         [ForeignKey("CountryId")]
         public Country Country { get; set; }
+
+        public ICollection<CommunityState> CommunityState { get; set; }
     }
 }

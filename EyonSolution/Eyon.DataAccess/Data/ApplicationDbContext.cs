@@ -42,6 +42,19 @@ namespace Eyon.DataAccess.Data
                 .WithMany(cc => cc.CookbookCategories)
                 .HasForeignKey(cc => cc.CategoryId);
 
+            modelBuilder.Entity<CommunityState>()
+                .HasKey(cc => new { cc.CommunityId, cc.StateId });
+            modelBuilder.Entity<CommunityState>()
+                .HasOne(cc => cc.Community)
+                .WithOne(cc => cc.CommunityState);
+                //.HasForeignKey("CommunityId");
+            modelBuilder.Entity<CommunityState>()
+                .HasOne(cc => cc.State)
+                .WithMany(cc => cc.CommunityState)
+                .HasForeignKey(cc => cc.StateId);
+                
+
+
 
             #region Seed Data
 
@@ -668,6 +681,7 @@ namespace Eyon.DataAccess.Data
         #region Relationship Tables
         public DbSet<CommunityCookbooks> CommunityCookbooks { get; set; }
         public DbSet<CookbookCategories> CookbookCategories { get; set; }
+        public DbSet<CommunityState> CommunityState { get; set; }
         /*
         public DbSet<Models.Relationship.CommunityOrganizations> CommunityOrganizations { get; set; }
         public DbSet<Models.Relationship.CookbookRecipes> CookbookRecipes { get; set; }
