@@ -22,7 +22,7 @@ function loadDataTable() {
                             </div>
                             `;
                 
-                }, "width": "20%"
+                }, "width": "15%"
             },
             {
                 "data": "id",

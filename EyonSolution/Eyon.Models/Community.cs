@@ -17,7 +17,10 @@ namespace Eyon.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string WikipediaURL { get; set; }
         public string County { get; set; }        
-        public bool Active { get; set; } = false;
+        public bool Active { get; set; } = false;        
+        public long CountryId { get; set; }
+        [ForeignKey("CountryId")]
+        public Country Country { get; set; }
         public ICollection<CommunityCookbooks> CommunityCookbooks { get; set; }
 
         public CommunityState CommunityState { get; set; }

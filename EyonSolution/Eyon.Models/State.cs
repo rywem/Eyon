@@ -16,8 +16,7 @@ namespace Eyon.Models
         public string Code { get; set; }
         [Required]
         public string Type { get; set; }
-        public string LocalName { get; set; }
-        [Required]
+        public string LocalName { get; set; }        
         public long CountryId { get; set; }
         [ForeignKey("CountryId")]
         public Country Country { get; set; }

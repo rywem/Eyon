@@ -34,17 +34,17 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         public IActionResult Upsert(long? id)
         {
-            Community community = new Community();
-
+            //Community community = new Community();
+            communityStateCountryViewModel = new CommunityStateCountryViewModel();
             if (id == null)
-                return View(community);
+                return View(communityStateCountryViewModel);
 
-            community = _unitOfWork.Community.Get(id.GetValueOrDefault());
+            communityStateCountryViewModel.Community = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == id.GetValueOrDefault(), includeProperties: "Country,CommunityState");
 
-            if (community == null)
+            if (communityStateCountryViewModel.Community == null)
                 return NotFound();
 
-            return View(community);
+            return View(communityStateCountryViewModel);
         }
 
         [HttpPost]
