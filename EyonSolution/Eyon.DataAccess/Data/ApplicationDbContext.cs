@@ -53,11 +53,7 @@ namespace Eyon.DataAccess.Data
                 .HasOne(cc => cc.State)
                 .WithMany(cc => cc.CommunityState)
                 .HasForeignKey(cc => cc.StateId)
-                .OnDelete(DeleteBehavior.Restrict); 
-                
-                
-
-
+                .OnDelete(DeleteBehavior.Restrict);                
 
             #region Seed Data
 

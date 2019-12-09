@@ -10,15 +10,23 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data
 
     public class CategoryRepositoryTests
     {
-        ICategoryRepository categoryRepository = GetInMemoryRepository();
+        ApplicationDbContext dbContext = GetInMemoryContext();        
         [Fact]
-        public void AddRepository_AssertCategoryAdded()
+        public void AddRepository_AssertCanCategoryAdded()
         {
-
+            ICategoryRepository categoryRepository =  new CategoryRepository(dbContext);
+            var category = new Models.Category()
+            {
+                DisplayOrder = 1,
+                Name = "Test Category"                
+            };
+            categoryRepository.Add(category);
+            dbContext.SaveChanges();
+            Assert.Equal(1, category.Id);            
         }
 
         //https://www.carlrippon.com/testing-ef-core-repositories-with-xunit-and-an-in-memory-db/
-        private ICategoryRepository GetInMemoryRepository()
+        private static ApplicationDbContext GetInMemoryContext()
         {            
             DbContextOptions<Eyon.DataAccess.Data.ApplicationDbContext> options;
             var builder = new DbContextOptionsBuilder<Eyon.DataAccess.Data.ApplicationDbContext>();
@@ -27,7 +35,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data
             ApplicationDbContext dbContext = new ApplicationDbContext(options);            
             dbContext.Database.EnsureCreated();
             dbContext.Database.EnsureDeleted();
-            return new CategoryRepository(dbContext);
+            return dbContext;
         }
     }
 }
