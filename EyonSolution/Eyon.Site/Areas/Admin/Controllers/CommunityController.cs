@@ -15,7 +15,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         [BindProperty]
-        public CommunityStateCountryViewModel communityStateCountryViewModel { get; set; }
+        public CommunityViewModel communityViewModel { get; set; }
 
         public CommunityController(IUnitOfWork unitOfWork)
         {
@@ -34,35 +34,35 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         public IActionResult Upsert(long? id)
         {
-            //Community community = new Community();
-            communityStateCountryViewModel = new CommunityStateCountryViewModel();
-            if (id == null)
-                return View(communityStateCountryViewModel);
+            if (ModelState.IsValid)
+            {
+                //Community community = new Community();
+                communityViewModel = new CommunityViewModel();
+                if (id == null)
+                {
+                    communityViewModel.CountryList = _unitOfWork.Country.GetCountryListForDropDown();
+                    communityViewModel.StateList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+                    return View(communityViewModel);
+                }
+                communityViewModel.Community = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == id.GetValueOrDefault(), includeProperties: "Country,CommunityState");
 
-            communityStateCountryViewModel.Community = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == id.GetValueOrDefault(), includeProperties: "Country,CommunityState");
+                if (communityViewModel.Community == null)
+                    return NotFound();
+                else
+                {
+                    communityViewModel.CountryList = _unitOfWork.Country.GetCountryListForDropDown();
+                    communityViewModel.StateList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+                }
 
-            if (communityStateCountryViewModel.Community == null)
-                return NotFound();
-
-            return View(communityStateCountryViewModel);
+            }
+            return View(communityViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Upsert()
-        {
-            /*if (ModelState.IsValid)
-            {
-                if (community.Id == 0)
-                    _unitOfWork.Community.Add(community);
-                else
-                    _unitOfWork.Community.Update(community);
-
-                _unitOfWork.Save();
-                return RedirectToAction(nameof(Index));
-            }
-            */
-            return View(communityStateCountryViewModel);
+        {            
+            return View(communityViewModel);
         }
 
         public IActionResult Submit()
