@@ -12,6 +12,8 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         ICookbookCategoriesRepository CookbookCategories { get; }
         ICommunityCookbooksRepository CommunityCookbooks { get; }
         ICommunityRepository Community { get; }
+        ICountryRepository Country { get; }
+        IStateRepository State { get; }
         IDatabaseTransaction BeginTransaction();
         void Save();        
     }
