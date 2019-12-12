@@ -22,7 +22,7 @@ namespace Eyon.DataAccess.Data.Repository
             TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
             return _db.State.Where(i => i.CountryId == countryId).Select(m => new SelectListItem()
             {
-                Text = ti.ToTitleCase(m.LocalName),
+                Text = ti.ToTitleCase(m.LocalName.ToLower()),
                 Value = m.Id.ToString()
             });
         }

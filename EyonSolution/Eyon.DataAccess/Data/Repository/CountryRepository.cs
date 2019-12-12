@@ -18,11 +18,11 @@ namespace Eyon.DataAccess.Data.Repository
             this._db = db;
         }
         public IEnumerable<SelectListItem> GetCountryListForDropDown()
-        {
+        {            
             TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
             return _db.Country.Select(m => new SelectListItem()
             {
-                Text = ti.ToTitleCase(m.Name),
+                Text = ti.ToTitleCase(m.Name.ToLower()),
                 Value = m.Id.ToString()
             });
         }
