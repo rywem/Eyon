@@ -15,3 +15,5 @@ jobs:
         dotnet-version: 3.0.100
     - name: Build with dotnet
       run: dotnet build ./EyonSolution --configuration Release
+    - name: Run Tests with dotnet
+      run: dotnet test ./EyonSolution --configuration Release
