@@ -4,7 +4,7 @@
 Project Goal: 
 - Project Eyon is a project that:
 	1. Creates a space for the exchange of cookbooks and recipes from different communities.
-	2. Is a project to promote, share, and preserve the culinary richness of communities throughout the world.
+	2. Promotes, shares, and preserves the culinary richness of communities throughout the world.
 
 ### Installed Packages: 
 1. Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation 3.0.0  `for 'refresh' browser to update views when debugging`
