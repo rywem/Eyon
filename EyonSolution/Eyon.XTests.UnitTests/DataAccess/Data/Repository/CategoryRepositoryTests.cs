@@ -4,15 +4,22 @@ using Eyon.DataAccess.Data.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.InMemory;
 using Eyon.DataAccess.Data;
+using System;
 
 namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
 {
 
-    public class CategoryRepositoryTests
+    public class CategoryRepositoryTests : IDisposable
     {
-        IUnitOfWork _unitOfWork = GetInMemoryUnitOfWork();        
+        IUnitOfWork _unitOfWork;
+
+        public CategoryRepositoryTests()
+        {
+            this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(CategoryRepositoryTests));
+        }
+
         [Fact]
-        public void AddRepository_AssertCanCategoryAdded()
+        public void AddCategory_AssertCategoryAdded_IdGreaterThan0()
         {            
             //Setup
             var category = new Models.Category()
@@ -26,25 +33,27 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
         }
 
         [Fact]
-        public void AddRepository_AssertCanGetCategoryFromDb()
+        public void GetCategory_WhenCategoryExists_ObjPropertiesAreEqual()
         {
-            //Setup            
+            // arrange           
             var category = new Models.Category()
             {
                 DisplayOrder = 1,
                 Name = "Test Category"
             };
+            
             _unitOfWork.Category.Add(category);
             _unitOfWork.Save();
-
+            // act
             var id = category.Id;
             var categoryFromDb = _unitOfWork.Category.Get(id);
 
+            // assert
             Assert.Equal(category.Name, categoryFromDb.Name);
             Assert.Equal(category.Id, categoryFromDb.Id);
         }
         [Fact]
-        public void AddRepository_AssertCanUpdateCategoryInDb()
+        public void UpdateCategory_WhenCategoryUpdated_CategoryHasNewValues()
         {
             //Setup
             var firstName = "Test Category";
@@ -70,19 +79,33 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
             Assert.Equal(categoryFromDb.DisplayOrder, secondDisplayOrder);
             Assert.Equal(category.Id, currentId);
         }
+        [Fact]
+        public void DeleteCategory_WhenCategoryDeleted_DbObjIsNull()
+        {
+            // arrange           
+            var category = new Models.Category()
+            {
+                DisplayOrder = 1,
+                Name = "Test Category"
+            };
 
-        //https://www.carlrippon.com/testing-ef-core-repositories-with-xunit-and-an-in-memory-db/
-        private static IUnitOfWork GetInMemoryUnitOfWork()
-        {            
-            DbContextOptions<Eyon.DataAccess.Data.ApplicationDbContext> options;
-            var builder = new DbContextOptionsBuilder<Eyon.DataAccess.Data.ApplicationDbContext>();
-            builder.UseInMemoryDatabase("Eyon_Test");
-            options = builder.Options;
-            ApplicationDbContext dbContext = new ApplicationDbContext(options);            
-            dbContext.Database.EnsureCreated();
-            dbContext.Database.EnsureDeleted();
-            return new UnitOfWork(dbContext);
-            
+            _unitOfWork.Category.Add(category);
+            _unitOfWork.Save();
+            var id = category.Id;
+            var categoryFromDb = _unitOfWork.Category.Get(id);
+            Assert.True(categoryFromDb.Id > 0);
+            // act
+            _unitOfWork.Category.Remove(category);
+            _unitOfWork.Save();
+            categoryFromDb = _unitOfWork.Category.Get(id);
+
+            // assert            
+            Assert.Null(categoryFromDb);
+        }
+
+        public void Dispose()
+        {
+            _unitOfWork.Dispose();
         }
     }
 }
