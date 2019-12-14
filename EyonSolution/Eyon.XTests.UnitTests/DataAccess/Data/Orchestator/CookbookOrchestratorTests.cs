@@ -85,23 +85,6 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Orchestator
             Assert.True(cookbookCategoriesFromDb.Count == 1);
         }
 
-        //[Fact]
-        //public void AddCookbook_WhenCategorySelected_CookbookAddedWithCookbookCategories()
-        //{
-        //    // arrange           
-        //    var category = new Models.Category()
-        //    {
-        //        DisplayOrder = 1,
-        //        Name = "Test Category"
-        //    };
-
-        //    CookbookViewModel cookbookViewModel = new CookbookViewModel();
-
-        //    _unitOfWork.Category.Add(category);
-        //    _unitOfWork.Save();
-
-        //}
-
         public void Dispose()
         {
             _unitOfWork.Dispose();
