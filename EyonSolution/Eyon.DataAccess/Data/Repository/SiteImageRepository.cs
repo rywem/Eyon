@@ -13,10 +13,6 @@ namespace Eyon.DataAccess.Data.Repository
             this._db = db;
         }
 
-        public SiteImage Get(long id)
-        {
-            return base.Get(id);
-        }
         public void Update(SiteImage siteImage)
         {
             var objFromDb = _db.SiteImage.FirstOrDefault(s => s.Id == siteImage.Id);
