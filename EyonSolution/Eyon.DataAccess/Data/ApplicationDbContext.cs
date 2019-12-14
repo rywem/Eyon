@@ -18,8 +18,8 @@ namespace Eyon.DataAccess.Data
         {
             modelBuilder.Entity<Community>()
                 .HasIndex(u => u.WikipediaURL)
-                .IsUnique();            
-                
+                .IsUnique();
+
 
             modelBuilder.Entity<CommunityCookbooks>()
                 .HasKey(bc => new { bc.CookbookId, bc.CommunityId });
@@ -47,19 +47,19 @@ namespace Eyon.DataAccess.Data
                 .HasKey(cc => new { cc.CommunityId, cc.StateId });
             modelBuilder.Entity<CommunityState>()
                 .HasOne(cc => cc.Community)
-                .WithOne(cc => cc.CommunityState)                
-                .OnDelete(DeleteBehavior.Restrict);            
+                .WithOne(cc => cc.CommunityState)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<CommunityState>()
                 .HasOne(cc => cc.State)
                 .WithMany(cc => cc.CommunityState)
                 .HasForeignKey(cc => cc.StateId)
-                .OnDelete(DeleteBehavior.Restrict);                
+                .OnDelete(DeleteBehavior.Restrict);
 
             #region Seed Data
 
 
             #region Seed Images 
-            
+
             modelBuilder.Entity<SiteImage>().HasData(
                 Seed_Data.Images.SeedImages()[0],
                 Seed_Data.Images.SeedImages()[1],
@@ -67,7 +67,7 @@ namespace Eyon.DataAccess.Data
                 Seed_Data.Images.SeedImages()[3],
                 Seed_Data.Images.SeedImages()[4],
                 Seed_Data.Images.SeedImages()[5],
-                Seed_Data.Images.SeedImages()[6]                
+                Seed_Data.Images.SeedImages()[6]
                 );
             #endregion
 
@@ -653,7 +653,59 @@ namespace Eyon.DataAccess.Data
                 new Models.State() { Name = "Tlaxcala", Code = "TLAX", Id = 359, CountryId = 114, LocalName = "Tlaxcala", Type = "State" },
                 new Models.State() { Name = "Veracruz", Code = "VER", Id = 360, CountryId = 114, LocalName = "Veracruz", Type = "State" },
                 new Models.State() { Name = "Yucatán", Code = "YUC", Id = 361, CountryId = 114, LocalName = "Yucatán", Type = "State" },
-                new Models.State() { Name = "Zacatecas", Code = "ZAC", Id = 362, CountryId = 114, LocalName = "Zacatecas", Type = "State" }
+                new Models.State() { Name = "Zacatecas", Code = "ZAC", Id = 362, CountryId = 114, LocalName = "Zacatecas", Type = "State" },
+                new Models.State() { Name = "Alabama", Code = "AL", Id = 363, CountryId = 192, LocalName = "Alabama", Type = "State" },
+                new Models.State() { Name = "Alaska", Code = "AK", Id = 364, CountryId = 192, LocalName = "Alaska", Type = "State" },
+                new Models.State() { Name = "Arizona", Code = "AZ", Id = 365, CountryId = 192, LocalName = "Arizona", Type = "State" },
+                new Models.State() { Name = "Arkansas", Code = "AR", Id = 366, CountryId = 192, LocalName = "Arkansas", Type = "State" },
+                new Models.State() { Name = "California", Code = "CA", Id = 367, CountryId = 192, LocalName = "California", Type = "State" },
+                new Models.State() { Name = "Colorado", Code = "CO", Id = 368, CountryId = 192, LocalName = "Colorado", Type = "State" },
+                new Models.State() { Name = "Connecticut", Code = "CT", Id = 369, CountryId = 192, LocalName = "Connecticut", Type = "State" },
+                new Models.State() { Name = "Delaware", Code = "DE", Id = 370, CountryId = 192, LocalName = "Delaware", Type = "State" },
+                new Models.State() { Name = "District of Columbia", Code = "DC", Id = 371, CountryId = 192, LocalName = "District of Columbia", Type = "State" },
+                new Models.State() { Name = "Florida", Code = "FL", Id = 372, CountryId = 192, LocalName = "Florida", Type = "State" },
+                new Models.State() { Name = "Georgia", Code = "GA", Id = 373, CountryId = 192, LocalName = "Georgia", Type = "State" },
+                new Models.State() { Name = "Hawaii", Code = "HI", Id = 374, CountryId = 192, LocalName = "Hawaii", Type = "State" },
+                new Models.State() { Name = "Idaho", Code = "ID", Id = 375, CountryId = 192, LocalName = "Idaho", Type = "State" },
+                new Models.State() { Name = "Illinois", Code = "IL", Id = 376, CountryId = 192, LocalName = "Illinois", Type = "State" },
+                new Models.State() { Name = "Indiana", Code = "IN", Id = 377, CountryId = 192, LocalName = "Indiana", Type = "State" },
+                new Models.State() { Name = "Iowa", Code = "IA", Id = 378, CountryId = 192, LocalName = "Iowa", Type = "State" },
+                new Models.State() { Name = "Kansas", Code = "KS", Id = 379, CountryId = 192, LocalName = "Kansas", Type = "State" },
+                new Models.State() { Name = "Kentucky", Code = "KY", Id = 380, CountryId = 192, LocalName = "Kentucky", Type = "State" },
+                new Models.State() { Name = "Louisiana", Code = "LA", Id = 381, CountryId = 192, LocalName = "Louisiana", Type = "State" },
+                new Models.State() { Name = "Maine", Code = "ME", Id = 382, CountryId = 192, LocalName = "Maine", Type = "State" },
+                new Models.State() { Name = "Maryland", Code = "MD", Id = 383, CountryId = 192, LocalName = "Maryland", Type = "State" },
+                new Models.State() { Name = "Massachusetts", Code = "MA", Id = 384, CountryId = 192, LocalName = "Massachusetts", Type = "State" },
+                new Models.State() { Name = "Michigan", Code = "MI", Id = 385, CountryId = 192, LocalName = "Michigan", Type = "State" },
+                new Models.State() { Name = "Minnesota", Code = "MN", Id = 386, CountryId = 192, LocalName = "Minnesota", Type = "State" },
+                new Models.State() { Name = "Mississippi", Code = "MS", Id = 387, CountryId = 192, LocalName = "Mississippi", Type = "State" },
+                new Models.State() { Name = "Missouri", Code = "MO", Id = 388, CountryId = 192, LocalName = "Missouri", Type = "State" },
+                new Models.State() { Name = "Montana", Code = "MT", Id = 389, CountryId = 192, LocalName = "Montana", Type = "State" },
+                new Models.State() { Name = "Nebraska", Code = "NE", Id = 390, CountryId = 192, LocalName = "Nebraska", Type = "State" },
+                new Models.State() { Name = "Nevada", Code = "NV", Id = 391, CountryId = 192, LocalName = "Nevada", Type = "State" },
+                new Models.State() { Name = "New Hampshire", Code = "NH", Id = 392, CountryId = 192, LocalName = "New Hampshire", Type = "State" },
+                new Models.State() { Name = "New Jersey", Code = "NJ", Id = 393, CountryId = 192, LocalName = "New Jersey", Type = "State" },
+                new Models.State() { Name = "New Mexico", Code = "NM", Id = 394, CountryId = 192, LocalName = "New Mexico", Type = "State" },
+                new Models.State() { Name = "New York", Code = "NY", Id = 395, CountryId = 192, LocalName = "New York", Type = "State" },
+                new Models.State() { Name = "North Carolina", Code = "NC", Id = 396, CountryId = 192, LocalName = "North Carolina", Type = "State" },
+                new Models.State() { Name = "North Dakota", Code = "ND", Id = 397, CountryId = 192, LocalName = "North Dakota", Type = "State" },
+                new Models.State() { Name = "Ohio", Code = "OH", Id = 398, CountryId = 192, LocalName = "Ohio", Type = "State" },
+                new Models.State() { Name = "Oklahoma", Code = "OK", Id = 399, CountryId = 192, LocalName = "Oklahoma", Type = "State" },
+                new Models.State() { Name = "Oregon", Code = "OR", Id = 400, CountryId = 192, LocalName = "Oregon", Type = "State" },
+                new Models.State() { Name = "Pennsylvania", Code = "PA", Id = 401, CountryId = 192, LocalName = "Pennsylvania", Type = "State" },
+                new Models.State() { Name = "Puerto Rico", Code = "PR", Id = 402, CountryId = 192, LocalName = "Puerto Rico", Type = "State" },
+                new Models.State() { Name = "Rhode Island", Code = "RI", Id = 403, CountryId = 192, LocalName = "Rhode Island", Type = "State" },
+                new Models.State() { Name = "South Carolina", Code = "SC", Id = 404, CountryId = 192, LocalName = "South Carolina", Type = "State" },
+                new Models.State() { Name = "South Dakota", Code = "SD", Id = 405, CountryId = 192, LocalName = "South Dakota", Type = "State" },
+                new Models.State() { Name = "Tennessee", Code = "TN", Id = 406, CountryId = 192, LocalName = "Tennessee", Type = "State" },
+                new Models.State() { Name = "Texas", Code = "TX", Id = 407, CountryId = 192, LocalName = "Texas", Type = "State" },
+                new Models.State() { Name = "Utah", Code = "UT", Id = 408, CountryId = 192, LocalName = "Utah", Type = "State" },
+                new Models.State() { Name = "Vermont", Code = "VT", Id = 409, CountryId = 192, LocalName = "Vermont", Type = "State" },
+                new Models.State() { Name = "Virginia", Code = "VA", Id = 410, CountryId = 192, LocalName = "Virginia", Type = "State" },
+                new Models.State() { Name = "Washington", Code = "WA", Id = 411, CountryId = 192, LocalName = "Washington", Type = "State" },
+                new Models.State() { Name = "West Virginia", Code = "WV", Id = 412, CountryId = 192, LocalName = "West Virginia", Type = "State" },
+                new Models.State() { Name = "Wisconsin", Code = "WI", Id = 413, CountryId = 192, LocalName = "Wisconsin", Type = "State" },
+                new Models.State() { Name = "Wyoming", Code = "WY", Id = 414, CountryId = 192, LocalName = "Wyoming", Type = "State" }                
                 );
             #endregion;
 

@@ -127,3 +127,17 @@ label {
 
 
 /* End search categories popup*/
+
+
+/* Show / hide div rows */
+.hidden {
+    visibility: hidden;
+}
+
+.visible {
+    visibility: hidden;
+}
+
+input[type=submit][disabled]{
+    background-color: #d9d9d9;
+}

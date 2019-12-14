@@ -61,7 +61,9 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Upsert()
-        {            
+        {
+            long? id = communityViewModel.StateId;
+
             return View(communityViewModel);
         }
 
@@ -102,6 +104,12 @@ namespace Eyon.Site.Areas.Admin.Controllers
         public IActionResult GetAll()
         {
             return Json(new { data = _unitOfWork.Community.GetAll() });
+        }
+
+        [HttpGet]
+        public IActionResult GetStates(long countryId)
+        {
+            return Json(new { data = _unitOfWork.State.GetAll(x => x.CountryId == countryId )});
         }
     }
 }

@@ -4803,6 +4803,474 @@ namespace Eyon.DataAccess.Migrations
                             LocalName = "Zacatecas",
                             Name = "Zacatecas",
                             Type = "State"
+                        },
+                        new
+                        {
+                            Id = 363L,
+                            Code = "AL",
+                            CountryId = 192L,
+                            LocalName = "Alabama",
+                            Name = "Alabama",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 364L,
+                            Code = "AK",
+                            CountryId = 192L,
+                            LocalName = "Alaska",
+                            Name = "Alaska",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 365L,
+                            Code = "AZ",
+                            CountryId = 192L,
+                            LocalName = "Arizona",
+                            Name = "Arizona",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 366L,
+                            Code = "AR",
+                            CountryId = 192L,
+                            LocalName = "Arkansas",
+                            Name = "Arkansas",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 367L,
+                            Code = "CA",
+                            CountryId = 192L,
+                            LocalName = "California",
+                            Name = "California",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 368L,
+                            Code = "CO",
+                            CountryId = 192L,
+                            LocalName = "Colorado",
+                            Name = "Colorado",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 369L,
+                            Code = "CT",
+                            CountryId = 192L,
+                            LocalName = "Connecticut",
+                            Name = "Connecticut",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 370L,
+                            Code = "DE",
+                            CountryId = 192L,
+                            LocalName = "Delaware",
+                            Name = "Delaware",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 371L,
+                            Code = "DC",
+                            CountryId = 192L,
+                            LocalName = "District of Columbia",
+                            Name = "District of Columbia",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 372L,
+                            Code = "FL",
+                            CountryId = 192L,
+                            LocalName = "Florida",
+                            Name = "Florida",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 373L,
+                            Code = "GA",
+                            CountryId = 192L,
+                            LocalName = "Georgia",
+                            Name = "Georgia",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 374L,
+                            Code = "HI",
+                            CountryId = 192L,
+                            LocalName = "Hawaii",
+                            Name = "Hawaii",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 375L,
+                            Code = "ID",
+                            CountryId = 192L,
+                            LocalName = "Idaho",
+                            Name = "Idaho",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 376L,
+                            Code = "IL",
+                            CountryId = 192L,
+                            LocalName = "Illinois",
+                            Name = "Illinois",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 377L,
+                            Code = "IN",
+                            CountryId = 192L,
+                            LocalName = "Indiana",
+                            Name = "Indiana",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 378L,
+                            Code = "IA",
+                            CountryId = 192L,
+                            LocalName = "Iowa",
+                            Name = "Iowa",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 379L,
+                            Code = "KS",
+                            CountryId = 192L,
+                            LocalName = "Kansas",
+                            Name = "Kansas",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 380L,
+                            Code = "KY",
+                            CountryId = 192L,
+                            LocalName = "Kentucky",
+                            Name = "Kentucky",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 381L,
+                            Code = "LA",
+                            CountryId = 192L,
+                            LocalName = "Louisiana",
+                            Name = "Louisiana",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 382L,
+                            Code = "ME",
+                            CountryId = 192L,
+                            LocalName = "Maine",
+                            Name = "Maine",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 383L,
+                            Code = "MD",
+                            CountryId = 192L,
+                            LocalName = "Maryland",
+                            Name = "Maryland",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 384L,
+                            Code = "MA",
+                            CountryId = 192L,
+                            LocalName = "Massachusetts",
+                            Name = "Massachusetts",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 385L,
+                            Code = "MI",
+                            CountryId = 192L,
+                            LocalName = "Michigan",
+                            Name = "Michigan",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 386L,
+                            Code = "MN",
+                            CountryId = 192L,
+                            LocalName = "Minnesota",
+                            Name = "Minnesota",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 387L,
+                            Code = "MS",
+                            CountryId = 192L,
+                            LocalName = "Mississippi",
+                            Name = "Mississippi",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 388L,
+                            Code = "MO",
+                            CountryId = 192L,
+                            LocalName = "Missouri",
+                            Name = "Missouri",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 389L,
+                            Code = "MT",
+                            CountryId = 192L,
+                            LocalName = "Montana",
+                            Name = "Montana",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 390L,
+                            Code = "NE",
+                            CountryId = 192L,
+                            LocalName = "Nebraska",
+                            Name = "Nebraska",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 391L,
+                            Code = "NV",
+                            CountryId = 192L,
+                            LocalName = "Nevada",
+                            Name = "Nevada",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 392L,
+                            Code = "NH",
+                            CountryId = 192L,
+                            LocalName = "New Hampshire",
+                            Name = "New Hampshire",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 393L,
+                            Code = "NJ",
+                            CountryId = 192L,
+                            LocalName = "New Jersey",
+                            Name = "New Jersey",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 394L,
+                            Code = "NM",
+                            CountryId = 192L,
+                            LocalName = "New Mexico",
+                            Name = "New Mexico",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 395L,
+                            Code = "NY",
+                            CountryId = 192L,
+                            LocalName = "New York",
+                            Name = "New York",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 396L,
+                            Code = "NC",
+                            CountryId = 192L,
+                            LocalName = "North Carolina",
+                            Name = "North Carolina",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 397L,
+                            Code = "ND",
+                            CountryId = 192L,
+                            LocalName = "North Dakota",
+                            Name = "North Dakota",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 398L,
+                            Code = "OH",
+                            CountryId = 192L,
+                            LocalName = "Ohio",
+                            Name = "Ohio",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 399L,
+                            Code = "OK",
+                            CountryId = 192L,
+                            LocalName = "Oklahoma",
+                            Name = "Oklahoma",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 400L,
+                            Code = "OR",
+                            CountryId = 192L,
+                            LocalName = "Oregon",
+                            Name = "Oregon",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 401L,
+                            Code = "PA",
+                            CountryId = 192L,
+                            LocalName = "Pennsylvania",
+                            Name = "Pennsylvania",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 402L,
+                            Code = "PR",
+                            CountryId = 192L,
+                            LocalName = "Puerto Rico",
+                            Name = "Puerto Rico",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 403L,
+                            Code = "RI",
+                            CountryId = 192L,
+                            LocalName = "Rhode Island",
+                            Name = "Rhode Island",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 404L,
+                            Code = "SC",
+                            CountryId = 192L,
+                            LocalName = "South Carolina",
+                            Name = "South Carolina",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 405L,
+                            Code = "SD",
+                            CountryId = 192L,
+                            LocalName = "South Dakota",
+                            Name = "South Dakota",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 406L,
+                            Code = "TN",
+                            CountryId = 192L,
+                            LocalName = "Tennessee",
+                            Name = "Tennessee",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 407L,
+                            Code = "TX",
+                            CountryId = 192L,
+                            LocalName = "Texas",
+                            Name = "Texas",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 408L,
+                            Code = "UT",
+                            CountryId = 192L,
+                            LocalName = "Utah",
+                            Name = "Utah",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 409L,
+                            Code = "VT",
+                            CountryId = 192L,
+                            LocalName = "Vermont",
+                            Name = "Vermont",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 410L,
+                            Code = "VA",
+                            CountryId = 192L,
+                            LocalName = "Virginia",
+                            Name = "Virginia",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 411L,
+                            Code = "WA",
+                            CountryId = 192L,
+                            LocalName = "Washington",
+                            Name = "Washington",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 412L,
+                            Code = "WV",
+                            CountryId = 192L,
+                            LocalName = "West Virginia",
+                            Name = "West Virginia",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 413L,
+                            Code = "WI",
+                            CountryId = 192L,
+                            LocalName = "Wisconsin",
+                            Name = "Wisconsin",
+                            Type = "State"
+                        },
+                        new
+                        {
+                            Id = 414L,
+                            Code = "WY",
+                            CountryId = 192L,
+                            LocalName = "Wyoming",
+                            Name = "Wyoming",
+                            Type = "State"
                         });
                 });
 
