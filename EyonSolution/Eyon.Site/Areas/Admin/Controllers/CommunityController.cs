@@ -6,7 +6,7 @@ using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-
+using Eyon.DataAccess.Data.Orchestrators;
 namespace Eyon.Site.Areas.Admin.Controllers
 {
 
@@ -14,12 +14,14 @@ namespace Eyon.Site.Areas.Admin.Controllers
     public class CommunityController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private CommunityOrchestrator _communityOrchestrator;
         [BindProperty]
         public CommunityViewModel communityViewModel { get; set; }
 
         public CommunityController(IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
+            this._communityOrchestrator = new CommunityOrchestrator(_unitOfWork);
         }
 
         public IActionResult Index()
@@ -35,25 +37,15 @@ namespace Eyon.Site.Areas.Admin.Controllers
         public IActionResult Upsert(long? id)
         {
             if (ModelState.IsValid)
-            {
-                //Community community = new Community();
-                communityViewModel = new CommunityViewModel();
+            {                                
                 if (id == null)
-                {
-                    communityViewModel.CountryList = _unitOfWork.Country.GetCountryListForDropDown();
-                    communityViewModel.StateList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+                {                    
+                    communityViewModel = _communityOrchestrator.CreateCommunityViewModel();
                     return View(communityViewModel);
-                }
-                communityViewModel.Community = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == id.GetValueOrDefault(), includeProperties: "Country,CommunityState");
-
+                }                
+                communityViewModel = _communityOrchestrator.GetCommunityViewModel(id.GetValueOrDefault());
                 if (communityViewModel.Community == null)
-                    return NotFound();
-                else
-                {
-                    communityViewModel.CountryList = _unitOfWork.Country.GetCountryListForDropDown();
-                    communityViewModel.StateList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
-                }
-
+                    return NotFound();                
             }
             return View(communityViewModel);
         }
