@@ -6,9 +6,9 @@ namespace Eyon.XTests.IntegrationsTests
     public class UnitTest1
     {
         [Fact]
-        public void Test1()
+        public void TrueTest()
         {
-
+            Assert.True(true);
         }
     }
 }
