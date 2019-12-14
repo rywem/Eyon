@@ -6,7 +6,7 @@ using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Eyon.DataAccess.Data.Orchestrator;
+using Eyon.DataAccess.Data.Orchestrators;
 namespace Eyon.Site.Areas.Seller.Controllers
 {
     [Area("Seller")]
@@ -50,11 +50,11 @@ namespace Eyon.Site.Areas.Seller.Controllers
                 {
                     if (cookbookViewModel.Cookbook.Id == 0) //New cookbook
                     {
-                        cookbookOrchestrator.AddCookbook(cookbookViewModel);
+                        cookbookOrchestrator.AddCookbookTransaction(cookbookViewModel);
                     }
                     else
                     {
-                        cookbookOrchestrator.UpdateCookbook(cookbookViewModel);
+                        cookbookOrchestrator.UpdateCookbookTransaction(cookbookViewModel);
                     }
                 }
                 catch (Models.Errors.WebUserSafeException usEx)
