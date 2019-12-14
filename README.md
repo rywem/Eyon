@@ -36,20 +36,9 @@ Project Goal:
 ### Third Party Resources:
 1. [Bootswatch](https://bootswatch.com/) - Bootstrap Wrapper Templates
 2. [DataTables](https://datatables.net/) - Data table templates (includes CDN link)
-    1. [DataTables CDN](http://cdn.datatables.net/) 
-        - `//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css`
-        - `//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js`
-3. [Toastr](https://codeseven.github.io/toastr/) - Simple javascript toast notifications    
-    - CDN
-        - `//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js`
-        - `//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css`
-    - Nuget
-    - [cdnjs toastr latest](https://cdnjs.com/libraries/toastr.js/latest)
-    
+3. [Toastr](https://codeseven.github.io/toastr/) - Simple javascript toast notifications        
 4. [Sweet Alert](https://sweetalert.js.org/guides/) - Displays alerts
-    - [cdnjs Sweet Alert 1.1.3](https://cdnjs.com/libraries/sweetalert/1.1.3)
 5. [Font Awesome](https://fontawesome.com/) - Beautiful, free icons
 6. [jQuery Serializer JSON](https://cdnjs.com/libraries/jquery.serializeJSON) - jQuery Serializer
-    - `<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/2.9.0/jquery.serializejson.min.js" integrity="sha256-A6ALIKGCsaO4m9Bg8qeVYZpvU575sGTBvtpzEFdL0z8=" crossorigin="anonymous"></script>`
-7. Images 
+7. Images: 
 	- [Unsplash](https://unsplash.com/) - Free images for use in projects. [License Details](https://unsplash.com/license)
