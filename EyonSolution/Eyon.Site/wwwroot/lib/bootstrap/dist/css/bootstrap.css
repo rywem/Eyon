@@ -4,6 +4,7 @@
  * Copyright 2012-2019 Thomas Park
  * Licensed under MIT
  * Based on Bootstrap
+ * Theme: Litera
 */
 /*!
  * Bootstrap v4.4.0 (https://getbootstrap.com/)
@@ -3850,6 +3851,23 @@ input[type="button"].btn-block {
     border: 0;
 }
 
+.dropdown-menu {
+    background-color: #02B875;
+}
+
+    .dropdown-menu .dropdown-item,
+    .dropdown-menu .dropdown-item:focus {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+        .dropdown-menu .dropdown-item.active,
+        .dropdown-menu .dropdown-item:hover,
+        .dropdown-menu .dropdown-item:focus {
+            background-color: #056b46;
+            text-decoration: none;
+            color: #fff;
+        }
+/*
     .dropdown-item:hover, .dropdown-item:focus {
         color: #16181b;
         text-decoration: none;
@@ -3866,7 +3884,7 @@ input[type="button"].btn-block {
         color: #868e96;
         pointer-events: none;
         background-color: transparent;
-    }
+    }*/
 
 .dropdown-menu.show {
     display: block;
@@ -11801,3 +11819,7 @@ table-primary, table-secondary, table-success, table-info, table-warning, table-
 .list-group {
     font-size: 0.930125rem;
 }
+
+
+
+        
