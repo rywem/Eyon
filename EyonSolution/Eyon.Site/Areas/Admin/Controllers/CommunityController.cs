@@ -62,8 +62,10 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert()
         {
+            throw new NotImplementedException();
             long? id = communityViewModel.StateId;
 
+            //To do, only admins can approve a community. 
             return View(communityViewModel);
         }
 
