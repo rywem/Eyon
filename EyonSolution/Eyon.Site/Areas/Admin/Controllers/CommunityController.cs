@@ -61,7 +61,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Upsert()
-        {
+        {            
             throw new NotImplementedException();
             long? id = communityViewModel.StateId;
 

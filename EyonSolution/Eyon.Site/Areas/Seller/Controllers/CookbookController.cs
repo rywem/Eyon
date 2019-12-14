@@ -6,19 +6,20 @@ using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-
+using Eyon.DataAccess.Data.Orchestrator;
 namespace Eyon.Site.Areas.Seller.Controllers
 {
     [Area("Seller")]
     public class CookbookController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-
+        private CookbookOrchestrator cookbookOrchestrator;
         [BindProperty]
         public CookbookViewModel cookbookViewModel { get; set; }
         public CookbookController(IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
+            this.cookbookOrchestrator = new CookbookOrchestrator(_unitOfWork);
         }
         public IActionResult Index()
         {
@@ -33,24 +34,7 @@ namespace Eyon.Site.Areas.Seller.Controllers
 
             if (id != null)
             {
-                cookbookViewModel.Cookbook = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == id.GetValueOrDefault(), includeProperties: "CommunityCookbooks,CookbookCategories,CookbookCategories.Category");
-                if (cookbookViewModel.Cookbook == null)
-                    return NotFound();
-                if (cookbookViewModel.Cookbook.CookbookCategories != null)
-                {
-                    var categories = cookbookViewModel.Cookbook.CookbookCategories.Select(x => x.Category).ToList();
-                    if (categories != null)
-                        cookbookViewModel.Categories = categories;
-
-                    cookbookViewModel.SetCategoryIds();
-                    cookbookViewModel.SetCategoryNames();
-                }
-                if (cookbookViewModel.Cookbook.CommunityCookbooks != null)
-                {
-                    var communities = cookbookViewModel.Cookbook.CommunityCookbooks.Select(x => x.Community).ToList();
-                    if (communities != null)
-                        cookbookViewModel.Communities = communities;
-                }
+                cookbookViewModel = cookbookOrchestrator.GetCookbookViewModel(id.GetValueOrDefault());
             }
             return View(cookbookViewModel);
         }
@@ -61,93 +45,29 @@ namespace Eyon.Site.Areas.Seller.Controllers
         {
             if (ModelState.IsValid)
             {
-                string[] categories = cookbookViewModel.CategoryIds.Split(',');
-
-                using (var transaction = _unitOfWork.BeginTransaction())
+                //todo validate the user submitting has permission to add or edit this cookbook.
+                try
                 {
-                    try
+                    if (cookbookViewModel.Cookbook.Id == 0) //New cookbook
                     {
-                        if (cookbookViewModel.Cookbook.Id == 0) //New cookbook
-                        {
-                            _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
-                            _unitOfWork.Save();
-                            for (int i = 0; i < categories.Length; i++)
-                            {
-                                long id = 0;
-                                if (long.TryParse(categories[i], out id) && id != 0)
-                                {
-                                    _unitOfWork.CookbookCategories.Add(new Eyon.Models.Relationship.CookbookCategories()
-                                    {
-                                        CategoryId = id,
-                                        CookbookId = cookbookViewModel.Cookbook.Id
-                                    });
-                                    _unitOfWork.Save();
-                                }
-                                else
-                                {                                    
-                                    throw new Errors.UserSafeException("Invalid category selected.");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == cookbookViewModel.Cookbook.Id, includeProperties: "CommunityCookbooks,CookbookCategories");
-
-                            List<long> newCategories = new List<long>();
-                            for (int i = 0; i < categories.Length; i++)
-                            {
-                                long id = 0;
-                                if (long.TryParse(categories[i], out id))
-                                {
-                                    newCategories.Add(id);
-                                }
-                                else
-                                {                                    
-                                    throw new Errors.UserSafeException("Invalid category selected.");
-                                }
-                            }
-                            // find existing categories to remove
-                            foreach (var item in objFromDb.CookbookCategories)
-                            {
-                                if (newCategories.Contains(item.CategoryId))
-                                    continue;
-                                else
-                                    _unitOfWork.CookbookCategories.Remove(item);
-                            }
-                            _unitOfWork.Save();
-
-                            //Find new categories to add
-                            foreach (var item in newCategories)
-                            {
-                                var exist = objFromDb.CookbookCategories.FirstOrDefault(x => x.CategoryId == item);
-                                if (exist == null)
-                                {
-                                    _unitOfWork.CookbookCategories.Add(new Eyon.Models.Relationship.CookbookCategories()
-                                    {
-                                        CategoryId = item,
-                                        CookbookId = objFromDb.Id
-                                    });
-                                }
-                            }
-                            _unitOfWork.Save();
-                            _unitOfWork.Cookbook.Update(cookbookViewModel.Cookbook);
-                            _unitOfWork.Save();
-                        }
-                        transaction.Commit();
+                        cookbookOrchestrator.AddCookbook(cookbookViewModel);
                     }
-                    catch(Errors.UserSafeException usEx)
+                    else
                     {
-                        transaction.Rollback();
-                        ModelState.AddModelError("CategoryIds", usEx.Message);
-                        return View(cookbookViewModel);
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        ModelState.AddModelError("CategoryIds", "An error occurred.");
-                        return View(cookbookViewModel);
+                        cookbookOrchestrator.UpdateCookbook(cookbookViewModel);
                     }
                 }
+                catch (Models.Errors.WebUserSafeException usEx)
+                {
+                    ModelState.AddModelError("CategoryIds", usEx.Message);
+                    return View(cookbookViewModel);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("CategoryIds", "An error occurred.");
+                    return View(cookbookViewModel);
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(cookbookViewModel);
@@ -173,7 +93,7 @@ namespace Eyon.Site.Areas.Seller.Controllers
                     }
                     _unitOfWork.Save();
                     _unitOfWork.Cookbook.Remove(objFromDb);
-                    _unitOfWork.Save();                    
+                    _unitOfWork.Save();
                     transaction.Commit();
                 }
                 catch (Exception ex)
