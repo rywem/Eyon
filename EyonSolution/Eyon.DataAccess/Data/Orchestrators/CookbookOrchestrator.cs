@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models.Errors;
 using Eyon.Models.ViewModels;

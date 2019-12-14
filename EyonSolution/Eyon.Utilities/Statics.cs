@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Eyon.Utilities
 {
     public static class Statics

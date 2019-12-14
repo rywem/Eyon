@@ -1,11 +1,9 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 
 namespace Eyon.DataAccess.Data.Repository
 {

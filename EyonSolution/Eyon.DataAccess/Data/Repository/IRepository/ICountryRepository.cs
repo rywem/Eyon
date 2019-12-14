@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Eyon.Models;
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface ICountryRepository : IRepository<Models.Country>
+    public interface ICountryRepository : IRepository<Country>
     {
-        IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> GetCountryListForDropDown();
+        IEnumerable<SelectListItem> GetCountryListForDropDown();
     }
 }

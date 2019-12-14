@@ -1,8 +1,6 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Eyon.DataAccess.Data.Orchestrators
 {
