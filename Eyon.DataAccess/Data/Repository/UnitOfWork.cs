@@ -19,6 +19,7 @@ namespace Eyon.DataAccess.Data.Repository
         public IStateRepository State { get; private set; }
         public ICountryRepository Country { get; private set; }
 
+        public ICommunityStateRepository CommunityState { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
@@ -33,6 +34,7 @@ namespace Eyon.DataAccess.Data.Repository
             this.Country = new CountryRepository(this._db);
             this.State = new StateRepository(this._db);
             this.ApplicationUser = new ApplicationUserRepository(this._db);
+            this.CommunityState = new CommunityStateRepository(this._db);
         }
 
         public IDatabaseTransaction BeginTransaction()

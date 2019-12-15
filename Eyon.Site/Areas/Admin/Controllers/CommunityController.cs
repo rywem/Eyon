@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Eyon.Site.Areas.Admin.Controllers
 {
 
-    [Authorize(Roles = Utilities.Statics.Roles.Admin+","+ Utilities.Statics.Roles.Manager)]
+    [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager)]
     [Area("Admin")]
     public class CommunityController : Controller
     {
@@ -21,7 +21,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [BindProperty]
         public CommunityViewModel communityViewModel { get; set; }
 
-        public CommunityController(IUnitOfWork unitOfWork)
+        public CommunityController( IUnitOfWork unitOfWork )
         {
             this._unitOfWork = unitOfWork;
             this._communityOrchestrator = new CommunityOrchestrator(_unitOfWork);
@@ -31,24 +31,24 @@ namespace Eyon.Site.Areas.Admin.Controllers
         {
             return View();
         }
-        
+
         public IActionResult Add()
         {
             return View();
         }
 
-        public IActionResult Upsert(long? id)
+        public IActionResult Upsert( long? id )
         {
-            if (ModelState.IsValid)
-            {                                
-                if (id == null)
-                {                    
+            if ( ModelState.IsValid )
+            {
+                if ( id == null )
+                {
                     communityViewModel = _communityOrchestrator.CreateCommunityViewModel();
                     return View(communityViewModel);
-                }                
+                }
                 communityViewModel = _communityOrchestrator.GetCommunityViewModel(id.GetValueOrDefault());
-                if (communityViewModel.Community == null)
-                    return NotFound();                
+                if ( communityViewModel.Community == null )
+                    return NotFound();
             }
             return View(communityViewModel);
         }
@@ -56,11 +56,17 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Upsert()
-        {            
-            throw new NotImplementedException();
-            long? id = communityViewModel.StateId;
-
-            //To do, only admins can approve a community. 
+        {
+            if ( ModelState.IsValid )
+            {
+                if ( communityViewModel.Community != null )
+                {
+                    if ( communityViewModel.Community.Id == 0 )
+                        _communityOrchestrator.AddCommunityTransaction(communityViewModel);
+                    else
+                        _communityOrchestrator.UpdateCommunityTransaction(communityViewModel);
+                }
+            }
             return View(communityViewModel);
         }
 
@@ -83,11 +89,11 @@ namespace Eyon.Site.Areas.Admin.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(int id)
+        public IActionResult Delete( int id )
         {
             var objFromDb = _unitOfWork.Community.Get(id);
 
-            if (objFromDb == null)
+            if ( objFromDb == null )
                 return Json(new { success = false, message = "Error while deleting, Id does not exist. " });
 
             _unitOfWork.Community.Remove(objFromDb);
@@ -104,10 +110,10 @@ namespace Eyon.Site.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager+"," + Utilities.Statics.Roles.Seller)]
-        public IActionResult GetStates(long countryId)
+        [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," + Utilities.Statics.Roles.Seller)]
+        public IActionResult GetStates( long countryId )
         {
-            return Json(new { data = _unitOfWork.State.GetAll(x => x.CountryId == countryId )});
+            return Json(new { data = _unitOfWork.State.GetAll(x => x.CountryId == countryId) });
         }
     }
 }

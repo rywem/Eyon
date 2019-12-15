@@ -13,7 +13,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 
         T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null);
 
-        bool Exists(Expression<Func<T, bool>> filter);
+        bool Any(Expression<Func<T, bool>> filter);
 
         void Add(T entity);        
 

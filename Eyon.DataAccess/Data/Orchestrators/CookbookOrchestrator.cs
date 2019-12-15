@@ -91,10 +91,10 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     // Todo, add community
                     transaction.Commit();
                 }
-                catch (Exception safeException)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw safeException;
+                    throw ex;
                 }
             }
         }

@@ -52,14 +52,10 @@ namespace Eyon.DataAccess.Data.Repository
             return query.ToList();
         }
 
-        public bool Exists(Expression<Func<T, bool>> filter)
+        public bool Any(Expression<Func<T, bool>> filter)
         {
-            IQueryable<T> query = dbSet;
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-            return query.FirstOrDefault() != null ? true : false;
+            IQueryable<T> query = dbSet;            
+            return query.Any(filter);
         }
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)
         {
