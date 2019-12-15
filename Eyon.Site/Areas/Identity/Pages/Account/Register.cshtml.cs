@@ -112,8 +112,13 @@ namespace Eyon.Site.Areas.Identity.Pages.Account
                     // Default Role is Customer.
                     string role = Eyon.Utilities.Statics.Roles.Customer;
 
-                    if ( user.Email == "ryan.wemmer@gmail.com" )                    
-                        await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Admin);                    
+                    if ( user.Email == "ryan.wemmer@gmail.com" )
+                    {
+                        await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Admin);
+                        await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Manager);
+                        await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Seller);
+                        await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Customer);
+                    }
                     else
                         await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Customer);                     
 

@@ -25,6 +25,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
             // Todo check current user credentials
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier); 
+
             return View(_unitOfWork.ApplicationUser.GetAll(x => x.Id != claims.Value ));
         }
 
