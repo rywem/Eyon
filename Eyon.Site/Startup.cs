@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
+using Eyon.DataAccess.Data.Initializers;
 
 namespace Eyon.Site
 {
@@ -47,18 +48,20 @@ namespace Eyon.Site
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 
-            });
-            
+            });            
             services.AddControllersWithViews()
                 .AddNewtonsoftJson()
                 .AddRazorRuntimeCompilation();
             
             services.AddRazorPages();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();            
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            // Add custom service
+            services.AddScoped<IDbInitializer, DbInitializer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInit)
         {
             if (env.IsDevelopment())
             {
@@ -76,6 +79,8 @@ namespace Eyon.Site
             app.UseStaticFiles();
             app.UseSession();
             app.UseRouting();
+
+            dbInit.Initialize();
 
             app.UseAuthentication();
             app.UseAuthorization();
