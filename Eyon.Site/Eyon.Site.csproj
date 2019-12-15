@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Eyon.DataAccess\Eyon.DataAccess.csproj" />
-    <ProjectReference Include="..\Eyon.Utilities\Eyon.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
