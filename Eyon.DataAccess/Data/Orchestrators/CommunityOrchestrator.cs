@@ -26,7 +26,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         public CommunityViewModel GetCommunityViewModel( long communityId )
         {
             var communityViewModel = CreateCommunityViewModel();
-            communityViewModel.Community = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == communityId, includeProperties: "Country,CommunityState");
+            communityViewModel.Community = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == communityId, includeProperties: "Country,CommunityState,CommunityState.State");
             if ( communityViewModel.Community != null )
             {
                 if ( communityViewModel.Community.CommunityState != null && communityViewModel.Community.CommunityState.StateId != 0 )
@@ -91,30 +91,40 @@ namespace Eyon.DataAccess.Data.Orchestrators
         {
             if ( communityViewModel.Community.Id != 0 )
                 throw new WebUserSafeException("Community does not exists");
-            if ( communityViewModel.Community.CountryId == 0 )
-                throw new WebUserSafeException("Country required.");
+            
+            //Disallow updates to country at this time.
+            var communityFromDb = _unitOfWork.Community.Get(communityViewModel.Community.Id);
+            if ( communityViewModel.Community.CountryId != 0 )
+            {
+                if ( communityViewModel.Community.CountryId != communityFromDb.CountryId )
+                    throw new WebUserSafeException("Changing country disallowed.");
+            }
+            else
+                communityViewModel.Community.CountryId = communityFromDb.CountryId;
+
 
             _unitOfWork.Community.Update(communityViewModel.Community);
 
-            var hasStates = _unitOfWork.State.Any(x => x.CountryId == communityViewModel.Community.CountryId);
 
-            if ( hasStates )
-            {
-                if ( communityViewModel.Community.CommunityState != null )
-                {
-                    if ( communityViewModel.Community.CommunityState.StateId == communityViewModel.StateId.GetValueOrDefault() || communityViewModel.StateId.GetValueOrDefault() == 0 )
-                        return;
-                    else 
-                    {
-                        _unitOfWork.CommunityState.Remove(communityViewModel.Community.CommunityState);
-                        _unitOfWork.Save();
-                    }
-                }               
-                if( communityViewModel.Community.CommunityState.StateId != communityViewModel.StateId.GetValueOrDefault() && communityViewModel.StateId != 0)
-                {
-                    CreateStateRelationship(communityViewModel);
-                }                
-            }
+            // At this time, do not allow updates to states or country. 
+            //var hasStates = _unitOfWork.State.Any(x => x.CountryId == communityViewModel.Community.CountryId);
+            //if ( hasStates )
+            //{
+            //    if ( communityViewModel.Community.CommunityState != null )
+            //    {
+            //        if ( communityViewModel.Community.CommunityState.StateId == communityViewModel.StateId.GetValueOrDefault() || communityViewModel.StateId.GetValueOrDefault() == 0 )
+            //            return;
+            //        else
+            //        {
+            //            _unitOfWork.CommunityState.Remove(communityViewModel.Community.CommunityState);
+            //            _unitOfWork.Save();
+            //        }
+            //    }
+            //    if ( communityViewModel.Community.CommunityState.StateId != communityViewModel.StateId.GetValueOrDefault() && communityViewModel.StateId != 0 )
+            //    {
+            //        CreateStateRelationship(communityViewModel);
+            //    }
+            //}
 
 
         }

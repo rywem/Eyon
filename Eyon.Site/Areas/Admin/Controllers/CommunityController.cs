@@ -63,11 +63,11 @@ namespace Eyon.Site.Areas.Admin.Controllers
                 {
                     if ( communityViewModel.Community.Id == 0 )
                         _communityOrchestrator.AddCommunityTransaction(communityViewModel);
-                    else
+                    else                    
                         _communityOrchestrator.UpdateCommunityTransaction(communityViewModel);
                 }
             }
-            return View(communityViewModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Submit()
@@ -106,7 +106,17 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Json(new { data = _unitOfWork.Community.GetAll() });
+            var communities = _unitOfWork.Community.GetAll(includeProperties: "Country,CommunityState,CommunityState.State");
+            var data = from c in communities
+                       select new
+                       {
+                           name = c.Name,
+                           county = c.County,
+                           stateProvince = c.CommunityState != null ? c.CommunityState.State.Name : "N/A",
+                           country = c.Country.Name,
+                           wikipediaURL = c.WikipediaURL
+                       };
+            return Json(new { data });
         }
 
         [HttpGet]

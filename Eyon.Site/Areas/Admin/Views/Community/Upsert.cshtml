@@ -47,25 +47,49 @@
                     <input asp-for="Community.County" class="form-control" />
                 </div>
             </div>
-            <div class="form-group row">
-                <div class="col-4">
-                    <label asp-for="Community.CountryId">Country</label>
+            @if ( Model.Community.Id == 0 )
+            {
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Community.CountryId">Country</label>
+                    </div>
+                    <div class="col-8">
+                        @Html.DropDownListFor(m => m.Community.CountryId, Model.CountryList, "-- Please Select a Country --", new { @class = "form-control" })
+                    </div>
                 </div>
-                <div class="col-8">
-                    @Html.DropDownListFor(m => m.Community.CountryId, Model.CountryList, "-- Please Select a Country --", new { @class = "form-control" })
+                <div class="form-group row hidden">
+                    <div class="col-4">
+                        <label asp-for="StateId">State</label>
+                    </div>
+                    <div class="col-8">
+                        @Html.DropDownListFor(m => m.StateId, Model.StateList, "-- Please Select a State --", new { @class = "form-control" })
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row hidden">
-                <div class="col-4">
-                    <label asp-for="StateId">State</label>
+            }
+            else
+            {
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Community.Country.Name">Country</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Community.Country.Name" class="form-control" readonly="readonly" />
+                        <input asp-for="Community.CountryId" class="form-control" hidden="hidden" />
+                    </div>
                 </div>
-                <div class="col-8">
-                    @Html.DropDownListFor(m => m.StateId, Model.StateList, "-- Please Select a State --", new { @class = "form-control" })
-                </div>
-
-            </div>
-
-
+                @if ( Model.Community.CommunityState != null )
+                {
+                    <div class="form-group row">
+                        <div class="col-4">
+                            <label asp-for="Community.CommunityState.State.Name">State</label>
+                        </div>
+                        <div class="col-8">
+                            <input asp-for="Community.CommunityState.State.Name" class="form-control" readonly="readonly" />
+                        </div>
+                    </div>
+                }
+            
+            }
 
             <div class="form-group row">
                 <div class="col-4">
@@ -77,7 +101,7 @@
             </div>
             <div class="form-group row">
                 <div class="col-8 offset-4">
-                    @if (Model.Community.Id != 0)
+                    @if ( Model.Community.Id != 0 )
                     {
                         // Edit button and back to list button
                         <partial name="_EditAndBackToListButton" model="Model.Community.Id" />
