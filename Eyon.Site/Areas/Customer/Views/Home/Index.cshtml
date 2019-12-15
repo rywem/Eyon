@@ -3,7 +3,16 @@
     ViewData["Title"] = "Sharing Culinary Richness";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>The purpose of Eyon is to preserve, promote and share the culinary richness of communities in a digital era.</p>
-</div>
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        @if ( User.IsInRole(Eyon.Utilities.Statics.Roles.Seller)
+                      || User.IsInRole(Eyon.Utilities.Statics.Roles.Admin)
+                      || User.IsInRole(Eyon.Utilities.Statics.Roles.Manager) )
+        {
+            <p>The purpose of Eyon is to preserve, promote and share the culinary richness of communities in a digital era.</p>
+        }
+        else
+        {
+            <p>Welcome to Project Eyon.</p>
+        }
+    </div>
