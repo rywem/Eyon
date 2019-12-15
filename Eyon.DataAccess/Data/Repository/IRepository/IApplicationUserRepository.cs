@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface IUserRepository : IRepository<ApplicationUser>
+    public interface IApplicationUserRepository : IRepository<ApplicationUser>
     {
         bool ChangeRole( ApplicationUser userToChange, string newRole );
 

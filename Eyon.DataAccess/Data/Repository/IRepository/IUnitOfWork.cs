@@ -12,6 +12,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         ICommunityRepository Community { get; }
         ICountryRepository Country { get; }
         IStateRepository State { get; }
+        IApplicationUserRepository ApplicationUser { get; }
         IDatabaseTransaction BeginTransaction();
         void Save();        
     }

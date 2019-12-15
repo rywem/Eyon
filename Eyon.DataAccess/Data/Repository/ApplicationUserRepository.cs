@@ -7,11 +7,11 @@ using System.Text;
 
 namespace Eyon.DataAccess.Data.Repository
 {
-    public class UserRepository : Repository<ApplicationUser>, IUserRepository
+    public class ApplicationUserRepository : Repository<ApplicationUser>, IApplicationUserRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public UserRepository( ApplicationDbContext db ) : base(db)
+        public ApplicationUserRepository( ApplicationDbContext db ) : base(db)
         {
             this._db = db;
         }
