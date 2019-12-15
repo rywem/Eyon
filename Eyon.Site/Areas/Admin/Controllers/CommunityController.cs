@@ -39,17 +39,15 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         public IActionResult Upsert( long? id )
         {
-            if ( ModelState.IsValid )
+            if ( id == null || id == 0 )
             {
-                if ( id == null )
-                {
-                    communityViewModel = _communityOrchestrator.CreateCommunityViewModel();
-                    return View(communityViewModel);
-                }
-                communityViewModel = _communityOrchestrator.GetCommunityViewModel(id.GetValueOrDefault());
-                if ( communityViewModel.Community == null )
-                    return NotFound();
+                communityViewModel = _communityOrchestrator.CreateCommunityViewModel();
+                return View(communityViewModel);
             }
+            communityViewModel = _communityOrchestrator.GetCommunityViewModel(id.GetValueOrDefault());
+            if ( communityViewModel.Community == null )
+                return NotFound();
+
             return View(communityViewModel);
         }
 
@@ -63,11 +61,12 @@ namespace Eyon.Site.Areas.Admin.Controllers
                 {
                     if ( communityViewModel.Community.Id == 0 )
                         _communityOrchestrator.AddCommunityTransaction(communityViewModel);
-                    else                    
+                    else
                         _communityOrchestrator.UpdateCommunityTransaction(communityViewModel);
                 }
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            return View(communityViewModel);
         }
 
         public IActionResult Submit()
@@ -94,7 +93,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
             var objFromDb = _unitOfWork.Community.Get(id);
 
             if ( objFromDb == null )
-                return Json(new { success = false, message = "Error while deleting, Id does not exist. " });
+                return Json(new { success = false, message = "Error while deleting, Id does not exist." });
 
             _unitOfWork.Community.Remove(objFromDb);
             _unitOfWork.Save();
@@ -114,7 +113,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
                            county = c.County,
                            stateProvince = c.CommunityState != null ? c.CommunityState.State.Name : "N/A",
                            country = c.Country.Name,
-                           wikipediaURL = c.WikipediaURL
+                           wikipediaURL = c.WikipediaURL,
+                           id = c.Id
                        };
             return Json(new { data });
         }

@@ -74,6 +74,7 @@
                     </div>
                     <div class="col-8">
                         <input asp-for="Community.Country.Name" class="form-control" readonly="readonly" />
+                        <input asp-for="Community.Country.Code" class="form-control" hidden="hidden"/>
                         <input asp-for="Community.CountryId" class="form-control" hidden="hidden" />
                     </div>
                 </div>
@@ -85,6 +86,7 @@
                         </div>
                         <div class="col-8">
                             <input asp-for="Community.CommunityState.State.Name" class="form-control" readonly="readonly" />
+                            <input asp-for="Community.CommunityState.State.Type" class="form-control" hidden="hidden" />                            
                         </div>
                     </div>
                 }
@@ -97,6 +99,12 @@
                 </div>
                 <div class="col-8">
                     <input asp-for="Community.Active" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4"></div>
+                <div class="col-8">
+                    <div asp-validation-summary="All" class="text-danger"></div>
                 </div>
             </div>
             <div class="form-group row">

@@ -89,7 +89,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         }
         public void UpdateCommunity(CommunityViewModel communityViewModel )
         {
-            if ( communityViewModel.Community.Id != 0 )
+            if ( _unitOfWork.Community.Any(x => x.Id == communityViewModel.Community.Id) == false )
                 throw new WebUserSafeException("Community does not exists");
             
             //Disallow updates to country at this time.
