@@ -716,7 +716,7 @@ namespace Eyon.DataAccess.Data
 
         }
 
-
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<SiteImage> SiteImage { get; set; }
         public DbSet<Cookbook> Cookbook { get; set; }
