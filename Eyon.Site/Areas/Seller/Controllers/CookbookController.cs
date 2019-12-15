@@ -7,8 +7,11 @@ using Eyon.Models;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Eyon.DataAccess.Data.Orchestrators;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Eyon.Site.Areas.Seller.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,Seller")]
     [Area("Seller")]
     public class CookbookController : Controller
     {

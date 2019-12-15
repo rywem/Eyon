@@ -36,25 +36,27 @@
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
                         <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>                    
-                    @if ( User.IsInRole(Eyon.Utilities.Statics.Roles.Admin) || User.IsInRole(Eyon.Utilities.Statics.Roles.Manager) )
+                    </li>
+                    @if ( User.IsInRole(Eyon.Utilities.Statics.Roles.Seller)
+                     || User.IsInRole(Eyon.Utilities.Statics.Roles.Admin)
+                     || User.IsInRole(Eyon.Utilities.Statics.Roles.Manager) )
                     {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Admin Management
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropDown">
-                                <a class="dropdown-item text-white" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a>
-                                <a class="dropdown-item text-white" asp-area="Admin" asp-controller="Community" asp-action="Index">Communities</a>
-                                @if ( User.IsInRole(Eyon.Utilities.Statics.Roles.Admin))
-                                { 
-                                    <a class="dropdown-item text-white" asp-area="Admin" asp-controller="User" asp-action="Index">Users</a>
-                                }
-                            </div>
-                        </li>
-                    }
-                    @if ( User.IsInRole(Eyon.Utilities.Statics.Roles.Seller) )
-                    {
+                        @if ( User.IsInRole(Eyon.Utilities.Statics.Roles.Admin) || User.IsInRole(Eyon.Utilities.Statics.Roles.Manager) )
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Admin Management
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropDown">
+                                    <a class="dropdown-item text-white" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a>
+                                    <a class="dropdown-item text-white" asp-area="Admin" asp-controller="Community" asp-action="Index">Communities</a>
+                                    @if ( User.IsInRole(Eyon.Utilities.Statics.Roles.Admin) )
+                                    {
+                                        <a class="dropdown-item text-white" asp-area="Admin" asp-controller="User" asp-action="Index">Users</a>
+                                    }
+                                </div>
+                            </li>
+                        }
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Seller Management

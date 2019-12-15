@@ -9,16 +9,16 @@ using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Eyon.Site.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Eyon.Site.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin,Manager")]
     [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        //[BindProperty]
-        //public Category Category { get; set; }        
+        
         public CategoryController(IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
@@ -186,6 +186,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager,Seller")]
         public IActionResult GetAll()
         {
             return Json(new { data = _unitOfWork.Category.GetAll(includeProperties: "SiteImage") });

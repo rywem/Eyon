@@ -7,9 +7,12 @@ using Eyon.Models;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Eyon.DataAccess.Data.Orchestrators;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Eyon.Site.Areas.Admin.Controllers
 {
 
+    [Authorize(Roles = "Admin,Manager")]
     [Area("Admin")]
     public class CommunityController : Controller
     {
@@ -28,7 +31,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         {
             return View();
         }
-        [Area("Seller")]
+        
         public IActionResult Add()
         {
             return View();
@@ -101,6 +104,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager,Seller")]
         public IActionResult GetStates(long countryId)
         {
             return Json(new { data = _unitOfWork.State.GetAll(x => x.CountryId == countryId )});
