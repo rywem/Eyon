@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Eyon.Site.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = Utilities.Statics.Roles.Admin)]
     public class UserController : Controller
     {
 

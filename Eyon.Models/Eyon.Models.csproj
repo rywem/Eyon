@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Eyon.Utilities\Eyon.Utilities.csproj" />
+  </ItemGroup>
+
 </Project>

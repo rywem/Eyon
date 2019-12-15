@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Eyon.Site.Areas.Seller.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,Seller")]
+    [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," + Utilities.Statics.Roles.Seller)]
     [Area("Seller")]
     public class CookbookController : Controller
     {

@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Eyon.Site.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin,Manager")]
+    [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager)]
     [Area("Admin")]
     public class CategoryController : Controller
     {
@@ -186,7 +186,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Manager,Seller")]
+        [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," + Utilities.Statics.Roles.Seller)]
         public IActionResult GetAll()
         {
             return Json(new { data = _unitOfWork.Category.GetAll(includeProperties: "SiteImage") });

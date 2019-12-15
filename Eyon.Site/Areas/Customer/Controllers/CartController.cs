@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Eyon.Site.Areas.Customer.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,Seller,Customer")] 
+    [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," + Utilities.Statics.Roles.Seller+"," +Utilities.Statics.Roles.Customer )]
     [Area("Customer")]
     public class CartController : Controller
     {
