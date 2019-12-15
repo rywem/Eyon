@@ -9,7 +9,7 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #28a745;
 }
 
 .btn-primary {
@@ -20,7 +20,7 @@ a {
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: #1b6ec2;
+  background-color: #28a745;
   border-color: #1861ac;
 }
 
@@ -156,4 +156,8 @@ label {
 
 input[type=submit][disabled]{
     background-color: #d9d9d9;
+}
+
+.font-thicker {
+    font-weight: 600;
 }
