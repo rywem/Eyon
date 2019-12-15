@@ -97,6 +97,7 @@ namespace Eyon.Site.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if ( result.Succeeded )
                 {
+                    /*
                     if ( !await _roleManager.RoleExistsAsync(Eyon.Utilities.Statics.Roles.Admin) )
                         await _roleManager.CreateAsync(new IdentityRole(Eyon.Utilities.Statics.Roles.Admin));
 
@@ -108,19 +109,10 @@ namespace Eyon.Site.Areas.Identity.Pages.Account
 
                     if ( !await _roleManager.RoleExistsAsync(Eyon.Utilities.Statics.Roles.Customer) )
                         await _roleManager.CreateAsync(new IdentityRole(Eyon.Utilities.Statics.Roles.Customer));
-
+                    */
                     // Default Role is Customer.
-                    string role = Eyon.Utilities.Statics.Roles.Customer;
-
-                    if ( user.Email == "ryan.wemmer@gmail.com" )
-                    {
-                        await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Admin);
-                        await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Manager);
-                        await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Seller);
-                        await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Customer);
-                    }
-                    else
-                        await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Customer);                     
+                    
+                    await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Customer);                     
 
                     _logger.LogInformation("User created a new account with password.");
 
