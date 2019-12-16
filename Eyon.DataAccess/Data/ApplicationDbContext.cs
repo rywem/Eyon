@@ -727,7 +727,7 @@ namespace Eyon.DataAccess.Data
 
             #region CommunityState Relationsh
 
-            modelBuilder.Entity<Community>().HasData(
+            modelBuilder.Entity<CommunityState>().HasData(
                 new CommunityState() { CommunityId = 1, StateId = 367 },
                 new CommunityState() { CommunityId = 3, StateId = 386 },
                 new CommunityState() { CommunityId = 2, StateId = 404 }
