@@ -57,7 +57,7 @@
                         @Html.DropDownListFor(m => m.Community.CountryId, Model.CountryList, "-- Please Select a Country --", new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="form-group row hidden">
+                <div class="form-group row hidden" id="States">
                     <div class="col-4">
                         <label asp-for="StateId">State</label>
                     </div>

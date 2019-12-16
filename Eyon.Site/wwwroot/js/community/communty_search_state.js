@@ -13,8 +13,8 @@
             success: function (data) {
                 var count = Object.keys(data.data).length;                
                 if (count > 0) {
-                    $("#StateId").removeClass("hidden");
-                    $("#StateId").addClass("visible");
+                    $("#States").removeClass("hidden");
+                    $("#States").addClass("visible");
                     $.each(data.data, function (k, v) {
                         $("#StateId").append('<option value="' + v.id + '">' + v.name + '</option>');
                     });
@@ -22,8 +22,8 @@
                     $(":submit").attr("disabled", true);
                 }
                 else {
-                    $("#StateId").addClass("hidden");
-                    $("#StateId").removeClass("visible");                                        
+                    $("#States").addClass("hidden");
+                    $("#States").removeClass("visible");                                        
                     hasStates = false;
                     $(":submit").attr("disabled", false);
                 }
