@@ -86,7 +86,11 @@ namespace Eyon.DataAccess.Data
             #endregion
 
 
+
+
             #region Seed Location Data
+
+            #region Country
             modelBuilder.Entity<Country>().HasData(
                 new Models.Country() { Name = "ALBANIA", Code = "AL", Id = 1 },
                 new Models.Country() { Name = "ALGERIA", Code = "DZ", Id = 2 },
@@ -290,7 +294,9 @@ namespace Eyon.DataAccess.Data
                 new Models.Country() { Name = "ZAMBIA", Code = "ZM", Id = 200 },
                 new Models.Country() { Name = "ZIMBABWE", Code = "ZW", Id = 201 });
 
+            #endregion
 
+            #region State/Province
             modelBuilder.Entity<State>().HasData(
                 new Models.State() { Name = "Buenos Aires (Ciudad)", Code = "CIUDAD AUTÓNOMA DE BUENOS AIRES", Id = 1, CountryId = 7, LocalName = "Buenos Aires (Ciudad)", Type = "Province" },
                 new Models.State() { Name = "Buenos Aires (Provincia)", Code = "BUENOS AIRES", Id = 2, CountryId = 7, LocalName = "Buenos Aires (Provincia)", Type = "Province" },
@@ -707,6 +713,28 @@ namespace Eyon.DataAccess.Data
                 new Models.State() { Name = "Wisconsin", Code = "WI", Id = 413, CountryId = 192, LocalName = "Wisconsin", Type = "State" },
                 new Models.State() { Name = "Wyoming", Code = "WY", Id = 414, CountryId = 192, LocalName = "Wyoming", Type = "State" }                
                 );
+            #endregion
+
+            #region Communities 
+
+            modelBuilder.Entity<Community>().HasData(
+                new Community() { Id = 1 ,Name = "Quincy", WikipediaURL = "https://en.wikipedia.org/wiki/Quincy,_California", County = "Plumas", Active = true, CountryId = 192 },
+                new Community() { Id = 2, Name = "Myrtle Beach", WikipediaURL = "https://en.wikipedia.org/wiki/Myrtle_Beach,_South_Carolina", County = "Horry", Active = true, CountryId = 192 },
+                new Community() { Id = 3, Name = "Deer River", WikipediaURL = "https://en.wikipedia.org/wiki/Deer_River,_Minnesota", County = "Itasca", Active = true, CountryId = 192 }
+                );
+
+            #endregion
+
+            #region CommunityState Relationsh
+
+            modelBuilder.Entity<Community>().HasData(
+                new CommunityState() { CommunityId = 1, StateId = 367 },
+                new CommunityState() { CommunityId = 3, StateId = 386 },
+                new CommunityState() { CommunityId = 2, StateId = 404 }
+                );
+
+            #endregion
+
             #endregion;
 
             #endregion
