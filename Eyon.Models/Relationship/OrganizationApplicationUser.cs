@@ -12,6 +12,6 @@ namespace Eyon.Models.Relationship
         public Organization Organization { get; set; }
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
-        public ApplicationUser ApplicationUser { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }        
     }
 }

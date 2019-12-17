@@ -21,6 +21,7 @@ namespace Eyon.DataAccess.Data
                 .IsUnique();
 
 
+            #region Relationships
             modelBuilder.Entity<CommunityCookbooks>()
                 .HasKey(bc => new { bc.CookbookId, bc.CommunityId });
             modelBuilder.Entity<CommunityCookbooks>()
@@ -43,6 +44,40 @@ namespace Eyon.DataAccess.Data
                 .WithMany(cc => cc.CookbookCategories)
                 .HasForeignKey(cc => cc.CategoryId);
 
+            
+            modelBuilder.Entity<OrganizationApplicationUser>()
+                .HasKey(bc => new { bc.ApplicationUserId, bc.OrganizationId });
+            modelBuilder.Entity<OrganizationApplicationUser>()
+                .HasOne(oa => oa.ApplicationUser)
+                .WithMany(oa => oa.OrganizationApplicationUsers)
+                .HasForeignKey(oa => oa.ApplicationUserId);
+            modelBuilder.Entity<OrganizationApplicationUser>()
+                .HasOne(x => x.Organization)
+                .WithMany(x => x.OrganizationApplicationUsers)
+                .HasForeignKey(x => x.OrganizationId);
+
+            modelBuilder.Entity<CommunityOrganizations>()
+                .HasKey(c => new { c.OrganizationId, c.CommunityId });
+            modelBuilder.Entity<CommunityOrganizations>()
+                .HasOne(c => c.Community)
+                .WithMany(c => c.CommunityOrganizations)
+                .HasForeignKey(c => c.CommunityId);
+            modelBuilder.Entity<CommunityOrganizations>()
+                .HasOne(c => c.Organization)
+                .WithMany(c => c.CommunityOrganizations)
+                .HasForeignKey(c => c.OrganizationId);
+            
+            modelBuilder.Entity<OrganizationCookbooks>()
+                .HasKey(o => new { o.OrganizationId, o.CookbookId });
+            modelBuilder.Entity<OrganizationCookbooks>()
+                .HasOne(o => o.Organization)
+                .WithMany(o => o.OrganizationCookbooks)
+                .HasForeignKey(o => o.OrganizationId);
+            modelBuilder.Entity<OrganizationCookbooks>()
+                .HasOne(o => o.Cookbook)
+                .WithMany(o => o.OrganizationCookbooks)
+                .HasForeignKey(o => o.CookbookId);
+
             modelBuilder.Entity<CommunityState>()
                 .HasKey(cc => new { cc.CommunityId, cc.StateId });
             modelBuilder.Entity<CommunityState>()
@@ -54,6 +89,9 @@ namespace Eyon.DataAccess.Data
                 .WithMany(cc => cc.CommunityState)
                 .HasForeignKey(cc => cc.StateId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            #endregion 
+
 
             #region Seed Data
 
