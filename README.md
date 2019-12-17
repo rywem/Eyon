@@ -1,5 +1,7 @@
 # Eyon
 
+&copy; Ryan Wemmer 2019
+
 ## About
 Project Goal: 
 - Project Eyon is a project that:
