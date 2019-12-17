@@ -63,7 +63,6 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Orchestator
             Assert.NotNull(cookbookInDb);
             // act
             var cookbookViewModel = _orchestrator.GetCookbookViewModel(cookbookInDb.Id);
-
             Assert.NotNull(cookbookViewModel);
             Assert.NotNull(cookbookViewModel.Cookbook);
             Assert.True(cookbookViewModel.Cookbook.Id > 0);
