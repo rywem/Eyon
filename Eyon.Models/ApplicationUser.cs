@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Eyon.Models.Relationship;
+using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Eyon.Models
@@ -12,6 +14,8 @@ namespace Eyon.Models
         public string Address { get; set; }
         public string Address2 { get; set; }
         public string City { get; set; }
+
+        public ICollection<OrganizationApplicationUser> OrganizationApplicationUsers { get; set; }
         
     }
 }

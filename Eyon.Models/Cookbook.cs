@@ -18,7 +18,7 @@ namespace Eyon.Models
         public ICollection<CommunityCookbooks> CommunityCookbooks { get; set; }
         public ICollection<CookbookCategories> CookbookCategories { get; set; }
 
-        //public ICollection<OrganizationCookbooks> OrganizationCookbooks { get; set; }
+        public OrganizationCookbooks OrganizationCookbooks { get; set; }
         //public ICollection<CookbookRecipes> CookbookRecipes { get; set; }
         //public ICollection<CookbookSiteImages> CookbookSiteImages { get; set; }
 
