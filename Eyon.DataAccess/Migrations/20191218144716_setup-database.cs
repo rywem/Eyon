@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Eyon.DataAccess.Migrations
 {
-    public partial class MigrateDatabase : Migration
+    public partial class setupdatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,7 +39,13 @@ namespace Eyon.DataAccess.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Address = table.Column<string>(nullable: true),
+                    Address2 = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,6 +81,22 @@ namespace Eyon.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Country", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Organization",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    Type = table.Column<string>(nullable: false),
+                    Website = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Organization", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -246,6 +268,30 @@ namespace Eyon.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrganizationCookbooks",
+                columns: table => new
+                {
+                    CookbookId = table.Column<long>(nullable: false),
+                    OrganizationId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrganizationCookbooks", x => new { x.OrganizationId, x.CookbookId });
+                    table.ForeignKey(
+                        name: "FK_OrganizationCookbooks_Cookbook_CookbookId",
+                        column: x => x.CookbookId,
+                        principalTable: "Cookbook",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrganizationCookbooks_Organization_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organization",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Category",
                 columns: table => new
                 {
@@ -286,6 +332,30 @@ namespace Eyon.DataAccess.Migrations
                         name: "FK_CommunityCookbooks_Cookbook_CookbookId",
                         column: x => x.CookbookId,
                         principalTable: "Cookbook",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrganizationCommunities",
+                columns: table => new
+                {
+                    CommunityId = table.Column<long>(nullable: false),
+                    OrganizationId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrganizationCommunities", x => new { x.OrganizationId, x.CommunityId });
+                    table.ForeignKey(
+                        name: "FK_OrganizationCommunities_Community_CommunityId",
+                        column: x => x.CommunityId,
+                        principalTable: "Community",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrganizationCommunities_Organization_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organization",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -570,8 +640,18 @@ namespace Eyon.DataAccess.Migrations
                     { 2L, 1, "Holiday Cookies", 2L },
                     { 6L, 5, "Soups and Stews", 6L },
                     { 4L, 3, "Breakfast", 4L },
-                    { 3L, 2, "Dinner", 3L },
-                    { 5L, 4, "Salads", 5L }
+                    { 5L, 4, "Salads", 5L },
+                    { 3L, 2, "Dinner", 3L }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Community",
+                columns: new[] { "Id", "Active", "CountryId", "County", "Name", "WikipediaURL" },
+                values: new object[,]
+                {
+                    { 1L, true, 192L, "Plumas", "Quincy", "https://en.wikipedia.org/wiki/Quincy,_California" },
+                    { 3L, true, 192L, "Itasca", "Deer River", "https://en.wikipedia.org/wiki/Deer_River,_Minnesota" },
+                    { 2L, true, 192L, "Horry", "Myrtle Beach", "https://en.wikipedia.org/wiki/Myrtle_Beach,_South_Carolina" }
                 });
 
             migrationBuilder.InsertData(
@@ -579,6 +659,7 @@ namespace Eyon.DataAccess.Migrations
                 columns: new[] { "Id", "Code", "CountryId", "LocalName", "Name", "Type" },
                 values: new object[,]
                 {
+                    { 266L, "TA", 87L, "Taranto", "Taranto", "Province" },
                     { 285L, "AOMORI-KEN", 89L, "Aomori", "Aomori", "Prefecture" },
                     { 284L, "AKITA-KEN", 89L, "Akita", "Akita", "Prefecture" },
                     { 283L, "AICHI-KEN", 89L, "Aichi", "Aichi", "Prefecture" },
@@ -589,8 +670,7 @@ namespace Eyon.DataAccess.Migrations
                     { 278L, "VC", 87L, "Vercelli", "Vercelli", "Province" },
                     { 277L, "VB", 87L, "Verbano-Cusio-Ossola", "Verbano-Cusio-Ossola", "Province" },
                     { 276L, "VE", 87L, "Venezia", "Venezia", "Province" },
-                    { 275L, "VA", 87L, "Varese", "Varese", "Province" },
-                    { 274L, "UD", 87L, "Udine", "Udine", "Province" },
+                    { 286L, "CHIBA-KEN", 89L, "Chiba", "Chiba", "Prefecture" },
                     { 273L, "TS", 87L, "Trieste", "Trieste", "Province" },
                     { 272L, "TV", 87L, "Treviso", "Treviso", "Province" },
                     { 271L, "TN", 87L, "Trento", "Trento", "Province" },
@@ -598,10 +678,8 @@ namespace Eyon.DataAccess.Migrations
                     { 269L, "TO", 87L, "Torino", "Torino", "Province" },
                     { 268L, "TR", 87L, "Terni", "Terni", "Province" },
                     { 267L, "TE", 87L, "Teramo", "Teramo", "Province" },
-                    { 266L, "TA", 87L, "Taranto", "Taranto", "Province" },
-                    { 265L, "SO", 87L, "Sondrio", "Sondrio", "Province" },
-                    { 286L, "CHIBA-KEN", 89L, "Chiba", "Chiba", "Prefecture" },
-                    { 287L, "EHIME-KEN", 89L, "Ehime", "Ehime", "Prefecture" },
+                    { 275L, "VA", 87L, "Varese", "Varese", "Province" },
+                    { 274L, "UD", 87L, "Udine", "Udine", "Province" },
                     { 288L, "FUKUI-KEN", 89L, "Fukui", "Fukui", "Prefecture" },
                     { 289L, "FUKUOKA-KEN", 89L, "Fukuoka", "Fukuoka", "Prefecture" },
                     { 311L, "NIIGATA-KEN", 89L, "Niigata", "Niigata", "Prefecture" },
@@ -614,7 +692,7 @@ namespace Eyon.DataAccess.Migrations
                     { 304L, "KYOTO-FU", 89L, "Kyoto", "Kyoto", "Prefecture" },
                     { 303L, "KUMAMOTO-KEN", 89L, "Kumamoto", "Kumamoto", "Prefecture" },
                     { 302L, "KOCHI-KEN", 89L, "Kochi", "Kochi", "Prefecture" },
-                    { 264L, "SR", 87L, "Siracusa", "Siracusa", "Province" },
+                    { 287L, "EHIME-KEN", 89L, "Ehime", "Ehime", "Prefecture" },
                     { 301L, "KANAGAWA-KEN", 89L, "Kanagawa", "Kanagawa", "Prefecture" },
                     { 299L, "KAGAWA-KEN", 89L, "Kagawa", "Kagawa", "Prefecture" },
                     { 298L, "IWATE-KEN", 89L, "Iwate", "Iwate", "Prefecture" },
@@ -627,9 +705,10 @@ namespace Eyon.DataAccess.Migrations
                     { 291L, "GIFU-KEN", 89L, "Gifu", "Gifu", "Prefecture" },
                     { 290L, "FUKUSHIMA-KEN", 89L, "Fukushima", "Fukushima", "Prefecture" },
                     { 300L, "KAGOSHIMA-KEN", 89L, "Kagoshima", "Kagoshima", "Prefecture" },
-                    { 213L, "GR", 87L, "Grosseto", "Grosseto", "Province" },
+                    { 265L, "SO", 87L, "Sondrio", "Sondrio", "Province" },
+                    { 264L, "SR", 87L, "Siracusa", "Siracusa", "Province" },
                     { 263L, "SI", 87L, "Siena", "Siena", "Province" },
-                    { 261L, "SS", 87L, "Sassari", "Sassari", "Province" },
+                    { 235L, "NU", 87L, "Nuoro", "Nuoro", "Province" },
                     { 234L, "NO", 87L, "Novara", "Novara", "Province" },
                     { 233L, "NA", 87L, "Napoli", "Napoli", "Province" },
                     { 232L, "MB", 87L, "Monza e della Brianza", "Monza e della Brianza", "Province" },
@@ -639,8 +718,8 @@ namespace Eyon.DataAccess.Migrations
                     { 228L, "VS", 87L, "Medio Campidano", "Medio Campidano", "Province" },
                     { 227L, "MT", 87L, "Matera", "Matera", "Province" },
                     { 226L, "MS", 87L, "Massa-Carrara", "Massa-Carrara", "Province" },
+                    { 236L, "OG", 87L, "Ogliastra", "Ogliastra", "Province" },
                     { 225L, "MN", 87L, "Mantova", "Mantova", "Province" },
-                    { 224L, "MC", 87L, "Macerata", "Macerata", "Province" },
                     { 223L, "LU", 87L, "Lucca", "Lucca", "Province" },
                     { 222L, "LO", 87L, "Lodi", "Lodi", "Province" },
                     { 221L, "LI", 87L, "Livorno", "Livorno", "Province" },
@@ -651,10 +730,12 @@ namespace Eyon.DataAccess.Migrations
                     { 216L, "AQ", 87L, "L'Aquila", "L'Aquila", "Province" },
                     { 215L, "IS", 87L, "Isernia", "Isernia", "Province" },
                     { 214L, "IM", 87L, "Imperia", "Imperia", "Province" },
-                    { 235L, "NU", 87L, "Nuoro", "Nuoro", "Province" },
-                    { 236L, "OG", 87L, "Ogliastra", "Ogliastra", "Province" },
+                    { 224L, "MC", 87L, "Macerata", "Macerata", "Province" },
                     { 237L, "OT", 87L, "Olbia-Tempio", "Olbia-Tempio", "Province" },
                     { 238L, "OR", 87L, "Oristano", "Oristano", "Province" },
+                    { 239L, "PD", 87L, "Padova", "Padova", "Province" },
+                    { 262L, "SV", 87L, "Savona", "Savona", "Province" },
+                    { 261L, "SS", 87L, "Sassari", "Sassari", "Province" },
                     { 260L, "SA", 87L, "Salerno", "Salerno", "Province" },
                     { 259L, "RO", 87L, "Rovigo", "Rovigo", "Province" },
                     { 258L, "RM", 87L, "Roma", "Roma", "Province" },
@@ -665,8 +746,8 @@ namespace Eyon.DataAccess.Migrations
                     { 253L, "RA", 87L, "Ravenna", "Ravenna", "Province" },
                     { 252L, "RG", 87L, "Ragusa", "Ragusa", "Province" },
                     { 251L, "PO", 87L, "Prato", "Prato", "Province" },
-                    { 312L, "OITA-KEN", 89L, "Oita", "Oita", "Prefecture" },
                     { 250L, "PZ", 87L, "Potenza", "Potenza", "Province" },
+                    { 249L, "PN", 87L, "Pordenone", "Pordenone", "Province" },
                     { 248L, "PT", 87L, "Pistoia", "Pistoia", "Province" },
                     { 247L, "PI", 87L, "Pisa", "Pisa", "Province" },
                     { 246L, "PC", 87L, "Piacenza", "Piacenza", "Province" },
@@ -676,10 +757,9 @@ namespace Eyon.DataAccess.Migrations
                     { 242L, "PV", 87L, "Pavia", "Pavia", "Province" },
                     { 241L, "PR", 87L, "Parma", "Parma", "Province" },
                     { 240L, "PA", 87L, "Palermo", "Palermo", "Province" },
-                    { 239L, "PD", 87L, "Padova", "Padova", "Province" },
-                    { 249L, "PN", 87L, "Pordenone", "Pordenone", "Province" },
-                    { 262L, "SV", 87L, "Savona", "Savona", "Province" },
-                    { 314L, "OKINAWA-KEN", 89L, "Okinawa", "Okinawa", "Prefecture" },
+                    { 312L, "OITA-KEN", 89L, "Oita", "Oita", "Prefecture" },
+                    { 313L, "OKAYAMA-KEN", 89L, "Okayama", "Okayama", "Prefecture" },
+                    { 316L, "SAGA-KEN", 89L, "Saga", "Saga", "Prefecture" },
                     { 315L, "OSAKA-FU", 89L, "Osaka", "Osaka", "Prefecture" },
                     { 388L, "MO", 192L, "Missouri", "Missouri", "State" },
                     { 387L, "MS", 192L, "Mississippi", "Mississippi", "State" },
@@ -729,8 +809,8 @@ namespace Eyon.DataAccess.Migrations
                     { 394L, "NM", 192L, "New Mexico", "New Mexico", "State" },
                     { 393L, "NJ", 192L, "New Jersey", "New Jersey", "State" },
                     { 403L, "RI", 192L, "Rhode Island", "Rhode Island", "State" },
+                    { 314L, "OKINAWA-KEN", 89L, "Okinawa", "Okinawa", "Prefecture" },
                     { 366L, "AR", 192L, "Arkansas", "Arkansas", "State" },
-                    { 365L, "AZ", 192L, "Arizona", "Arizona", "State" },
                     { 364L, "AK", 192L, "Alaska", "Alaska", "State" },
                     { 337L, "COAH", 114L, "Coahuila", "Coahuila", "State" },
                     { 336L, "CDMX", 114L, "Ciudad de México", "Ciudad de México", "State" },
@@ -742,8 +822,8 @@ namespace Eyon.DataAccess.Migrations
                     { 330L, "AGS", 114L, "Aguascalientes", "Aguascalientes", "State" },
                     { 329L, "YAMANASHI-KEN", 89L, "Yamanashi", "Yamanashi", "Prefecture" },
                     { 328L, "YAMAGUCHI-KEN", 89L, "Yamaguchi", "Yamaguchi", "Prefecture" },
-                    { 338L, "COL", 114L, "Colima", "Colima", "State" },
                     { 327L, "YAMAGATA-KEN", 89L, "Yamagata", "Yamagata", "Prefecture" },
+                    { 326L, "WAKAYAMA-KEN", 89L, "Wakayama", "Wakayama", "Prefecture" },
                     { 325L, "TOYAMA-KEN", 89L, "Toyama", "Toyama", "Prefecture" },
                     { 324L, "TOTTORI-KEN", 89L, "Tottori", "Tottori", "Prefecture" },
                     { 323L, "TOKYO-TO", 89L, "Tokyo", "Tokyo", "Prefecture" },
@@ -751,12 +831,11 @@ namespace Eyon.DataAccess.Migrations
                     { 321L, "TOCHIGI-KEN", 89L, "Tochigi", "Tochigi", "Prefecture" },
                     { 320L, "SHIZUOKA-KEN", 89L, "Shizuoka", "Shizuoka", "Prefecture" },
                     { 319L, "SHIMANE-KEN", 89L, "Shimane", "Shimane", "Prefecture" },
-                    { 318L, "SHIGA-KEN", 89L, "Shiga", "Shiga", "Prefecture" },
+                    { 213L, "GR", 87L, "Grosseto", "Grosseto", "Province" },
                     { 317L, "SAITAMA-KEN", 89L, "Saitama", "Saitama", "Prefecture" },
-                    { 212L, "GO", 87L, "Gorizia", "Gorizia", "Province" },
-                    { 326L, "WAKAYAMA-KEN", 89L, "Wakayama", "Wakayama", "Prefecture" },
-                    { 313L, "OKAYAMA-KEN", 89L, "Okayama", "Okayama", "Prefecture" },
+                    { 338L, "COL", 114L, "Colima", "Colima", "State" },
                     { 339L, "DF", 114L, "Distrito Federal", "Distrito Federal", "State" },
+                    { 340L, "DGO", 114L, "Durango", "Durango", "State" },
                     { 341L, "MEX", 114L, "Estado de México", "Estado de México", "State" },
                     { 363L, "AL", 192L, "Alabama", "Alabama", "State" },
                     { 362L, "ZAC", 114L, "Zacatecas", "Zacatecas", "State" },
@@ -768,7 +847,7 @@ namespace Eyon.DataAccess.Migrations
                     { 356L, "SON", 114L, "Sonora", "Sonora", "State" },
                     { 355L, "SIN", 114L, "Sinaloa", "Sinaloa", "State" },
                     { 354L, "SLP", 114L, "San Luis Potosí", "San Luis Potosí", "State" },
-                    { 340L, "DGO", 114L, "Durango", "Durango", "State" },
+                    { 365L, "AZ", 192L, "Arizona", "Arizona", "State" },
                     { 353L, "Q ROO", 114L, "Quintana Roo", "Quintana Roo", "State" },
                     { 351L, "PUE", 114L, "Puebla", "Puebla", "State" },
                     { 350L, "OAX", 114L, "Oaxaca", "Oaxaca", "State" },
@@ -781,9 +860,9 @@ namespace Eyon.DataAccess.Migrations
                     { 343L, "GRO", 114L, "Guerrero", "Guerrero", "State" },
                     { 342L, "GTO", 114L, "Guanajuato", "Guanajuato", "State" },
                     { 352L, "QRO", 114L, "Querétaro", "Querétaro", "State" },
-                    { 316L, "SAGA-KEN", 89L, "Saga", "Saga", "Prefecture" },
-                    { 211L, "GE", 87L, "Genova", "Genova", "Province" },
-                    { 209L, "FC", 87L, "Forlì-Cesena", "Forlì-Cesena", "Province" },
+                    { 318L, "SHIGA-KEN", 89L, "Shiga", "Shiga", "Prefecture" },
+                    { 212L, "GO", 87L, "Gorizia", "Gorizia", "Province" },
+                    { 210L, "FR", 87L, "Frosinone", "Frosinone", "Province" },
                     { 76L, "CN-HI", 38L, "海南省 (Hǎinán Shěng)", "Hainan Sheng", "Province" },
                     { 75L, "CN-HE", 38L, "河北省 (Héběi Shěng)", "Hebei Sheng", "Province" },
                     { 74L, "CN-HB", 38L, "湖北省 (Húběi Shěng)", "Hubei Sheng", "Province" },
@@ -807,9 +886,10 @@ namespace Eyon.DataAccess.Migrations
                     { 56L, "NL", 33L, "Newfoundland and Labrador", "Newfoundland and Labrador", "Province" },
                     { 55L, "NB", 33L, "New Brunswick", "New Brunswick", "Province" },
                     { 65L, "CN-AH", 38L, "安徽省 (Ānhuī Shěng)", "Anhui Sheng", "Province" },
-                    { 54L, "MB", 33L, "Manitoba", "Manitoba", "Province" },
                     { 78L, "", 38L, "Xianggang Tebiexingzhengqu (zh)", "Xianggang Tebiexingzhengqu (zh)", "Province" },
+                    { 79L, "CN-HL", 38L, "黑龙江省 (Hēilóngjiāng Shěng)", "Heilongjiang Sheng", "Province" },
                     { 80L, "CN-HN", 38L, "湖南省 (Húnán Shěng)", "Hunan Sheng", "Province" },
+                    { 103L, "Andhra Pradesh", 83L, "Andhra Pradesh", "Andhra Pradesh", "State" },
                     { 102L, "Andaman and Nicobar Islands", 83L, "Andaman and Nicobar Islands", "Andaman and Nicobar Islands", "State" },
                     { 101L, "CN-ZJ", 38L, "浙江省 (Zhèjiāng Shěng)", "Zhejiang Sheng", "Province" },
                     { 100L, "CN-YN", 38L, "云南省 (Yúnnán Shěng)", "Yunnan Sheng", "Province" },
@@ -820,8 +900,8 @@ namespace Eyon.DataAccess.Migrations
                     { 95L, "CN-SX", 38L, "山西省 (Shānxī Shěng)", "Shanxi Sheng", "Province" },
                     { 94L, "CN-SN", 38L, "陕西省 (Shǎnxī Shěng)", "Shaanxi Sheng", "Province" },
                     { 93L, "CN-SH", 38L, "上海市 (Shànghǎi Shì)", "Shanghai Shi", "Municipality" },
-                    { 79L, "CN-HL", 38L, "黑龙江省 (Hēilóngjiāng Shěng)", "Heilongjiang Sheng", "Province" },
                     { 92L, "CN-SD", 38L, "山东省 (Shāndōng Shěng)", "Shandong Sheng", "Province" },
+                    { 91L, "CN-SC", 38L, "四川省 (Sìchuān Shěng)", "Sichuan Sheng", "Province" },
                     { 90L, "CN-QH", 38L, "青海省 (Qīnghǎi Shěng)", "Qinghai Sheng", "Province" },
                     { 89L, "CN-NX", 38L, "宁夏回族自治区 (Níngxià Huízú Zìzhìqū)", "Ningxia Huizu Zizhiqu", "Autonomous region" },
                     { 88L, "CN-NM", 38L, "内蒙古自治区 (Nèi Ménggǔ Zìzhìqū)", "Nei Mongol Zizhiqu (mn)", "Autonomous region" },
@@ -832,9 +912,9 @@ namespace Eyon.DataAccess.Migrations
                     { 83L, "CN-JX", 38L, "江西省 (Jiāngxī Shěng)", "Jiangxi Sheng", "Province" },
                     { 82L, "CN-JS", 38L, "江苏省 (Jiāngsū Shěng)", "Jiangsu Sheng", "Province" },
                     { 81L, "CN-JL", 38L, "吉林省 (Jílín Shěng)", "Jilin Sheng", "Province" },
-                    { 91L, "CN-SC", 38L, "四川省 (Sìchuān Shěng)", "Sichuan Sheng", "Province" },
+                    { 54L, "MB", 33L, "Manitoba", "Manitoba", "Province" },
+                    { 104L, "APO", 83L, "Army Post Office", "Army Post Office", "State" },
                     { 53L, "BC", 33L, "British Columbia", "British Columbia", "Province" },
-                    { 52L, "AB", 33L, "Alberta", "Alberta", "Province" },
                     { 51L, "TO", 25L, "Tocantins", "Tocantins", "State" },
                     { 23L, "TIERRA DEL FUEGO", 7L, "Tierra del Fuego", "Tierra del Fuego", "Province" },
                     { 22L, "SANTIAGO DEL ESTERO", 7L, "Santiago del Estero", "Santiago del Estero", "Province" },
@@ -885,10 +965,11 @@ namespace Eyon.DataAccess.Migrations
                     { 30L, "CE", 25L, "Ceará", "Ceará", "State" },
                     { 29L, "BA", 25L, "Bahia", "Bahia", "State" },
                     { 28L, "AM", 25L, "Amazonas", "Amazonas", "State" },
-                    { 103L, "Andhra Pradesh", 83L, "Andhra Pradesh", "Andhra Pradesh", "State" },
-                    { 104L, "APO", 83L, "Army Post Office", "Army Post Office", "State" },
+                    { 52L, "AB", 33L, "Alberta", "Alberta", "Province" },
+                    { 211L, "GE", 87L, "Genova", "Genova", "Province" },
                     { 105L, "Arunachal Pradesh", 83L, "Arunachal Pradesh", "Arunachal Pradesh", "State" },
-                    { 106L, "Assam", 83L, "Assam", "Assam", "State" },
+                    { 107L, "Bihar", 83L, "Bihar", "Bihar", "State" },
+                    { 182L, "BT", 87L, "Barletta-Andria-Trani", "Barletta-Andria-Trani", "Province" },
                     { 181L, "BA", 87L, "Bari", "Bari", "Province" },
                     { 180L, "AV", 87L, "Avellino", "Avellino", "Province" },
                     { 179L, "AT", 87L, "Asti", "Asti", "Province" },
@@ -898,9 +979,9 @@ namespace Eyon.DataAccess.Migrations
                     { 175L, "AN", 87L, "Ancona", "Ancona", "Province" },
                     { 174L, "AL", 87L, "Alessandria", "Alessandria", "Province" },
                     { 173L, "AG", 87L, "Agrigento", "Agrigento", "Province" },
+                    { 183L, "BL", 87L, "Belluno", "Belluno", "Province" },
                     { 172L, "ID-SU", 84L, "Sumatera Utara", "Sumatera Utara", "Province" },
-                    { 182L, "BT", 87L, "Barletta-Andria-Trani", "Barletta-Andria-Trani", "Province" },
-                    { 171L, "ID-SS", 84L, "Sumatera Selatan", "Sumatera Selatan", "Province" },
+                    { 170L, "ID-SB", 84L, "Sumatera Barat", "Sumatera Barat", "Province" },
                     { 169L, "ID-SA", 84L, "Sulawesi Utara", "Sulawesi Utara", "Province" },
                     { 168L, "ID-SG", 84L, "Sulawesi Tenggara", "Sulawesi Tenggara", "Province" },
                     { 167L, "ID-ST", 84L, "Sulawesi Tengah", "Sulawesi Tengah", "Province" },
@@ -910,20 +991,16 @@ namespace Eyon.DataAccess.Migrations
                     { 163L, "ID-PB", 84L, "Papua Barat", "Papua Barat", "Province" },
                     { 162L, "ID-PA", 84L, "Papua", "Papua", "Province" },
                     { 161L, "ID-NT", 84L, "Nusa Tenggara Timur", "Nusa Tenggara Timur", "Province" },
-                    { 160L, "ID-NB", 84L, "Nusa Tenggara Barat", "Nusa Tenggara Barat", "Province" },
-                    { 170L, "ID-SB", 84L, "Sumatera Barat", "Sumatera Barat", "Province" },
-                    { 183L, "BL", 87L, "Belluno", "Belluno", "Province" },
+                    { 171L, "ID-SS", 84L, "Sumatera Selatan", "Sumatera Selatan", "Province" },
                     { 184L, "BN", 87L, "Benevento", "Benevento", "Province" },
                     { 185L, "BG", 87L, "Bergamo", "Bergamo", "Province" },
+                    { 186L, "BI", 87L, "Biella", "Biella", "Province" },
+                    { 209L, "FC", 87L, "Forlì-Cesena", "Forlì-Cesena", "Province" },
                     { 208L, "FG", 87L, "Foggia", "Foggia", "Province" },
                     { 207L, "FI", 87L, "Firenze", "Firenze", "Province" },
                     { 206L, "FE", 87L, "Ferrara", "Ferrara", "Province" },
                     { 205L, "FM", 87L, "Fermo", "Fermo", "Province" },
-                    { 204L, "EN", 87L, "Enna", "Enna", "Province" },
-                    { 203L, "CN", 87L, "Cuneo", "Cuneo", "Province" },
-                    { 202L, "KR", 87L, "Crotone", "Crotone", "Province" },
-                    { 201L, "CR", 87L, "Cremona", "Cremona", "Province" },
-                    { 200L, "CS", 87L, "Cosenza", "Cosenza", "Province" }
+                    { 204L, "EN", 87L, "Enna", "Enna", "Province" }
                 });
 
             migrationBuilder.InsertData(
@@ -931,6 +1008,10 @@ namespace Eyon.DataAccess.Migrations
                 columns: new[] { "Id", "Code", "CountryId", "LocalName", "Name", "Type" },
                 values: new object[,]
                 {
+                    { 203L, "CN", 87L, "Cuneo", "Cuneo", "Province" },
+                    { 202L, "KR", 87L, "Crotone", "Crotone", "Province" },
+                    { 201L, "CR", 87L, "Cremona", "Cremona", "Province" },
+                    { 200L, "CS", 87L, "Cosenza", "Cosenza", "Province" },
                     { 199L, "CO", 87L, "Como", "Como", "Province" },
                     { 198L, "CH", 87L, "Chieti", "Chieti", "Province" },
                     { 197L, "CZ", 87L, "Catanzaro", "Catanzaro", "Province" },
@@ -944,11 +1025,11 @@ namespace Eyon.DataAccess.Migrations
                     { 189L, "BS", 87L, "Brescia", "Brescia", "Province" },
                     { 188L, "BZ", 87L, "Bolzano", "Bolzano", "Province" },
                     { 187L, "BO", 87L, "Bologna", "Bologna", "Province" },
-                    { 186L, "BI", 87L, "Biella", "Biella", "Province" },
+                    { 160L, "ID-NB", 84L, "Nusa Tenggara Barat", "Nusa Tenggara Barat", "Province" },
+                    { 106L, "Assam", 83L, "Assam", "Assam", "State" },
                     { 159L, "ID-AC", 84L, "Nanggroe Aceh Darussalam", "Nanggroe Aceh Darussalam", "Province" },
-                    { 210L, "FR", 87L, "Frosinone", "Frosinone", "Province" },
-                    { 158L, "ID-MU", 84L, "Maluku Utara", "Maluku Utara", "Province" },
-                    { 156L, "ID-LA", 84L, "Lampung", "Lampung", "Province" },
+                    { 157L, "ID-MA", 84L, "Maluku", "Maluku", "Province" },
+                    { 129L, "Puducherry", 83L, "Puducherry", "Puducherry", "State" },
                     { 128L, "Odisha", 83L, "Odisha", "Odisha", "State" },
                     { 127L, "Nagaland", 83L, "Nagaland", "Nagaland", "State" },
                     { 126L, "Mizoram", 83L, "Mizoram", "Mizoram", "State" },
@@ -958,9 +1039,9 @@ namespace Eyon.DataAccess.Migrations
                     { 122L, "Madhya Pradesh", 83L, "Madhya Pradesh", "Madhya Pradesh", "State" },
                     { 121L, "Lakshadweep", 83L, "Lakshadweep", "Lakshadweep", "State" },
                     { 120L, "Kerala", 83L, "Kerala", "Kerala", "State" },
+                    { 130L, "Punjab", 83L, "Punjab", "Punjab", "State" },
                     { 119L, "Karnataka", 83L, "Karnataka", "Karnataka", "State" },
-                    { 129L, "Puducherry", 83L, "Puducherry", "Puducherry", "State" },
-                    { 118L, "Jharkhand", 83L, "Jharkhand", "Jharkhand", "State" },
+                    { 117L, "Jammu and Kashmir", 83L, "Jammu and Kashmir", "Jammu and Kashmir", "State" },
                     { 116L, "Himachal Pradesh", 83L, "Himachal Pradesh", "Himachal Pradesh", "State" },
                     { 115L, "Haryana", 83L, "Haryana", "Haryana", "State" },
                     { 114L, "Gujarat", 83L, "Gujarat", "Gujarat", "State" },
@@ -970,11 +1051,11 @@ namespace Eyon.DataAccess.Migrations
                     { 110L, "Dadra and Nagar Haveli", 83L, "Dadra and Nagar Haveli", "Dadra and Nagar Haveli", "State" },
                     { 109L, "Chhattisgarh", 83L, "Chhattisgarh", "Chhattisgarh", "State" },
                     { 108L, "Chandigarh", 83L, "Chandigarh", "Chandigarh", "State" },
-                    { 107L, "Bihar", 83L, "Bihar", "Bihar", "State" },
-                    { 117L, "Jammu and Kashmir", 83L, "Jammu and Kashmir", "Jammu and Kashmir", "State" },
-                    { 130L, "Punjab", 83L, "Punjab", "Punjab", "State" },
+                    { 118L, "Jharkhand", 83L, "Jharkhand", "Jharkhand", "State" },
                     { 131L, "Rajasthan", 83L, "Rajasthan", "Rajasthan", "State" },
                     { 132L, "Sikkim", 83L, "Sikkim", "Sikkim", "State" },
+                    { 133L, "Tamil Nadu", 83L, "Tamil Nadu", "Tamil Nadu", "State" },
+                    { 156L, "ID-LA", 84L, "Lampung", "Lampung", "Province" },
                     { 155L, "ID-KR", 84L, "Kepulauan Riau", "Kepulauan Riau", "Province" },
                     { 154L, "ID-KU", 84L, "Kalimantan Utara", "Kalimantan Utara", "Province" },
                     { 153L, "ID-KI", 84L, "Kalimantan Timur", "Kalimantan Timur", "Province" },
@@ -997,10 +1078,24 @@ namespace Eyon.DataAccess.Migrations
                     { 136L, "Uttar Pradesh", 83L, "Uttar Pradesh", "Uttar Pradesh", "State" },
                     { 135L, "Tripura", 83L, "Tripura", "Tripura", "State" },
                     { 134L, "Telangana", 83L, "Telangana", "Telangana", "State" },
-                    { 133L, "Tamil Nadu", 83L, "Tamil Nadu", "Tamil Nadu", "State" },
-                    { 157L, "ID-MA", 84L, "Maluku", "Maluku", "Province" },
+                    { 158L, "ID-MU", 84L, "Maluku Utara", "Maluku Utara", "Province" },
                     { 1L, "CIUDAD AUTÓNOMA DE BUENOS AIRES", 7L, "Buenos Aires (Ciudad)", "Buenos Aires (Ciudad)", "Province" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "CommunityState",
+                columns: new[] { "CommunityId", "StateId" },
+                values: new object[] { 1L, 367L });
+
+            migrationBuilder.InsertData(
+                table: "CommunityState",
+                columns: new[] { "CommunityId", "StateId" },
+                values: new object[] { 3L, 386L });
+
+            migrationBuilder.InsertData(
+                table: "CommunityState",
+                columns: new[] { "CommunityId", "StateId" },
+                values: new object[] { 2L, 404L });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -1079,6 +1174,16 @@ namespace Eyon.DataAccess.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrganizationCommunities_CommunityId",
+                table: "OrganizationCommunities",
+                column: "CommunityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrganizationCookbooks_CookbookId",
+                table: "OrganizationCookbooks",
+                column: "CookbookId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_State_CountryId",
                 table: "State",
                 column: "CountryId");
@@ -1111,13 +1216,16 @@ namespace Eyon.DataAccess.Migrations
                 name: "CookbookCategories");
 
             migrationBuilder.DropTable(
+                name: "OrganizationCommunities");
+
+            migrationBuilder.DropTable(
+                name: "OrganizationCookbooks");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Community");
 
             migrationBuilder.DropTable(
                 name: "State");
@@ -1126,13 +1234,19 @@ namespace Eyon.DataAccess.Migrations
                 name: "Category");
 
             migrationBuilder.DropTable(
+                name: "Community");
+
+            migrationBuilder.DropTable(
                 name: "Cookbook");
 
             migrationBuilder.DropTable(
-                name: "Country");
+                name: "Organization");
 
             migrationBuilder.DropTable(
                 name: "SiteImage");
+
+            migrationBuilder.DropTable(
+                name: "Country");
         }
     }
 }

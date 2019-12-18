@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Eyon.Models.Relationship
 {
-    public class OrganizationsCommunities
+    public class OrganizationCommunities
     {        
         public long CommunityId { get; set; }
         [ForeignKey("CommunityId")]

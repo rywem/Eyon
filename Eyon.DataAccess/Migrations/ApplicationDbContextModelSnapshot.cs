@@ -1456,21 +1456,6 @@ namespace Eyon.DataAccess.Migrations
                     b.ToTable("CommunityCookbooks");
                 });
 
-            modelBuilder.Entity("Eyon.Models.Relationship.CommunityOrganizations", b =>
-                {
-                    b.Property<long>("OrganizationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("CommunityId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("OrganizationId", "CommunityId");
-
-                    b.HasIndex("CommunityId");
-
-                    b.ToTable("CommunityOrganizations");
-                });
-
             modelBuilder.Entity("Eyon.Models.Relationship.CommunityState", b =>
                 {
                     b.Property<long>("CommunityId")
@@ -1521,19 +1506,19 @@ namespace Eyon.DataAccess.Migrations
                     b.ToTable("CookbookCategories");
                 });
 
-            modelBuilder.Entity("Eyon.Models.Relationship.OrganizationApplicationUser", b =>
+            modelBuilder.Entity("Eyon.Models.Relationship.OrganizationCommunities", b =>
                 {
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<long>("OrganizationId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("ApplicationUserId", "OrganizationId");
+                    b.Property<long>("CommunityId")
+                        .HasColumnType("bigint");
 
-                    b.HasIndex("OrganizationId");
+                    b.HasKey("OrganizationId", "CommunityId");
 
-                    b.ToTable("OrganizationApplicationUser");
+                    b.HasIndex("CommunityId");
+
+                    b.ToTable("OrganizationCommunities");
                 });
 
             modelBuilder.Entity("Eyon.Models.Relationship.OrganizationCookbooks", b =>
@@ -5651,21 +5636,6 @@ namespace Eyon.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Eyon.Models.Relationship.CommunityOrganizations", b =>
-                {
-                    b.HasOne("Eyon.Models.Community", "Community")
-                        .WithMany("CommunityOrganizations")
-                        .HasForeignKey("CommunityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Eyon.Models.Organization", "Organization")
-                        .WithMany("CommunityOrganizations")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Eyon.Models.Relationship.CommunityState", b =>
                 {
                     b.HasOne("Eyon.Models.Community", "Community")
@@ -5696,16 +5666,16 @@ namespace Eyon.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Eyon.Models.Relationship.OrganizationApplicationUser", b =>
+            modelBuilder.Entity("Eyon.Models.Relationship.OrganizationCommunities", b =>
                 {
-                    b.HasOne("Eyon.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("OrganizationApplicationUsers")
-                        .HasForeignKey("ApplicationUserId")
+                    b.HasOne("Eyon.Models.Community", "Community")
+                        .WithMany("OrganizationCommunities")
+                        .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Eyon.Models.Organization", "Organization")
-                        .WithMany("OrganizationApplicationUsers")
+                        .WithMany("OrganizationCommunities")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

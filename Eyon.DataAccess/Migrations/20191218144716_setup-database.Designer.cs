@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eyon.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191215144008_AddUserProperties")]
-    partial class AddUserProperties
+    [Migration("20191218144716_setup-database")]
+    partial class setupdatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.1")
+                .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -129,6 +129,35 @@ namespace Eyon.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Community");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Active = true,
+                            CountryId = 192L,
+                            County = "Plumas",
+                            Name = "Quincy",
+                            WikipediaURL = "https://en.wikipedia.org/wiki/Quincy,_California"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Active = true,
+                            CountryId = 192L,
+                            County = "Horry",
+                            Name = "Myrtle Beach",
+                            WikipediaURL = "https://en.wikipedia.org/wiki/Myrtle_Beach,_South_Carolina"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Active = true,
+                            CountryId = 192L,
+                            County = "Itasca",
+                            Name = "Deer River",
+                            WikipediaURL = "https://en.wikipedia.org/wiki/Deer_River,_Minnesota"
+                        });
                 });
 
             modelBuilder.Entity("Eyon.Models.Cookbook", b =>
@@ -1387,6 +1416,33 @@ namespace Eyon.DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Eyon.Models.Organization", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Website")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Organization");
+                });
+
             modelBuilder.Entity("Eyon.Models.Relationship.CommunityCookbooks", b =>
                 {
                     b.Property<long>("CookbookId")
@@ -1418,6 +1474,23 @@ namespace Eyon.DataAccess.Migrations
                     b.HasIndex("StateId");
 
                     b.ToTable("CommunityState");
+
+                    b.HasData(
+                        new
+                        {
+                            CommunityId = 1L,
+                            StateId = 367L
+                        },
+                        new
+                        {
+                            CommunityId = 3L,
+                            StateId = 386L
+                        },
+                        new
+                        {
+                            CommunityId = 2L,
+                            StateId = 404L
+                        });
                 });
 
             modelBuilder.Entity("Eyon.Models.Relationship.CookbookCategories", b =>
@@ -1433,6 +1506,36 @@ namespace Eyon.DataAccess.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("CookbookCategories");
+                });
+
+            modelBuilder.Entity("Eyon.Models.Relationship.OrganizationCommunities", b =>
+                {
+                    b.Property<long>("OrganizationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CommunityId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("OrganizationId", "CommunityId");
+
+                    b.HasIndex("CommunityId");
+
+                    b.ToTable("OrganizationCommunities");
+                });
+
+            modelBuilder.Entity("Eyon.Models.Relationship.OrganizationCookbooks", b =>
+                {
+                    b.Property<long>("OrganizationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CookbookId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("OrganizationId", "CookbookId");
+
+                    b.HasIndex("CookbookId");
+
+                    b.ToTable("OrganizationCookbooks");
                 });
 
             modelBuilder.Entity("Eyon.Models.SiteImage", b =>
@@ -5561,6 +5664,36 @@ namespace Eyon.DataAccess.Migrations
                     b.HasOne("Eyon.Models.Cookbook", "Cookbook")
                         .WithMany("CookbookCategories")
                         .HasForeignKey("CookbookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Eyon.Models.Relationship.OrganizationCommunities", b =>
+                {
+                    b.HasOne("Eyon.Models.Community", "Community")
+                        .WithMany("OrganizationCommunities")
+                        .HasForeignKey("CommunityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Eyon.Models.Organization", "Organization")
+                        .WithMany("OrganizationCommunities")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Eyon.Models.Relationship.OrganizationCookbooks", b =>
+                {
+                    b.HasOne("Eyon.Models.Cookbook", "Cookbook")
+                        .WithMany("OrganizationCookbooks")
+                        .HasForeignKey("CookbookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Eyon.Models.Organization", "Organization")
+                        .WithMany("OrganizationCookbooks")
+                        .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

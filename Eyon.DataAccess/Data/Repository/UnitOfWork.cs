@@ -21,6 +21,8 @@ namespace Eyon.DataAccess.Data.Repository
 
         public ICommunityStateRepository CommunityState { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
+        public IOrganizationCommunitiesRepository OrganizationCommunities { get; private set; }
+        public IOrganizationCookbooksRepository OrganizationCookbooks { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -35,6 +37,8 @@ namespace Eyon.DataAccess.Data.Repository
             this.State = new StateRepository(this._db);
             this.ApplicationUser = new ApplicationUserRepository(this._db);
             this.CommunityState = new CommunityStateRepository(this._db);
+            this.OrganizationCommunities = new OrganizationCommunitiesRepository(this._db);
+            this.OrganizationCookbooks = new OrganizationCookbooksRepository(this._db);
         }
 
         public IDatabaseTransaction BeginTransaction()
