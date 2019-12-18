@@ -7,11 +7,13 @@ namespace Eyon.Models.Relationship
     /// </summary>
     public class OrganizationApplicationUser
     {
+        /*
         public long OrganizationId { get; set; }
         [ForeignKey("OrganizationId")]
         public Organization Organization { get; set; }
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
-        public ApplicationUser ApplicationUser { get; set; }        
+        public ApplicationUser ApplicationUser { get; set; }      
+        */
     }
 }

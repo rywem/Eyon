@@ -44,7 +44,7 @@ namespace Eyon.DataAccess.Data
                 .WithMany(cc => cc.CookbookCategories)
                 .HasForeignKey(cc => cc.CategoryId);
 
-            
+            /*
             modelBuilder.Entity<OrganizationApplicationUser>()
                 .HasKey(bc => new { bc.ApplicationUserId, bc.OrganizationId });
             modelBuilder.Entity<OrganizationApplicationUser>()
@@ -55,7 +55,7 @@ namespace Eyon.DataAccess.Data
                 .HasOne(x => x.Organization)
                 .WithMany(x => x.OrganizationApplicationUsers)
                 .HasForeignKey(x => x.OrganizationId);
-
+            */
             modelBuilder.Entity<OrganizationsCommunities>()
                 .HasKey(c => new { c.OrganizationId, c.CommunityId });
             modelBuilder.Entity<OrganizationsCommunities>()
