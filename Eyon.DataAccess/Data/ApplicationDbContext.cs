@@ -56,15 +56,15 @@ namespace Eyon.DataAccess.Data
                 .WithMany(x => x.OrganizationApplicationUsers)
                 .HasForeignKey(x => x.OrganizationId);
 
-            modelBuilder.Entity<CommunityOrganizations>()
+            modelBuilder.Entity<OrganizationsCommunities>()
                 .HasKey(c => new { c.OrganizationId, c.CommunityId });
-            modelBuilder.Entity<CommunityOrganizations>()
+            modelBuilder.Entity<OrganizationsCommunities>()
                 .HasOne(c => c.Community)
-                .WithMany(c => c.CommunityOrganizations)
+                .WithMany(c => c.OrganizationCommunities)
                 .HasForeignKey(c => c.CommunityId);
-            modelBuilder.Entity<CommunityOrganizations>()
+            modelBuilder.Entity<OrganizationsCommunities>()
                 .HasOne(c => c.Organization)
-                .WithMany(c => c.CommunityOrganizations)
+                .WithMany(c => c.OrganizationCommunities)
                 .HasForeignKey(c => c.OrganizationId);
             
             modelBuilder.Entity<OrganizationCookbooks>()
