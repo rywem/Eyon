@@ -774,6 +774,7 @@ namespace Eyon.DataAccess.Data
         public DbSet<Category> Category { get; set; }
         public DbSet<SiteImage> SiteImage { get; set; }
         public DbSet<Cookbook> Cookbook { get; set; }
+        public DbSet<Organization> Organization { get; set; }
 
         #region location tables
         public DbSet<Community> Community { get; set; }
@@ -788,11 +789,13 @@ namespace Eyon.DataAccess.Data
         public DbSet<CommunityCookbooks> CommunityCookbooks { get; set; }
         public DbSet<CookbookCategories> CookbookCategories { get; set; }
         public DbSet<CommunityState> CommunityState { get; set; }
+        public DbSet<Models.Relationship.OrganizationCookbooks> OrganizationCookbooks { get; set; }
+        public DbSet<Models.Relationship.OrganizationCommunities> OrganizationCommunities { get; set; }
         /*
-        public DbSet<Models.Relationship.CommunityOrganizations> CommunityOrganizations { get; set; }
+        
         public DbSet<Models.Relationship.CookbookRecipes> CookbookRecipes { get; set; }
         public DbSet<Models.Relationship.CookbookSiteImages> CookbookSiteImages { get; set; }
-        public DbSet<Models.Relationship.OrganizationCookbooks> OrganizationCookbooks { get; set; }
+        
         public DbSet<Models.Relationship.OrganizationRecipes> OrganizationRecipes { get; set; }
         public DbSet<Models.Relationship.RecipeSiteImages> RecipeSiteImages { get; set; }
         public DbSet<Models.Relationship.RecipeCategories> RecipeCategories { get; set; }

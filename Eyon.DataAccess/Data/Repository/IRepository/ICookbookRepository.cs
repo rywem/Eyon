@@ -2,8 +2,8 @@
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface ICookbookRepository : IRepository<Cookbook>
+    public interface IOrganizationRepository : IRepository<Organization>
     {        
-        void Update(Cookbook cookbook);
+        void Update(Organization organization);
     }    
 }
