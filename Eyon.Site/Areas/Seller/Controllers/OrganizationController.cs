@@ -72,5 +72,18 @@ namespace Eyon.Site.Areas.Seller.Controllers
             }
             return View(organizationViewModel);
         }
+
+        [HttpDelete]
+        public IActionResult Delete( long id )
+        {
+            throw new NotImplementedException();
+        }
+
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Json(new { data = _unitOfWork.Organization.GetAll() });
+        }
     }
 }

@@ -8,7 +8,7 @@ $(document).ready(function () {
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": {
-            "url": "/admin/community/GetAll",
+            "url": "/seller/organization/GetAll",
             "type": "GET",
             "datatype": "json"
         },
@@ -18,12 +18,14 @@ function loadDataTable() {
             {
                 "data": "website",
                 "render": function (data) {
-                    if (data !== '') {
+                    if (data !== null ) {
                         return ` <div class="badge badge-dark text-white">
-                                <a href="#"  onClick="window.open('${data}', '_blank')" class="inherit">View Wikipedia</a>
+                                <a href="#"  onClick="window.open('${data}', '_blank')" class="inherit">View Website</a>
                             </div>
                             `;
-                    }                    
+                    }
+                    else 
+                        return "<div />"
 
                 }, "width": "15%"
             },
@@ -31,11 +33,11 @@ function loadDataTable() {
                 "data": "id",
                 "render": function (data) {
                     return `<div class="text-center">
-                                <a href="/Admin/Community/Upsert/${data}" class='btn btn-success text-white' style='cursor:pointer; width:100px'>
+                                <a href="/Seller/Organization/Upsert/${data}" class='btn btn-success text-white' style='cursor:pointer; width:100px'>
                                     <i class='far fa-edit'></i> Edit
                                 </a>
                                 &nbsp;
-                                <a onclick=Delete("/Admin/Community/Delete/${data}") class='btn btn-danger text-white' style='cursor:pointer; width:100px'>
+                                <a onclick=Delete("/Seller/Organization/Delete/${data}") class='btn btn-danger text-white' style='cursor:pointer; width:100px'>
                                     <i class='far fa-trash-alt'></i> Delete
                                 </a>
                                 &nbsp;

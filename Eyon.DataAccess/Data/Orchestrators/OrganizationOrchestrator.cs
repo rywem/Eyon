@@ -30,7 +30,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 throw new WebUserSafeException("Organization already exists.");
 
             _unitOfWork.Organization.Add(organizationViewModel.Organization);
-
+            _unitOfWork.Save();
         }
 
         public void AddOrganizationTransaction( OrganizationViewModel organizationViewModel )
@@ -55,7 +55,29 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
         public void UpdateOrganizationTransaction( OrganizationViewModel organizationViewModel )
         {
-            throw new NotImplementedException();
+            using ( var transaction = _unitOfWork.BeginTransaction() )
+            {
+                try
+                {
+                    UpdateOrganization(organizationViewModel);
+
+                    transaction.Commit();
+                }
+                catch ( Exception exception )
+                {
+                    transaction.Rollback();
+                    throw exception;
+                }
+            }
+        }
+
+        public void UpdateOrganization( OrganizationViewModel organizationViewModel )
+        {
+            if ( organizationViewModel.Organization.Id == 0 )
+                throw new WebUserSafeException("Organization not found.");
+
+            _unitOfWork.Organization.Update(organizationViewModel.Organization);
+            _unitOfWork.Save();
         }
     }
 }
