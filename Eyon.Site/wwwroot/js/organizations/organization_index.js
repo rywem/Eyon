@@ -18,14 +18,14 @@ function loadDataTable() {
             {
                 "data": "website",
                 "render": function (data) {
-                    if (data !== null ) {
+                    if (data !== null) {
                         return ` <div class="badge badge-dark text-white">
                                 <a href="#"  onClick="window.open('${data}', '_blank')" class="inherit">View Website</a>
                             </div>
                             `;
                     }
-                    else 
-                        return "<div />"
+                    else
+                        return "<div />";
 
                 }, "width": "15%"
             },
