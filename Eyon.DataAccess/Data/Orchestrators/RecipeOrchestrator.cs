@@ -16,43 +16,43 @@ namespace Eyon.DataAccess.Data.Orchestrators
             this._unitOfWork = unitOfWork;
         }
 
-        public RecipeViewModel GetRecipeViewModel(long id)
+        public RecipeViewModel GetRecipeViewModel(long id, string currentApplicationUser)
         {
             RecipeViewModel recipeViewModel = new RecipeViewModel();
-            recipeViewModel.Recipe = _unitOfWork.Recipe.GetFirstOrDefault(x => x.Id == id,
-                includeProperties: "CommunityRecipe,CommunityRecipe.Community,Instructions,RecipeIngredient,RecipeIngredient.Ingredient,RecipeCategories,RecipesCategories.Category,CookbookRecipes,CookbookRecipes.Cookbook");
+            //recipeViewModel.Recipe = _unitOfWork.Recipe.GetFirstOrDefault(x => x.Id == id,
+            //    includeProperties: "CommunityRecipe,CommunityRecipe.Community,Instructions,RecipeIngredient,RecipeIngredient.Ingredient,RecipeCategories,RecipesCategories.Category,CookbookRecipes,CookbookRecipes.Cookbook");
+            
+            //if ( recipeViewModel.Recipe != null )
+            //{
+            //    if ( recipeViewModel.Recipe.CommunityRecipe != null )
+            //        recipeViewModel.Community = recipeViewModel.Recipe.CommunityRecipe.Community;
 
-            if ( recipeViewModel.Recipe != null )
-            {
-                if ( recipeViewModel.Recipe.CommunityRecipe != null )
-                    recipeViewModel.Community = recipeViewModel.Recipe.CommunityRecipe.Community;
-
-                if ( recipeViewModel.Recipe.Instructions != null && recipeViewModel.Recipe.Instructions.Count > 0)
-                    recipeViewModel.Instructions = recipeViewModel.Recipe.Instructions.ToList();
+            //    if ( recipeViewModel.Recipe.Instructions != null && recipeViewModel.Recipe.Instructions.Count > 0)
+            //        recipeViewModel.Instructions = recipeViewModel.Recipe.Instructions.ToList();
                 
-                if ( recipeViewModel.Recipe.RecipeIngredient != null && recipeViewModel.Recipe.RecipeIngredient.Count > 0)
-                    recipeViewModel.Ingredients = recipeViewModel.Recipe.RecipeIngredient.Select(x => x.Ingredient).ToList();
+            //    if ( recipeViewModel.Recipe.RecipeIngredient != null && recipeViewModel.Recipe.RecipeIngredient.Count > 0)
+            //        recipeViewModel.Ingredients = recipeViewModel.Recipe.RecipeIngredient.Select(x => x.Ingredient).ToList();
                 
-                if ( recipeViewModel.Recipe.RecipeCategories != null && recipeViewModel.Recipe.RecipeCategories.Count > 0)
-                    recipeViewModel.Categories = recipeViewModel.Recipe.RecipeCategories.Select(x => x.Category).ToList();
+            //    if ( recipeViewModel.Recipe.RecipeCategories != null && recipeViewModel.Recipe.RecipeCategories.Count > 0)
+            //        recipeViewModel.Categories = recipeViewModel.Recipe.RecipeCategories.Select(x => x.Category).ToList();
                 
-                if ( recipeViewModel.Recipe.RecipeSiteImages != null && recipeViewModel.Recipe.RecipeSiteImages.Count > 0 )
-                    recipeViewModel.RecipeSiteImages = recipeViewModel.Recipe.RecipeSiteImages.Select(x => x.SiteImage).ToList();
+            //    if ( recipeViewModel.Recipe.RecipeSiteImages != null && recipeViewModel.Recipe.RecipeSiteImages.Count > 0 )
+            //        recipeViewModel.RecipeSiteImages = recipeViewModel.Recipe.RecipeSiteImages.Select(x => x.SiteImage).ToList();
                 
-                if ( recipeViewModel.Recipe.CookbookRecipes != null && recipeViewModel.Recipe.CookbookRecipes.Count > 0 )
-                    recipeViewModel.Cookbooks = recipeViewModel.Recipe.CookbookRecipes.Select(x => x.Cookbook).ToList();
-            }
+            //    if ( recipeViewModel.Recipe.CookbookRecipes != null && recipeViewModel.Recipe.CookbookRecipes.Count > 0 )
+            //        recipeViewModel.Cookbooks = recipeViewModel.Recipe.CookbookRecipes.Select(x => x.Cookbook).ToList();
+            //}
             return recipeViewModel;
         }
     
         
-        public void AddRecipeTransaction( RecipeViewModel recipeViewModel )
+        public void AddRecipeTransaction( RecipeViewModel recipeViewModel, string currentApplicationUserId )
         {
             using ( var transaction = _unitOfWork.BeginTransaction() )
             {
                 try
                 {
-                    AddRecipe(recipeViewModel);
+                    AddRecipe(recipeViewModel, currentApplicationUserId);
                     transaction.Commit();
                 }
                 catch ( Exception ex )
@@ -63,7 +63,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             }
         }
 
-        public void AddRecipe(RecipeViewModel recipeViewModel)
+        public void AddRecipe(RecipeViewModel recipeViewModel, string currentApplicationUserId )
         {
 
         }

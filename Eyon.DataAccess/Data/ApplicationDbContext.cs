@@ -135,7 +135,7 @@ namespace Eyon.DataAccess.Data
 
 
             modelBuilder.Entity<ApplicationUserRecipe>()
-                .HasKey(c => new { c.RecipeId, c.ApplicationUserId});
+                .HasKey(c => new { c.ObjectId, c.ApplicationUserId});
             modelBuilder.Entity<ApplicationUserRecipe>()
                 .HasOne(c => c.ApplicationUser)
                 .WithMany(c => c.ApplicationUserRecipes)

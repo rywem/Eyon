@@ -13,6 +13,7 @@ namespace Eyon.Models.ViewModels
         public Community Community { get; set; }
         public List<SiteImage> RecipeSiteImages { get; set; }
         public List<Cookbook> Cookbooks { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
         
         public RecipeViewModel()
         {
@@ -23,6 +24,7 @@ namespace Eyon.Models.ViewModels
             this.Instructions = new List<Instruction>();
             this.RecipeSiteImages = new List<SiteImage>();
             this.Cookbooks = new List<Cookbook>();
+            this.ApplicationUser = new ApplicationUser();
         }
 
     }

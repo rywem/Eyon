@@ -1,4 +1,5 @@
-﻿using Eyon.Models.Relationship;
+﻿using Eyon.Models.Interfaces;
+using Eyon.Models.Relationship;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace Eyon.Models
 {
-    public class Recipe
+    public class Recipe : IRecord
     {        
         [Key]
         public long Id { get; set; }
