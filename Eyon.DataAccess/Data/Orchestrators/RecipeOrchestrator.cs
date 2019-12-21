@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Eyon.Models;
+
 namespace Eyon.DataAccess.Data.Orchestrators
 {
     public class RecipeOrchestrator
@@ -41,6 +43,49 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     recipeViewModel.Cookbooks = recipeViewModel.Recipe.CookbookRecipes.Select(x => x.Cookbook).ToList();
             }
             return recipeViewModel;
+        }
+    
+        
+        public void AddRecipeTransaction( RecipeViewModel recipeViewModel )
+        {
+            using ( var transaction = _unitOfWork.BeginTransaction() )
+            {
+                try
+                {
+                    AddRecipe(recipeViewModel);
+                    transaction.Commit();
+                }
+                catch ( Exception ex )
+                {
+                    transaction.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        public void AddRecipe(RecipeViewModel recipeViewModel)
+        {
+
+        }
+
+        public void UpdateRecipe(RecipeViewModel recipeViewModel)
+        {
+            // Update Ingredients, Add Ingredients/Remove Ingredients
+
+            // Update Instructions, Add Instructions/Remove Instructions
+
+            // Update Community
+
+            // Update cookbooks, add cookbooks/remove cookbooks
+
+            // Update RecipeSiteImages,  add/remove
+
+            // Update Categories: Add Relations, remove relations            
+        }
+
+        public void UpdateInstructions( RecipeViewModel recipeViewModel)
+        {
+
         }
     }
 }

@@ -7,15 +7,13 @@ namespace Eyon.Models.ViewModels
     public class RecipeViewModel
     {
         public Recipe Recipe { get; set; }
-
         public List<Category> Categories { get; set; }
-
         public List<Ingredient> Ingredients { get; set; }
         public List<Instruction> Instructions { get; set; }
         public Community Community { get; set; }
         public List<SiteImage> RecipeSiteImages { get; set; }
         public List<Cookbook> Cookbooks { get; set; }
-        //public List<Organization> Organizations { get; set; }
+        
         public RecipeViewModel()
         {
             this.Recipe = new Recipe();
@@ -25,7 +23,6 @@ namespace Eyon.Models.ViewModels
             this.Instructions = new List<Instruction>();
             this.RecipeSiteImages = new List<SiteImage>();
             this.Cookbooks = new List<Cookbook>();
-            //this.Organizations = new List<Organization>();
         }
 
     }
