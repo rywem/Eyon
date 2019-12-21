@@ -12,7 +12,7 @@ namespace Eyon.DataAccess.Data.Repository
 
         public ICookbookCategoriesRepository CookbookCategories { get; private set; }
 
-        public ICommunityCookbooksRepository CommunityCookbooks { get; private set; }
+        public ICommunityCookbookRepository CommunityCookbooks { get; private set; }
 
         public ICommunityRepository Community { get; private set; }
 

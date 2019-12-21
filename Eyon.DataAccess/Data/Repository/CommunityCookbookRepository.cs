@@ -3,7 +3,7 @@ using Eyon.Models.Relationship;
 
 namespace Eyon.DataAccess.Data.Repository
 {
-    public class CommunityCookbookRepository : Repository<CommunityCookbook>, ICommunityCookbooksRepository
+    public class CommunityCookbookRepository : Repository<CommunityCookbook>, ICommunityCookbookRepository
     {
         private readonly ApplicationDbContext _db;
 
