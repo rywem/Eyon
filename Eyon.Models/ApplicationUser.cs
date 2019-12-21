@@ -13,6 +13,8 @@ namespace Eyon.Models
         public string LastName { get; set; }
         public string Address { get; set; }
         public string Address2 { get; set; }
-        public string City { get; set; }                
+        public string City { get; set; }       
+        
+        public ICollection<ApplicationUserRecipe> ApplicationUserRecipes { get; set; }
     }
 }

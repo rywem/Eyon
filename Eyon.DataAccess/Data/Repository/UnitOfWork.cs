@@ -33,7 +33,7 @@ namespace Eyon.DataAccess.Data.Repository
         public IIngredientRepository Ingredient { get; private set; }
         public IInstructionRepository Instruction { get; private set; }
         public ICookbookRecipeRepository CookbookRecipe { get; private set; }
-        //public IOrganizationRecipeRepository OrganizationRecipe { get; private set; }
+        public IApplicationUserRecipeRepository ApplicationUserRecipe { get; private set; }
 
 
         public UnitOfWork(ApplicationDbContext db)
@@ -60,6 +60,7 @@ namespace Eyon.DataAccess.Data.Repository
             this.OrganizationCommunities = new OrganizationCommunitiesRepository(this._db);
             this.OrganizationCookbooks = new OrganizationCookbooksRepository(this._db);
             this.Organization = new OrganizationRepository(this._db);
+            this.ApplicationUserRecipe = new ApplicationUserRecipeRepository(this._db);
         }
 
         public IDatabaseTransaction BeginTransaction()

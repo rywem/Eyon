@@ -17,7 +17,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         IOrganizationRepository Organization { get; }
         IOrganizationCommunitiesRepository OrganizationCommunities { get; }
         IOrganizationCookbooksRepository OrganizationCookbooks { get; }
-
+        IApplicationUserRecipeRepository ApplicationUserRecipe { get; }
 
 
         IRecipeRepository Recipe { get; }

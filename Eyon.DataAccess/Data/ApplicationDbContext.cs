@@ -132,7 +132,18 @@ namespace Eyon.DataAccess.Data
                 .HasOne(c => c.Recipe)
                 .WithMany(c => c.CookbookRecipes)
                 .HasForeignKey(c => c.RecipeId);
-           
+
+
+            modelBuilder.Entity<ApplicationUserRecipe>()
+                .HasKey(c => new { c.RecipeId, c.ApplicationUserId});
+            modelBuilder.Entity<ApplicationUserRecipe>()
+                .HasOne(c => c.ApplicationUser)
+                .WithMany(c => c.ApplicationUserRecipes)
+                .HasForeignKey(c => c.ApplicationUserId);
+            modelBuilder.Entity<ApplicationUserRecipe>()
+                .HasOne(c => c.Recipe)
+                .WithMany(c => c.ApplicationUserRecipes)
+                .HasForeignKey(c => c.RecipeId);
             #endregion
 
 
@@ -833,7 +844,7 @@ namespace Eyon.DataAccess.Data
         public DbSet<Organization> Organization { get; set; }
         public DbSet<Recipe> Recipe { get; set; }
         public DbSet<Ingredient> Ingredient { get; set; }
-        public DbSet<Instruction> Instruction { get; set; }
+        public DbSet<Instruction> Instruction { get; set; }        
 
         #region location tables
         public DbSet<Community> Community { get; set; }
@@ -855,6 +866,8 @@ namespace Eyon.DataAccess.Data
         public DbSet<RecipeCategory> RecipeCategories { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public DbSet<CommunityRecipe> CommunityRecipes { get; set; }
+
+        public DbSet<ApplicationUserRecipe> ApplicationUserRecipes { get; set; }
 
         #endregion
 
