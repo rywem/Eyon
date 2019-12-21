@@ -13,11 +13,10 @@ namespace Eyon.Models
         public long Id { get; set; }
         [Required]
         [StringLength(50)]
-        public string Name { get; set; }        
-        public string Instructions { get; set; }
-        public string Cooktime { get; set; }
-        
+        public string Name { get; set; }                
+        public string Cooktime { get; set; }        
         public CommunityRecipe CommunityRecipe { get; set; }
+        public ICollection<Instruction> Instructions { get; set; }
         public ICollection<RecipeSiteImage> RecipeSiteImages { get; set; }
         public ICollection<RecipeIngredient> RecipeIngredient { get; set; }
         public ICollection<RecipeCategory> RecipeCategories { get; set; }

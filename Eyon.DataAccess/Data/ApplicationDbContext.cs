@@ -844,7 +844,8 @@ namespace Eyon.DataAccess.Data
         public DbSet<Organization> Organization { get; set; }
         public DbSet<Recipe> Recipe { get; set; }
         public DbSet<Ingredient> Ingredient { get; set; }
-        
+        public DbSet<Instruction> Instruction { get; set; }
+
         #region location tables
         public DbSet<Community> Community { get; set; }
         public DbSet<State> State { get; set; }
