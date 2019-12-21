@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Eyon.Models.Relationship
 {
-    public class CookbookRecipes
+    public class CookbookRecipe
     {        
         public long CookbookId { get; set; }
         [ForeignKey("CookbookId")]

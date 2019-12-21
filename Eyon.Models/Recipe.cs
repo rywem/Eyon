@@ -21,7 +21,7 @@ namespace Eyon.Models
         public ICollection<RecipeSiteImage> RecipeSiteImages { get; set; }
         public ICollection<RecipeIngredient> RecipeIngredient { get; set; }
         public ICollection<RecipeCategory> RecipeCategories { get; set; }
-        public ICollection<CookbookRecipes> CookbookRecipes { get; set; }
+        public ICollection<CookbookRecipe> CookbookRecipes { get; set; }
         public ICollection<OrganizationRecipe> OrganizationRecipes { get; set; }
 
 
