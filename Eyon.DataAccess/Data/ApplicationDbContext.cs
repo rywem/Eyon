@@ -132,18 +132,7 @@ namespace Eyon.DataAccess.Data
                 .HasOne(c => c.Recipe)
                 .WithMany(c => c.CookbookRecipes)
                 .HasForeignKey(c => c.RecipeId);
-
-
-            modelBuilder.Entity<OrganizationRecipe>()
-                .HasKey(c => new { c.RecipeId, c.OrganizationId });
-            modelBuilder.Entity<OrganizationRecipe>()
-                .HasOne(c => c.Organization)
-                .WithMany(c => c.OrganizationRecipes)
-                .HasForeignKey(c => c.OrganizationId);
-            modelBuilder.Entity<OrganizationRecipe>()
-                .HasOne(c => c.Recipe)
-                .WithMany(c => c.OrganizationRecipes)
-                .HasForeignKey(c => c.RecipeId);
+           
             #endregion
 
 
@@ -861,9 +850,7 @@ namespace Eyon.DataAccess.Data
         public DbSet<OrganizationCookbooks> OrganizationCookbooks { get; set; }
         public DbSet<OrganizationCommunities> OrganizationCommunities { get; set; }
 
-        public DbSet<CookbookRecipe> CookbookRecipes { get; set; }
-        
-        public DbSet<OrganizationRecipe> OrganizationRecipes { get; set; }
+        public DbSet<CookbookRecipe> CookbookRecipes { get; set; }                
         public DbSet<RecipeSiteImage> RecipeSiteImages { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }

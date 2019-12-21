@@ -27,8 +27,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 
         IIngredientRepository Ingredient { get; }
         IInstructionRepository Instruction { get; }
-        ICookbookRecipeRepository CookbookRecipe { get; }
-        IOrganizationRecipeRepository OrganizationRecipe { get; }
+        ICookbookRecipeRepository CookbookRecipe { get; }        
 
         IDatabaseTransaction BeginTransaction();
         void Save();        

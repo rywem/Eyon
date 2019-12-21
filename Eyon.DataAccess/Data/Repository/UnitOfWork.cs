@@ -33,7 +33,7 @@ namespace Eyon.DataAccess.Data.Repository
         public IIngredientRepository Ingredient { get; private set; }
         public IInstructionRepository Instruction { get; private set; }
         public ICookbookRecipeRepository CookbookRecipe { get; private set; }
-        public IOrganizationRecipeRepository OrganizationRecipe { get; private set; }
+        //public IOrganizationRecipeRepository OrganizationRecipe { get; private set; }
 
 
         public UnitOfWork(ApplicationDbContext db)
@@ -45,8 +45,7 @@ namespace Eyon.DataAccess.Data.Repository
             this.RecipeSiteImage = new RecipeSiteImageRepository(this._db);
             this.Ingredient = new IngredientRepository(this._db);
             this.Instruction = new InstructionRepository(this._db);
-            this.CookbookRecipe = new CookbookRecipeRepository(this._db);
-            this.OrganizationRecipe = new OrganizationRecipeRepository(this._db);
+            this.CookbookRecipe = new CookbookRecipeRepository(this._db);            
 
             this.Category = new CategoryRepository(this._db);
             this.SiteImage = new SiteImageRepository(this._db);
