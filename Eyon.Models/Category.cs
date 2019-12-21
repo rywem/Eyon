@@ -20,7 +20,7 @@ namespace Eyon.Models
         public SiteImage SiteImage { get; set; }
 
         public ICollection<CookbookCategories> CookbookCategories { get; set; }
-        //public ICollection<RecipeCategories> RecipeCategories { get; set; }
+        public ICollection<RecipeCategory> RecipeCategories { get; set; }
 
     }
 }

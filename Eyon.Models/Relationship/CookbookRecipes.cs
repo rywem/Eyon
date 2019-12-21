@@ -7,14 +7,12 @@ using System.Text;
 namespace Eyon.Models.Relationship
 {
     public class CookbookRecipes
-    {
-        /*
+    {        
         public long CookbookId { get; set; }
         [ForeignKey("CookbookId")]
         public Cookbook Cookbook { get; set; }
         public long RecipeId { get; set; }
         [ForeignKey("RecipeId")]
-        public Recipe Recipe { get; set; }
-        */
+        public Recipe Recipe { get; set; }        
     }
 }

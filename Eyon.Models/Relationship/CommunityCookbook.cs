@@ -2,7 +2,7 @@
 
 namespace Eyon.Models.Relationship
 {
-    public class CommunityCookbooks
+    public class CommunityCookbook
     {
         public long CookbookId { get; set; }
         [ForeignKey("CookbookId")]

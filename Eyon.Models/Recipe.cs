@@ -17,10 +17,12 @@ namespace Eyon.Models
         public string Instructions { get; set; }
         public string Cooktime { get; set; }
         
-        public Community Community { get; set; }
-        public ICollection<RecipeSiteImages> RecipeSiteImages { get; set; }
-        public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
-        public ICollection<RecipeCategories> RecipeCategories { get; set; }
+        public CommunityRecipe CommunityRecipe { get; set; }
+        public ICollection<RecipeSiteImage> RecipeSiteImages { get; set; }
+        public ICollection<RecipeIngredient> RecipeIngredient { get; set; }
+        public ICollection<RecipeCategory> RecipeCategories { get; set; }
+        public ICollection<CookbookRecipes> CookbookRecipes { get; set; }
+        public ICollection<OrganizationRecipe> OrganizationRecipes { get; set; }
 
 
     }

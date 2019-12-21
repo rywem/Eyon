@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eyon.Models.Relationship;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -12,5 +13,7 @@ namespace Eyon.Models
         [Required]
         [StringLength(50)]
         public string Name { get; set; }
+
+        public ICollection<RecipeIngredient> RecipeIngredient { get; set; }
     }
 }

@@ -22,13 +22,15 @@ namespace Eyon.DataAccess.Data
 
 
             #region Relationships
-            modelBuilder.Entity<CommunityCookbooks>()
+
+            
+            modelBuilder.Entity<CommunityCookbook>()
                 .HasKey(bc => new { bc.CookbookId, bc.CommunityId });
-            modelBuilder.Entity<CommunityCookbooks>()
+            modelBuilder.Entity<CommunityCookbook>()
                 .HasOne(cc => cc.Community)
                 .WithMany(cc => cc.CommunityCookbooks)
                 .HasForeignKey(cc => cc.CommunityId);
-            modelBuilder.Entity<Models.Relationship.CommunityCookbooks>()
+            modelBuilder.Entity<Models.Relationship.CommunityCookbook>()
                 .HasOne(cc => cc.Cookbook)
                 .WithMany(cc => cc.CommunityCookbooks)
                 .HasForeignKey(cc => cc.CookbookId);
@@ -66,6 +68,7 @@ namespace Eyon.DataAccess.Data
                 .WithMany(o => o.OrganizationCookbooks)
                 .HasForeignKey(o => o.CookbookId);
 
+            
             modelBuilder.Entity<CommunityState>()
                 .HasKey(cc => new { cc.CommunityId, cc.StateId });
             modelBuilder.Entity<CommunityState>()
@@ -78,7 +81,70 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(cc => cc.StateId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            #endregion 
+            modelBuilder.Entity<CommunityRecipe>()
+                .HasKey(c => new { c.CommunityId, c.RecipeId });
+            modelBuilder.Entity<CommunityRecipe>()
+                .HasOne(c => c.Recipe)
+                .WithOne(c => c.CommunityRecipe)                
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<CommunityRecipe>()
+                .HasOne(c => c.Community)
+                .WithMany(c => c.CommunityRecipes)
+                .HasForeignKey(c => c.CommunityId);
+                
+
+            modelBuilder.Entity<RecipeSiteImage>()
+                .HasKey(c => new { c.RecipeId, c.SiteImageId });
+            modelBuilder.Entity<RecipeSiteImage>()
+                .HasOne(c => c.Recipe)
+                .WithMany(c => c.RecipeSiteImages)
+                .HasForeignKey(c => c.RecipeId);
+
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasKey(c => new { c.RecipeId, c.IngredientId });
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(c => c.Recipe)
+                .WithMany(c => c.RecipeIngredient)
+                .HasForeignKey(c => c.RecipeId);
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(c => c.Ingredient)
+                .WithMany(c => c.RecipeIngredient)
+                .HasForeignKey(c => c.IngredientId);
+
+            modelBuilder.Entity<RecipeCategory>()
+                .HasKey(c => new { c.RecipeId, c.CategoryId });
+            modelBuilder.Entity<RecipeCategory>()
+                .HasOne(c => c.Recipe)
+                .WithMany(c => c.RecipeCategories)
+                .HasForeignKey(c => c.RecipeId);
+            modelBuilder.Entity<RecipeCategory>()
+                .HasOne(c => c.Category)
+                .WithMany(c => c.RecipeCategories)
+                .HasForeignKey(c => c.CategoryId);
+
+            modelBuilder.Entity<CookbookRecipes>()
+                .HasKey(c => new { c.RecipeId, c.CookbookId });
+            modelBuilder.Entity<CookbookRecipes>()
+                .HasOne(c => c.Cookbook)
+                .WithMany(c => c.CookbookRecipes)
+                .HasForeignKey(c => c.CookbookId);
+            modelBuilder.Entity<CookbookRecipes>()
+                .HasOne(c => c.Recipe)
+                .WithMany(c => c.CookbookRecipes)
+                .HasForeignKey(c => c.RecipeId);
+
+
+            modelBuilder.Entity<OrganizationRecipe>()
+                .HasKey(c => new { c.RecipeId, c.OrganizationId });
+            modelBuilder.Entity<OrganizationRecipe>()
+                .HasOne(c => c.Organization)
+                .WithMany(c => c.OrganizationRecipes)
+                .HasForeignKey(c => c.OrganizationId);
+            modelBuilder.Entity<OrganizationRecipe>()
+                .HasOne(c => c.Recipe)
+                .WithMany(c => c.OrganizationRecipes)
+                .HasForeignKey(c => c.RecipeId);
+            #endregion
 
 
             #region Seed Data
@@ -770,36 +836,38 @@ namespace Eyon.DataAccess.Data
 
         }
 
+
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<SiteImage> SiteImage { get; set; }
         public DbSet<Cookbook> Cookbook { get; set; }
         public DbSet<Organization> Organization { get; set; }
-
+        public DbSet<Recipe> Recipe { get; set; }
+        public DbSet<Ingredient> Ingredient { get; set; }
+        
         #region location tables
         public DbSet<Community> Community { get; set; }
         public DbSet<State> State { get; set; }
         public DbSet<Country> Country { get; set; }
+        
 
-        #endregion
-        //public DbSet<Organization> Organization { get; set; }
-        //public DbSet<Recipe> Recipe { get; set; }
+        #endregion        
 
         #region Relationship Tables
-        public DbSet<CommunityCookbooks> CommunityCookbooks { get; set; }
+        public DbSet<CommunityCookbook> CommunityCookbooks { get; set; }
         public DbSet<CookbookCategories> CookbookCategories { get; set; }
         public DbSet<CommunityState> CommunityState { get; set; }
-        public DbSet<Models.Relationship.OrganizationCookbooks> OrganizationCookbooks { get; set; }
-        public DbSet<Models.Relationship.OrganizationCommunities> OrganizationCommunities { get; set; }
-        /*
+        public DbSet<OrganizationCookbooks> OrganizationCookbooks { get; set; }
+        public DbSet<OrganizationCommunities> OrganizationCommunities { get; set; }
+
+        public DbSet<CookbookRecipes> CookbookRecipes { get; set; }
         
-        public DbSet<Models.Relationship.CookbookRecipes> CookbookRecipes { get; set; }
-        public DbSet<Models.Relationship.CookbookSiteImages> CookbookSiteImages { get; set; }
-        
-        public DbSet<Models.Relationship.OrganizationRecipes> OrganizationRecipes { get; set; }
-        public DbSet<Models.Relationship.RecipeSiteImages> RecipeSiteImages { get; set; }
-        public DbSet<Models.Relationship.RecipeCategories> RecipeCategories { get; set; }
-        */
+        public DbSet<OrganizationRecipe> OrganizationRecipes { get; set; }
+        public DbSet<RecipeSiteImage> RecipeSiteImages { get; set; }
+        public DbSet<RecipeCategory> RecipeCategories { get; set; }
+        public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+        public DbSet<CommunityRecipe> CommunityRecipes { get; set; }
+
         #endregion
 
     }

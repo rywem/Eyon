@@ -15,13 +15,13 @@ namespace Eyon.Models
         public string Copyright { get; set; }
         public string ISBN { get; set; }        
 
-        public ICollection<CommunityCookbooks> CommunityCookbooks { get; set; }
+        public ICollection<Eyon.Models.Relationship.CommunityCookbook> CommunityCookbooks { get; set; }
         public ICollection<CookbookCategories> CookbookCategories { get; set; }
 
         public ICollection<OrganizationCookbooks> OrganizationCookbooks { get; set; }
+        public ICollection<CookbookRecipes> CookbookRecipes { get; set; }
 
         //public ICollection<CookbookApplicationUsers> CookbookApplicationUsers { get; set; }
-        //public ICollection<CookbookRecipes> CookbookRecipes { get; set; }
         //public ICollection<CookbookSiteImages> CookbookSiteImages { get; set; }
 
 

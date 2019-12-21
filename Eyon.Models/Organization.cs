@@ -19,7 +19,7 @@ namespace Eyon.Models
         public string Website { get; set; }
         public ICollection<OrganizationCommunities> OrganizationCommunities { get; set; }
         public ICollection<OrganizationCookbooks> OrganizationCookbooks { get; set; }        
-        //public ICollection<OrganizationRecipes> OrganizationRecipes { get; set; }
+        public ICollection<OrganizationRecipe> OrganizationRecipes { get; set; }
 
     }
 }

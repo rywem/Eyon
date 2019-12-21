@@ -19,10 +19,10 @@ namespace Eyon.Models
         public long CountryId { get; set; }
         [ForeignKey("CountryId")]
         public Country Country { get; set; }
-        public ICollection<CommunityCookbooks> CommunityCookbooks { get; set; }
+        public ICollection<CommunityCookbook> CommunityCookbooks { get; set; }
 
         public CommunityState CommunityState { get; set; }
         public ICollection<OrganizationCommunities> OrganizationCommunities { get; set; }
-        //public ICollection<Recipe> Recipes { get; set; }
+        public ICollection<CommunityRecipe> CommunityRecipes { get; set; }
     }
 }
