@@ -142,8 +142,8 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(c => c.ApplicationUserId);
             modelBuilder.Entity<ApplicationUserRecipe>()
                 .HasOne(c => c.Recipe)
-                .WithMany(c => c.ApplicationUserRecipes)
-                .HasForeignKey(c => c.RecipeId);
+                .WithOne(c => c.ApplicationUserRecipe)
+                .OnDelete(DeleteBehavior.Restrict);
             #endregion
 
 
