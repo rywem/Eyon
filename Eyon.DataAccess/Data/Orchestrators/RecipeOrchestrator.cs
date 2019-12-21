@@ -65,7 +65,8 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
         public void AddRecipe(RecipeViewModel recipeViewModel, string currentApplicationUserId )
         {
-
+            _unitOfWork.Recipe.AddOwned(currentApplicationUserId, recipeViewModel.Recipe, new Models.Relationship.ApplicationUserRecipe());
+            _unitOfWork.Save();
         }
 
         public void UpdateRecipe(RecipeViewModel recipeViewModel)
