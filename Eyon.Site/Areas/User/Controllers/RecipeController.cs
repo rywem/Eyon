@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Eyon.DataAccess.Data.Orchestrators;
 using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -16,13 +17,15 @@ namespace Eyon.Site.Areas.User.Controllers
     public class RecipeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        
+        private RecipeOrchestrator recipeOrchestrator;
+
         [BindProperty]
         public RecipeViewModel recipeViewModel { get; set; }
 
         public RecipeController( IUnitOfWork unitOfWork )
         {
             this._unitOfWork = unitOfWork;
+            this.recipeOrchestrator = new RecipeOrchestrator(_unitOfWork);
         }
 
         public IActionResult Index()

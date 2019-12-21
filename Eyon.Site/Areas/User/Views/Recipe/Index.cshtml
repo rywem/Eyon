@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+br />
+<div class="border-0">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-success">Category List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <a asp-action="Upsert" class="btn btn-success text-white"><i class="fas fa-plus"></i>&nbsp;Create New Recipe</a>
+        </div>
+    </div>
+    <br />
+    <br />
+    <table id="tblData" class="table table-striped table-borderless" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+@section Scripts {
+    <script src="~/js/recipe/recipe_user_index.js"></script>
+}
