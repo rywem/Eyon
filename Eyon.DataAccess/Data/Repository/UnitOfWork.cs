@@ -32,7 +32,7 @@ namespace Eyon.DataAccess.Data.Repository
             this.SiteImage = new SiteImageRepository(this._db);
             this.Cookbook = new CookbookRepository(this._db);
             this.Community = new CommunityRepository(this._db);
-            this.CommunityCookbooks = new CommunityCookbooksRepository(this._db);
+            this.CommunityCookbooks = new CommunityCookbookRepository(this._db);
             this.CookbookCategories = new CookbookCategoriesRepository(this._db);
             this.Country = new CountryRepository(this._db);
             this.State = new StateRepository(this._db);
