@@ -97,22 +97,9 @@ namespace Eyon.Site.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if ( result.Succeeded )
                 {
-                    /*
-                    if ( !await _roleManager.RoleExistsAsync(Eyon.Utilities.Statics.Roles.Admin) )
-                        await _roleManager.CreateAsync(new IdentityRole(Eyon.Utilities.Statics.Roles.Admin));
-
-                    if ( !await _roleManager.RoleExistsAsync(Eyon.Utilities.Statics.Roles.Manager) )
-                        await _roleManager.CreateAsync(new IdentityRole(Eyon.Utilities.Statics.Roles.Manager));
-
-                    if ( !await _roleManager.RoleExistsAsync(Eyon.Utilities.Statics.Roles.Seller) )
-                        await _roleManager.CreateAsync(new IdentityRole(Eyon.Utilities.Statics.Roles.Seller));
-
-                    if ( !await _roleManager.RoleExistsAsync(Eyon.Utilities.Statics.Roles.Customer) )
-                        await _roleManager.CreateAsync(new IdentityRole(Eyon.Utilities.Statics.Roles.Customer));
-                    */
                     // Default Role is Customer.
                     
-                    await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.Customer);                     
+                    await _userManager.AddToRoleAsync(user, Utilities.Statics.Roles.User);                     
 
                     _logger.LogInformation("User created a new account with password.");
 

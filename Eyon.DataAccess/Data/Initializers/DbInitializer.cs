@@ -34,6 +34,12 @@ namespace Eyon.DataAccess.Data.Initializers
             {
 
             }
+
+            if ( !_db.Roles.Any(r => r.Name == Eyon.Utilities.Statics.Roles.User) && _db.Roles.Any(r => r.Name == Eyon.Utilities.Statics.Roles.Admin) )
+            {
+                _roleManager.CreateAsync(new IdentityRole(Eyon.Utilities.Statics.Roles.User)).GetAwaiter().GetResult();
+            }
+
             // If no pending migrations
             if ( _db.Roles.Any(r => r.Name == Eyon.Utilities.Statics.Roles.Admin) )
             {
@@ -44,6 +50,7 @@ namespace Eyon.DataAccess.Data.Initializers
             _roleManager.CreateAsync(new IdentityRole(Eyon.Utilities.Statics.Roles.Manager)).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole(Eyon.Utilities.Statics.Roles.Seller)).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole(Eyon.Utilities.Statics.Roles.Customer)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(Eyon.Utilities.Statics.Roles.User)).GetAwaiter().GetResult();
             // Create Users
             _userManager.CreateAsync(new ApplicationUser
             {

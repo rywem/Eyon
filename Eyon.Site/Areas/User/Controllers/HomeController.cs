@@ -8,9 +8,9 @@ using Microsoft.Extensions.Logging;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Eyon.Site.Areas.Customer.Controllers
+namespace Eyon.Site.Areas.User.Controllers
 {
-    [Area("Customer")]
+    [Area("User")]
     [AllowAnonymous]
     public class HomeController : Controller
     {
