@@ -10,7 +10,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         where TRecord : class, IRecord
         where TRelation : class, IOwner
     {
-        void AddOwned( string ownerId, TRecord entity );
+        void AddOwned( string ownerId, TRecord entity, TRelation relationEntity );
         TRecord GetFirstOrDefaultOwned(string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null );
 
         IEnumerable<TRecord> GetAllOwned( string ownerId, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>,

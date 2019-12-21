@@ -1,4 +1,6 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Models;
+using Eyon.Models.Errors;
 using Eyon.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,9 +23,20 @@ namespace Eyon.DataAccess.Data.Repository
             this.dbSetRelation = context.Set<TRelation>();
         }
 
-        public void AddOwned( string ownerId, TRecord entity )
+        public void AddOwned( string ownerId, TRecord entity, TRelation relationEntity )
         {
-            throw new NotImplementedException();
+            DbSet<ApplicationUser> userDbSet = Context.Set<ApplicationUser>();
+            var userFromDb = userDbSet.FirstOrDefault(x => x.Id.Equals(ownerId));
+
+            if ( userFromDb == null )
+                throw new WebUserSafeException("An error occurred.");
+            else
+            {
+                dbSet.Add(entity);
+                relationEntity.ApplicationUserId = userFromDb.Id;
+                relationEntity.ObjectId = entity.Id;
+                dbSetRelation.Add(relationEntity);
+            }
         }
 
         public IEnumerable<TRecord> GetAllOwned( string ownerId, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>, IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null )
@@ -58,7 +71,27 @@ namespace Eyon.DataAccess.Data.Repository
 
         public TRecord GetFirstOrDefaultOwned( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null )
         {
-            throw new NotImplementedException();
+            IQueryable<TRecord> query = dbSet;
+
+            query = from e in dbSet
+                    join k in dbSetRelation on e.Id equals k.ObjectId
+                    where k.ApplicationUserId.Equals(ownerId)
+                    select e;
+
+            if ( filter != null )
+            {
+                query = query.Where(filter);
+            }
+            // include properties will be comma seperated
+            if ( includeProperties != null )
+            {
+                foreach ( var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) )
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            return query.FirstOrDefault();
         }
 
         public void UpdateOwned( TRecord entity, string ownerId )
