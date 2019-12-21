@@ -19,32 +19,32 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
         [Fact]
         public void AddRecipe_AssertRecipeAdded_IdGreaterThan0()
         {
-            var recipe = new Recipe()
+            var newEntity = new Recipe()
             {
                 Name = "Ryan's cookies",
                 Cooktime = "20 minutes"
             };
 
-            _unitOfWork.Recipe.Add(recipe);
+            _unitOfWork.Recipe.Add(newEntity);
             _unitOfWork.Save();
-            Assert.True(recipe.Id > 0);
+            Assert.True(newEntity.Id > 0);
         }
         [Fact]
         public void GetRecipe_WhenRecipeExists_ObjPropertiesAreEqual()
         {
-            var recipe = new Recipe()
+            var newEntity = new Recipe()
             {
                 Name = "Ryan's cookies",
                 Cooktime = "20 minutes"
             };
 
-            _unitOfWork.Recipe.Add(recipe);
+            _unitOfWork.Recipe.Add(newEntity);
             _unitOfWork.Save();
 
-            var objFromDb = _unitOfWork.Recipe.Get(recipe.Id);
+            var objFromDb = _unitOfWork.Recipe.Get(newEntity.Id);
 
-            Assert.Equal(recipe.Name, objFromDb.Name);
-            Assert.Equal(recipe.Cooktime, objFromDb.Cooktime);
+            Assert.Equal(newEntity.Name, objFromDb.Name);
+            Assert.Equal(newEntity.Cooktime, objFromDb.Cooktime);
         }
 
         [Theory, InlineData("Ryan's Cheesy Bread", "30 minutes"), 
@@ -53,21 +53,21 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
         {
             string startingName = "Ryan's Cheese Bread";
             string startingCooktime = "29 minutes";
-            var recipe = new Recipe()
+            var newEntity = new Recipe()
             {
                 Name = startingName,
                 Cooktime = startingCooktime
             };
 
-            _unitOfWork.Recipe.Add(recipe);
+            _unitOfWork.Recipe.Add(newEntity);
             _unitOfWork.Save();
-            var objFromDb = _unitOfWork.Recipe.Get(recipe.Id);
+            var objFromDb = _unitOfWork.Recipe.Get(newEntity.Id);
 
             objFromDb.Name = newName;
             objFromDb.Cooktime = newCooktime;
             _unitOfWork.Recipe.Update(objFromDb);
             _unitOfWork.Save();
-            var objFromDbUpdated = _unitOfWork.Recipe.Get(recipe.Id);
+            var objFromDbUpdated = _unitOfWork.Recipe.Get(newEntity.Id);
 
             Assert.Equal(newName, objFromDbUpdated.Name);
             Assert.Equal(newCooktime, objFromDbUpdated.Cooktime);
@@ -77,18 +77,18 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
         {
             string startingName = "Ryan's Cheese Bread";
             string startingCooktime = "29 minutes";
-            var recipe = new Recipe()
+            var newEntity = new Recipe()
             {
                 Name = startingName,
                 Cooktime = startingCooktime
             };
 
-            _unitOfWork.Recipe.Add(recipe);
+            _unitOfWork.Recipe.Add(newEntity);
             _unitOfWork.Save();
-
-            _unitOfWork.Recipe.Remove(recipe.Id);
+            Assert.True(newEntity.Id > 0);
+            _unitOfWork.Recipe.Remove(newEntity.Id);
             _unitOfWork.Save();
-            var objFromDb = _unitOfWork.Recipe.Get(recipe.Id);
+            var objFromDb = _unitOfWork.Recipe.Get(newEntity.Id);
 
             Assert.Null(objFromDb);
         }
@@ -97,18 +97,18 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
         {
             string startingName = "Ryan's Cheese Bread";
             string startingCooktime = "29 minutes";
-            var recipe = new Recipe()
+            var newEntity = new Recipe()
             {
                 Name = startingName,
                 Cooktime = startingCooktime
             };
 
-            _unitOfWork.Recipe.Add(recipe);
+            _unitOfWork.Recipe.Add(newEntity);
             _unitOfWork.Save();
-
-            _unitOfWork.Recipe.Remove(recipe);
+            Assert.True(newEntity.Id > 0);
+            _unitOfWork.Recipe.Remove(newEntity);
             _unitOfWork.Save();
-            var objFromDb = _unitOfWork.Recipe.Get(recipe.Id);
+            var objFromDb = _unitOfWork.Recipe.Get(newEntity.Id);
 
             Assert.Null(objFromDb);
         }
