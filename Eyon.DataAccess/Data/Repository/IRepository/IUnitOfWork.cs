@@ -17,7 +17,19 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         IOrganizationRepository Organization { get; }
         IOrganizationCommunitiesRepository OrganizationCommunities { get; }
         IOrganizationCookbooksRepository OrganizationCookbooks { get; }
-        
+
+
+
+        IRecipeRepository Recipe { get; }
+        IRecipeCategoryRepository RecipeCategory { get; }
+        IRecipeIngredientRepository RecipeIngredient { get; }
+        IRecipeSiteImageRepository RecipeSiteImage { get; }
+
+        IIngredientRepository Ingredient { get; }
+        IInstructionRepository Instruction { get; }
+        ICookbookRecipeRepository CookbookRecipe { get; }
+        IOrganizationRecipeRepository OrganizationRecipe { get; }
+
         IDatabaseTransaction BeginTransaction();
         void Save();        
     }
