@@ -48,11 +48,13 @@ namespace Eyon.Site
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 
-            });            
+            });
             services.AddControllersWithViews()
                 .AddNewtonsoftJson()
-                .AddRazorRuntimeCompilation();
-            
+#if ( DEBUG )
+                .AddRazorRuntimeCompilation()
+#endif
+                ;
             services.AddRazorPages();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
