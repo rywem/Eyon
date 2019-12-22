@@ -23,18 +23,18 @@ namespace Eyon.DataAccess.Data.Repository
             this.dbSetRelation = context.Set<TRelation>();
         }
 
-        public void AddOwned( string ownerId, TRecord entity, TRelation relationEntity )
+        public void AddOwned( string ownerId, TRecord addedEntity, TRelation relationEntity )
         {
             DbSet<ApplicationUser> userDbSet = Context.Set<ApplicationUser>();
             var userFromDb = userDbSet.FirstOrDefault(x => x.Id.Equals(ownerId));
-
-            if ( userFromDb == null )
+            var entityFromDb = dbSet.FirstOrDefault(c => c.Id == addedEntity.Id);
+            if ( userFromDb == null || entityFromDb == null || entityFromDb.Id == 0 )
                 throw new WebUserSafeException("An error occurred.");
             else
-            {
-                dbSet.Add(entity);
+            {         
+                // TODO Refactor
                 relationEntity.ApplicationUserId = userFromDb.Id;
-                relationEntity.ObjectId = entity.Id;
+                relationEntity.ObjectId = entityFromDb.Id;
                 dbSetRelation.Add(relationEntity);
             }
         }

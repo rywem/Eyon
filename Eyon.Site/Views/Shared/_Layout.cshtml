@@ -40,6 +40,8 @@
                         </li>
                         @if ( User.IsInRole(Eyon.Utilities.Statics.Roles.Seller)
                     || User.IsInRole(Eyon.Utilities.Statics.Roles.Admin)
+                    || User.IsInRole(Eyon.Utilities.Statics.Roles.Customer)
+                    || User.IsInRole(Eyon.Utilities.Statics.Roles.User)
                     || User.IsInRole(Eyon.Utilities.Statics.Roles.Manager) )
                         {
                             <li class="nav-item dropdown">

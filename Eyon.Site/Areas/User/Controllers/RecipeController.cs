@@ -43,7 +43,42 @@ namespace Eyon.Site.Areas.User.Controllers
             return View(recipeViewModel);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert()
+        {
+            if ( ModelState. IsValid )
+            {
+                var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+                var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                //todo validate the user submitting has permission to add or edit this cookbook.
+                try
+                {
+                    if ( recipeViewModel.Recipe.Id == 0 ) //New cookbook
+                    {
 
+                        recipeOrchestrator.AddRecipeTransaction(recipeViewModel, claims.Value);
+                    }
+                    else
+                    {
+                        //cookbookOrchestrator.UpdateCookbookTransaction(cookbookViewModel);
+                    }
+                }
+                catch ( Models.Errors.WebUserSafeException usEx )
+                {
+                    //ModelState.AddModelError("CategoryIds", usEx.Message);
+                   // return View(cookbookViewModel);
+                }
+                catch ( Exception ex )
+                {
+                    //ModelState.AddModelError("CategoryIds", "An error occurred.");
+                    //return View(cookbookViewModel);
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            return View(recipeViewModel);
+        }
         [HttpGet]
         public IActionResult GetUserRecipes()
         {
