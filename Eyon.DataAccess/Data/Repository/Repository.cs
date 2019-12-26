@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Eyon.DataAccess.Data.Repository
 {
@@ -17,17 +18,18 @@ namespace Eyon.DataAccess.Data.Repository
             this.dbSet = context.Set<T>();
         }
 
-        public virtual void Add(T entity)
+
+        public async virtual Task<T> GetAsync(long id )
         {
-            dbSet.Add(entity);
-        }        
+            return await dbSet.FindAsync(id);
+        }
 
         public T Get(long id)
         {
             return dbSet.Find(id);
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<System.Linq.IQueryable<T>, System.Linq.IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>,IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
         {
             IQueryable<T> query = dbSet;
 
@@ -48,15 +50,34 @@ namespace Eyon.DataAccess.Data.Repository
             {
                 return orderBy(query).ToList();
             }
-
             return query.ToList();
         }
 
-        public bool Any(Expression<Func<T, bool>> filter)
+        public async Task<IEnumerable<T>> GetAllAsync( Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null )
         {
-            IQueryable<T> query = dbSet;            
-            return query.Any(filter);
+            IQueryable<T> query = dbSet;
+
+            if ( filter != null )
+            {
+                query = query.Where(filter);
+            }
+            // include properties will be comma seperated
+            if ( includeProperties != null )
+            {
+                foreach ( var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) )
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            if ( orderBy != null )
+            {
+                return orderBy(query).ToList();
+            }
+            return await query.ToListAsync();
         }
+
+
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)
         {
             IQueryable<T> query = dbSet;
@@ -76,7 +97,52 @@ namespace Eyon.DataAccess.Data.Repository
 
             return query.FirstOrDefault();
         }
-        
+
+        public async Task<T> GetFirstOrDefaultAsync( Expression<Func<T, bool>> filter = null, string includeProperties = null )
+        {
+            IQueryable<T> query = dbSet;
+
+            if ( filter != null )
+            {
+                query = query.Where(filter);
+            }
+            // include properties will be comma seperated
+            if ( includeProperties != null )
+            {
+                foreach ( var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) )
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            return await query.FirstOrDefaultAsync();
+        }
+        public bool Any( Expression<Func<T, bool>> filter )
+        {
+            IQueryable<T> query = dbSet;
+            return query.Any(filter);
+        }
+
+        public async Task<bool> AnyAsync( Expression<Func<T, bool>> filter )
+        {
+            IQueryable<T> query = dbSet;
+            return await query.AnyAsync(filter);
+        }
+
+        public virtual void Add( T entity )
+        {
+            dbSet.Add(entity);
+        }
+
+
+        public async virtual Task<ValueTask<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T>>> AddAsync( T entity )
+        {            
+            // TODO: Read and Understand
+            // https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/
+            return await Task.Run(() => dbSet.AddAsync(entity));
+        }
+
+
         public void Remove(long id)
         {
             T entityToRemove = dbSet.Find(id);

@@ -67,11 +67,13 @@ namespace Eyon.Site.Areas.User.Controllers
                 }
                 catch ( Models.Errors.WebUserSafeException usEx )
                 {
+                    throw usEx;
                     //ModelState.AddModelError("CategoryIds", usEx.Message);
                    // return View(cookbookViewModel);
                 }
                 catch ( Exception ex )
                 {
+                    throw ex;
                     //ModelState.AddModelError("CategoryIds", "An error occurred.");
                     //return View(cookbookViewModel);
                 }
