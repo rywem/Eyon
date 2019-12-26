@@ -36,7 +36,42 @@
                     <span asp-validation-for="Recipe.Cooktime" class="text-danger"></span>
                 </div>
             </div>
-
+            <div class="form-group row">
+                <div class="col-4">
+                    <b>Ingredients</b>
+                </div>
+                <div class="col-8">
+                    <div class="col-8">
+                        <ol>
+                            <li>One </li>
+                            <li>Two </li>
+                            <li>Three </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <b>Instructions</b>
+                </div>
+                <div class="col-8">
+                    <ul class="instructions">
+                        <li>
+                            <div class="input-group">
+                                <input type="text" class="form-control col-sm-1 instruction_number" />&nbsp;<input type="text" id="instruction_text" class="form-control col-sm-11" />
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="row">
+                        <button class="btn btn-primary" id="addInstruction">
+                            <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn btn-danger" id="removeInstruction">
+                            <i class="far fa-minus-square fa-2x"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="form-group row">
                 <div class="col-8 offset-4">
                     @if ( Model.Recipe.Id != 0 )
@@ -55,3 +90,8 @@
     </div>
 </form>
 
+@section Scripts {
+    <script>
+        var instructions = new Object();
+    </script>
+}

@@ -7,6 +7,7 @@ using Eyon.DataAccess.Data.Orchestrators;
 using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eyon.Site.Areas.User.Controllers
@@ -45,7 +46,7 @@ namespace Eyon.Site.Areas.User.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert()
+        public IActionResult Upsert( FormCollection formCollection )
         {
             if ( ModelState. IsValid )
             {
@@ -85,6 +86,6 @@ namespace Eyon.Site.Areas.User.Controllers
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             return Json(new { data = _unitOfWork.Recipe.GetAllOwned(claims.Value) });
-        }
+        }        
     }
 }

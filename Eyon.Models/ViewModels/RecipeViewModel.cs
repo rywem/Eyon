@@ -20,7 +20,7 @@ namespace Eyon.Models.ViewModels
             this.Recipe = new Recipe();
             //this.Community = new Community();
             //this.Categories = new List<Category>();
-            //this.Ingredients = new List<Ingredient>();
+            this.Ingredients = new List<Ingredient>();
             //this.Instructions = new List<Instruction>();
             //this.RecipeSiteImages = new List<SiteImage>();
             //this.Cookbooks = new List<Cookbook>();

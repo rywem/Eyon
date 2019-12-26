@@ -167,3 +167,14 @@ input[type=submit][disabled]{
 .font-thicker {
     font-weight: 600;
 }
+
+ul.instructions {
+    list-style-type:none;    
+    padding: 0;
+}
+
+
+.instruction_number {
+    padding-right: 0.2em;
+    padding-left: 0.2em;
+}
