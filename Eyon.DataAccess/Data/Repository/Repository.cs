@@ -134,20 +134,12 @@ namespace Eyon.DataAccess.Data.Repository
             dbSet.Add(entity);
         }
 
-
-        public async virtual Task<ValueTask<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T>>> AddAsync( T entity )
-        {            
-            // TODO: Read and Understand
-            // https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/
-            return await Task.Run(() => dbSet.AddAsync(entity));
-        }
-
-
         public void Remove(long id)
         {
             T entityToRemove = dbSet.Find(id);
             Remove(entityToRemove);
         }
+
         public void Remove(T entity)
         {
             dbSet.Remove(entity);

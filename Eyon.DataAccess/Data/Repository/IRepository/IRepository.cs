@@ -23,12 +23,11 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         bool Any(Expression<Func<T, bool>> filter);
         Task<bool> AnyAsync( Expression<Func<T, bool>> filter );
 
-        void Add(T entity);
-        Task<ValueTask<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T>>> AddAsync( T entity );
+        void Add(T entity);        
 
-        void Remove(long id);
+        void Remove(long id);        
         void Remove(T entity);
-
+        
         void RemoveRange(IEnumerable<T> entitiesToRemove);
     }
 }
