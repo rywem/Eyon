@@ -28,7 +28,7 @@ namespace Eyon.DataAccess.Data.Repository
 
         public IEnumerable<Category> Search(string searchString, string includeProperties = null)
         {
-            IQueryable<Category> query = _db.Category.Where(x => x.Name.Contains(searchString));            
+            IQueryable<Category> query = _db.Category.Where(x => x.Name.Contains(searchString));
                         
             if (includeProperties != null)
             {
