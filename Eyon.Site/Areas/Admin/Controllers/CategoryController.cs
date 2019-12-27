@@ -28,7 +28,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
             return View();
         }
 
-        [Area("Seller")]
+        /*[Area("Seller")]
         [HttpGet]
         public ActionResult Search()
         {
@@ -64,7 +64,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
             return Json(new { categories = x });            
         }        
-
+        */
         public IActionResult Upsert(long? id)
         {
             Category category = new Category();

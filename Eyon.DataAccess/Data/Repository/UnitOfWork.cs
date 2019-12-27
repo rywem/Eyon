@@ -1,4 +1,5 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
+using System.Threading.Tasks;
 
 namespace Eyon.DataAccess.Data.Repository
 {
@@ -71,6 +72,10 @@ namespace Eyon.DataAccess.Data.Repository
         public void Save()
         {
             _db.SaveChanges();
+        }
+        public async Task<int> SaveAsync()
+        {
+            return await _db.SaveChangesAsync();
         }
 
         public void Dispose()

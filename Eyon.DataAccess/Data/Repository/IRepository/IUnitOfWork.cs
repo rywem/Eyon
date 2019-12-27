@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
@@ -30,6 +31,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         ICookbookRecipeRepository CookbookRecipe { get; }        
 
         IDatabaseTransaction BeginTransaction();
-        void Save();        
+        void Save();
+        Task<int> SaveAsync();
     }
 }
