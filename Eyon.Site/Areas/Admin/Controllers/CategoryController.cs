@@ -86,7 +86,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Category Category)
+        public async Task<IActionResult> Upsert(Category Category)
         {
             if (ModelState.IsValid)
             {
@@ -116,7 +116,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
                                 return View(Category);
                             }
                             _unitOfWork.SiteImage.Add(Category.SiteImage);
-                            _unitOfWork.Save();
+                            await _unitOfWork.SaveAsync();
                             Category.SiteImageId = Category.SiteImage.Id;
                             _unitOfWork.Category.Add(Category);
                         }
@@ -133,16 +133,16 @@ namespace Eyon.Site.Areas.Admin.Controllers
                             }
                             Category.SiteImage = categoryFromDb.SiteImage;
                             _unitOfWork.SiteImage.Update(Category.SiteImage);
-                            _unitOfWork.Save();
+                            await _unitOfWork.SaveAsync();
                             Category.SiteImageId = Category.SiteImage.Id;
                             _unitOfWork.Category.Update(Category);
                         }
-                        _unitOfWork.Save();
-                        transaction.Commit();
+                        await _unitOfWork.SaveAsync();
+                        await transaction.CommitAsync();
                     }
                     catch (Exception)
                     {
-                        transaction.Rollback();
+                        await transaction.RollbackAsync();
                     }
                 }
                 return RedirectToAction(nameof(Index));
