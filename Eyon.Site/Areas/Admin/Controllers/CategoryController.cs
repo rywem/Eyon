@@ -26,45 +26,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         public IActionResult Index()
         {
             return View();
-        }
-
-        /*[Area("Seller")]
-        [HttpGet]
-        public ActionResult Search()
-        {
-            return View(new SearchCategoryViewModel());            
-        }
-
-        [HttpGet]
-        [ValidateAntiForgeryToken]
-        public PartialViewResult Search(SearchCategoryViewModel searchCategoryViewModel)
-        {
-            //TODO make async
-            if (!String.IsNullOrEmpty(searchCategoryViewModel.SearchString))
-            {
-                searchCategoryViewModel.ResultsCategories = _unitOfWork.Category.Search(searchCategoryViewModel.SearchString, includeProperties: "SiteImage").ToList();
-            }            
-            return PartialView("_SearchCategories", searchCategoryViewModel);
-        }
-
-        [HttpGet]
-        public IActionResult SearchCategories(string filter)
-        {
-            var x = (from p in _unitOfWork.Category.Search(filter, includeProperties: "SiteImage")
-                     select new
-                     {
-                         name = p.Name,
-                         displayOrder = p.DisplayOrder,
-                         id = p.Id,
-                         imageTitle = p.SiteImage.Title,
-                         imageAlt = p.SiteImage.Alt,
-                         image = p.SiteImage.Image
-                     });
-                     
-
-            return Json(new { categories = x });            
-        }        
-        */
+        }       
         public IActionResult Upsert(long? id)
         {
             Category category = new Category();
@@ -187,9 +149,10 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         [HttpGet]
         [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," + Utilities.Statics.Roles.Seller)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Json(new { data = _unitOfWork.Category.GetAll(includeProperties: "SiteImage") });
+            return Json(new { data = await _unitOfWork.Category.GetAllAsync(includeProperties: "SiteImage") });
         }
+        
     }
 }
