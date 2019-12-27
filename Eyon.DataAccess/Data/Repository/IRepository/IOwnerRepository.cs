@@ -12,7 +12,8 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         where TRelation : class, IOwner
     {
         void AddOwned( string ownerId, TRecord entity, TRelation relationEntity );
-        
+
+        bool IsOwner( string userIdToCheck, long entityId );
         TRecord GetFirstOrDefaultOwned(string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null );
         Task<TRecord> GetFirstOrDefaultOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null );
 

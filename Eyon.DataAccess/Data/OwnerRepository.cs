@@ -3,12 +3,14 @@ using Eyon.Models;
 using Eyon.Models.Errors;
 using Eyon.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-
+using Eyon.DataAccess.Data.Repository.Relationship;
+using Eyon.DataAccess.Data.Repository;
 namespace Eyon.DataAccess.Data
 {
     public class OwnerRepository<TRecord, TRelation> : Repository<TRecord> , IOwnerRepository<TRecord, TRelation>
@@ -129,6 +131,30 @@ namespace Eyon.DataAccess.Data
             }
 
             return query.FirstOrDefault();
+        }
+        public bool IsOwner( string userIdToCheck, long entityId )
+        {
+            IQueryable<TRecord> query = dbSet;
+            /*query = from e in dbSet
+                    join k in dbSetRelation on e.Id equals k.ObjectId
+                    where k.ApplicationUserId.Equals(userIdToCheck) && e.Id == entityId 
+                    select e;*/
+
+            var result = dbSet.Where(x => x.Id == entityId)
+                             .Join(dbSetRelation.Where(x=> x.ApplicationUserId.Equals(userIdToCheck)), 
+                             d => d.Id, 
+                             dr => dr.ObjectId,
+                            (record, relation) => new 
+                            {
+                                entityId = record.Id,
+                                applicationUserId = relation.ApplicationUserId
+                            }).Any(x => x.entityId > 0 && !string.IsNullOrEmpty(x.applicationUserId));
+
+            return result;
+            //if ( query.ToList().Count > 0 )
+            //    return true;
+            //else 
+            //    return false;
         }
 
         public async Task<TRecord> GetFirstOrDefaultOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null )
