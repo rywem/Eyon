@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Eyon.DataAccess.Data.Repository
+namespace Eyon.DataAccess.Data.Repository.Relationship
 {
-    public class OrganizationCookbooksRepository : Repository<OrganizationCookbooks>, IOrganizationCookbooksRepository
+    public class ApplicationUserRecipeRepository : Repository<ApplicationUserRecipe>, IApplicationUserRecipeRepository
     {
         private readonly ApplicationDbContext _db;
-        public OrganizationCookbooksRepository( ApplicationDbContext db ) : base(db)
+
+        public ApplicationUserRecipeRepository( ApplicationDbContext db ) : base(db)
         {
             this._db = db;
         }

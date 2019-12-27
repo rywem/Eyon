@@ -35,7 +35,7 @@ namespace Eyon.Site
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
-            services.AddScoped<DataAccess.Data.Repository.IRepository.IUnitOfWork, DataAccess.Data.Repository.UnitOfWork>();
+            services.AddScoped<DataAccess.Data.Repository.IRepository.IUnitOfWork, DataAccess.Data.UnitOfWork>();
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(60);

@@ -4,7 +4,7 @@ using System.Linq;
 using Eyon.Models.Relationship;
 
 
-namespace Eyon.DataAccess.Data.Repository
+namespace Eyon.DataAccess.Data.Repository.Relationship
 {
     public class CookbookCategoriesRepository : Repository<CookbookCategories>, ICookbookCategoriesRepository
     {

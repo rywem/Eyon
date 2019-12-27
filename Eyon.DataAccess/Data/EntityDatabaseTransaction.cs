@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Threading.Tasks;
 
-namespace Eyon.DataAccess.Data.Repository
+namespace Eyon.DataAccess.Data
 {
     public class EntityDatabaseTransaction : IDatabaseTransaction
     {

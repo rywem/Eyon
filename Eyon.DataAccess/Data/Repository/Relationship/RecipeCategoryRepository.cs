@@ -2,7 +2,7 @@
 using Eyon.Models.Relationship;
 
 
-namespace Eyon.DataAccess.Data.Repository
+namespace Eyon.DataAccess.Data.Repository.Relationship
 {
     public class RecipeCategoryRepository : Repository<RecipeCategory>, IRecipeCategoryRepository
     {

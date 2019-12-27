@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Eyon.DataAccess.Data.Repository
+namespace Eyon.DataAccess.Data
 {
     public class Repository<T> : Eyon.DataAccess.Data.Repository.IRepository.IRepository<T> where T : class
     {

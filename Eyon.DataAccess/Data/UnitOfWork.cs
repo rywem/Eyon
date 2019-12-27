@@ -1,8 +1,10 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
 using System.Threading.Tasks;
+using Eyon.DataAccess.Data.Repository;
+using Eyon.DataAccess.Data.Repository.Relationship;
+using System;
 
-namespace Eyon.DataAccess.Data.Repository
-{
+namespace Eyon.DataAccess.Data{
     public class UnitOfWork : IUnitOfWork
     {
         #region getters and setters
