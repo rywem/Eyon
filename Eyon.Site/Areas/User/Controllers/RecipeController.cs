@@ -40,6 +40,17 @@ namespace Eyon.Site.Areas.User.Controllers
             {
                 recipeViewModel = new RecipeViewModel();
             }
+            else
+            {
+                var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+                var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                bool isOwner = _unitOfWork.Recipe.IsOwner(claims.Value, id.GetValueOrDefault());
+
+                if ( isOwner == false )
+                    return RedirectToAction("Denied", "Error");
+
+                recipeViewModel = recipeOrchestrator.GetRecipeViewModel(id.GetValueOrDefault(), claims.Value);
+            }
 
             return View(recipeViewModel);
         }
