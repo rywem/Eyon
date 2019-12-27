@@ -22,7 +22,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         {
             RecipeViewModel recipeViewModel = new RecipeViewModel();
             recipeViewModel.Recipe = _unitOfWork.Recipe.GetFirstOrDefaultOwned(currentApplicationUserId, x => x.Id == id,
-                includeProperties: "CommunityRecipe,CommunityRecipe.Community,Instructions,RecipeIngredient,RecipeIngredient.Ingredient,RecipeCategories,RecipesCategories.Category,CookbookRecipes,CookbookRecipes.Cookbook");
+                includeProperties: "CommunityRecipe,CommunityRecipe.Community,Instructions,RecipeIngredient,RecipeIngredient.Ingredient,CookbookRecipes,CookbookRecipes.Cookbook"); //RecipeCategories,RecipesCategories.Category,
 
             if ( recipeViewModel.Recipe != null )
             {
