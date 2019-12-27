@@ -5,6 +5,7 @@ namespace Eyon.DataAccess.Data.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
+        #region getters and setters
         private readonly ApplicationDbContext _db;
         public ICategoryRepository Category { get; private set; }
         public ISiteImageRepository SiteImage { get; private set; }
@@ -35,8 +36,7 @@ namespace Eyon.DataAccess.Data.Repository
         public IInstructionRepository Instruction { get; private set; }
         public ICookbookRecipeRepository CookbookRecipe { get; private set; }
         public IApplicationUserRecipeRepository ApplicationUserRecipe { get; private set; }
-
-
+        #endregion
         public UnitOfWork(ApplicationDbContext db)
         {
             this._db = db;
@@ -68,6 +68,7 @@ namespace Eyon.DataAccess.Data.Repository
         {
             return new EntityDatabaseTransaction(_db);
         }
+
 
         public void Save()
         {
