@@ -47,7 +47,7 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.Name = category.Name;
             objFromDb.DisplayOrder = category.DisplayOrder;            
             objFromDb.SiteImageId = category.SiteImageId;
-            //_db.SaveChanges(); //I think this shouldn't be called here.
+            _db.SaveChanges(); //I think this shouldn't be called here.
         }
         //public void Update( Category category )
         //{
