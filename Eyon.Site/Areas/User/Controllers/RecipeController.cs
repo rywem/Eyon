@@ -34,7 +34,7 @@ namespace Eyon.Site.Areas.User.Controllers
             return View();
         }
 
-        public IActionResult Upsert(long? id)
+        public async Task<IActionResult> Upsert(long? id)
         {
             if ( id == null)
             {
@@ -44,7 +44,7 @@ namespace Eyon.Site.Areas.User.Controllers
             {
                 var claimsIdentity = (ClaimsIdentity)this.User.Identity;
                 var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                bool isOwner = _unitOfWork.Recipe.IsOwner(claims.Value, id.GetValueOrDefault());
+                bool isOwner = await _unitOfWork.Recipe.IsOwnerAsync(claims.Value, id.GetValueOrDefault());
 
                 if ( isOwner == false )
                     return RedirectToAction("Denied", "Error");

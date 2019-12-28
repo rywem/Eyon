@@ -1,7 +1,7 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models.Relationship;
 
-namespace Eyon.DataAccess.Data.Repository.Relationship
+namespace Eyon.DataAccess.Data.Repository
 {
     public class RecipeSiteImageRepository : Repository<RecipeSiteImage>, IRecipeSiteImageRepository
     {

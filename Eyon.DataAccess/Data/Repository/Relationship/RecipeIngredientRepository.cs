@@ -2,7 +2,7 @@
 using Eyon.Models.Relationship;
 using System.Linq;
 
-namespace Eyon.DataAccess.Data.Repository.Relationship
+namespace Eyon.DataAccess.Data.Repository
 {
     public class RecipeIngredientRepository : Repository<RecipeIngredient>, IRecipeIngredientRepository
     {

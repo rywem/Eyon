@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Eyon.DataAccess.Data.Repository.Relationship
+namespace Eyon.DataAccess.Data.Repository
 {
     public class OrganizationCookbooksRepository : Repository<OrganizationCookbooks>, IOrganizationCookbooksRepository
     {

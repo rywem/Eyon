@@ -2,7 +2,7 @@
 using Eyon.Models.Relationship;
 
 
-namespace Eyon.DataAccess.Data.Repository.Relationship
+namespace Eyon.DataAccess.Data.Repository
 {
     public class CommunityRecipeRepository : Repository<CommunityRecipe>, ICommunityRecipeRepository
     {
