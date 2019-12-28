@@ -130,9 +130,8 @@
                 newInstructionsCounter++;
                 createInstruction(newInstructionsCounter + instructionCounter, '');
             } else {
-                for (var i = 1; i <= instructionCounter; i++) {
+                for (var i = 1; i <= instructionCounter + newInstructionsCounter; i++) {
                     createInstruction(i, instructions[i]);
-
                 }
             }
         }
@@ -151,18 +150,29 @@
             if (id <= instructionCounter)
                 instructionCounter--;
             else
-                newInstructionsCounter--;
-
+                newInstructionsCounter--;            
             var newLength = newInstructionsCounter + instructionCounter;
-            for (var i = 1; i <= newLength; i++) {
+            for (var i = 1; i <= instructionCounter; i++) {
                 if (i < id )
                     newInstructions[i] = instructions[i];
                 else 
                     newInstructions[i] = instructions[i+1];
             }
+
+            
+            for (var i = instructionCounter + 1; i <= newLength; i++) {
+                var textId;
+                var number = i;
+                if (i >= id)                     
+                    number = i + 1;
+
+                textId = "#instructionText_" + number;
+                var newText = $(textId).val();
+                newInstructions[i] = newText;
+            }
+
             instructions = {};
-            instructions = newInstructions;
-            //delete instructions[id];
+            instructions = newInstructions;            
             createInstructionsList();
         }
         // End Instructions
