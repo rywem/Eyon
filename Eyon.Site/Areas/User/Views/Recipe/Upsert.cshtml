@@ -56,17 +56,17 @@
                     <b>Instructions</b>
                 </div>
                 <div class="col-8">
-                    <ul class="instructions" id="instructions_list">
-                        <li>
+                    <ol class="instructions" id="instructions_list">
+                        <li class="instruction_item">
                             <div class="input-group">
                                 <input type="text" class="form-control col-sm-1 instruction_number" />
-                                &nbsp;<input type="text" id="instruction_0" class="form-control col-sm-11" />
+                                &nbsp;<input type="text" id="instruction_0" class="form-control col-sm-11 instruction_textbox" rows="3"/>
                                 &nbsp;<button type="button" class="btn btn-danger" id="removeInstruction" onclick="removeInstruction(1)">
                                     <i class="far fa-minus-square"></i>
                                 </button>
                             </div>
                         </li>
-                    </ul>
+                    </ol>
                     <span asp-validation-for="Instructions" class="text-danger"></span>
                     <div class="row">
                         <button type="button" class="btn btn-primary" id="addInstruction">
@@ -137,9 +137,9 @@
         }
 
         function createInstruction(index, text) {
-            $("#instructions_list").append('<li> <div class="input-group">'
-                    + '<input type="text" class="form-control col-sm-1 instruction_number" name="instruction_' + index + '" id="instructionsStep_' + index + '" value="' + index + '" />&nbsp;'
-                    + '<input type="text" name="instruction_' + index + '" id="instructionText_' + index + '" class="form-control col-sm-11" value="' + text + '" />'
+            $("#instructions_list").append('<li class="instruction_item"> <div class="input-group">'
+                    + '<input type="text" class="form-control col-sm-1 instruction_number" name="instruction_' + index + '" id="instructionsStep_' + index + '" value="' + index + '" hidden />&nbsp;'
+                    + '<input type="text" name="instruction_' + index + '" id="instructionText_' + index + '" class="form-control col-sm-11 instruction_textbox" value="' + text + '" rows="3"/>'
                     + '&nbsp;<button type="button" class="btn btn-danger" onclick="removeInstructionItem('+index+');"> <i class="far fa-minus-square"></i> </button>'
                     + '</div></li>');
         }

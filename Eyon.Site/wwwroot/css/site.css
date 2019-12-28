@@ -168,13 +168,50 @@ input[type=submit][disabled]{
     font-weight: 600;
 }
 
-ul.instructions {
-    list-style-type:none;    
+ol.instructions {
+ 
     padding: 0;
 }
 
 
+
 .instruction_number {
-    padding-right: 0.2em;
-    padding-left: 0.2em;
+    clear: both;
+    list-style: none;
+    padding-left: 2%;
+}
+.instruction_item {
+    padding-left: 1em;
+    display: block;
+    position: relative;
+    counter-increment: inst;
+    margin-top: .5em;
+}
+
+    .instruction_item::before {
+        margin-top: .75em;
+        content: counter(inst);
+        background: rgba(2, 184, 117, 0.35);
+        /*box-shadow: 0px 2px 2px rgba(2, 184, 117, 0.3);*/
+        box-shadow: 0px 2px 2px rgba(100, 184, 117, 0.9);
+        color: #fff;
+        font-size: 1em;
+        font-weight: 700;
+        font-style: italic;
+        text-shadow: 1px 1px rgba(2, 184, 117, 0.5);
+        border-radius: 0 0.675em 0.675em 0;
+        font-size: 1.5em;
+        text-align: center;
+        padding-top: 0;
+        padding-left: 2.25%;
+        left: -5%;
+        top: -0.65em;
+        height: 1.35em;
+        width: 1.35em;
+        position: absolute;
+        transition: all 0.2s ease-in-out;
+    }
+
+.instruction_textbox {
+    border-radius: 0.675em !important;
 }
