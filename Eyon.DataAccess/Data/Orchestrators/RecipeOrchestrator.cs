@@ -141,11 +141,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             {
                 return;
             }
-
-
-            await _unitOfWork.Recipe.UpdateIfOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe);
-            //tasks.Add(_unitOfWork.Recipe.UpdateIfOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe));
-            List<Instruction> instructionsToRemove = new List<Instruction>();
+            await _unitOfWork.Recipe.UpdateIfOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe);            
 
             if ( recipeViewModel.Instructions.Count < recipeFromDb.Instructions.Count )
             {
@@ -154,7 +150,6 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 {
                     var itemToRemove = dbInstructionsList[i];
                     _unitOfWork.Instruction.Remove(itemToRemove.Id);
-                    //tasks.Add(_unitOfWork.SaveAsync());
                 }
             }
             foreach ( var item in recipeViewModel.Instructions )
@@ -173,11 +168,8 @@ namespace Eyon.DataAccess.Data.Orchestrators
                         tasks.Add(_unitOfWork.Instruction.UpdateAsync(instructionFromDb));
                     }
                 }
-            }
-            //tasks.Add(_unitOfWork.SaveAsync());
+            }            
             await _unitOfWork.SaveAsync();
-
-            // Update Instructions, Add Instructions/Remove Instructions
 
             // Update Ingredients, Add Ingredients/Remove Ingredients
 
@@ -188,7 +180,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             // Update RecipeSiteImages,  add/remove
 
             // Update Categories: Add Relations, remove relations       
-            //Task.WaitAll(tasks.ToArray());
+            
         }
         public async Task UpdateRecipeTransactionAsync( string currentApplicationUserId, RecipeViewModel recipeViewModel )
         {
