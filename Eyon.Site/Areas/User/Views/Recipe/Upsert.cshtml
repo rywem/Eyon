@@ -4,14 +4,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+<form method="post" asp-action="Upsert" enctype="multipart/form-data" asp-route-id="@ViewBag.Id">
     <div class="row px-2 mx-2 backgroundWhite border">
         <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Recipe.Id" />
         @if ( Model.Recipe.Id != 0 )
         {
-            <input type="hidden" asp-for="Recipe.Id" />
             title = "Edit Recipe";
         }
+
         <div class="col-12">
             <h2 class="text-primary">@title</h2>
             <br />
@@ -55,20 +56,23 @@
                     <b>Instructions</b>
                 </div>
                 <div class="col-8">
-                    <ul class="instructions">
+                    <ul class="instructions" id="instructions_list">
                         <li>
                             <div class="input-group">
-                                <input type="text" class="form-control col-sm-1 instruction_number" />&nbsp;<input type="text" id="instruction_text" class="form-control col-sm-11" />
+                                <input type="text" class="form-control col-sm-1 instruction_number" />
+                                &nbsp;<input type="text" id="instruction_0" class="form-control col-sm-11" />
+                                &nbsp;<button type="button" class="btn btn-danger" id="removeInstruction" onclick="removeInstruction(1)">
+                                    <i class="far fa-minus-square"></i>
+                                </button>
                             </div>
                         </li>
                     </ul>
+                    <span asp-validation-for="Instructions" class="text-danger"></span>
                     <div class="row">
-                        <button class="btn btn-primary" id="addInstruction">
+                        <button type="button" class="btn btn-primary" id="addInstruction">
                             <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
                         </button>
-                        <button class="btn btn-danger" id="removeInstruction">
-                            <i class="far fa-minus-square fa-2x"></i>
-                        </button>
+                        
                     </div>
                 </div>
             </div>
@@ -92,6 +96,76 @@
 
 @section Scripts {
     <script>
-        var instructions = new Object();
+        // Begin Instructions
+        
+        var instructions = {};
+        var instructionCounter = 0;
+        var stepNumber;
+        
+        var newInstructionsCounter = 0;
+        @if ( Model.Instructions != null && Model.Instructions.Count > 0 ) {
+            foreach ( var instr in Model.Instructions.OrderBy(x => x.StepNumber) )
+            {
+                <text>
+                    instructions[@instr.StepNumber] = '@instr.Text';
+                </text>
+            }
+            <text>
+                instructionCounter = @Model.Instructions.Max(x => x.StepNumber) ;
+            </text>
+        }
+
+        $(document).ready(function () {
+            createInstructionsList();
+            $("#addInstruction").click(function () {
+                newInstructionsCounter++;
+                createInstruction(newInstructionsCounter + instructionCounter, '');                
+            });
+        });
+
+
+        function createInstructionsList() {
+            $("#instructions_list").empty();
+            if (instructionCounter == 0) {
+                newInstructionsCounter++;
+                createInstruction(newInstructionsCounter + instructionCounter, '');
+            } else {
+                for (var i = 1; i <= instructionCounter; i++) {
+                    createInstruction(i, instructions[i]);
+
+                }
+            }
+        }
+
+        function createInstruction(index, text) {
+            $("#instructions_list").append('<li> <div class="input-group">'
+                    + '<input type="text" class="form-control col-sm-1 instruction_number" name="instruction_' + index + '" id="instructionsStep_' + index + '" value="' + index + '" />&nbsp;'
+                    + '<input type="text" name="instruction_' + index + '" id="instructionText_' + index + '" class="form-control col-sm-11" value="' + text + '" />'
+                    + '&nbsp;<button type="button" class="btn btn-danger" onclick="removeInstructionItem('+index+');"> <i class="far fa-minus-square"></i> </button>'
+                    + '</div></li>');
+        }
+
+        function removeInstructionItem(id) {
+            var newInstructions = {};
+            
+            if (id <= instructionCounter)
+                instructionCounter--;
+            else
+                newInstructionsCounter--;
+
+            var newLength = newInstructionsCounter + instructionCounter;
+            for (var i = 1; i <= newLength; i++) {
+                if (i < id )
+                    newInstructions[i] = instructions[i];
+                else 
+                    newInstructions[i] = instructions[i+1];
+            }
+            instructions = {};
+            instructions = newInstructions;
+            //delete instructions[id];
+            createInstructionsList();
+        }
+        // End Instructions
+
     </script>
 }

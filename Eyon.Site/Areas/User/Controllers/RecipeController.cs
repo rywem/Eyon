@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Eyon.DataAccess.Data.Orchestrators;
 using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Models;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,8 +21,8 @@ namespace Eyon.Site.Areas.User.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private RecipeOrchestrator recipeOrchestrator;
 
-        [BindProperty]
-        public RecipeViewModel recipeViewModel { get; set; }
+        
+        //public RecipeViewModel recipeViewModel { get; set; }
 
         public RecipeController( IUnitOfWork unitOfWork )
         {
@@ -36,6 +37,8 @@ namespace Eyon.Site.Areas.User.Controllers
 
         public async Task<IActionResult> Upsert(long? id)
         {
+            RecipeViewModel recipeViewModel;
+            ViewBag.Id = 0;
             if ( id == null)
             {
                 recipeViewModel = new RecipeViewModel();
@@ -49,6 +52,7 @@ namespace Eyon.Site.Areas.User.Controllers
                 if ( isOwner == false )
                     return RedirectToAction("Denied", "Error");
 
+                ViewBag.id = id.GetValueOrDefault();
                 recipeViewModel = recipeOrchestrator.GetRecipeViewModel(id.GetValueOrDefault(), claims.Value);
             }
 
@@ -57,42 +61,100 @@ namespace Eyon.Site.Areas.User.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert( FormCollection formCollection )
+        public async Task<IActionResult> Upsert( IFormCollection form, long id )
         {
-            if ( ModelState. IsValid )
+            RecipeViewModel recipeViewModel = new RecipeViewModel();
+            try
             {
                 var claimsIdentity = (ClaimsIdentity)this.User.Identity;
                 var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                //todo validate the user submitting has permission to add or edit this cookbook.
-                try
-                {
-                    if ( recipeViewModel.Recipe.Id == 0 ) //New cookbook
+                if ( id != 0 )
+                {                    
+                    bool isOwner = await _unitOfWork.Recipe.IsOwnerAsync(claims.Value, id);
+                    if ( isOwner == false )
                     {
-
-                        recipeOrchestrator.AddRecipeTransaction(recipeViewModel, claims.Value);
-                    }
-                    else
-                    {
-                        //cookbookOrchestrator.UpdateCookbookTransaction(cookbookViewModel);
+                        ModelState.AddModelError("Recipe.Id", "An error occurred.");
+                        return RedirectToAction("Denied", "Error");
                     }
                 }
-                catch ( Models.Errors.WebUserSafeException usEx )
+                
+                if ( id != 0 )
                 {
-                    throw usEx;
-                    //ModelState.AddModelError("CategoryIds", usEx.Message);
-                   // return View(cookbookViewModel);
-                }
-                catch ( Exception ex )
-                {
-                    throw ex;
-                    //ModelState.AddModelError("CategoryIds", "An error occurred.");
-                    //return View(cookbookViewModel);
-                }
+                    recipeViewModel.Recipe = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(claims.Value, x => x.Id == id);
+                    if ( recipeViewModel.Recipe == null || recipeViewModel.Recipe.Id == 0 )
+                        ModelState.AddModelError("Recipe.Id", "An error occurred.");
+                }                
 
-                return RedirectToAction(nameof(Index));
+                if ( ModelState.IsValid )
+                {
+                    // Create the RecipeViewModel
+                    recipeViewModel.Recipe.Name = form["Recipe.Name"];
+                    recipeViewModel.Recipe.Cooktime = form["Recipe.Cooktime"];                    
+                    List<Instruction> instructionsUnordered = new List<Instruction>();
+                    foreach ( var item in form.Keys )
+                    {
+                        if ( item.Contains("instruction_"))
+                        {
+                            int step;                            
+                            string[] tempInstructionArray = form[item].ToString().Split(',', 2, options: StringSplitOptions.RemoveEmptyEntries);
+                            if ( !int.TryParse(tempInstructionArray[0], out step) )
+                            {
+                                ModelState.AddModelError("Instructions", "Invalid Instructions");
+                                break;
+                            }
+
+                            instructionsUnordered.Add(new Instruction()
+                            {
+                                StepNumber = step,
+                                Text = tempInstructionArray[1],
+                                RecipeId = recipeViewModel.Recipe.Id
+                            });
+                        }
+                    }
+                    
+                    int stepCounter = 1;
+                    foreach ( var item in instructionsUnordered.OrderBy(x => x.StepNumber) )
+                    {
+                        item.StepNumber = stepCounter;
+                        recipeViewModel.Instructions.Add(item);
+                        stepCounter++;
+                    }
+                    
+                    try
+                    {
+                        if ( recipeViewModel.Recipe.Id == 0 ) //New cookbook
+                        {
+
+                            await recipeOrchestrator.AddRecipeTransactionAsync(claims.Value, recipeViewModel);
+                        }
+                        else
+                        {
+                            await recipeOrchestrator.UpdateRecipeTransactionAsync(claims.Value, recipeViewModel);
+                        }
+                    }
+                    catch ( Models.Errors.WebUserSafeException usEx )
+                    {
+                        throw usEx;
+                        //ModelState.AddModelError("CategoryIds", usEx.Message);
+                        // return View(cookbookViewModel);
+                    }
+                    catch ( Exception ex )
+                    {
+                        throw ex;
+                        //ModelState.AddModelError("CategoryIds", "An error occurred.");
+                        //return View(cookbookViewModel);
+                    }
+
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch ( Exception ex )
+            {
+                throw ex;                
             }
             return View(recipeViewModel);
         }
+
         [HttpGet]
         public IActionResult GetUserRecipes()
         {
