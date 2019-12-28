@@ -22,8 +22,7 @@ namespace Eyon.DataAccess.Data
         }
 
         public void AddOwned( string ownerId, TRecord addedEntity, TRelation relationEntity )
-        {
-            throw new WebUserSafeException("Deprecated");
+        {            
             DbSet<ApplicationUser> userDbSet = Context.Set<ApplicationUser>();
             var userFromDb = userDbSet.FirstOrDefault(x => x.Id.Equals(ownerId));
             var entityFromDb = dbSet.FirstOrDefault(c => c.Id == addedEntity.Id);
@@ -36,11 +35,6 @@ namespace Eyon.DataAccess.Data
                 relationEntity.ObjectId = entityFromDb.Id;
                 dbSetRelation.Add(relationEntity);
             }
-        }
-
-        public void AddOwnedAsync( string ownerId, TRecord entity, TRelation relationEntity )
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<TRecord> GetAllOwned( string ownerId, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>, IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null )
