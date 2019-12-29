@@ -21,8 +21,8 @@ namespace Eyon.Site.Areas.User.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private RecipeOrchestrator recipeOrchestrator;
 
-        
-        //public RecipeViewModel recipeViewModel { get; set; }
+        [BindProperty]
+        public RecipeViewModel recipeViewModel { get; set; }
 
         public RecipeController( IUnitOfWork unitOfWork )
         {
@@ -61,64 +61,55 @@ namespace Eyon.Site.Areas.User.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upsert( IFormCollection form, long id )
+        public async Task<IActionResult> Upsert()
         {
-            RecipeViewModel recipeViewModel = new RecipeViewModel();
+            
             try
             {
                 var claimsIdentity = (ClaimsIdentity)this.User.Identity;
                 var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                if ( id != 0 )
+                if ( recipeViewModel.Recipe.Id != 0 )
                 {                    
-                    bool isOwner = await _unitOfWork.Recipe.IsOwnerAsync(claims.Value, id);
+                    bool isOwner = await _unitOfWork.Recipe.IsOwnerAsync(claims.Value, recipeViewModel.Recipe.Id);
                     if ( isOwner == false )
                     {
                         ModelState.AddModelError("Recipe.Id", "An error occurred.");
                         return RedirectToAction("Denied", "Error");
                     }
-                }
-                
-                if ( id != 0 )
-                {
-                    recipeViewModel.Recipe = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(claims.Value, x => x.Id == id);
-                    if ( recipeViewModel.Recipe == null || recipeViewModel.Recipe.Id == 0 )
-                        ModelState.AddModelError("Recipe.Id", "An error occurred.");
                 }                
-
+                
                 if ( ModelState.IsValid )
-                {
-                    // Create the RecipeViewModel
-                    recipeViewModel.Recipe.Name = form["Recipe.Name"];
-                    recipeViewModel.Recipe.Cooktime = form["Recipe.Cooktime"];                    
-                    List<Instruction> instructionsUnordered = new List<Instruction>();
-                    foreach ( var item in form.Keys )
+                {                    
+                    // Create Ingredients
+                    string[] ingredientsSplit = recipeViewModel.IngredientsText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                    recipeViewModel.Ingredients = new List<Ingredient>();
+                    int step = 1;
+                    foreach ( var item in ingredientsSplit )
                     {
-                        if ( item.Contains("instruction_"))
+                        recipeViewModel.Ingredients.Add(new Ingredient()
                         {
-                            int step;                            
-                            string[] tempInstructionArray = form[item].ToString().Split(',', 2, options: StringSplitOptions.RemoveEmptyEntries);
-                            if ( !int.TryParse(tempInstructionArray[0], out step) )
-                            {
-                                ModelState.AddModelError("Instructions", "Invalid Instructions");
-                                break;
-                            }
+                            Text = item,
+                            Number = step
+                        });
+                        step++;
+                    }
 
-                            instructionsUnordered.Add(new Instruction()
-                            {
-                                StepNumber = step,
-                                Text = tempInstructionArray[1],
-                                RecipeId = recipeViewModel.Recipe.Id
-                            });
-                        }
-                    }
-                    
-                    int stepCounter = 1;
-                    foreach ( var item in instructionsUnordered.OrderBy(x => x.StepNumber) )
+
+                    // Create Instructions
+                    string[] instructionsSplit = recipeViewModel.InstructionsText.Split(new[] { Environment.NewLine },StringSplitOptions.RemoveEmptyEntries);
+
+                    step = 1;
+                    recipeViewModel.Instructions = new List<Instruction>();
+                    foreach ( var item in instructionsSplit )
                     {
-                        item.StepNumber = stepCounter;
-                        recipeViewModel.Instructions.Add(item);
-                        stepCounter++;
-                    }
+                        recipeViewModel.Instructions.Add(new Instruction()
+                        {
+                            StepNumber = step,
+                            Text = item,
+                            RecipeId = recipeViewModel.Recipe.Id
+                        });
+                        step++;
+                    }                    
                     
                     try
                     {

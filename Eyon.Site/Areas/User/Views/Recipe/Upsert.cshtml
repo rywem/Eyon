@@ -7,10 +7,10 @@
 <form method="post" asp-action="Upsert" enctype="multipart/form-data" asp-route-id="@ViewBag.Id">
     <div class="row px-2 mx-2 backgroundWhite border">
         <div asp-validation-summary="All" class="text-danger"></div>
-        <input type="hidden" asp-for="Recipe.Id" />
         @if ( Model.Recipe.Id != 0 )
         {
             title = "Edit Recipe";
+            <input type="hidden" asp-for="Recipe.Id" />
         }
 
         <div class="col-12">
@@ -30,6 +30,24 @@
             </div>
             <div class="form-group row">
                 <div class="col-4">
+                    <label asp-for="Recipe.Description"></label>
+                </div>
+                <div class="col-8">
+                    <textarea asp-for="Recipe.Description" class="form-control" rows="3" ></textarea>
+                    <span asp-validation-for="Recipe.Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Recipe.PrepTime"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Recipe.PrepTime" class="form-control" />
+                    <span asp-validation-for="Recipe.PrepTime" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
                     <label asp-for="Recipe.Cooktime"></label>
                 </div>
                 <div class="col-8">
@@ -39,41 +57,29 @@
             </div>
             <div class="form-group row">
                 <div class="col-4">
-                    <label for="ingredients_text"><b>Ingredients</b></label>
+                    <label asp-for="Recipe.Servings"></label>
                 </div>
-                <div class="col-8">                                        
-                    <textarea name="ingredients_text" id="ingredients_text" class="form-control col-sm-12" rows="4" placeholder="Put each ingredient on a different line"></textarea>                    
+                <div class="col-8">
+                    <input asp-for="Recipe.Servings" class="form-control" />
+                    <span asp-validation-for="Recipe.Servings" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
                 <div class="col-4">
-                    <b>Instructions</b>                    
+                    <label asp-for="IngredientsText"><b>Ingredients</b></label>
                 </div>
                 <div class="col-8">
-                    <ol class="instructions" id="instructions_list">
-                        <li class="instruction_item">
-                            <div class="col-sm-12 pl-0">
-                                <div class="input-group">
-                                    <input type="text" class="form-control instruction_number" name="instruction_0" id="instructionsStep_0" value="0" hidden />&nbsp;
-                                    <textarea  id="instruction_0" class="form-control instruction_textbox col-sm-11" rows="2"></textarea>&nbsp;
-                                    <button type="button" class="btn btn-danger btn-danger-bright btnInstruction col-sm-1" id="removeInstruction" onclick="removeInstruction(0)">
-                                        <i class="far fa-minus-square"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nostyle">
-                            <div class="col-sm-12 pl-0">
-                                <div class="input-group">
-                                    <div class="col-sm-11" >&nbsp;</div>                                    
-                                    <button type="button" class="btn btn-primary btnInstruction col-sm-1" id="addInstruction">
-                                        <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </li>                                                
-                    </ol>                                        
-                    <span asp-validation-for="Instructions" class="text-danger"></span>                    
+                    <textarea asp-for="IngredientsText" class="form-control col-sm-12" rows="4" placeholder="Put each ingredient on a different line"></textarea>                    
+                    <span asp-validation-for="IngredientsText" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="InstructionsText"><b>Instructions</b></label>
+                </div>
+                <div class="col-8">
+                    <textarea asp-for="InstructionsText" class="form-control col-sm-12" rows="4" placeholder="Put each instruction on a different line"></textarea>
+                    <span asp-validation-for="InstructionsText" class="text-danger"></span>                    
                 </div>
             </div>
             <div class="form-group row">
@@ -95,7 +101,7 @@
 </form>
 
 @section Scripts {
-    <script>
+    <script>        
         // Begin Instructions        
         var instructions = {};
         var instructionCounter = 0;        
@@ -113,8 +119,8 @@
         }
 
         $(document).ready(function () {            
-            createInstructionsList();
-            createAddInstructionButton();
+            //createInstructionsList();
+            //createAddInstructionButton();
             $("#instructions_list").on("click", "#addInstruction", function () {
                 saveCurrentInstructions();
                 createInstructionsList();

@@ -2,12 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+
 namespace Eyon.Models.ViewModels
 {
     public class RecipeViewModel
     {
         public Recipe Recipe { get; set; }
-
+        
+        [Required]
+        [DisplayName("Ingredients")]
+        [MaxLength(5000)]
+        public string IngredientsText { get; set; }
+        [Required]
+        [DisplayName("Instructions")]
+        [MaxLength(5000)]
+        public string InstructionsText { get;set; }
         public List<Category> Categories { get; set; }
         public List<Ingredient> Ingredients { get; set; }
         public List<Instruction> Instructions { get; set; }

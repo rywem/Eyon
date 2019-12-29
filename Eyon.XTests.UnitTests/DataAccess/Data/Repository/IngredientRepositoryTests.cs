@@ -21,7 +21,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
         {
             var newEntity = new Ingredient()
             {
-                Name = "Broccoli",                
+                Text = "Broccoli",                
             };
             _unitOfWork.Ingredient.Add(newEntity);
             _unitOfWork.Save();
@@ -33,13 +33,13 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
         {
             var newEntity = new Ingredient()
             {
-                Name = "Broccoli",
+                Text = "Broccoli",
             };
 
             _unitOfWork.Ingredient.Add(newEntity);
             _unitOfWork.Save();
             var objFromDb = _unitOfWork.Ingredient.Get(newEntity.Id);
-            Assert.Equal(newEntity.Name, objFromDb.Name);            
+            Assert.Equal(newEntity.Text, objFromDb.Text);            
         }
 
         [Theory, InlineData("Green Broccoli"),
@@ -49,18 +49,18 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
             string startingName = "Broccoli";            
             var newEntity = new Ingredient()
             {
-                Name = startingName,                
+                Text = startingName,                
             };
 
             _unitOfWork.Ingredient.Add(newEntity);
             _unitOfWork.Save();
             var objFromDb = _unitOfWork.Ingredient.Get(newEntity.Id);
 
-            objFromDb.Name = newName;            
+            objFromDb.Text = newName;            
             _unitOfWork.Ingredient.Update(objFromDb);
             _unitOfWork.Save();
             var objFromDbUpdated = _unitOfWork.Ingredient.Get(newEntity.Id);
-            Assert.Equal(newName, objFromDbUpdated.Name);
+            Assert.Equal(newName, objFromDbUpdated.Text);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
             string startingName = "Broccoli";
             var newEntity = new Ingredient()
             {
-                Name = startingName,
+                Text = startingName,
             };
             _unitOfWork.Ingredient.Add(newEntity);
             _unitOfWork.Save();
@@ -87,7 +87,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
             string startingName = "Broccoli";
             var newEntity = new Ingredient()
             {
-                Name = startingName,
+                Text = startingName,
             };
             _unitOfWork.Ingredient.Add(newEntity);
             _unitOfWork.Save();

@@ -42,8 +42,7 @@ namespace Eyon.DataAccess.Data{
         {
             this._db = db;
             this.Recipe = new RecipeRepository(this._db);
-            this.RecipeCategory = new RecipeCategoryRepository(this._db);
-            this.RecipeIngredient = new RecipeIngredientRepository(this._db);
+            this.RecipeCategory = new RecipeCategoryRepository(this._db);            
             this.RecipeSiteImage = new RecipeSiteImageRepository(this._db);
             this.Ingredient = new IngredientRepository(this._db);
             this.Instruction = new InstructionRepository(this._db);

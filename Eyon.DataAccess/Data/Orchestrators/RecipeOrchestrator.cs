@@ -23,7 +23,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         {
             RecipeViewModel recipeViewModel = new RecipeViewModel();
             recipeViewModel.Recipe = _unitOfWork.Recipe.GetFirstOrDefaultOwned(currentApplicationUserId, x => x.Id == id,
-                includeProperties: "CommunityRecipe,CommunityRecipe.Community,Instructions,RecipeIngredient,RecipeIngredient.Ingredient,CookbookRecipes,CookbookRecipes.Cookbook"); //RecipeCategories,RecipesCategories.Category,
+                includeProperties: "CommunityRecipe,CommunityRecipe.Community,Instructions,Ingredients,CookbookRecipes,CookbookRecipes.Cookbook"); //RecipeCategories,RecipesCategories.Category,
 
             if ( recipeViewModel.Recipe != null )
             {
@@ -31,10 +31,16 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     recipeViewModel.Community = recipeViewModel.Recipe.CommunityRecipe.Community;
 
                 if ( recipeViewModel.Recipe.Instructions != null && recipeViewModel.Recipe.Instructions.Count > 0 )
-                    recipeViewModel.Instructions = recipeViewModel.Recipe.Instructions.ToList();
+                { recipeViewModel.Instructions = recipeViewModel.Recipe.Instructions.ToList();
+                    //var instructions = recipeViewModel.Instructions.OrderBy(x => x.StepNumber).Select(x => x.Text);
+                    recipeViewModel.InstructionsText = string.Join(Environment.NewLine, recipeViewModel.Instructions.OrderBy(x => x.StepNumber).Select(x => x.Text));
+                }
 
-                if ( recipeViewModel.Recipe.RecipeIngredient != null && recipeViewModel.Recipe.RecipeIngredient.Count > 0 )
-                    recipeViewModel.Ingredients = recipeViewModel.Recipe.RecipeIngredient.Select(x => x.Ingredient).ToList();
+                if ( recipeViewModel.Recipe.Ingredients != null && recipeViewModel.Recipe.Ingredients.Count > 0 )
+                {
+                    recipeViewModel.Ingredients = recipeViewModel.Recipe.Ingredients.ToList();
+                    recipeViewModel.IngredientsText = string.Join(Environment.NewLine, recipeViewModel.Ingredients.Select(x => x.Text));
+                }
 
                 if ( recipeViewModel.Recipe.RecipeCategories != null && recipeViewModel.Recipe.RecipeCategories.Count > 0 )
                     recipeViewModel.Categories = recipeViewModel.Recipe.RecipeCategories.Select(x => x.Category).ToList();
@@ -94,6 +100,12 @@ namespace Eyon.DataAccess.Data.Orchestrators
             {
                 item.RecipeId = recipeViewModel.Recipe.Id;
                 _unitOfWork.Instruction.Add(item);
+            }            
+
+            foreach ( var item in recipeViewModel.Ingredients )
+            {
+                item.RecipeId = recipeViewModel.Recipe.Id;
+                _unitOfWork.Ingredient.Add(item);
             }
             await _unitOfWork.SaveAsync();
         }
@@ -110,6 +122,12 @@ namespace Eyon.DataAccess.Data.Orchestrators
             {
                 item.RecipeId = recipeViewModel.Recipe.Id;
                 _unitOfWork.Instruction.Add(item);
+            }
+            // Add ingregients
+            foreach ( var item in recipeViewModel.Ingredients )
+            {
+                item.RecipeId = recipeViewModel.Recipe.Id;
+                _unitOfWork.Ingredient.Add(item);
             }
             _unitOfWork.Save();
         }
@@ -134,15 +152,18 @@ namespace Eyon.DataAccess.Data.Orchestrators
             List<Task> tasks = new List<Task>();
             if ( await _unitOfWork.Recipe.IsOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe.Id) == false )
             {
-                throw new WebUserSafeException("Access denied.");
+                throw new WebUserSafeException("An error occurred.");
             }
-            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "Instructions");            
+            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "Instructions,Ingredients");            
             if ( recipeFromDb == null )
             {
                 return;
             }
             await _unitOfWork.Recipe.UpdateIfOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe);            
 
+            // instructions
+
+            // remove instructions
             if ( recipeViewModel.Instructions.Count < recipeFromDb.Instructions.Count )
             {
                 var dbInstructionsList = recipeFromDb.Instructions.ToList();
@@ -152,6 +173,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     _unitOfWork.Instruction.Remove(itemToRemove.Id);
                 }
             }
+            // add or update new instructions
             foreach ( var item in recipeViewModel.Instructions )
             {
                 var instructionFromDb = recipeFromDb.Instructions.FirstOrDefault(x => x.StepNumber == item.StepNumber);
@@ -168,7 +190,41 @@ namespace Eyon.DataAccess.Data.Orchestrators
                         tasks.Add(_unitOfWork.Instruction.UpdateAsync(instructionFromDb));
                     }
                 }
-            }            
+            }
+
+            // ingredients
+
+            // remove ingredients 
+            if ( recipeViewModel.Ingredients.Count < recipeFromDb.Ingredients.Count )
+            {
+                var dbIngredientsList = recipeFromDb.Ingredients.ToList();
+                
+                for ( int i = recipeViewModel.Ingredients.Count; i < recipeFromDb.Ingredients.Count; i++ )
+                {
+                    var itemToRemove = dbIngredientsList[i];
+                    _unitOfWork.Ingredient.Remove(itemToRemove.Id);
+                    dbIngredientsList.Remove(itemToRemove);
+                }
+            }
+            int ingredientCounter = 0;
+            // add or update ingredients
+            
+            foreach ( var item in recipeViewModel.Ingredients )
+            {
+                var ingredientFromDb = recipeFromDb.Ingredients.FirstOrDefault(x => x.Number == item.Number );
+                if ( ingredientFromDb == null )
+                    _unitOfWork.Ingredient.Add(item);
+                else
+                {
+                    if ( !ingredientFromDb.Text.Equals(item.Text) )
+                    {
+                        ingredientFromDb.Text = item.Text;
+                        tasks.Add(_unitOfWork.Ingredient.UpdateAsync(ingredientFromDb));
+                    }
+                }
+                ingredientCounter++;
+            }
+
             await _unitOfWork.SaveAsync();
 
             // Update Ingredients, Add Ingredients/Remove Ingredients

@@ -7,15 +7,14 @@ using System.Text;
 namespace Eyon.Models.Relationship
 {
     public class RecipeIngredient
-    {
-        
-        public long RecipeId { get; set; }
-        [ForeignKey("RecipeId")]
-        public Recipe Recipe { get; set; }
-        public long IngredientId { get; set; }
-        [ForeignKey("IngredientId")]
-        public Ingredient Ingredient { get; set; }
-        [StringLength(50)]
-        public string Measure { get; set; }
+    {        
+        //public long RecipeId { get; set; }
+        //[ForeignKey("RecipeId")]
+        //public Recipe Recipe { get; set; }
+        //public long IngredientId { get; set; }
+        //[ForeignKey("IngredientId")]
+        //public Ingredient Ingredient { get; set; }
+        //[StringLength(50)]
+        //public string Measure { get; set; }
     }
 }
