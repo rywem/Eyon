@@ -149,7 +149,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
         public async Task UpdateRecipeAsync( string currentApplicationUserId, RecipeViewModel recipeViewModel )
         {
-            List<Task> tasks = new List<Task>();
+            
             if ( await _unitOfWork.Recipe.IsOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe.Id) == false )
             {
                 throw new WebUserSafeException("An error occurred.");
@@ -180,6 +180,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
                 if(instructionFromDb == null ) // add
                 {
+                    item.RecipeId = recipeFromDb.Id;
                     _unitOfWork.Instruction.Add(item);                    
                 }
                 else
@@ -187,7 +188,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     if ( !instructionFromDb.Text.Equals(item.Text) )
                     {
                         instructionFromDb.Text = item.Text;
-                        tasks.Add(_unitOfWork.Instruction.UpdateAsync(instructionFromDb));
+                        _unitOfWork.Instruction.Update(instructionFromDb);
                     }
                 }
             }
@@ -202,8 +203,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 for ( int i = recipeViewModel.Ingredients.Count; i < recipeFromDb.Ingredients.Count; i++ )
                 {
                     var itemToRemove = dbIngredientsList[i];
-                    _unitOfWork.Ingredient.Remove(itemToRemove.Id);
-                    dbIngredientsList.Remove(itemToRemove);
+                    _unitOfWork.Ingredient.Remove(itemToRemove.Id);                    
                 }
             }
             int ingredientCounter = 0;
@@ -213,13 +213,16 @@ namespace Eyon.DataAccess.Data.Orchestrators
             {
                 var ingredientFromDb = recipeFromDb.Ingredients.FirstOrDefault(x => x.Number == item.Number );
                 if ( ingredientFromDb == null )
+                {
+                    item.RecipeId = recipeFromDb.Id;
                     _unitOfWork.Ingredient.Add(item);
+                }
                 else
                 {
                     if ( !ingredientFromDb.Text.Equals(item.Text) )
                     {
                         ingredientFromDb.Text = item.Text;
-                        tasks.Add(_unitOfWork.Ingredient.UpdateAsync(ingredientFromDb));
+                        _unitOfWork.Ingredient.Update(ingredientFromDb);
                     }
                 }
                 ingredientCounter++;

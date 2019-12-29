@@ -7,6 +7,6 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
     {
 
         void Update( Instruction instruction );
-        Task<bool> UpdateAsync( Instruction instruction );
+        //Task<bool> UpdateAsync( Instruction instruction );
     }    
 }

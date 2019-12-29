@@ -62,8 +62,7 @@ namespace Eyon.Site.Areas.User.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert()
-        {
-            
+        {            
             try
             {
                 var claimsIdentity = (ClaimsIdentity)this.User.Identity;
@@ -89,12 +88,11 @@ namespace Eyon.Site.Areas.User.Controllers
                         recipeViewModel.Ingredients.Add(new Ingredient()
                         {
                             Text = item,
-                            Number = step
+                            Number = step,
+                            RecipeId = recipeViewModel.Recipe.Id
                         });
                         step++;
                     }
-
-
                     // Create Instructions
                     string[] instructionsSplit = recipeViewModel.InstructionsText.Split(new[] { Environment.NewLine },StringSplitOptions.RemoveEmptyEntries);
 
@@ -125,15 +123,11 @@ namespace Eyon.Site.Areas.User.Controllers
                     }
                     catch ( Models.Errors.WebUserSafeException usEx )
                     {
-                        throw usEx;
-                        //ModelState.AddModelError("CategoryIds", usEx.Message);
-                        // return View(cookbookViewModel);
+                        throw usEx;                        
                     }
                     catch ( Exception ex )
                     {
                         throw ex;
-                        //ModelState.AddModelError("CategoryIds", "An error occurred.");
-                        //return View(cookbookViewModel);
                     }
 
                     return RedirectToAction(nameof(Index));

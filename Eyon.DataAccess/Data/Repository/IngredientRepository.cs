@@ -1,5 +1,6 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
+using Eyon.Models.Errors;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,21 +18,25 @@ namespace Eyon.DataAccess.Data.Repository
         public void Update( Ingredient ingredient )
         {
             var objFromDb = _db.Ingredient.FirstOrDefault(s => s.Id == ingredient.Id);
-            objFromDb.Text = ingredient.Text;
-            _db.SaveChanges();
-        }
-
-        public async Task<bool> UpdateAsync( Ingredient ingredient )
-        {
-            var objFromDb = _db.Ingredient.FirstOrDefault(s => s.Id == ingredient.Id);
 
             if ( objFromDb == null )
-                return false;
+                throw new WebUserSafeException("An error occurred.");
             objFromDb.Number = ingredient.Number;
             objFromDb.Text = ingredient.Text;
-
-            await _db.SaveChangesAsync();
-            return true;
+            //_db.SaveChanges();
+            dbSet.Update(objFromDb);
         }
+
+        //public async Task UpdateAsync( Ingredient ingredient )
+        //{
+        //    var objFromDb = _db.Ingredient.FirstOrDefault(s => s.Id == ingredient.Id);
+
+        //    if ( objFromDb == null )
+        //        throw new WebUserSafeException("An error occurred.");
+        //    objFromDb.Number = ingredient.Number;
+        //    objFromDb.Text = ingredient.Text;            
+        //    dbSet.Update(objFromDb);
+            
+        //}
     }
 }

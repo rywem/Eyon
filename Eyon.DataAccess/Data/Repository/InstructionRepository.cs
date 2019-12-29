@@ -22,21 +22,22 @@ namespace Eyon.DataAccess.Data.Repository
             var objFromDb = _db.Instruction.FirstOrDefault(s => s.Id == instruction.Id);
             objFromDb.StepNumber = instruction.StepNumber;
             objFromDb.Text = instruction.Text;
-            
-            _db.SaveChanges();
+
+            //_db.SaveChanges();
+            dbSet.Update(instruction);
         }
 
-        public async Task<bool> UpdateAsync( Instruction instruction )
-        {
-            var objFromDb = _db.Instruction.FirstOrDefault(s => s.Id == instruction.Id);
+        //public async Task<bool> UpdateAsync( Instruction instruction )
+        //{
+        //    var objFromDb = _db.Instruction.FirstOrDefault(s => s.Id == instruction.Id);
 
-            if ( objFromDb == null )
-                return false;
-            objFromDb.StepNumber = instruction.StepNumber;
-            objFromDb.Text = instruction.Text;
+        //    if ( objFromDb == null )
+        //        return false;
+        //    objFromDb.StepNumber = instruction.StepNumber;
+        //    objFromDb.Text = instruction.Text;
 
-            await _db.SaveChangesAsync();
-            return true;
-        }
+        //    await _db.SaveChangesAsync();
+        //    return true;
+        //}
     }
 }
