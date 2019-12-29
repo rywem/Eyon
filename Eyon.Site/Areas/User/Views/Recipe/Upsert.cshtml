@@ -53,27 +53,38 @@
             </div>
             <div class="form-group row">
                 <div class="col-4">
-                    <b>Instructions</b>
+                    <b>Instructions</b>                    
                 </div>
                 <div class="col-8">
                     <ol class="instructions" id="instructions_list">
                         <li class="instruction_item">
-                            <div class="input-group">
-                                <input type="text" class="form-control col-sm-1 instruction_number" />
-                                &nbsp;<input type="text" id="instruction_0" class="form-control col-sm-11 instruction_textbox" rows="3"/>
-                                &nbsp;<button type="button" class="btn btn-danger" id="removeInstruction" onclick="removeInstruction(1)">
-                                    <i class="far fa-minus-square"></i>
-                                </button>
+                            <div class="col-sm-12 pl-0">
+                                <div class="input-group">
+                                    <input type="text" class="form-control instruction_number" name="instruction_0" id="instructionsStep_0" value="0" hidden />&nbsp;
+                                    <textarea type="text" id="instruction_0" class="form-control instruction_textbox col-sm-11" rows="2"></textarea>&nbsp;
+                                    <button type="button" class="btn btn-danger btnInstruction col-sm-1" id="removeInstruction" onclick="removeInstruction(0)">
+                                        <i class="far fa-minus-square"></i>
+                                    </button>
+                                </div>
                             </div>
                         </li>
-                    </ol>
+                        <li class="nostyle">
+                            <div class="col-sm-12 pl-0">
+                                <div class="input-group">
+                                    <div class="col-sm-11" >&nbsp;</div>                                    
+                                    <button type="button" class="btn btn-primary btnInstruction col-sm-1" id="addInstruction">
+                                        <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>                                                
+                    </ol>                                        
                     <span asp-validation-for="Instructions" class="text-danger"></span>
-                    <div class="row">
+                    @*<div class="row">
                         <button type="button" class="btn btn-primary" id="addInstruction">
                             <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
-                        </button>
-                        
-                    </div>
+                        </button>                        
+                    </div>*@
                 </div>
             </div>
             <div class="form-group row">
@@ -96,12 +107,9 @@
 
 @section Scripts {
     <script>
-        // Begin Instructions
-        
+        // Begin Instructions        
         var instructions = {};
-        var instructionCounter = 0;
-        var stepNumber;
-        
+        var instructionCounter = 0;        
         var newInstructionsCounter = 0;
         @if ( Model.Instructions != null && Model.Instructions.Count > 0 ) {
             foreach ( var instr in Model.Instructions.OrderBy(x => x.StepNumber) )
@@ -111,17 +119,23 @@
                 </text>
             }
             <text>
-                instructionCounter = @Model.Instructions.Max(x => x.StepNumber) ;
+                instructionCounter = @Model.Instructions.Max(x => x.StepNumber) ;                                
             </text>
         }
 
-        $(document).ready(function () {
+        $(document).ready(function () {            
             createInstructionsList();
-            $("#addInstruction").click(function () {
+            createAddInstructionButton();
+
+            $("#instructions_list").on("click", "#addInstruction", function () {
+                saveCurrentInstructions();
+                createInstructionsList();
                 newInstructionsCounter++;
-                createInstruction(newInstructionsCounter + instructionCounter, '');                
+                createInstruction(newInstructionsCounter + instructionCounter, '');
+                createAddInstructionButton();
             });
         });
+       
 
 
         function createInstructionsList() {
@@ -131,17 +145,50 @@
                 createInstruction(newInstructionsCounter + instructionCounter, '');
             } else {
                 for (var i = 1; i <= instructionCounter + newInstructionsCounter; i++) {
-                    createInstruction(i, instructions[i]);
+                    if ( instructions[i] !== 'undefined' )
+                        createInstruction(i, instructions[i]);
+                    else 
+                        createInstruction(i, '');
                 }
-            }
+            }            
         }
 
-        function createInstruction(index, text) {
-            $("#instructions_list").append('<li class="instruction_item"> <div class="input-group">'
-                    + '<input type="text" class="form-control col-sm-1 instruction_number" name="instruction_' + index + '" id="instructionsStep_' + index + '" value="' + index + '" hidden />&nbsp;'
-                    + '<input type="text" name="instruction_' + index + '" id="instructionText_' + index + '" class="form-control col-sm-11 instruction_textbox" value="' + text + '" rows="3"/>'
-                    + '&nbsp;<button type="button" class="btn btn-danger" onclick="removeInstructionItem('+index+');"> <i class="far fa-minus-square"></i> </button>'
-                    + '</div></li>');
+        function createInstruction(index, text) {                        
+            $("#instructions_list").append('<li class="instruction_item"> <div class="col-sm-12 pl-0"> <div class="input-group">'
+                    + '<input type="text" class="form-control instruction_number" name="instruction_' + index + '" id="instructionsStep_' + index + '" value="' + index + '" hidden />&nbsp;'
+                    + '<textarea type="text" name="instruction_' + index + '" id="instructionText_' + index + '" class="form-control instruction_textbox col-sm-11" rows="2">' + text + '</textarea>'
+                    + '&nbsp;<button type="button" class="btn btn-danger btnInstruction col-sm-1" onclick="removeInstructionItem('+index+');"> <i class="far fa-minus-square"></i> </button>'                    
+                    + '</div></div></li>');
+        }
+
+        function createAddInstructionButton() {
+            $("#instructions_list").append(` <li class="nostyle">
+                                                <div class="col-sm-12 pl-0">
+                                                    <div class="input-group">
+                                                        <div class="col-sm-11" >&nbsp;</div>                                    
+                                                        <button type="button" class="btn btn-primary btnInstruction col-sm-1" id="addInstruction">
+                                                            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                        `);
+        }
+
+
+        function saveCurrentInstructions() {
+            var newInstructions = {};
+            for (var i = 1; i <= (instructionCounter + newInstructionsCounter); i++) {
+                // get current form values
+                var textId;
+                var number = i;
+
+                textId = "#instructionText_" + number;
+                var newText = $(textId).val();
+                newInstructions[i] = newText;
+            }
+            instructions = {};
+            instructions = newInstructions;
         }
 
         function removeInstructionItem(id) {
@@ -174,6 +221,7 @@
             instructions = {};
             instructions = newInstructions;            
             createInstructionsList();
+            createAddInstructionButton();
         }
         // End Instructions
 
