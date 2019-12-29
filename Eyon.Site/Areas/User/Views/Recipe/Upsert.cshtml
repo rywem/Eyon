@@ -39,16 +39,10 @@
             </div>
             <div class="form-group row">
                 <div class="col-4">
-                    <b>Ingredients</b>
+                    <label for="ingredients_text"><b>Ingredients</b></label>
                 </div>
-                <div class="col-8">
-                    <div class="col-8">
-                        <ul id="ingredients_list">
-                            <li>One </li>
-                            <li>Two </li>
-                            <li>Three </li>
-                        </ul>
-                    </div>
+                <div class="col-8">                                        
+                    <textarea name="ingredients_text" id="ingredients_text" class="form-control col-sm-12" rows="4" placeholder="Put each ingredient on a different line"></textarea>                    
                 </div>
             </div>
             <div class="form-group row">
@@ -61,8 +55,8 @@
                             <div class="col-sm-12 pl-0">
                                 <div class="input-group">
                                     <input type="text" class="form-control instruction_number" name="instruction_0" id="instructionsStep_0" value="0" hidden />&nbsp;
-                                    <textarea type="text" id="instruction_0" class="form-control instruction_textbox col-sm-11" rows="2"></textarea>&nbsp;
-                                    <button type="button" class="btn btn-danger btnInstruction col-sm-1" id="removeInstruction" onclick="removeInstruction(0)">
+                                    <textarea  id="instruction_0" class="form-control instruction_textbox col-sm-11" rows="2"></textarea>&nbsp;
+                                    <button type="button" class="btn btn-danger btn-danger-bright btnInstruction col-sm-1" id="removeInstruction" onclick="removeInstruction(0)">
                                         <i class="far fa-minus-square"></i>
                                     </button>
                                 </div>
@@ -79,12 +73,7 @@
                             </div>
                         </li>                                                
                     </ol>                                        
-                    <span asp-validation-for="Instructions" class="text-danger"></span>
-                    @*<div class="row">
-                        <button type="button" class="btn btn-primary" id="addInstruction">
-                            <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
-                        </button>                        
-                    </div>*@
+                    <span asp-validation-for="Instructions" class="text-danger"></span>                    
                 </div>
             </div>
             <div class="form-group row">
@@ -126,7 +115,6 @@
         $(document).ready(function () {            
             createInstructionsList();
             createAddInstructionButton();
-
             $("#instructions_list").on("click", "#addInstruction", function () {
                 saveCurrentInstructions();
                 createInstructionsList();
@@ -136,8 +124,6 @@
             });
         });
        
-
-
         function createInstructionsList() {
             $("#instructions_list").empty();
             if (instructionCounter == 0) {
@@ -156,8 +142,8 @@
         function createInstruction(index, text) {                        
             $("#instructions_list").append('<li class="instruction_item"> <div class="col-sm-12 pl-0"> <div class="input-group">'
                     + '<input type="text" class="form-control instruction_number" name="instruction_' + index + '" id="instructionsStep_' + index + '" value="' + index + '" hidden />&nbsp;'
-                    + '<textarea type="text" name="instruction_' + index + '" id="instructionText_' + index + '" class="form-control instruction_textbox col-sm-11" rows="2">' + text + '</textarea>'
-                    + '&nbsp;<button type="button" class="btn btn-danger btnInstruction col-sm-1" onclick="removeInstructionItem('+index+');"> <i class="far fa-minus-square"></i> </button>'                    
+                    + '<textarea name="instruction_' + index + '" id="instructionText_' + index + '" class="form-control instruction_textbox col-sm-11" rows="2">' + text + '</textarea>'
+                    + '&nbsp;<button type="button" class="btn btn-danger btn-danger-bright btnInstruction col-sm-1" onclick="removeInstructionItem('+index+');"> <i class="far fa-minus-square"></i> </button>'                    
                     + '</div></div></li>');
         }
 
