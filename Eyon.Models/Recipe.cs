@@ -2,6 +2,7 @@
 using Eyon.Models.Relationship;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
@@ -14,14 +15,17 @@ namespace Eyon.Models
         public long Id { get; set; }
         [Required]
         [StringLength(100)]
+        [DisplayName("Recipe Name")]
         public string Name { get; set; }                
         [Required]
+        [DisplayName("Cooktime")]
         public string Cooktime { get; set; }
         [Required]
+        [DisplayName("Prep time")]
         public string PrepTime { get; set; }
         [Required]
         public string Servings { get; set; }        
-        [MaxLength(5000)]
+        [MaxLength(3000)]
         [Required]
         public string Description { get; set; } 
         

@@ -230,8 +230,6 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
             await _unitOfWork.SaveAsync();
 
-            // Update Ingredients, Add Ingredients/Remove Ingredients
-
             // Update Community
 
             // Update cookbooks, add cookbooks/remove cookbooks

@@ -20,70 +20,97 @@
 
         <div class="col-9">
             <div class="form-group row">
-                <div class="col-4">
+                <div class="col-3">
                     <label asp-for="Recipe.Name"></label>
                 </div>
-                <div class="col-8">
+                <div class="col-9">
                     <input asp-for="Recipe.Name" class="form-control" />
                     <span asp-validation-for="Recipe.Name" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-4">
+                <div class="col-3">
                     <label asp-for="Recipe.Description"></label>
                 </div>
-                <div class="col-8">
-                    <textarea asp-for="Recipe.Description" class="form-control" rows="3" ></textarea>
+                <div class="col-9">
+                    <textarea asp-for="Recipe.Description" class="form-control" rows="3"></textarea>
                     <span asp-validation-for="Recipe.Description" class="text-danger"></span>
                 </div>
             </div>
+
             <div class="form-group row">
-                <div class="col-4">
-                    <label asp-for="Recipe.PrepTime"></label>
-                </div>
-                <div class="col-8">
-                    <input asp-for="Recipe.PrepTime" class="form-control" />
-                    <span asp-validation-for="Recipe.PrepTime" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-4">
-                    <label asp-for="Recipe.Cooktime"></label>
-                </div>
-                <div class="col-8">
-                    <input asp-for="Recipe.Cooktime" class="form-control" />
-                    <span asp-validation-for="Recipe.Cooktime" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-4">
-                    <label asp-for="Recipe.Servings"></label>
-                </div>
-                <div class="col-8">
-                    <input asp-for="Recipe.Servings" class="form-control" />
-                    <span asp-validation-for="Recipe.Servings" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-4">
+                <div class="col-3">
                     <label asp-for="IngredientsText"><b>Ingredients</b></label>
                 </div>
-                <div class="col-8">
-                    <textarea asp-for="IngredientsText" class="form-control col-sm-12" rows="4" placeholder="Put each ingredient on a different line"></textarea>                    
+                <div class="col-9">
+                    <textarea asp-for="IngredientsText" class="form-control col-sm-12" rows="4" placeholder="Put each ingredient on a different line"></textarea>
                     <span asp-validation-for="IngredientsText" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-4">
+                <div class="col-3">
                     <label asp-for="InstructionsText"><b>Instructions</b></label>
                 </div>
-                <div class="col-8">
+                <div class="col-9">
                     <textarea asp-for="InstructionsText" class="form-control col-sm-12" rows="4" placeholder="Put each instruction on a different line"></textarea>
-                    <span asp-validation-for="InstructionsText" class="text-danger"></span>                    
+                    <span asp-validation-for="InstructionsText" class="text-danger"></span>
                 </div>
             </div>
+            @if ( Model.Community != null && Model.Community.Id > 0 )
+            {                
+                <div class="col-3">
+                    <label asp-for="Community.Name"><b>Community Name</b></label>
+                </div>
+                <div class="col-9">
+                    <textarea asp-for="InstructionsText" class="form-control col-sm-12" rows="4" placeholder="Put each instruction on a different line"></textarea>
+                    <span asp-validation-for="InstructionsText" class="text-danger"></span>
+                    <input asp-for="CommunityId" class="form-control" hidden value="@Model.Community.Id"/>
+                </div>
+            }
+            else
+            {
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="CommunityId"><b>Add Community</b></label>
+                    </div>
+                    <div class="col-9">
+                        <input asp-for="CommunityId" class="form-control" hidden />
+                        <input type="text" class="form-control" />
+                        <button type="button">Find Community</button>
+                        <span asp-validation-for="CommunityId" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group row offset-3 col-9 p-0">
+                <div class="col-3">
+                    <label asp-for="Recipe.PrepTime"></label>
+                </div>
+                <div class="col-2">
+                    <input asp-for="Recipe.PrepTime" class="form-control" />
+                    <span asp-validation-for="Recipe.PrepTime" class="text-danger"></span>
+                </div>
+
+                <div class="col-3 offset-1">
+                    <label asp-for="Recipe.Cooktime"></label>
+                </div>
+                <div class="col-2">
+                    <input asp-for="Recipe.Cooktime" class="form-control" />
+                    <span asp-validation-for="Recipe.Cooktime" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row offset-3 col-9 p-0">
+                <div class="col-3">
+                    <label asp-for="Recipe.Servings"></label>
+                </div>
+                <div class="col-2">
+                    <input asp-for="Recipe.Servings" class="form-control" />
+                    <span asp-validation-for="Recipe.Servings" class="text-danger"></span>
+                </div>
+            </div>
+
             <div class="form-group row">
-                <div class="col-8 offset-4">
+                <div class="col-9 offset-3">
                     @if ( Model.Recipe.Id != 0 )
                     {
                         // Edit button and back to list button
@@ -102,7 +129,7 @@
 
 @section Scripts {
     <script>        
-        // Begin Instructions        
+        @*// Begin Instructions        
         var instructions = {};
         var instructionCounter = 0;        
         var newInstructionsCounter = 0;
@@ -215,7 +242,7 @@
             createInstructionsList();
             createAddInstructionButton();
         }
-        // End Instructions
+        // End Instructions*@
 
     </script>
 }
