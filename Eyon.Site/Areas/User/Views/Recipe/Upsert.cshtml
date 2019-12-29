@@ -76,7 +76,7 @@
                     <div class="col-9">
                         <input asp-for="CommunityId" class="form-control" hidden />
                         <input type="text" class="form-control" />
-                        <button type="button">Find Community</button>
+                        <button type="button" onclick="on();">Find Community</button>
                         <span asp-validation-for="CommunityId" class="text-danger"></span>
                     </div>
                 </div>
@@ -126,123 +126,22 @@
         </div>
     </div>
 </form>
+<div id="recipe_community_overlay">
+    <div id="recipe_community_overlay_body">
+        <button type="button" onclick="off()">X</button>
+        Hello world
+    </div>
+</div>
 
 @section Scripts {
     <script>        
-        @*// Begin Instructions        
-        var instructions = {};
-        var instructionCounter = 0;        
-        var newInstructionsCounter = 0;
-        @if ( Model.Instructions != null && Model.Instructions.Count > 0 ) {
-            foreach ( var instr in Model.Instructions.OrderBy(x => x.StepNumber) )
-            {
-                <text>
-                    instructions[@instr.StepNumber] = '@instr.Text';
-                </text>
-            }
-            <text>
-                instructionCounter = @Model.Instructions.Max(x => x.StepNumber) ;                                
-            </text>
+        function on() {
+          document.getElementById("recipe_community_overlay").style.display = "block";
         }
 
-        $(document).ready(function () {            
-            //createInstructionsList();
-            //createAddInstructionButton();
-            $("#instructions_list").on("click", "#addInstruction", function () {
-                saveCurrentInstructions();
-                createInstructionsList();
-                newInstructionsCounter++;
-                createInstruction(newInstructionsCounter + instructionCounter, '');
-                createAddInstructionButton();
-            });
-        });
-       
-        function createInstructionsList() {
-            $("#instructions_list").empty();
-            if (instructionCounter == 0) {
-                newInstructionsCounter++;
-                createInstruction(newInstructionsCounter + instructionCounter, '');
-            } else {
-                for (var i = 1; i <= instructionCounter + newInstructionsCounter; i++) {
-                    if ( instructions[i] !== 'undefined' )
-                        createInstruction(i, instructions[i]);
-                    else 
-                        createInstruction(i, '');
-                }
-            }            
+        function off() {
+          document.getElementById("recipe_community_overlay").style.display = "none";
         }
-
-        function createInstruction(index, text) {                        
-            $("#instructions_list").append('<li class="instruction_item"> <div class="col-sm-12 pl-0"> <div class="input-group">'
-                    + '<input type="text" class="form-control instruction_number" name="instruction_' + index + '" id="instructionsStep_' + index + '" value="' + index + '" hidden />&nbsp;'
-                    + '<textarea name="instruction_' + index + '" id="instructionText_' + index + '" class="form-control instruction_textbox col-sm-11" rows="2">' + text + '</textarea>'
-                    + '&nbsp;<button type="button" class="btn btn-danger btn-danger-bright btnInstruction col-sm-1" onclick="removeInstructionItem('+index+');"> <i class="far fa-minus-square"></i> </button>'                    
-                    + '</div></div></li>');
-        }
-
-        function createAddInstructionButton() {
-            $("#instructions_list").append(` <li class="nostyle">
-                                                <div class="col-sm-12 pl-0">
-                                                    <div class="input-group">
-                                                        <div class="col-sm-11" >&nbsp;</div>                                    
-                                                        <button type="button" class="btn btn-primary btnInstruction col-sm-1" id="addInstruction">
-                                                            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </li>
-                        `);
-        }
-
-
-        function saveCurrentInstructions() {
-            var newInstructions = {};
-            for (var i = 1; i <= (instructionCounter + newInstructionsCounter); i++) {
-                // get current form values
-                var textId;
-                var number = i;
-
-                textId = "#instructionText_" + number;
-                var newText = $(textId).val();
-                newInstructions[i] = newText;
-            }
-            instructions = {};
-            instructions = newInstructions;
-        }
-
-        function removeInstructionItem(id) {
-            var newInstructions = {};
-            
-            if (id <= instructionCounter)
-                instructionCounter--;
-            else
-                newInstructionsCounter--;            
-            var newLength = newInstructionsCounter + instructionCounter;
-            for (var i = 1; i <= instructionCounter; i++) {
-                if (i < id )
-                    newInstructions[i] = instructions[i];
-                else 
-                    newInstructions[i] = instructions[i+1];
-            }
-
-            
-            for (var i = instructionCounter + 1; i <= newLength; i++) {
-                var textId;
-                var number = i;
-                if (i >= id)                     
-                    number = i + 1;
-
-                textId = "#instructionText_" + number;
-                var newText = $(textId).val();
-                newInstructions[i] = newText;
-            }
-
-            instructions = {};
-            instructions = newInstructions;            
-            createInstructionsList();
-            createAddInstructionButton();
-        }
-        // End Instructions*@
 
     </script>
 }
