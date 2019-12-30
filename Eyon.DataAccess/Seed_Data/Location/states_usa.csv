@@ -1,0 +1,53 @@
+﻿Id,Name,Code,Type,LocalName,CountryId
+363,Alabama,AL,State,Alabama,192
+364,Alaska,AK,State,Alaska,192
+365,Arizona,AZ,State,Arizona,192
+366,Arkansas,AR,State,Arkansas,192
+367,California,CA,State,California,192
+368,Colorado,CO,State,Colorado,192
+369,Connecticut,CT,State,Connecticut,192
+370,Delaware,DE,State,Delaware,192
+371,District of Columbia,DC,State,District of Columbia,192
+372,Florida,FL,State,Florida,192
+373,Georgia,GA,State,Georgia,192
+374,Hawaii,HI,State,Hawaii,192
+375,Idaho,ID,State,Idaho,192
+376,Illinois,IL,State,Illinois,192
+377,Indiana,IN,State,Indiana,192
+378,Iowa,IA,State,Iowa,192
+379,Kansas,KS,State,Kansas,192
+380,Kentucky,KY,State,Kentucky,192
+381,Louisiana,LA,State,Louisiana,192
+382,Maine,ME,State,Maine,192
+383,Maryland,MD,State,Maryland,192
+384,Massachusetts,MA,State,Massachusetts,192
+385,Michigan,MI,State,Michigan,192
+386,Minnesota,MN,State,Minnesota,192
+387,Mississippi,MS,State,Mississippi,192
+388,Missouri,MO,State,Missouri,192
+389,Montana,MT,State,Montana,192
+390,Nebraska,NE,State,Nebraska,192
+391,Nevada,NV,State,Nevada,192
+392,New Hampshire,NH,State,New Hampshire,192
+393,New Jersey,NJ,State,New Jersey,192
+394,New Mexico,NM,State,New Mexico,192
+395,New York,NY,State,New York,192
+396,North Carolina,NC,State,North Carolina,192
+397,North Dakota,ND,State,North Dakota,192
+398,Ohio,OH,State,Ohio,192
+399,Oklahoma,OK,State,Oklahoma,192
+400,Oregon,OR,State,Oregon,192
+401,Pennsylvania,PA,State,Pennsylvania,192
+402,Puerto Rico,PR,State,Puerto Rico,192
+403,Rhode Island,RI,State,Rhode Island,192
+404,South Carolina,SC,State,South Carolina,192
+405,South Dakota,SD,State,South Dakota,192
+406,Tennessee,TN,State,Tennessee,192
+407,Texas,TX,State,Texas,192
+408,Utah,UT,State,Utah,192
+409,Vermont,VT,State,Vermont,192
+410,Virginia,VA,State,Virginia,192
+411,Washington,WA,State,Washington,192
+412,West Virginia,WV,State,West Virginia,192
+413,Wisconsin,WI,State,Wisconsin,192
+414,Wyoming,WY,State,Wyoming,192

@@ -1,0 +1,3 @@
+﻿1. Zip codes - http://federalgovernmentzipcodes.us/download.html
+2. Cities - https://www.kaggle.com/max-mind/world-cities-database
+	- license: https://www.kaggle.com/max-mind/world-cities-database#LICENSE.txt
