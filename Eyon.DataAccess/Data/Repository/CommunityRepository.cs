@@ -50,10 +50,6 @@ namespace Eyon.DataAccess.Data.Repository
         {
             var objFromDb = _db.Community.FirstOrDefault(s => s.Id == community.Id);
             objFromDb.Name = community.Name;
-            
-            objFromDb.County = community.County;
-            
-            objFromDb.WikipediaURL = community.WikipediaURL;
             objFromDb.Active = community.Active;
             _db.SaveChanges();
         }

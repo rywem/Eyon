@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿// Code to control the Country/State drop down menus.
+$(document).ready(function () {
     var createEnabled = true;
     $("#Community_CountryId").change(function () {
         var countryId = $("#Community_CountryId :selected").val();        

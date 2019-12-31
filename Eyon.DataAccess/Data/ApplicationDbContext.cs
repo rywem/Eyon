@@ -16,14 +16,30 @@ namespace Eyon.DataAccess.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Community>()
-                .HasIndex(u => u.WikipediaURL)
+            #region Indexes
+            // Indexes: https://stackoverflow.com/questions/18889218/unique-key-constraints-for-multiple-columns-in-entity-framework
+            modelBuilder.Entity<WebReference>()
+                .HasIndex(u => u.Url)
                 .IsUnique();
 
+            
+            modelBuilder.Entity<PostalCode>()
+                .HasIndex(p => new { p.Text, p.CountryId })
+                .IsUnique();
+
+            modelBuilder.Entity<Geocode>()
+                .HasIndex(p => new { p.Latitude, p.Longitude })
+                .IsUnique();
+
+            modelBuilder.Entity<CommunityGeocode>()
+                .HasIndex(p => new { p.CommunityId, p.GeocodeId })
+                .IsUnique();
+
+            #endregion
 
             #region Relationships
 
-            
+
             modelBuilder.Entity<CommunityCookbook>()
                 .HasKey(bc => new { bc.CookbookId, bc.CommunityId });
             modelBuilder.Entity<CommunityCookbook>()
@@ -34,6 +50,46 @@ namespace Eyon.DataAccess.Data
                 .HasOne(cc => cc.Cookbook)
                 .WithMany(cc => cc.CommunityCookbooks)
                 .HasForeignKey(cc => cc.CookbookId);
+
+            modelBuilder.Entity<CommunityWebReference>()
+                .HasKey(bc => new { bc.WebReferenceId, bc.CommunityId });
+            modelBuilder.Entity<CommunityWebReference>()
+                .HasOne(cc => cc.Community)
+                .WithMany(cc => cc.CommunityWebReferences)
+                .HasForeignKey(cc => cc.CommunityId);
+
+            modelBuilder.Entity<CommunityPostalCode>()
+                .HasKey(bc => new { bc.PostalCodeId, bc.CommunityId });
+            modelBuilder.Entity<CommunityPostalCode>()
+                .HasOne(cc => cc.Community)
+                .WithMany(cc => cc.CommunityPostalCodes)
+                .HasForeignKey(cc => cc.CommunityId);
+            modelBuilder.Entity<Models.Relationship.CommunityPostalCode>()
+                .HasOne(cc => cc.PostalCode)
+                .WithMany(cc => cc.CommunityPostalCodes)
+                .HasForeignKey(cc => cc.PostalCodeId);
+
+            modelBuilder.Entity<CommunityGeocode>()
+                .HasKey(bc => new { bc.GeocodeId, bc.CommunityId });
+            modelBuilder.Entity<CommunityGeocode>()
+                .HasOne(cc => cc.Community)
+                .WithMany(cc => cc.CommunityGeocodes)
+                .HasForeignKey(cc => cc.CommunityId);
+            modelBuilder.Entity<CommunityGeocode>()
+                .HasOne(cc => cc.Geocode)
+                .WithMany(cc => cc.CommunityGeocodes)
+                .HasForeignKey(cc => cc.GeocodeId);
+
+            modelBuilder.Entity<PostalCodeGeocode>()
+                .HasKey(bc => new { bc.GeocodeId, bc.PostalCodeId });
+            modelBuilder.Entity<PostalCodeGeocode>()
+                .HasOne(cc => cc.PostalCode)
+                .WithMany(cc => cc.PostalCodeGeocodes)
+                .HasForeignKey(cc => cc.PostalCodeId);
+            modelBuilder.Entity<PostalCodeGeocode>()
+                .HasOne(cc => cc.Geocode)
+                .WithMany(cc => cc.PostalCodeGeocodes)
+                .HasForeignKey(cc => cc.GeocodeId);
 
             modelBuilder.Entity<CookbookCategories>()
                 .HasKey(bc => new { bc.CookbookId, bc.CategoryId });
@@ -67,7 +123,6 @@ namespace Eyon.DataAccess.Data
                 .HasOne(o => o.Cookbook)
                 .WithMany(o => o.OrganizationCookbooks)
                 .HasForeignKey(o => o.CookbookId);
-
             
             modelBuilder.Entity<CommunityState>()
                 .HasKey(cc => new { cc.CommunityId, cc.StateId });
@@ -800,9 +855,9 @@ namespace Eyon.DataAccess.Data
             #region Communities 
 
             modelBuilder.Entity<Community>().HasData(
-                new Community() { Id = 1 ,Name = "Quincy", WikipediaURL = "https://en.wikipedia.org/wiki/Quincy,_California", County = "Plumas", Active = true, CountryId = 192 },
-                new Community() { Id = 2, Name = "Myrtle Beach", WikipediaURL = "https://en.wikipedia.org/wiki/Myrtle_Beach,_South_Carolina", County = "Horry", Active = true, CountryId = 192 },
-                new Community() { Id = 3, Name = "Deer River", WikipediaURL = "https://en.wikipedia.org/wiki/Deer_River,_Minnesota", County = "Itasca", Active = true, CountryId = 192 }
+                new Community() { Id = 1 ,Name = "Quincy", Active = true, CountryId = 192 },
+                new Community() { Id = 2, Name = "Myrtle Beach", Active = true, CountryId = 192 },
+                new Community() { Id = 3, Name = "Deer River", Active = true, CountryId = 192 }
                 );
 
             #endregion

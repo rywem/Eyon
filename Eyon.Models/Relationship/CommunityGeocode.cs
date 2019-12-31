@@ -5,12 +5,13 @@ using System.Text;
 
 namespace Eyon.Models.Relationship
 {
-    public class CommunityZipcode
+    public class CommunityGeocode
     {
-        public long Id { get; set; }
-        public string ZipCode { get; set; }
-        public long CommunityId { get; set; }        
+        public long CommunityId { get; set; }
         [ForeignKey("CommunityId")]
         public Community Community { get; set; }
+        public long GeocodeId { get; set; }
+        [ForeignKey("GeocodeId")]
+        public Geocode Geocode { get; set; }
     }
 }

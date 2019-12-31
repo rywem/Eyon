@@ -13,20 +13,9 @@ function loadDataTable() {
             "datatype": "json"
         },
         "columns": [
-            { "data": "name", "width": "15%" },
-            { "data": "county", "width": "15%" },
-            { "data": "stateProvince", "width": "15%" },
-            { "data": "country", "width": "15%" },
-            {
-                "data": "wikipediaURL",
-                "render": function (data) {
-                    return ` <div class="badge badge-dark text-white">
-                                <a href="#"  onClick="window.open('${data}', '_blank')" class="inherit">View Wikipedia</a>
-                            </div>
-                            `;
-
-                }, "width": "15%"
-            },
+            { "data": "name", "width": "20%" },
+            { "data": "stateProvince", "width": "20%" },
+            { "data": "country", "width": "20%" },            
             {
                 "data": "id",
                 "render": function (data) {
@@ -53,7 +42,6 @@ function loadDataTable() {
 
 function Delete(url) {
     // Use Sweet Alert to give popup confirming delete.
-
     swal({
         title: "Are you sure you want to delete?",
         text: "You will not be able to restore the content!",

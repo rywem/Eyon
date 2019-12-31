@@ -26,8 +26,8 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
             var community = new Community()
             {
                 Name = "Quincy",
-                WikipediaURL = "https://en.wikipedia.org/wiki/Quincy,_California",
-                County = "Plumas",
+                //WikipediaURL = "https://en.wikipedia.org/wiki/Quincy,_California",
+                //County = "Plumas",
                 Active = true
             };
             _unitOfWork.Community.Add(community);

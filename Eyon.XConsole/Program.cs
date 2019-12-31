@@ -32,31 +32,40 @@ namespace Eyon.XConsole
             var states = LocationHelper.LoadStates(pathToStatesFile);
             List<CommunityState> communityStates = new List<CommunityState>();
             List<Community> communities = new List<Community>();
-            long id = 4;            
+            long id = 4;
+            
             //IUnitOfWork unitOfWork = new UnitOfWork();
-            foreach ( var item in deduped )
-            {
-                //Console.WriteLine(string.Format("city {0} \t state: {1} \t zip {2}", item.City, item.State, item.Zipcode));
-                long stateId = states.FirstOrDefault(x => x.Code == item.State).Id;
-                //TODO get State ID
-                Community community = new Community()
-                {
-                    Id = id,
-                    Name = item.City,
-                    CountryId = 192,
-                    WikipediaURL = Eyon.Utilities.Seeding.CommunityCreator.GetWikipediaURL(item.City, item.State, "United States"),
-                    Active = true
-                };
-                communities.Add(community);
 
-                CommunityState communityState = new CommunityState()
-                {
-                    CommunityId = id,
-                    StateId = stateId
-                };
+            //List<long> listOfIds = new List<long>();
+            //System.Collections.Concurrent.ConcurrentQueue<Community> communityQueue = new System.Collections.Concurrent.ConcurrentQueue<Community>();
+            //System.Collections.Concurrent.ConcurrentQueue<CommunityState> communityStateQueue = new System.Collections.Concurrent.ConcurrentQueue<CommunityState>();
 
-                id++;
-            }
+            //fo
+
+
+            //foreach ( var item in deduped )
+            //{
+            //    //Console.WriteLine(string.Format("city {0} \t state: {1} \t zip {2}", item.City, item.State, item.Zipcode));
+            //    long stateId = states.FirstOrDefault(x => x.Code == item.State).Id;
+            //    //TODO get State ID
+            //    Community community = new Community()
+            //    {
+            //        Id = id,
+            //        Name = item.City,
+            //        CountryId = 192,
+            //        //WikipediaURL = Eyon.Utilities.Seeding.CommunityCreator.GetWikipediaURL(item.City, item.State, "United States"),
+            //        Active = true
+            //    };
+            //    communities.Add(community);
+
+            //    CommunityState communityState = new CommunityState()
+            //    {
+            //        CommunityId = id,
+            //        StateId = stateId
+            //    };
+
+            //    id++;
+            //}
             
             
             //string city = "deer river";

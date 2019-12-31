@@ -14,6 +14,7 @@ namespace Eyon.Models
         [Key]
         public long Id { get; set; }
         [Required]
+        [MaxLength(100)]
         [StringLength(100)]
         [DisplayName("Recipe Name")]
         public string Name { get; set; }                
@@ -26,6 +27,7 @@ namespace Eyon.Models
         [Required]
         public string Servings { get; set; }        
         [MaxLength(3000)]
+        [StringLength(3000)]
         [Required]
         public string Description { get; set; } 
         

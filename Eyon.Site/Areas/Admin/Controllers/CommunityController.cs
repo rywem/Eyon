@@ -110,10 +110,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
                        select new
                        {
                            name = c.Name,
-                           county = c.County,
                            stateProvince = c.CommunityState != null ? c.CommunityState.State.Name : "N/A",
                            country = c.Country.Name,
-                           wikipediaURL = c.WikipediaURL,
                            id = c.Id
                        };
             return Json(new { data });
