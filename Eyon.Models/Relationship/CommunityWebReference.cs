@@ -9,8 +9,7 @@ namespace Eyon.Models.Relationship
     {
         public long CommunityId { get; set; }
         [ForeignKey("CommunityId")]
-        public Community Community { get; set; }
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Community Community { get; set; }        
         public long WebReferenceId { get; set; }
         [ForeignKey("WebReferenceId")]
         public WebReference WebReference { get; set; }

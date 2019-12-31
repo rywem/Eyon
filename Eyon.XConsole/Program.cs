@@ -3,16 +3,9 @@ using System.IO;
 using System.Net;
 using System.Text;
 using Eyon.XTests.UnitTests.DataAccess.Data.Orchestator;
-using HtmlAgilityPack;
-using Eyon.XConsole.Seeding;
 using System.Linq;
 using Eyon.Utilities;
-using Eyon.Models;
-using Eyon.DataAccess;
 using System.Collections.Generic;
-using Eyon.Models.Relationship;
-using Eyon.DataAccess.Data;
-using Eyon.DataAccess.Data.Repository.IRepository;
 
 namespace Eyon.XConsole
 {
@@ -21,68 +14,68 @@ namespace Eyon.XConsole
         static void Main(string[] args)
         {
 
-            string pathToFile = "..\\..\\..\\..\\Eyon.DataAccess\\Seed_Data\\Location\\free-zipcode-database-Primary.csv";
+            //string pathToFile = "..\\..\\..\\..\\Eyon.DataAccess\\Seed_Data\\Location\\free-zipcode-database-Primary.csv";
 
-            var zips = LocationHelper.LoadZipcodes(pathToFile);
-            //var zipsList = zips.ToList();
+            //var zips = LocationHelper.LoadZipcodes(pathToFile);
+            ////var zipsList = zips.ToList();
 
-            var deduped = zips.DistinctBy(x => x.CityState).ToList();
+            //var deduped = zips.DistinctBy(x => x.CityState).ToList();
 
-            string pathToStatesFile = "..\\..\\..\\..\\Eyon.DataAccess\\Seed_Data\\Location\\states_usa.csv";
-            var states = LocationHelper.LoadStates(pathToStatesFile);
-            List<CommunityState> communityStates = new List<CommunityState>();
-            List<Community> communities = new List<Community>();
-            long id = 4;
+            //string pathToStatesFile = "..\\..\\..\\..\\Eyon.DataAccess\\Seed_Data\\Location\\states_usa.csv";
+            //var states = LocationHelper.LoadStates(pathToStatesFile);
+            //List<CommunityState> communityStates = new List<CommunityState>();
+            //List<Community> communities = new List<Community>();
+            //long id = 4;
             
-            //IUnitOfWork unitOfWork = new UnitOfWork();
+            ////IUnitOfWork unitOfWork = new UnitOfWork();
 
-            //List<long> listOfIds = new List<long>();
-            //System.Collections.Concurrent.ConcurrentQueue<Community> communityQueue = new System.Collections.Concurrent.ConcurrentQueue<Community>();
-            //System.Collections.Concurrent.ConcurrentQueue<CommunityState> communityStateQueue = new System.Collections.Concurrent.ConcurrentQueue<CommunityState>();
+            ////List<long> listOfIds = new List<long>();
+            ////System.Collections.Concurrent.ConcurrentQueue<Community> communityQueue = new System.Collections.Concurrent.ConcurrentQueue<Community>();
+            ////System.Collections.Concurrent.ConcurrentQueue<CommunityState> communityStateQueue = new System.Collections.Concurrent.ConcurrentQueue<CommunityState>();
 
-            //fo
+            ////fo
 
 
-            //foreach ( var item in deduped )
-            //{
-            //    //Console.WriteLine(string.Format("city {0} \t state: {1} \t zip {2}", item.City, item.State, item.Zipcode));
-            //    long stateId = states.FirstOrDefault(x => x.Code == item.State).Id;
-            //    //TODO get State ID
-            //    Community community = new Community()
-            //    {
-            //        Id = id,
-            //        Name = item.City,
-            //        CountryId = 192,
-            //        //WikipediaURL = Eyon.Utilities.Seeding.CommunityCreator.GetWikipediaURL(item.City, item.State, "United States"),
-            //        Active = true
-            //    };
-            //    communities.Add(community);
+            ////foreach ( var item in deduped )
+            ////{
+            ////    //Console.WriteLine(string.Format("city {0} \t state: {1} \t zip {2}", item.City, item.State, item.Zipcode));
+            ////    long stateId = states.FirstOrDefault(x => x.Code == item.State).Id;
+            ////    //TODO get State ID
+            ////    Community community = new Community()
+            ////    {
+            ////        Id = id,
+            ////        Name = item.City,
+            ////        CountryId = 192,
+            ////        //WikipediaURL = Eyon.Utilities.Seeding.CommunityCreator.GetWikipediaURL(item.City, item.State, "United States"),
+            ////        Active = true
+            ////    };
+            ////    communities.Add(community);
 
-            //    CommunityState communityState = new CommunityState()
-            //    {
-            //        CommunityId = id,
-            //        StateId = stateId
-            //    };
+            ////    CommunityState communityState = new CommunityState()
+            ////    {
+            ////        CommunityId = id,
+            ////        StateId = stateId
+            ////    };
 
-            //    id++;
-            //}
+            ////    id++;
+            ////}
             
             
-            //string city = "deer river";
-            //string state = "MN";
+            ////string city = "deer river";
+            ////string state = "MN";
 
-            //string country = "united+states";
+            ////string country = "united+states";
 
-            //try
-            //{
-            //    GetWikipediaURL(city, state, country);
-            //}
-            //catch(Exception ex)
-            //{
-            //    Console.WriteLine(ex.ToString());
-            //}
-            Console.WriteLine("Finished");
-            Console.ReadLine();
+            ////try
+            ////{
+            ////    GetWikipediaURL(city, state, country);
+            ////}
+            ////catch(Exception ex)
+            ////{
+            ////    Console.WriteLine(ex.ToString());
+            ////}
+            //Console.WriteLine("Finished");
+            //Console.ReadLine();
         }
 
         //public static string GetWikipediaURL(string city, string state, string country)

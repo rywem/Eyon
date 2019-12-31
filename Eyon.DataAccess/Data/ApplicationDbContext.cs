@@ -18,6 +18,10 @@ namespace Eyon.DataAccess.Data
         {
             #region Indexes
             // Indexes: https://stackoverflow.com/questions/18889218/unique-key-constraints-for-multiple-columns-in-entity-framework
+            //modelBuilder.Entity<Community>()
+            //    .HasIndex(u => u.WikipediaURL)
+            //    .IsUnique();
+
             modelBuilder.Entity<WebReference>()
                 .HasIndex(u => u.Url)
                 .IsUnique();
@@ -59,15 +63,17 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(cc => cc.CommunityId);
 
             modelBuilder.Entity<CommunityPostalCode>()
-                .HasKey(bc => new { bc.PostalCodeId, bc.CommunityId });
+                .HasKey(bc => new { bc.CommunityId, bc.PostalCodeId });
             modelBuilder.Entity<CommunityPostalCode>()
                 .HasOne(cc => cc.Community)
                 .WithMany(cc => cc.CommunityPostalCodes)
-                .HasForeignKey(cc => cc.CommunityId);
+                .HasForeignKey(cc => cc.CommunityId)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Models.Relationship.CommunityPostalCode>()
                 .HasOne(cc => cc.PostalCode)
                 .WithMany(cc => cc.CommunityPostalCodes)
-                .HasForeignKey(cc => cc.PostalCodeId);
+                .HasForeignKey(cc => cc.PostalCodeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CommunityGeocode>()
                 .HasKey(bc => new { bc.GeocodeId, bc.CommunityId });
