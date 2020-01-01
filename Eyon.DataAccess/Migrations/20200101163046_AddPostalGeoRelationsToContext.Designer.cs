@@ -4,14 +4,16 @@ using Eyon.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Eyon.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200101163046_AddPostalGeoRelationsToContext")]
+    partial class AddPostalGeoRelationsToContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,6 +118,29 @@ namespace Eyon.DataAccess.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Community");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Active = true,
+                            CountryId = 192L,
+                            Name = "Quincy"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Active = true,
+                            CountryId = 192L,
+                            Name = "Myrtle Beach"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Active = true,
+                            CountryId = 192L,
+                            Name = "Deer River"
+                        });
                 });
 
             modelBuilder.Entity("Eyon.Models.Cookbook", b =>
@@ -1629,6 +1654,23 @@ namespace Eyon.DataAccess.Migrations
                     b.HasIndex("StateId");
 
                     b.ToTable("CommunityState");
+
+                    b.HasData(
+                        new
+                        {
+                            CommunityId = 1L,
+                            StateId = 367L
+                        },
+                        new
+                        {
+                            CommunityId = 3L,
+                            StateId = 386L
+                        },
+                        new
+                        {
+                            CommunityId = 2L,
+                            StateId = 404L
+                        });
                 });
 
             modelBuilder.Entity("Eyon.Models.Relationship.CommunityWebReference", b =>

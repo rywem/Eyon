@@ -861,21 +861,21 @@ namespace Eyon.DataAccess.Data
 
             #region Communities 
 
-            modelBuilder.Entity<Community>().HasData(
-                new Community() { Id = 1 ,Name = "Quincy", Active = true, CountryId = 192 },
-                new Community() { Id = 2, Name = "Myrtle Beach", Active = true, CountryId = 192 },
-                new Community() { Id = 3, Name = "Deer River", Active = true, CountryId = 192 }
-                );
+            //modelBuilder.Entity<Community>().HasData(
+            //    new Community() { Id = 1 ,Name = "Quincy", Active = true, CountryId = 192 },
+            //    new Community() { Id = 2, Name = "Myrtle Beach", Active = true, CountryId = 192 },
+            //    new Community() { Id = 3, Name = "Deer River", Active = true, CountryId = 192 }
+            //    );
 
             #endregion
 
             #region CommunityState Relationsh
 
-            modelBuilder.Entity<CommunityState>().HasData(
-                new CommunityState() { CommunityId = 1, StateId = 367 },
-                new CommunityState() { CommunityId = 3, StateId = 386 },
-                new CommunityState() { CommunityId = 2, StateId = 404 }
-                );
+            //modelBuilder.Entity<CommunityState>().HasData(
+            //    new CommunityState() { CommunityId = 1, StateId = 367 },
+            //    new CommunityState() { CommunityId = 3, StateId = 386 },
+            //    new CommunityState() { CommunityId = 2, StateId = 404 }
+            //    );
 
             #endregion
 
@@ -928,6 +928,8 @@ namespace Eyon.DataAccess.Data
         public DbSet<PostalCodeGeocode> PostalCodeGeocodes { get; set; }
 
         public DbSet<ApplicationUserRecipe> ApplicationUserRecipes { get; set; }
+
+        // NOTE: Start making these names NOT PLURAL
 
         #endregion
 

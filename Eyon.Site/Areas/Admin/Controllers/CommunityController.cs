@@ -89,8 +89,9 @@ namespace Eyon.Site.Areas.Admin.Controllers
                     {                                                
                         await files[0].CopyToAsync(stream);
                         stream.Seek(0, SeekOrigin.Begin);                        
-                        var records = Eyon.DataAccess.SeedData.Location.ZipCodeFile.LoadZipcodesFromStream(stream, true);                        
-                    }                    
+                        var records = Eyon.DataAccess.SeedData.Location.ZipCodeFile.LoadZipcodesFromStream(stream, true);
+                        await _communityOrchestrator.UploadCommunities(records, 192);
+                    }
                 }
             }
             return View();

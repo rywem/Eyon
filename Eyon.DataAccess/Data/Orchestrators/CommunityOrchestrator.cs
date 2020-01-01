@@ -4,6 +4,11 @@ using Eyon.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using Eyon.DataAccess.Data.Repository;
+using System.Threading.Tasks;
+using Eyon.Models;
+using Eyon.Models.Relationship;
+using System.Linq;
+using Eyon.DataAccess.SeedData.Location;
 
 namespace Eyon.DataAccess.Data.Orchestrators
 {
@@ -36,10 +41,162 @@ namespace Eyon.DataAccess.Data.Orchestrators
             return communityViewModel;
         }
 
-        //public void UploadCommunity(List<DataAccess.SeedData.> zipcodes)
-        //{
+        private async Task AddZipcode( ZipCodeFile zip, Country country)
+        {
+            string city = zip.City.ToUpper();
+            string state = zip.State.ToUpper();
 
-        //}
+            var stateFromDb = await _unitOfWork.State.GetFirstOrDefaultAsync(x => x.CountryId == country.Id && x.Code == state);
+
+            if ( stateFromDb != null )
+            {
+                var community = await _unitOfWork.Community.GetFirstOrDefaultAsync(x => x.CountryId == country.Id && x.Name == city, includeProperties: "CommunityState,CommunityPostalCodes,CommunityPostalCodes.PostalCode,CommunityGeocodes,CommunityGeocodes.Geocode");
+                if ( community == null )
+                {
+                    community = new Community()
+                    {
+                        Active = true,
+                        CountryId = country.Id,
+                        Name = city,
+                    };
+                    _unitOfWork.Community.Add(community);
+                    await _unitOfWork.SaveAsync();
+                }
+                else
+                {
+                    string x = "";
+                }
+
+                // Create state relationship
+                if ( community.CommunityState == null )
+                {
+                    CommunityState communityState = new CommunityState()
+                    {
+                        CommunityId = community.Id,
+                        StateId = stateFromDb.Id
+                    };
+                    _unitOfWork.CommunityState.Add(communityState);
+                    await _unitOfWork.SaveAsync();
+                }
+
+                PostalCode postal = null;
+                CommunityPostalCode commmunityPostalCode = null;
+                var zipText = zip.Zipcode.ToUpper();
+                if ( community.CommunityPostalCodes != null )
+                {                    
+                    postal = community.CommunityPostalCodes.ToList().Select(x => x.PostalCode).Where(x => x.Text.Equals(zipText)).FirstOrDefault();
+                }
+                
+                //postal = community.CommunityPostalCodes.ToList().Select(x => x.PostalCode).Where(x => x.Text.Equals(zipText)).FirstOrDefault();
+                if ( postal != null )
+                    commmunityPostalCode = community.CommunityPostalCodes.FirstOrDefault(x => x.PostalCodeId == postal.Id);
+                else
+                    postal = await _unitOfWork.PostalCode.GetFirstOrDefaultAsync(x => x.Text.Equals(zipText) && x.CountryId == country.Id);
+
+                // create postal code.
+                if ( postal == null )
+                {
+                    postal = new PostalCode()
+                    {
+                        CountryId = country.Id,
+                        Text = zip.Zipcode.ToUpper(),
+                    };
+                    _unitOfWork.PostalCode.Add(postal);
+                    await _unitOfWork.SaveAsync();
+                }
+                
+                if ( commmunityPostalCode == null )                
+                {
+                    commmunityPostalCode = new CommunityPostalCode()
+                    {
+                        CommunityId = community.Id,
+                        PostalCodeId = postal.Id
+                    };
+                    _unitOfWork.CommunityPostalCode.Add(commmunityPostalCode);
+                    await _unitOfWork.SaveAsync();
+                }
+                // check for geo code 
+                Geocode geocode = null;
+                CommunityGeocode communityGeocode = null;
+                string lati = zip.Lat.ToUpper();
+                string longi = zip.Long.ToUpper();
+                if ( community.CommunityGeocodes != null )
+                {
+                    // check if the postal code exists:
+                    //geocode = await _unitOfWork.Geocode.GetFirstOrDefaultAsync(x => x.Latitude.Equals(lati) && x.Longitude.Equals(longi));
+                    geocode = community.CommunityGeocodes.ToList().Select(x => x.Geocode).Where(x => x.Latitude.Equals(lati) && x.Longitude.Equals(longi)).FirstOrDefault();
+                }
+                                    
+                if ( geocode != null )
+                    communityGeocode = community.CommunityGeocodes.FirstOrDefault(x => x.GeocodeId == geocode.Id);
+                else
+                    geocode = await _unitOfWork.Geocode.GetFirstOrDefaultAsync(x => x.Latitude.Equals(lati) && x.Longitude.Equals(longi));
+                
+
+                if ( geocode == null )
+                {
+                    geocode = new Geocode()
+                    {
+                        Latitude = lati,
+                        Longitude = longi
+                    };
+                    _unitOfWork.Geocode.Add(geocode);
+                    await _unitOfWork.SaveAsync();
+                }
+                if (communityGeocode == null )
+                {
+                    communityGeocode = new CommunityGeocode()
+                    {
+                        CommunityId = community.Id,
+                        GeocodeId = geocode.Id
+                    };
+                    _unitOfWork.CommunityGeocode.Add(communityGeocode);
+                    await _unitOfWork.SaveAsync();
+                }
+
+                // last, check if the postal geocode relation exists.
+                PostalCodeGeocode postalCodeGeocode = await  _unitOfWork.PostalCodeGeocode.GetFirstOrDefaultAsync(x => x.GeocodeId == geocode.Id && x.PostalCodeId == postal.Id);
+
+                if(postalCodeGeocode == null)
+                {
+                    postalCodeGeocode = new PostalCodeGeocode() { GeocodeId = geocode.Id, PostalCodeId = postal.Id };
+                    _unitOfWork.PostalCodeGeocode.Add(postalCodeGeocode);
+                    await _unitOfWork.SaveAsync();
+                }
+            }
+        }
+        private async Task AddZipcodeTransaction( ZipCodeFile zip, Country country )
+        {
+            using ( var transaction = _unitOfWork.BeginTransaction() )
+            {
+                try
+                {
+                    await AddZipcode(zip, country);
+                    // Todo, add community
+                    transaction.Commit();
+                }
+                catch ( Exception safeException )
+                {
+                    transaction.Rollback();
+                    throw safeException;
+                }
+            }
+        }
+
+        public async Task UploadCommunities(List<ZipCodeFile> zipcodes, long countryId)
+        {
+
+            // loop through the list of zip codes
+            var countryFromDb = await _unitOfWork.Country.GetFirstOrDefaultAsync(x => x.Id == countryId);
+
+            if ( countryFromDb != null ) {
+                int counter = 0;
+                foreach ( var zip in zipcodes )
+                {
+                    await AddZipcodeTransaction(zip, countryFromDb);                    
+                }
+            }
+        }
 
         public void AddCommunity( CommunityViewModel communityViewModel )
         {
