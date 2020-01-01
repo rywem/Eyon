@@ -178,7 +178,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
                            StateCode = r.CommunityState != null ? r.CommunityState.State.Code : string.Empty,
                            CountryId = r.Country.Id,
                            CountryName = r.Country.Name
-                       } into pr
+                       } 
+                       into pr
                        select new 
                        { 
                            pr.Key.CommunityId,

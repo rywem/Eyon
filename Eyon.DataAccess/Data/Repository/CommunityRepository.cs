@@ -28,8 +28,8 @@ namespace Eyon.DataAccess.Data.Repository
         }
 
         public IEnumerable<Community> Search( string searchString, string includeProperties = null )
-        {
-            //IQueryable<Community> query;
+        {            
+            string[] splitString = searchString.Split(" ");
             searchString = searchString.ToUpper();
             var query = (from c in _db.Community
                         join cs in _db.CommunityState
@@ -45,7 +45,7 @@ namespace Eyon.DataAccess.Data.Repository
                         join p in _db.PostalCode 
                         on cpci.PostalCodeId equals p.Id into postalCP 
                         from pcpc in postalCP.DefaultIfEmpty()
-                        where ( c.Name.Contains(searchString)
+                        where (  c.Name.Contains(searchString)
                             || scsc.Name.Contains(searchString)
                             || scsc.Code.Contains(searchString)
                             || scsc.LocalName.Contains(searchString) 
