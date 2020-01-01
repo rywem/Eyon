@@ -27,10 +27,19 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 
         IIngredientRepository Ingredient { get; }
         IInstructionRepository Instruction { get; }
-        ICookbookRecipeRepository CookbookRecipe { get; }        
+        ICookbookRecipeRepository CookbookRecipe { get; }
+        ICommunityGeocodeRepository CommunityGeocode { get; }
+        IPostalCodeGeocodeRepository PostalCodeGeocode { get; }
+        IGeocodeRepository Geocode { get; }
+        ICommunityPostalCodeRepository CommunityPostalCode { get; }
+        ICommunityWebReferenceRepository CommunityWebReference { get; }
+        IWebReferenceRepository WebReference { get; }
+
+        IPostalCodeRepository PostalCode { get; }
 
         IDatabaseTransaction BeginTransaction();
         void Save();
         Task<int> SaveAsync();
     }
 }
+

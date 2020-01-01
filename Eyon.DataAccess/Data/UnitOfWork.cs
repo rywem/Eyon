@@ -37,6 +37,15 @@ namespace Eyon.DataAccess.Data{
         public IInstructionRepository Instruction { get; private set; }
         public ICookbookRecipeRepository CookbookRecipe { get; private set; }
         public IApplicationUserRecipeRepository ApplicationUserRecipe { get; private set; }
+
+        public ICommunityGeocodeRepository CommunityGeocode { get; private set; }
+        public IPostalCodeGeocodeRepository PostalCodeGeocode { get; private set; }
+        public IGeocodeRepository Geocode { get; private set; }
+        public ICommunityPostalCodeRepository CommunityPostalCode { get; private set; }
+        public ICommunityWebReferenceRepository CommunityWebReference { get; private set; }
+        public IWebReferenceRepository WebReference { get; private set; }
+
+        public IPostalCodeRepository PostalCode { get; private set; }
         #endregion
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -46,7 +55,14 @@ namespace Eyon.DataAccess.Data{
             this.RecipeSiteImage = new RecipeSiteImageRepository(this._db);
             this.Ingredient = new IngredientRepository(this._db);
             this.Instruction = new InstructionRepository(this._db);
-            this.CookbookRecipe = new CookbookRecipeRepository(this._db);            
+            this.CookbookRecipe = new CookbookRecipeRepository(this._db);
+            this.CommunityGeocode = new CommunityGeocodeRepository(this._db);
+            this.PostalCodeGeocode = new PostalCodeGeocodeRepository(this._db);
+            this.Geocode = new GeocodeRepository(this._db);
+            this.CommunityPostalCode = new CommunityPostalCodeRepository(this._db);
+            this.CommunityWebReference = new CommunityWebReferenceRepository(this._db);
+            this.WebReference = new WebReferenceRepository(this._db);
+            this.PostalCode = new PostalCodeRepository(this._db);
 
             this.Category = new CategoryRepository(this._db);
             this.SiteImage = new SiteImageRepository(this._db);
