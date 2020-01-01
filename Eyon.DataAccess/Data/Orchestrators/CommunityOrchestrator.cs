@@ -36,6 +36,11 @@ namespace Eyon.DataAccess.Data.Orchestrators
             return communityViewModel;
         }
 
+        //public void UploadCommunity(List<DataAccess.SeedData.> zipcodes)
+        //{
+
+        //}
+
         public void AddCommunity( CommunityViewModel communityViewModel )
         {
             if ( communityViewModel.Community.Id != 0 )
@@ -105,8 +110,6 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
 
             _unitOfWork.Community.Update(communityViewModel.Community);
-
-
             // At this time, do not allow updates to states or country. 
             //var hasStates = _unitOfWork.State.Any(x => x.CountryId == communityViewModel.Community.CountryId);
             //if ( hasStates )
@@ -126,8 +129,6 @@ namespace Eyon.DataAccess.Data.Orchestrators
             //        CreateStateRelationship(communityViewModel);
             //    }
             //}
-
-
         }
         private void CreateStateRelationship( CommunityViewModel communityViewModel )
         {           

@@ -14,6 +14,7 @@ namespace Eyon.DataAccess.Data
             : base(options)
         {
         }
+        #region OnModelCreating
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Indexes
@@ -204,13 +205,13 @@ namespace Eyon.DataAccess.Data
             #region Seed Images 
 
             modelBuilder.Entity<SiteImage>().HasData(
-                Seed_Data.Images.SeedImages()[0],
-                Seed_Data.Images.SeedImages()[1],
-                Seed_Data.Images.SeedImages()[2],
-                Seed_Data.Images.SeedImages()[3],
-                Seed_Data.Images.SeedImages()[4],
-                Seed_Data.Images.SeedImages()[5],
-                Seed_Data.Images.SeedImages()[6]
+                SeedData.Images.SeedImages()[0],
+                SeedData.Images.SeedImages()[1],
+                SeedData.Images.SeedImages()[2],
+                SeedData.Images.SeedImages()[3],
+                SeedData.Images.SeedImages()[4],
+                SeedData.Images.SeedImages()[5],
+                SeedData.Images.SeedImages()[6]
                 );
             #endregion
 
@@ -887,7 +888,7 @@ namespace Eyon.DataAccess.Data
 
         }
 
-
+        #endregion
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<SiteImage> SiteImage { get; set; }
@@ -895,7 +896,10 @@ namespace Eyon.DataAccess.Data
         public DbSet<Organization> Organization { get; set; }
         public DbSet<Recipe> Recipe { get; set; }
         public DbSet<Ingredient> Ingredient { get; set; }
-        public DbSet<Instruction> Instruction { get; set; }        
+        public DbSet<Instruction> Instruction { get; set; }
+        public DbSet<PostalCode> PostalCode { get; set; }
+        public DbSet<Geocode> Geocode { get; set; }
+        public DbSet<WebReference> WebReference { get; set; }
 
         #region location tables
         public DbSet<Community> Community { get; set; }
@@ -916,6 +920,12 @@ namespace Eyon.DataAccess.Data
         public DbSet<RecipeSiteImage> RecipeSiteImages { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }        
         public DbSet<CommunityRecipe> CommunityRecipes { get; set; }
+
+        public DbSet<CommunityGeocode> CommunityGeocodes { get; set; }
+        public DbSet<CommunityPostalCode> CommunityPostalCodes { get; set; }
+        public DbSet<CommunityWebReference> CommunityWebReferences { get; set; }
+
+        public DbSet<PostalCodeGeocode> PostalCodeGeocodes { get; set; }
 
         public DbSet<ApplicationUserRecipe> ApplicationUserRecipes { get; set; }
 

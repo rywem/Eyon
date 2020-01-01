@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Eyon.Models;
 
-namespace Eyon.DataAccess.Seed_Data
+namespace Eyon.DataAccess.SeedData
 {
     class Images
     {

@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form method="post" asp-action="Upsert" enctype="multipart/form-data" asp-route-id="@ViewBag.Id">
+<form method="post" asp-action="Upsert" asp-route-id="@ViewBag.Id">
     <div class="row px-2 mx-2 backgroundWhite border">
         <div asp-validation-summary="All" class="text-danger"></div>
         @if ( Model.Recipe.Id != 0 )

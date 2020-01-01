@@ -1,8 +1,11 @@
-﻿using System;
+﻿using CsvHelper;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 
-namespace Eyon.DataAccess.Seed_Data.Location
+namespace Eyon.DataAccess.SeedData.Location
 {
     public class ZipCodeFile
     {
@@ -24,6 +27,25 @@ namespace Eyon.DataAccess.Seed_Data.Location
             get
             {
                 return City + State;
+            }
+        }
+
+        public static List<ZipCodeFile> LoadZipcodesFromStream(Stream stream, bool hasHeaders )
+        {
+            try
+            {
+                using ( var reader = new StreamReader(stream) )
+                using ( var csv = new CsvReader(reader) )
+                {
+                    csv.Configuration.HasHeaderRecord = hasHeaders;
+
+                    var records = csv.GetRecords<ZipCodeFile>().ToList();
+                    return records;
+                }
+            }
+            catch(Exception ex )
+            {
+                return null;
             }
         }
     }

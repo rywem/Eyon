@@ -1,10 +1,10 @@
-﻿using Eyon.DataAccess.Seed_Data.Location;
+﻿using Eyon.DataAccess.SeedData.Location;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Eyon.DataAccess.Seed_Data
+namespace Eyon.DataAccess.SeedData
 {
     public class LocationHelper
     {

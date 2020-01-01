@@ -8,6 +8,11 @@ using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Eyon.DataAccess.Data.Orchestrators;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Security.AccessControl;
+using Eyon.DataAccess.SeedData.Location;
+using CsvHelper;
 
 namespace Eyon.Site.Areas.Admin.Controllers
 {
@@ -18,8 +23,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private CommunityOrchestrator _communityOrchestrator;
-        [BindProperty]
-        public CommunityViewModel communityViewModel { get; set; }
+        //[BindProperty]
+        //public CommunityViewModel communityViewModel { get; set; }
 
         public CommunityController( IUnitOfWork unitOfWork )
         {
@@ -39,6 +44,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         public IActionResult Upsert( long? id )
         {
+            CommunityViewModel communityViewModel = new CommunityViewModel();
             if ( id == null || id == 0 )
             {
                 communityViewModel = _communityOrchestrator.CreateCommunityViewModel();
@@ -53,7 +59,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert()
+        public IActionResult Upsert( CommunityViewModel communityViewModel )
         {
             if ( ModelState.IsValid )
             {
@@ -68,6 +74,34 @@ namespace Eyon.Site.Areas.Admin.Controllers
             }
             return View(communityViewModel);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Utilities.Statics.Roles.Admin)]
+        public async Task<IActionResult> Upload(IFormCollection formCollection)        
+        {
+            if ( ModelState.IsValid)
+            {                                
+                var files = HttpContext.Request.Form.Files;
+                if ( files[0].Length > 0 && files[0].Length < 2097152 )
+                {                    
+                    using ( var stream = new MemoryStream())
+                    {                                                
+                        await files[0].CopyToAsync(stream);
+                        stream.Seek(0, SeekOrigin.Begin);                        
+                        var records = Eyon.DataAccess.SeedData.Location.ZipCodeFile.LoadZipcodesFromStream(stream, true);                        
+                    }                    
+                }
+            }
+            return View();
+        }
+
+        [Authorize(Roles = Utilities.Statics.Roles.Admin)]
+        public IActionResult Upload()
+        {
+            return View();
+        }
+
 
         public IActionResult Submit()
         {

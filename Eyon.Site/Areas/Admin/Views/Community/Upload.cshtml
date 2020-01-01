@@ -1,0 +1,46 @@
+﻿@using Eyon.DataAccess.SeedData.Location;
+@{
+    var title = "Upload Communities";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var selectItems = new List<SelectListItem>();
+    selectItems.Add(new SelectListItem() {
+        Text = nameof(Eyon.DataAccess.SeedData.Location.ZipCodeFile),
+        Value = "0"
+    });
+}
+
+<h1>Upload CSV</h1>
+
+<form method="post" asp-action="Upload" enctype="multipart/form-data">
+    <div class="row px-2 mx-2 backgroundWhite border">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="col-12">
+            <h2 class="text-primary">@title</h2>
+        </div>
+        <div class="col-9">
+            <div class="form-group row">
+                <div class="col-4">
+                    @Html.Label("FileType", "File Type")
+                </div>
+                <div class="col-8">
+                    @Html.DropDownList("FileType", selectItems, "Select File Type")
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    @Html.Label("SelectFile", "Select File")
+                </div>
+                <div class="col-8">
+                    <input type="file" name="files" id="uploadBox" multiple class="form-control" accept="text/csv" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-4 col-8">
+                    <button type="submit" class="btn btn-primary form-control">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
