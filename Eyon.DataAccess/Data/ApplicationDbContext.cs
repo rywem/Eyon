@@ -201,7 +201,6 @@ namespace Eyon.DataAccess.Data
 
             #region Seed Data
 
-
             #region Seed Images 
 
             modelBuilder.Entity<SiteImage>().HasData(
@@ -228,9 +227,6 @@ namespace Eyon.DataAccess.Data
                 );
 
             #endregion
-
-
-
 
             #region Seed Location Data
 
@@ -859,25 +855,6 @@ namespace Eyon.DataAccess.Data
                 );
             #endregion
 
-            #region Communities 
-
-            //modelBuilder.Entity<Community>().HasData(
-            //    new Community() { Id = 1 ,Name = "Quincy", Active = true, CountryId = 192 },
-            //    new Community() { Id = 2, Name = "Myrtle Beach", Active = true, CountryId = 192 },
-            //    new Community() { Id = 3, Name = "Deer River", Active = true, CountryId = 192 }
-            //    );
-
-            #endregion
-
-            #region CommunityState Relationsh
-
-            //modelBuilder.Entity<CommunityState>().HasData(
-            //    new CommunityState() { CommunityId = 1, StateId = 367 },
-            //    new CommunityState() { CommunityId = 3, StateId = 386 },
-            //    new CommunityState() { CommunityId = 2, StateId = 404 }
-            //    );
-
-            #endregion
 
             #endregion;
 

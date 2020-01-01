@@ -160,5 +160,37 @@ namespace Eyon.Site.Areas.Admin.Controllers
         {
             return Json(new { data = _unitOfWork.State.GetAll(x => x.CountryId == countryId) });
         }
+
+        [HttpGet]
+        [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," +
+            Utilities.Statics.Roles.Seller + "," + Utilities.Statics.Roles.Customer + "," + Utilities.Statics.Roles.User)]
+        [Area("User")]
+        public IActionResult SearchCommunities( string searchString)
+        {
+            var results = _unitOfWork.Community.Search(searchString, "CommunityState,CommunityState.State,Country");
+            var data = from r in results
+                       group r by new
+                       {
+                           CommunityId = r.Id,
+                           CommunityName = r.Name,
+                           StateId = r.CommunityState != null ? r.CommunityState.StateId : 0,
+                           StateName = r.CommunityState != null ? r.CommunityState.State.Name : string.Empty,
+                           StateCode = r.CommunityState != null ? r.CommunityState.State.Code : string.Empty,
+                           CountryId = r.Country.Id,
+                           CountryName = r.Country.Name
+                       } into pr
+                       select new 
+                       { 
+                           pr.Key.CommunityId,
+                           pr.Key.CommunityName,
+                           pr.Key.CountryName,
+                           pr.Key.CountryId,
+                           pr.Key.StateId,
+                           pr.Key.StateCode,
+                           pr.Key.StateName
+                       };
+
+            return Json(new { data = data });
+        }
     }
 }
