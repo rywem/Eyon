@@ -162,10 +162,10 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," +
             Utilities.Statics.Roles.Seller + "," + Utilities.Statics.Roles.Customer + "," + Utilities.Statics.Roles.User)]
         [Area("User")]
-        public async Task<IActionResult> SearchCommunities( string searchString)
+        public async Task<IActionResult> SearchCommunities( string query)
         {
             await Task.Delay(100);
-            var results = _unitOfWork.Community.Search(searchString, "CommunityState,CommunityState.State,Country");            
+            var results = _unitOfWork.Community.Search(query, "CommunityState,CommunityState.State,Country");            
             var data = from pr in results                       
                        select new
                        {
