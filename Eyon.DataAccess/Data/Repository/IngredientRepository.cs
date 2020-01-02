@@ -23,20 +23,7 @@ namespace Eyon.DataAccess.Data.Repository
                 throw new WebUserSafeException("An error occurred.");
             objFromDb.Number = ingredient.Number;
             objFromDb.Text = ingredient.Text;
-            //_db.SaveChanges();
             dbSet.Update(objFromDb);
         }
-
-        //public async Task UpdateAsync( Ingredient ingredient )
-        //{
-        //    var objFromDb = _db.Ingredient.FirstOrDefault(s => s.Id == ingredient.Id);
-
-        //    if ( objFromDb == null )
-        //        throw new WebUserSafeException("An error occurred.");
-        //    objFromDb.Number = ingredient.Number;
-        //    objFromDb.Text = ingredient.Text;            
-        //    dbSet.Update(objFromDb);
-            
-        //}
     }
 }
