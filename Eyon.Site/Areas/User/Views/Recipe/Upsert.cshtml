@@ -74,12 +74,18 @@
                         <label asp-for="CommunityId"><b>Add Community</b></label>
                     </div>
                     <div class="col-9">
-                        <input asp-for="CommunityId" class="form-control" />
+                        <input asp-for="CommunityId" hidden />
                         @*<input type="text" class="form-control" />*@
-                        <span id="CommunityName"></span>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                            Find Community
-                        </button>                        
+                    <div class="row">
+                        <div class="col-8">
+                            <span id="CommunityName"></span>
+                        </div>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-primary text-right" data-toggle="modal" data-target="#exampleModal">
+                                Add Community
+                            </button>
+                            </div>
+                        </div>
                         <span asp-validation-for="CommunityId" class="text-danger"></span>
                     </div>
                 </div>
@@ -202,7 +208,7 @@
                                     + '<td>' + item.community + '</td>'
                                     + '<td>' + item.state + '</td>'
                                     + '<td>' + item.country + '</td>'
-                                    + '<td><button type="button" class="btn btn-danger" onclick="chooseCommunity(' + item.communityId +',\''+ item.community+ '\')"><i class="fas fa-hand-pointer"></i>&nbsp;Select</button></td>'
+                                    + '<td><button type="button" class="btn btn-danger" onclick="chooseCommunity(' + item.communityId +',\''+ item.community+ '\',\''+item.stateCode +'\',\''+item.country+'\')"><i class="fas fa-hand-pointer"></i>&nbsp;Select</button></td>'
                                     + '</tr>'
                                 );
                             });
@@ -212,9 +218,10 @@
             });    
         });
 
-        function chooseCommunity(id, name) {
+        function chooseCommunity(id, name, code, country) {
             $('#CommunityId').val(id);
-            $('#CommunityName').innerHTML = name;
+            var community = name + ', ' + code +' ' + country
+            $('#CommunityName').text(community);
         }
     </script>
 }
