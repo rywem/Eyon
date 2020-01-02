@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Eyon.Utilities
+namespace Eyon.Utilities.Extensions
 {
     public static class LinqExtensions
     {
@@ -16,19 +16,6 @@ namespace Eyon.Utilities
                     yield return element;
                 }
             }
-        }
-        public static bool ContainsAny( this string str, params string[] values )
-        {
-            if ( !string.IsNullOrEmpty(str) || values.Length > 0 )
-            {
-                foreach ( string value in values )
-                {
-                    if ( str.Contains(value) )
-                        return true;
-                }
-            }
-
-            return false;
         }
     }
 }
