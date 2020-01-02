@@ -6651,13 +6651,19 @@ a.close.disabled {
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    width: 100%;
+    /*width: 100%;
+    min-width: 600px;*/
     pointer-events: auto;
     background-color: #fff;
     background-clip: padding-box;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 0.3rem;
     outline: 0;
+}
+
+.modal-width {
+    width: 100%;
+    min-width: 600px;
 }
 
 .modal-backdrop {
@@ -6746,6 +6752,11 @@ a.close.disabled {
     .modal-dialog {
         max-width: 500px;
         margin: 1.75rem auto;
+    }
+
+    .modal-width {
+        width: 100%;
+        min-width: 300px;
     }
 
     .modal-dialog-scrollable {
