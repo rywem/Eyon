@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Eyon.DataAccess.Data.Repository.IRepository;
-using Eyon.Models;
+using Eyon.Utilities.Extensions;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Eyon.DataAccess.Data.Orchestrators;
@@ -11,8 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Security.AccessControl;
-using Eyon.DataAccess.SeedData.Location;
-using CsvHelper;
+
 
 namespace Eyon.Site.Areas.Admin.Controllers
 {
@@ -165,31 +162,20 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," +
             Utilities.Statics.Roles.Seller + "," + Utilities.Statics.Roles.Customer + "," + Utilities.Statics.Roles.User)]
         [Area("User")]
-        public IActionResult SearchCommunities( string searchString)
+        public async Task<IActionResult> SearchCommunities( string searchString)
         {
-            var results = _unitOfWork.Community.Search(searchString, "CommunityState,CommunityState.State,Country");
-            var data = from r in results
-                       group r by new
+            await Task.Delay(100);
+            var results = _unitOfWork.Community.Search(searchString, "CommunityState,CommunityState.State,Country");            
+            var data = from pr in results                       
+                       select new
                        {
-                           CommunityId = r.Id,
-                           CommunityName = r.Name,
-                           StateId = r.CommunityState != null ? r.CommunityState.StateId : 0,
-                           StateName = r.CommunityState != null ? r.CommunityState.State.Name : string.Empty,
-                           StateCode = r.CommunityState != null ? r.CommunityState.State.Code : string.Empty,
-                           CountryId = r.Country.Id,
-                           CountryName = r.Country.Name
-                       } 
-                       into pr
-                       select new 
-                       { 
-                           pr.Key.CommunityId,
-                           pr.Key.CommunityName,
-                           pr.Key.CountryName,
-                           pr.Key.CountryId,
-                           pr.Key.StateId,
-                           pr.Key.StateCode,
-                           pr.Key.StateName
+                           CommunityId = pr.Id,
+                           Community = pr.Name.ToProperCase(),
+                           Country = pr.Country.Name.ToProperCase(),
+                           State = pr.CommunityState != null && pr.CommunityState.StateId != 0 ? pr.CommunityState.State.Name.ToProperCase() : string.Empty,
+                           StateCode = pr.CommunityState != null && pr.CommunityState.StateId != 0 ? pr.CommunityState.State.Code : string.Empty,
                        };
+
 
             return Json(new { data = data });
         }

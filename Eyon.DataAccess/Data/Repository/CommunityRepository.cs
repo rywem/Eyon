@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Eyon.DataAccess.Data.Repository
 {
@@ -60,7 +61,17 @@ namespace Eyon.DataAccess.Data.Repository
                 }
             }
 
-            return query.AsEnumerable();
+            var enumerable = from community in query.AsEnumerable()
+                    group community by new
+                    {
+                        community,
+                        StateId = community.CommunityState != null ? community.CommunityState.StateId : 0,
+                        CountryId = community.Country.Id
+                    }
+                    into communityGroup
+                    select communityGroup.Key.community;
+
+            return enumerable;
 
         }
 
