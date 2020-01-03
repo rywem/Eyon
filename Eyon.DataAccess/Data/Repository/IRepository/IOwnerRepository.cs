@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface IOwnerRepository<TRecord, TRelation> 
+    public interface IOwnerRepository<TRecord, TOwnerRelation> 
         where TRecord : class, IRecord
-        where TRelation : class, IOwner
+        where TOwnerRelation : class, IOwner
     {
-        void AddOwned( string ownerId, TRecord entity, TRelation relationEntity );
+        void AddOwned( string ownerId, TRecord entity, TOwnerRelation relationEntity );
 
         bool IsOwner( string userIdToCheck, long entityId );
         Task<bool> IsOwnerAsync( string userIdToCheck, long entityId );
