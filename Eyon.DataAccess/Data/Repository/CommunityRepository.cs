@@ -29,30 +29,24 @@ namespace Eyon.DataAccess.Data.Repository
         }
 
         public IEnumerable<Community> Search( string searchString, string includeProperties = null )
-        {            
-            string[] splitString = searchString.Split(" ");
-            searchString = searchString.ToUpper();
-            var query = (from c in _db.Community
-                        join cs in _db.CommunityState
-                        on c.Id equals cs.CommunityId into csc
-                        from csci in csc.DefaultIfEmpty() // search state
-                        join s in _db.State
-                        on csci.StateId equals s.Id into stateCS
-                        from scsc in stateCS.DefaultIfEmpty()
-                        // search postal code
-                        join cp in _db.CommunityPostalCodes 
-                        on c.Id equals cp.CommunityId into cpc
-                        from cpci in cpc.DefaultIfEmpty()
-                        join p in _db.PostalCode 
-                        on cpci.PostalCodeId equals p.Id into postalCP 
-                        from pcpc in postalCP.DefaultIfEmpty()
-                        where (  c.Name.Contains(searchString)
-                            || scsc.Name.Contains(searchString)
-                            || scsc.Code.Contains(searchString)
-                            || scsc.LocalName.Contains(searchString) 
-                            || pcpc.Text.Contains(searchString) )
-                        select c);
-            
+        {                        
+            searchString = searchString.ToUpper();            
+            var query =   (from c in _db.Community
+                          join cs in _db.CommunityState
+                          on c.Id equals cs.CommunityId into csc
+                          from csci in csc.DefaultIfEmpty() // search state
+                          // search postal code
+                          join cp in _db.CommunityPostalCodes
+                          on c.Id equals cp.CommunityId into cpc
+                          from cpci in cpc.DefaultIfEmpty()
+                          join p in _db.PostalCode
+                          on cpci.PostalCodeId equals p.Id into postalCP
+                          from pcpc in postalCP.DefaultIfEmpty()
+                          where ( c.Name.Contains(searchString)
+                              || pcpc.Text.Contains(searchString) )
+                          select c).Take(20);
+
+
             if ( includeProperties != null )
             {
                 foreach ( var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) )

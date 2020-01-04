@@ -158,26 +158,25 @@ namespace Eyon.Site.Areas.Admin.Controllers
             return Json(new { data = _unitOfWork.State.GetAll(x => x.CountryId == countryId) });
         }
 
+
+
         [HttpGet]
         [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," +
             Utilities.Statics.Roles.Seller + "," + Utilities.Statics.Roles.Customer + "," + Utilities.Statics.Roles.User)]
         [Area("User")]
-        public async Task<IActionResult> SearchCommunities( string query)
+        public async Task<ActionResult> Suggest( string term )
         {
-            await Task.Delay(100);
-            var results = _unitOfWork.Community.Search(query, "CommunityState,CommunityState.State,Country");            
-            var data = from pr in results                       
+            // https://stackoverflow.com/questions/20989275/show-results-on-typing-in-textbox-mvc-view
+            await Task.Delay(50);
+            var results = _unitOfWork.Community.Search(term, "CommunityState,CommunityState.State,Country");
+            var data = from pr in results
                        select new
-                       {
-                           CommunityId = pr.Id,
-                           Community = pr.Name.ToProperCase(),
-                           Country = pr.Country.Name.ToProperCase(),
-                           State = pr.CommunityState != null && pr.CommunityState.StateId != 0 ? pr.CommunityState.State.Name.ToProperCase() : string.Empty,
-                           StateCode = pr.CommunityState != null && pr.CommunityState.StateId != 0 ? pr.CommunityState.State.Code : string.Empty,
+                       {                           
+                           id = pr.Id,
+                           label = Eyon.Models.Helpers.CommunityHelper.FullNameFormatter(pr),
+                           value = Eyon.Models.Helpers.CommunityHelper.FullNameFormatter(pr)
                        };
-
-
-            return Json(new { data = data });
+            return Json(data);
         }
     }
 }

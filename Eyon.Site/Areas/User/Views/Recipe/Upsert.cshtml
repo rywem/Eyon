@@ -71,20 +71,20 @@
             {
                 <div class="form-group row">
                     <div class="col-3">
-                        <label asp-for="CommunityId"><b>Add Community</b></label>
+                        <label asp-for="CommunityId">Community</label>
                     </div>
                     <div class="col-9">
-                        <input asp-for="CommunityId" hidden />
-                        @*<input type="text" class="form-control" />*@
+                        <input asp-for="CommunityId"  hidden />
+                        <input type="text" asp-for="CommunityName" class="form-control" />
                     <div class="row">
-                        <div class="col-8">
-                            <span id="CommunityName"></span>
-                        </div>
                         <div class="col-4">
                             <button type="button" class="btn btn-primary text-right" data-toggle="modal" data-target="#exampleModal">
-                                Add Community
+                                <i class="fas fa-search"></i>&nbsp;Find
                             </button>
                             </div>
+                        </div>
+                        <div class="col-8">
+                            <span id="CommunityName"></span>
                         </div>
                         <span asp-validation-for="CommunityId" class="text-danger"></span>
                     </div>
@@ -140,7 +140,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content modal-width">            
             <div class="modal-header">
-                <h5 class="modal-title">Add Community</h5>
+                <h5 class="modal-title">Find Community</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>                
@@ -189,39 +189,15 @@
 
 @section Scripts {
     <script>
-        var chosenCommunityId = 0;
-        $(document).ready(function () {
-            $("#btnCommunitySearch").click(function () {
-                var searchString = $("#searchCommunitiesTxt").val();
-                if (searchString != '') {
-                    var rowCount = $('#bodyResults tr').length;
-                    if (rowCount > 1) {
-                        $("#bodyResults tr").remove();
-                    }
-                    $.ajax({
-                        async: true,
-                        url: "/User/Community/SearchCommunities?query=" + searchString,
-                        type: "GET",
-                        success: function (results) {
-                            $.each(results.data, function (index, item) {                                
-                                $('#bodyResults').append('<tr>'
-                                    + '<td>' + item.community + '</td>'
-                                    + '<td>' + item.state + '</td>'
-                                    + '<td>' + item.country + '</td>'
-                                    + '<td><button type="button" class="btn btn-danger" onclick="chooseCommunity(' + item.communityId +',\''+ item.community+ '\',\''+item.stateCode +'\',\''+item.country+'\')"><i class="fas fa-hand-pointer"></i>&nbsp;Select</button></td>'
-                                    + '</tr>'
-                                );
-                            });
-                        }
-                    });
+        $(function () {
+            $('#CommunityName').autocomplete({
+                source: '@Url.Action("Suggest", "Community")',
+                minLength: 3,
+                select: function (evt, ui) {
+                    $('#CommunityId').val(ui.item.id);
+                    $('#CommunityName').val(ui.item.label);
                 }
-            });    
-        });
-
-        function chooseCommunity(id, name, code, country) {
-            $('#CommunityId').val(id);
-            var community = name + ', ' + code +' ' + country
-            $('#CommunityName').text(community);
-        }
+            });
+        });        
     </script>
 }
