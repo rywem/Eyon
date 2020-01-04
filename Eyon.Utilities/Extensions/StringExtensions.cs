@@ -9,6 +9,9 @@ namespace Eyon.Utilities.Extensions
     {
         public static string ToProperCase(this string s, CultureInfo culture = null)
         {
+            if ( string.IsNullOrEmpty(s) )
+                return String.Empty;
+
             TextInfo ti = null;
             if ( culture == null )
                 ti = CultureInfo.CurrentCulture.TextInfo;
