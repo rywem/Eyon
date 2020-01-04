@@ -1,6 +1,7 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Models.Errors;
 using Eyon.Models.Relationship;
-
+using System.Linq;
 
 namespace Eyon.DataAccess.Data.Repository
 {

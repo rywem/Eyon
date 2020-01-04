@@ -56,54 +56,30 @@
                     <span asp-validation-for="InstructionsText" class="text-danger"></span>
                 </div>
             </div>
-            @if ( Model.Community != null && Model.Community.Id > 0 )
-            {                
+            <div class="form-group row">
                 <div class="col-3">
-                    <label asp-for="Community.Name"><b>Community Name</b></label>
+                    <label asp-for="CommunityId">Community</label>
                 </div>
                 <div class="col-9">
-                    <textarea asp-for="InstructionsText" class="form-control col-sm-12" rows="4" placeholder="Put each instruction on a different line"></textarea>
-                    <span asp-validation-for="InstructionsText" class="text-danger"></span>
-                    <input asp-for="CommunityId" class="form-control" hidden value="@Model.Community.Id"/>
+                    <input asp-for="CommunityId" hidden />
+                    <input type="text" asp-for="CommunityName" class="form-control" />
+                    <span asp-validation-for="CommunityId" class="text-danger"></span>
                 </div>
-            }
-            else
-            {
-                <div class="form-group row">
-                    <div class="col-3">
-                        <label asp-for="CommunityId">Community</label>
-                    </div>
-                    <div class="col-9">
-                        <input asp-for="CommunityId"  hidden />
-                        <input type="text" asp-for="CommunityName" class="form-control" />
-                    <div class="row">
-                        <div class="col-4">
-                            <button type="button" class="btn btn-primary text-right" data-toggle="modal" data-target="#exampleModal">
-                                <i class="fas fa-search"></i>&nbsp;Find
-                            </button>
-                            </div>
-                        </div>
-                        <div class="col-8">
-                            <span id="CommunityName"></span>
-                        </div>
-                        <span asp-validation-for="CommunityId" class="text-danger"></span>
-                    </div>
-                </div>
-            }
-
+            </div>
             <div class="form-group row offset-3 col-9 p-0">
                 <div class="col-3">
                     <label asp-for="Recipe.PrepTime"></label>
                 </div>
-                <div class="col-2">
+                <div class="col-4">
                     <input asp-for="Recipe.PrepTime" class="form-control" />
                     <span asp-validation-for="Recipe.PrepTime" class="text-danger"></span>
                 </div>
-
-                <div class="col-3 offset-1">
+            </div>
+            <div class="form-group row offset-3 col-9 p-0">
+                <div class="col-3">
                     <label asp-for="Recipe.Cooktime"></label>
                 </div>
-                <div class="col-2">
+                <div class="col-4">
                     <input asp-for="Recipe.Cooktime" class="form-control" />
                     <span asp-validation-for="Recipe.Cooktime" class="text-danger"></span>
                 </div>
@@ -112,7 +88,7 @@
                 <div class="col-3">
                     <label asp-for="Recipe.Servings"></label>
                 </div>
-                <div class="col-2">
+                <div class="col-4">
                     <input asp-for="Recipe.Servings" class="form-control" />
                     <span asp-validation-for="Recipe.Servings" class="text-danger"></span>
                 </div>
@@ -123,12 +99,12 @@
                     @if ( Model.Recipe.Id != 0 )
                     {
                         // Edit button and back to list button
-                        <partial name="_EditAndBackToListButton" model="Model.Recipe.Id" />
+                    <partial name="_EditAndBackToListButton" model="Model.Recipe.Id" />
                     }
                     else
                     {
                         // Create button and back to list button
-                        <partial name="_CreateAndBackToListButton" />
+                    <partial name="_CreateAndBackToListButton" />
                     }
                 </div>
             </div>
@@ -136,56 +112,6 @@
     </div>
 </form>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content modal-width">            
-            <div class="modal-header">
-                <h5 class="modal-title">Find Community</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>                
-            </div>
-            <div class="modal-body mx-3">
-                <div class="row mb-2">
-                    <div class="col-sm-8">
-                        <input type="text" id="searchCommunitiesTxt" placeholder="Search for Communities" class="form-control textbox-search-community" />
-                    </div>
-                    <div class="col-sm-4 text-right">
-                        <button type="button" class="btn btn-warning" id="btnCommunitySearch"><i class="fas fa-search-plus"></i>&nbsp;Search</button>
-                    </div>
-                </div>
-                <div class="row mb-5">
-                    <table class="table table-responsive" id="tableResults">
-                        <thead class="thead-light">
-                            <tr>                                
-                                <th scope="col" width="25%">
-                                    Name
-                                </th>
-                                <th scope="col" width="25%">
-                                    State
-                                </th>
-                                <th scope="col" with="25%">
-                                    Country
-                                </th>
-                                <th scope="col" width="25%">
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="bodyResults">
-                           
-                        </tbody>
-
-                    </table>
-                </div>
-            </div>
-        <div class="modal-footer">
-
-
-        </div>
-        </div>
-    </div>
-</div>
 
 @section Scripts {
     <script>

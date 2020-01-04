@@ -21,7 +21,9 @@ namespace Eyon.DataAccess.Data
 
         public async virtual Task<T> GetAsync(long id )
         {
+
             return await dbSet.FindAsync(id);
+
         }
 
         public T Get(long id)
@@ -78,7 +80,7 @@ namespace Eyon.DataAccess.Data
         }
 
 
-        public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)
+        public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null, bool tracking = true )
         {
             IQueryable<T> query = dbSet;
 
@@ -94,11 +96,12 @@ namespace Eyon.DataAccess.Data
                     query = query.Include(includeProperty);
                 }
             }
-
+            if ( tracking == false )
+                query.AsNoTracking();
             return query.FirstOrDefault();
         }
 
-        public async Task<T> GetFirstOrDefaultAsync( Expression<Func<T, bool>> filter = null, string includeProperties = null )
+        public async Task<T> GetFirstOrDefaultAsync( Expression<Func<T, bool>> filter = null, string includeProperties = null, bool tracking = true )
         {
             IQueryable<T> query = dbSet;
 
@@ -114,6 +117,8 @@ namespace Eyon.DataAccess.Data
                     query = query.Include(includeProperty);
                 }
             }
+            if ( tracking == false )
+                query.AsNoTracking();
 
             return await query.FirstOrDefaultAsync();
         }

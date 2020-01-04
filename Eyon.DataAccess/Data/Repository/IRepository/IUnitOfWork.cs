@@ -34,7 +34,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         ICommunityPostalCodeRepository CommunityPostalCode { get; }
         ICommunityWebReferenceRepository CommunityWebReference { get; }
         IWebReferenceRepository WebReference { get; }
-
+        ICommunityRecipeRepository CommunityRecipe { get;  }
         IPostalCodeRepository PostalCode { get; }
 
         IDatabaseTransaction BeginTransaction();

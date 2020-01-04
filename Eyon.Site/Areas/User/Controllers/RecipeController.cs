@@ -62,7 +62,7 @@ namespace Eyon.Site.Areas.User.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert()
-        {            
+        {
             try
             {
                 var claimsIdentity = (ClaimsIdentity)this.User.Identity;

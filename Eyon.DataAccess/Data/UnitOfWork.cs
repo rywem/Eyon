@@ -44,7 +44,7 @@ namespace Eyon.DataAccess.Data{
         public ICommunityPostalCodeRepository CommunityPostalCode { get; private set; }
         public ICommunityWebReferenceRepository CommunityWebReference { get; private set; }
         public IWebReferenceRepository WebReference { get; private set; }
-
+        public ICommunityRecipeRepository CommunityRecipe { get; private set; }
         public IPostalCodeRepository PostalCode { get; private set; }
         #endregion
         public UnitOfWork(ApplicationDbContext db)
@@ -77,6 +77,7 @@ namespace Eyon.DataAccess.Data{
             this.OrganizationCommunities = new OrganizationCommunitiesRepository(this._db);
             this.OrganizationCookbooks = new OrganizationCookbooksRepository(this._db);
             this.Organization = new OrganizationRepository(this._db);
+            this.CommunityRecipe = new CommunityRecipeRepository(this._db);
             this.ApplicationUserRecipe = new ApplicationUserRecipeRepository(this._db);
         }
 

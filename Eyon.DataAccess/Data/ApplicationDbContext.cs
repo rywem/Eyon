@@ -194,7 +194,8 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(c => c.ApplicationUserId);
             modelBuilder.Entity<ApplicationUserRecipe>()
                 .HasOne(c => c.Recipe)
-                .WithOne(c => c.ApplicationUserRecipe)
+                .WithMany(c => c.ApplicationUserOwners)
+                .HasForeignKey(c => c.ObjectId)
                 .OnDelete(DeleteBehavior.Restrict);
             #endregion
 
@@ -904,7 +905,7 @@ namespace Eyon.DataAccess.Data
 
         public DbSet<PostalCodeGeocode> PostalCodeGeocodes { get; set; }
 
-        public DbSet<ApplicationUserRecipe> ApplicationUserRecipes { get; set; }
+        public DbSet<ApplicationUserRecipe> ApplicationUserRecipes { get; set; }        
 
         // NOTE: Start making these names NOT PLURAL
 

@@ -11,5 +11,10 @@ namespace Eyon.Models.Errors
         {
 
         }
+
+        public WebUserSafeException( string safeMessage, Exception innerException ) : base(safeMessage, innerException)
+        {
+           
+        }
     }
 }

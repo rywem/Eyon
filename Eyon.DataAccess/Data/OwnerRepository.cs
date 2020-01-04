@@ -21,7 +21,7 @@ namespace Eyon.DataAccess.Data
             this.dbSetRelation = context.Set<TRelation>();
         }
 
-        public void AddOwned( string ownerId, TRecord addedEntity, TRelation relationEntity )
+        public void AddOwnerRelationship( string ownerId, TRecord addedEntity, TRelation relationEntity )
         {            
             DbSet<ApplicationUser> userDbSet = Context.Set<ApplicationUser>();
             var userFromDb = userDbSet.FirstOrDefault(x => x.Id.Equals(ownerId));
@@ -37,7 +37,7 @@ namespace Eyon.DataAccess.Data
             }
         }
 
-        public IEnumerable<TRecord> GetAllOwned( string ownerId, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>, IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null )
+        public IEnumerable<TRecord> GetAllOwned( string ownerId, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>, IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null, bool tracking = true )
         {
             IQueryable<TRecord> query = dbSet;
 
@@ -62,6 +62,10 @@ namespace Eyon.DataAccess.Data
             if ( orderBy != null )
             {
                 return orderBy(query).ToList();
+            }
+            if ( tracking == false )
+            {
+                query.AsNoTracking();
             }
 
             return query.ToList();
@@ -69,7 +73,7 @@ namespace Eyon.DataAccess.Data
 
 
 
-        public async Task<IEnumerable<TRecord>> GetAllOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>, IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null )
+        public async Task<IEnumerable<TRecord>> GetAllOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>, IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null, bool tracking = true )
         {
             IQueryable<TRecord> query = dbSet;
 
@@ -96,10 +100,15 @@ namespace Eyon.DataAccess.Data
                 return orderBy(query).ToList();
             }
 
+            if ( tracking == false )
+            {
+                query.AsNoTracking();
+            }
+
             return await query.ToListAsync();
         }
 
-        public TRecord GetFirstOrDefaultOwned( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null )
+        public TRecord GetFirstOrDefaultOwned( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
         {
             IQueryable<TRecord> query = dbSet;
 
@@ -119,6 +128,16 @@ namespace Eyon.DataAccess.Data
                 {
                     query = query.Include(includeProperty);
                 }
+            }
+
+            if(tracking == false )
+            {
+                query.AsNoTracking();
+            }
+
+            if ( tracking == false )
+            {
+                query.AsNoTracking();
             }
 
             return query.FirstOrDefault();
@@ -155,7 +174,7 @@ namespace Eyon.DataAccess.Data
 
 
 
-        public async Task<TRecord> GetFirstOrDefaultOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null )
+        public async Task<TRecord> GetFirstOrDefaultOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
         {
             IQueryable<TRecord> query = dbSet;
 
@@ -175,6 +194,11 @@ namespace Eyon.DataAccess.Data
                 {
                     query = query.Include(includeProperty);
                 }
+            }
+
+            if ( tracking == false )
+            {
+                query.AsNoTracking();
             }
 
             return await query.FirstOrDefaultAsync();

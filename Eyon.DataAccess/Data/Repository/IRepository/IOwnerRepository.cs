@@ -11,17 +11,17 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         where TRecord : class, IRecord
         where TOwnerRelation : class, IOwner
     {
-        void AddOwned( string ownerId, TRecord entity, TOwnerRelation relationEntity );
+        void AddOwnerRelationship( string ownerId, TRecord entity, TOwnerRelation relationEntity );
 
         bool IsOwner( string userIdToCheck, long entityId );
         Task<bool> IsOwnerAsync( string userIdToCheck, long entityId );
-        TRecord GetFirstOrDefaultOwned(string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null );
-        Task<TRecord> GetFirstOrDefaultOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null );
+        TRecord GetFirstOrDefaultOwned(string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true );
+        Task<TRecord> GetFirstOrDefaultOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true );
 
         IEnumerable<TRecord> GetAllOwned( string ownerId, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>,
-                        IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null );
+                        IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null, bool tracking = true );
         Task<IEnumerable<TRecord>> GetAllOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>,
-                        IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null );
+                        IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null, bool tracking = true );
 
         void UpdateOwned( TRecord entity, string ownerId );
     }
