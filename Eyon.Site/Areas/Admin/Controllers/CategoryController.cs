@@ -102,7 +102,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
                         await _unitOfWork.SaveAsync();
                         await transaction.CommitAsync();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
                     }
