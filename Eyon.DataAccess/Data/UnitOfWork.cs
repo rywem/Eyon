@@ -65,7 +65,9 @@ namespace Eyon.DataAccess.Data{
             this.CommunityWebReference = new CommunityWebReferenceRepository(this._db);
             this.WebReference = new WebReferenceRepository(this._db);
             this.PostalCode = new PostalCodeRepository(this._db);
-
+            this.RecipeUserImage = new RecipeUserImageRepository(this._db);
+            this.ApplicationUserUserImage = new ApplicationUserUserImageRepository(this._db);
+            this.UserImage = new UserImageRepository(this._db);
             this.Category = new CategoryRepository(this._db);
             this.SiteImage = new SiteImageRepository(this._db);
             this.Cookbook = new CookbookRepository(this._db);

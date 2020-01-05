@@ -17,14 +17,17 @@ namespace Eyon.Models
         [MaxLength(100)]
         [StringLength(100)]
         [DisplayName("Recipe Name")]
-        public string Name { get; set; }                
-        [Required]
+        public string Name { get; set; }
         [DisplayName("Cooktime")]
+        [MaxLength(100)]
+        [StringLength(100)]
         public string Cooktime { get; set; }
-        [Required]
         [DisplayName("Prep time")]
+        [MaxLength(100)]
+        [StringLength(100)]
         public string PrepTime { get; set; }
-        [Required]
+        [MaxLength(100)]
+        [StringLength(100)]
         public string Servings { get; set; }        
         [MaxLength(3000)]
         [StringLength(3000)]

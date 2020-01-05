@@ -50,7 +50,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     recipeViewModel.Categories = recipeViewModel.Recipe.RecipeCategories.Select(x => x.Category).ToList();
 
                 if ( recipeViewModel.Recipe.RecipeUserImages != null && recipeViewModel.Recipe.RecipeUserImages.Count > 0 )
-                    recipeViewModel.RecipeUserImages = recipeViewModel.Recipe.RecipeUserImages.Select(x => x.UserImage).ToList();
+                    recipeViewModel.UserImages = recipeViewModel.Recipe.RecipeUserImages.Select(x => x.UserImage).ToList();
 
                 if ( recipeViewModel.Recipe.CookbookRecipes != null && recipeViewModel.Recipe.CookbookRecipes.Count > 0 )
                     recipeViewModel.Cookbooks = recipeViewModel.Recipe.CookbookRecipes.Select(x => x.Cookbook).ToList();
@@ -124,10 +124,50 @@ namespace Eyon.DataAccess.Data.Orchestrators
             {
                 item.RecipeId = recipeViewModel.Recipe.Id;
                 _unitOfWork.Ingredient.Add(item);
-            }
-            
-
+            }            
             await _unitOfWork.SaveAsync();
+
+            await AddRecipeUserImageAsync(currentApplicationUserId, recipeViewModel);
+        }
+
+
+        /// <summary>
+        /// Users do not need to own the recipe to add the recipe image
+        /// </summary>
+        /// <param name="recipeViewModel"></param>
+        /// <returns></returns>
+        private async Task AddRecipeUserImageAsync(string currentApplicationUserId, RecipeViewModel recipeViewModel)
+        {
+
+            if ( recipeViewModel.UserImages != null && recipeViewModel.UserImages.Count > 0 )
+            {
+                var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id);
+                var applicationUserFromDb = await _unitOfWork.ApplicationUser.GetFirstOrDefaultAsync(x => x.Id == currentApplicationUserId);
+                if ( recipeFromDb != null && applicationUserFromDb != null )
+                {
+                    foreach ( var item in recipeViewModel.UserImages )
+                    {
+                        if ( item.Id == 0 )
+                            _unitOfWork.UserImage.Add(item);
+                    }
+                    await _unitOfWork.SaveAsync();
+
+                    foreach ( var item in recipeViewModel.UserImages )
+                    {
+                        _unitOfWork.RecipeUserImage.Add(new RecipeUserImage()
+                        {
+                            RecipeId = recipeFromDb.Id,
+                            UserImageId = item.Id
+                        });
+                        _unitOfWork.ApplicationUserUserImage.Add(new ApplicationUserUserImage()
+                        {
+                            ApplicationUserId = currentApplicationUserId,
+                            ObjectId = item.Id
+                        });
+                    }
+                    await _unitOfWork.SaveAsync();
+                }
+            }
         }
 
         public void AddRecipe( string currentApplicationUserId, RecipeViewModel recipeViewModel )

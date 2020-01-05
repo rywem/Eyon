@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Eyon.DataAccess.Data.Orchestrators;
 using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
 using Eyon.Models.ViewModels;
+using Eyon.Site.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +67,7 @@ namespace Eyon.Site.Areas.User.Controllers
         {
             try
             {
+                
                 var claimsIdentity = (ClaimsIdentity)this.User.Identity;
                 var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 if ( recipeViewModel.Recipe.Id != 0 )
@@ -75,10 +78,28 @@ namespace Eyon.Site.Areas.User.Controllers
                         ModelState.AddModelError("Recipe.Id", "An error occurred.");
                         return RedirectToAction("Denied", "Error");
                     }
-                }                
-                
+                }
+                var files = HttpContext.Request.Form.Files;
                 if ( ModelState.IsValid )
-                {                    
+                {                   
+                    
+                    if ( files.Count > 0)
+                    {
+                        for ( int i = 0; i < files.Count; i++ )
+                        {
+                            if (files[i].Length > 0 )
+                            {
+                                if ( recipeViewModel.UserImages == null )
+                                    recipeViewModel.UserImages = new List<UserImage>();
+                                recipeViewModel.UserImages.Add(new UserImage()
+                                {
+                                    Encoded = files[i].ConvertToBase64(),
+                                    FileType = Path.GetExtension(files[i].FileName).Trim('.'),
+                                    Description = string.Empty
+                                });
+                            }
+                        }
+                    }
                     // Create Ingredients
                     string[] ingredientsSplit = recipeViewModel.IngredientsText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                     recipeViewModel.Ingredients = new List<Ingredient>();
@@ -137,6 +158,7 @@ namespace Eyon.Site.Areas.User.Controllers
             {
                 throw ex;                
             }
+            recipeViewModel.UserImages = null;
             return View(recipeViewModel);
         }
 
