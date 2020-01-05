@@ -26,7 +26,7 @@ namespace Eyon.Models.ViewModels
         public List<Ingredient> Ingredients { get; set; }
         public List<Instruction> Instructions { get; set; }
         public Community Community { get; set; }
-        public List<SiteImage> RecipeSiteImages { get; set; }
+        public List<UserImage> RecipeUserImages { get; set; }
         public List<Cookbook> Cookbooks { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         

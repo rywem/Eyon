@@ -31,7 +31,9 @@ namespace Eyon.DataAccess.Data{
         public IRecipeRepository Recipe { get; private set; }
         public IRecipeCategoryRepository RecipeCategory { get; private set; }
         public IRecipeIngredientRepository RecipeIngredient { get; private set; }
-        public IRecipeSiteImageRepository RecipeSiteImage { get; private set; }
+        public IRecipeUserImageRepository RecipeUserImage { get; private set; }
+        public IApplicationUserUserImageRepository ApplicationUserUserImage { get; private set; }
+        public IUserImageRepository UserImage { get; private set; }
 
         public IIngredientRepository Ingredient { get; private set; }
         public IInstructionRepository Instruction { get; private set; }
@@ -52,7 +54,7 @@ namespace Eyon.DataAccess.Data{
             this._db = db;
             this.Recipe = new RecipeRepository(this._db);
             this.RecipeCategory = new RecipeCategoryRepository(this._db);            
-            this.RecipeSiteImage = new RecipeSiteImageRepository(this._db);
+            //this.RecipeSiteImage = new RecipeSiteImageRepository(this._db);
             this.Ingredient = new IngredientRepository(this._db);
             this.Instruction = new InstructionRepository(this._db);
             this.CookbookRecipe = new CookbookRecipeRepository(this._db);

@@ -7,7 +7,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 {
     public interface IRecipeRepository : IRepository<Models.Recipe>, IOwnerRepository<Recipe, ApplicationUserRecipe>
     {
-        bool UpdateIfOwner( string currentUserId, Recipe recipe );
-        Task<bool> UpdateIfOwnerAsync( string currentUserId, Recipe recipe );
+        void UpdateIfOwner( string currentUserId, Recipe recipe );
+        //Task<bool> UpdateIfOwnerAsync( string currentUserId, Recipe recipe );
     }    
 }

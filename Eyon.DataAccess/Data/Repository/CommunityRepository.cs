@@ -74,7 +74,8 @@ namespace Eyon.DataAccess.Data.Repository
             var objFromDb = _db.Community.FirstOrDefault(s => s.Id == community.Id);
             objFromDb.Name = community.Name;
             objFromDb.Active = community.Active;
-            _db.SaveChanges();
+            //_db.SaveChanges();
+            dbSet.Update(objFromDb);
         }
     }
 }

@@ -16,5 +16,6 @@ namespace Eyon.Models
         public string City { get; set; }       
         
         public ICollection<ApplicationUserRecipe> ApplicationUserRecipes { get; set; }
+        public ICollection<ApplicationUserUserImage> ApplicationUserUserImage { get; set; }
     }
 }

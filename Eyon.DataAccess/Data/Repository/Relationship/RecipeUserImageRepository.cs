@@ -3,11 +3,11 @@ using Eyon.Models.Relationship;
 
 namespace Eyon.DataAccess.Data.Repository
 {
-    public class RecipeSiteImageRepository : Repository<RecipeSiteImage>, IRecipeSiteImageRepository
+    public class RecipeUserImageRepository : Repository<RecipeUserImage>, IRecipeUserImageRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public RecipeSiteImageRepository( ApplicationDbContext db ) : base(db)
+        public RecipeUserImageRepository( ApplicationDbContext db ) : base(db)
         {
             this._db = db;
         }

@@ -22,8 +22,10 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 
 
         IRecipeRepository Recipe { get; }
-        IRecipeCategoryRepository RecipeCategory { get; }        
-        IRecipeSiteImageRepository RecipeSiteImage { get; }
+        IRecipeCategoryRepository RecipeCategory { get; }
+        IRecipeUserImageRepository RecipeUserImage { get; }
+        IUserImageRepository UserImage { get; }
+        IApplicationUserUserImageRepository ApplicationUserUserImage { get; }
 
         IIngredientRepository Ingredient { get; }
         IInstructionRepository Instruction { get; }

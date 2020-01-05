@@ -17,11 +17,27 @@ namespace Eyon.DataAccess.Data
         #region OnModelCreating
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Recipe>()
+                .Property(r => r.CreationDateTime)
+                .HasDefaultValue(DateTime.Now.ToUniversalTime());
+
+            modelBuilder.Entity<UserImage>()
+                .Property(r => r.CreationDateTime)
+                .HasDefaultValue(DateTime.Now.ToUniversalTime());
+
             #region Indexes
             // Indexes: https://stackoverflow.com/questions/18889218/unique-key-constraints-for-multiple-columns-in-entity-framework
             //modelBuilder.Entity<Community>()
             //    .HasIndex(u => u.WikipediaURL)
             //    .IsUnique();
+
+            modelBuilder.Entity<Recipe>()
+                .HasIndex(x => x.CreationDateTime)
+                .IsClustered(false);
+            modelBuilder.Entity<UserImage>()
+                .HasIndex(x => x.CreationDateTime)
+                .IsClustered(false);
+
 
             modelBuilder.Entity<WebReference>()
                 .HasIndex(u => u.Url)
@@ -154,14 +170,12 @@ namespace Eyon.DataAccess.Data
                 .WithMany(c => c.CommunityRecipes)
                 .HasForeignKey(c => c.CommunityId);
                 
-
-            modelBuilder.Entity<RecipeSiteImage>()
-                .HasKey(c => new { c.RecipeId, c.SiteImageId });
-            modelBuilder.Entity<RecipeSiteImage>()
+            modelBuilder.Entity<RecipeUserImage>()
+                .HasKey(c => new { c.RecipeId, c.UserImageId });
+            modelBuilder.Entity<RecipeUserImage>()
                 .HasOne(c => c.Recipe)
-                .WithMany(c => c.RecipeSiteImages)
+                .WithMany(c => c.RecipeUserImages)
                 .HasForeignKey(c => c.RecipeId);
-
 
             modelBuilder.Entity<RecipeCategory>()
                 .HasKey(c => new { c.RecipeId, c.CategoryId });
@@ -186,6 +200,7 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(c => c.RecipeId);
 
 
+           #region ownership tables 
             modelBuilder.Entity<ApplicationUserRecipe>()
                 .HasKey(c => new { c.ObjectId, c.ApplicationUserId});
             modelBuilder.Entity<ApplicationUserRecipe>()
@@ -197,6 +212,21 @@ namespace Eyon.DataAccess.Data
                 .WithMany(c => c.ApplicationUserOwners)
                 .HasForeignKey(c => c.ObjectId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ApplicationUserUserImage>()
+                .HasKey(a => new { a.ObjectId, a.ApplicationUserId });
+            modelBuilder.Entity<ApplicationUserUserImage>()
+                .HasOne(c => c.ApplicationUser)
+                .WithMany(c => c.ApplicationUserUserImage)
+                .HasForeignKey(c => c.ApplicationUserId);
+            modelBuilder.Entity<ApplicationUserUserImage>()
+                .HasOne(c => c.UserImage)
+                .WithMany(c => c.ApplicationUserOwners)
+                .HasForeignKey(c => c.ObjectId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            #endregion
+
             #endregion
 
 
@@ -878,6 +908,7 @@ namespace Eyon.DataAccess.Data
         public DbSet<PostalCode> PostalCode { get; set; }
         public DbSet<Geocode> Geocode { get; set; }
         public DbSet<WebReference> WebReference { get; set; }
+        public DbSet<UserImage> UserImage { get; set; }
 
         #region location tables
         public DbSet<Community> Community { get; set; }
@@ -894,8 +925,9 @@ namespace Eyon.DataAccess.Data
         public DbSet<OrganizationCookbooks> OrganizationCookbooks { get; set; }
         public DbSet<OrganizationCommunities> OrganizationCommunities { get; set; }
 
-        public DbSet<CookbookRecipe> CookbookRecipes { get; set; }                
-        public DbSet<RecipeSiteImage> RecipeSiteImages { get; set; }
+        public DbSet<CookbookRecipe> CookbookRecipes { get; set; }
+        //public DbSet<RecipeSiteImage> RecipeSiteImages { get; set; }
+        public DbSet<RecipeUserImage> RecipeUserImage { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }        
         public DbSet<CommunityRecipe> CommunityRecipes { get; set; }
 
@@ -906,7 +938,7 @@ namespace Eyon.DataAccess.Data
         public DbSet<PostalCodeGeocode> PostalCodeGeocodes { get; set; }
 
         public DbSet<ApplicationUserRecipe> ApplicationUserRecipes { get; set; }        
-
+        public DbSet<ApplicationUserUserImage> ApplicationUserUserImage { get; set; }
         // NOTE: Start making these names NOT PLURAL
 
         #endregion

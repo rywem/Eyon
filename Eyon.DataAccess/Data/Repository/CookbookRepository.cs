@@ -21,8 +21,9 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.Copyright = cookbook.Copyright;
             objFromDb.Author = cookbook.Author;
             objFromDb.Description = cookbook.Description;
-            objFromDb.ISBN = cookbook.ISBN;            
-            _db.SaveChanges();
+            objFromDb.ISBN = cookbook.ISBN;
+            //_db.SaveChanges();
+            dbSet.Update(objFromDb);
         }
         
     }

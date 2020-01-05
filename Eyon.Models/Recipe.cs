@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Eyon.Models
 {
-    public class Recipe : IHasOwners<ApplicationUserRecipe> 
+    public class Recipe : IHasOwners<ApplicationUserRecipe>, ICreated
     {        
         [Key]
         public long Id { get; set; }
@@ -31,9 +31,10 @@ namespace Eyon.Models
         [Required]
         public string Description { get; set; } 
         
+        public DateTime CreationDateTime { get; set; } 
         public CommunityRecipe CommunityRecipe { get; set; }
         public ICollection<Instruction> Instructions { get; set; }
-        public ICollection<RecipeSiteImage> RecipeSiteImages { get; set; }
+        public ICollection<RecipeUserImage> RecipeUserImages { get; set; }
         
         public ICollection<Ingredient> Ingredients { get; set; }
         public ICollection<RecipeCategory> RecipeCategories { get; set; }

@@ -19,8 +19,8 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.Name = organization.Name;
             objFromDb.Description = organization.Description;
             objFromDb.Type = organization.Type;
-            objFromDb.Website = organization.Website;            
-            _db.SaveChanges();
+            objFromDb.Website = organization.Website;
+            dbSet.Update(objFromDb);
         }
 
 

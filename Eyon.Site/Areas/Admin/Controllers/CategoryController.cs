@@ -69,7 +69,6 @@ namespace Eyon.Site.Areas.Admin.Controllers
                                     Alt = Category.SiteImage.Alt,
                                     FileType = Path.GetExtension(files[0].FileName).Trim('.'),
                                     Encoded = files[0].ConvertToBase64()
-
                                 };
                             }
                             else
@@ -85,7 +84,6 @@ namespace Eyon.Site.Areas.Admin.Controllers
                         else
                         {
                             var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == Category.Id, includeProperties: "SiteImage");
-
                             categoryFromDb.SiteImage.Alt = Category.SiteImage.Alt;
                             categoryFromDb.SiteImage.Title = Category.SiteImage.Title;
                             if (files.Count > 0)

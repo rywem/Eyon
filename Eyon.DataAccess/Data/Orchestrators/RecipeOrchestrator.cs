@@ -49,8 +49,8 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 if ( recipeViewModel.Recipe.RecipeCategories != null && recipeViewModel.Recipe.RecipeCategories.Count > 0 )
                     recipeViewModel.Categories = recipeViewModel.Recipe.RecipeCategories.Select(x => x.Category).ToList();
 
-                if ( recipeViewModel.Recipe.RecipeSiteImages != null && recipeViewModel.Recipe.RecipeSiteImages.Count > 0 )
-                    recipeViewModel.RecipeSiteImages = recipeViewModel.Recipe.RecipeSiteImages.Select(x => x.SiteImage).ToList();
+                if ( recipeViewModel.Recipe.RecipeUserImages != null && recipeViewModel.Recipe.RecipeUserImages.Count > 0 )
+                    recipeViewModel.RecipeUserImages = recipeViewModel.Recipe.RecipeUserImages.Select(x => x.UserImage).ToList();
 
                 if ( recipeViewModel.Recipe.CookbookRecipes != null && recipeViewModel.Recipe.CookbookRecipes.Count > 0 )
                     recipeViewModel.Cookbooks = recipeViewModel.Recipe.CookbookRecipes.Select(x => x.Cookbook).ToList();
@@ -179,8 +179,9 @@ namespace Eyon.DataAccess.Data.Orchestrators
             {
                 return;
             }
-            await _unitOfWork.Recipe.UpdateIfOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe);
-            
+            //await _unitOfWork.Recipe.UpdateIfOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe);
+            _unitOfWork.Recipe.UpdateIfOwner(currentApplicationUserId, recipeViewModel.Recipe);
+            await _unitOfWork.SaveAsync();
             // instructions
 
             // remove instructions
