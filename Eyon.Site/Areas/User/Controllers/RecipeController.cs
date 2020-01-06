@@ -40,6 +40,15 @@ namespace Eyon.Site.Areas.User.Controllers
         public async Task<IActionResult> View(long id)
         {
             RecipeViewModel recipeViewModel = null;
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            bool isOwner = await _unitOfWork.Recipe.IsOwnerAsync(claims.Value, id);
+
+            if ( isOwner == false )
+                return RedirectToAction("Denied", "Error");
+
+            ViewBag.id = id;
+            recipeViewModel = recipeOrchestrator.GetRecipeViewModel(id, claims.Value);
 
             return View(recipeViewModel);
         }

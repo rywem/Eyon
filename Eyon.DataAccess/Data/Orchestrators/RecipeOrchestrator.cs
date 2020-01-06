@@ -22,12 +22,19 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
         public RecipeViewModel GetRecipeViewModel(long id, string currentApplicationUserId)
         {
-            RecipeViewModel recipeViewModel = new RecipeViewModel();
-            recipeViewModel.Recipe = _unitOfWork.Recipe.GetFirstOrDefaultOwned(currentApplicationUserId, x => x.Id == id,
-                includeProperties: "CommunityRecipe,CommunityRecipe,Instructions,Ingredients,CookbookRecipes,CookbookRecipes.Cookbook", false); //RecipeCategories,RecipesCategories.Category,
+            RecipeViewModel recipeViewModel = new RecipeViewModel();            
+            recipeViewModel.Recipe = _unitOfWork.Recipe.GetFirstOrDefault( x => x.Id == id,
+                includeProperties: "CommunityRecipe,CommunityRecipe,Instructions,Ingredients,CookbookRecipes,CookbookRecipes.Cookbook", false); 
 
             if ( recipeViewModel.Recipe != null )
             {
+                // check if it is private, if so, only allow owners to view.
+                if ( recipeViewModel.Recipe.Privacy == Models.Enums.Privacy.Private
+                    && _unitOfWork.Recipe.IsOwner(currentApplicationUserId, recipeViewModel.Recipe.Id) == false )
+                {
+                    throw new WebUserSafeException("An error occurred.");
+                }
+
                 if ( recipeViewModel.Recipe.CommunityRecipe != null )
                 {
                     recipeViewModel.Community = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == recipeViewModel.Recipe.CommunityRecipe.CommunityId, includeProperties: "CommunityState,CommunityState.State,Country");
