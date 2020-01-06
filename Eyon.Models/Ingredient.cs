@@ -12,7 +12,7 @@ namespace Eyon.Models
         [Key]
         public long Id { get; set; }
         [Required]
-        [StringLength(50)]
+        [StringLength(200)]
         public string Text { get; set; }
         public int Number { get; set; }
         public long RecipeId { get; set; }

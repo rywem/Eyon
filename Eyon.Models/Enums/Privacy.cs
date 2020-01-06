@@ -6,7 +6,7 @@ namespace Eyon.Models.Enums
 {
     public enum Privacy
     {
-        Private = 0,        
-        Public = 2
+        Public = 0,        
+        Private = 1
     }
 }

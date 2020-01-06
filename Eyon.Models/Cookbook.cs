@@ -9,10 +9,20 @@ namespace Eyon.Models
         [Key]
         public long Id { get; set; }
         [Required]
+        [MaxLength(300)]
+        [StringLength(300)]
         public string Name { get; set; }
+        [MaxLength(3000)]
+        [StringLength(3000)]
         public string Description { get; set; }
+        [MaxLength(200)]
+        [StringLength(200)]
         public string Author { get; set; }
+        [MaxLength(100)]
+        [StringLength(100)]
         public string Copyright { get; set; }
+        [MaxLength(50)]
+        [StringLength(50)]
         public string ISBN { get; set; }        
 
         public ICollection<Eyon.Models.Relationship.CommunityCookbook> CommunityCookbooks { get; set; }

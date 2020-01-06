@@ -13,6 +13,8 @@ namespace Eyon.Models
         [Required]
         public int StepNumber { get; set; }
         [Required]
+        [MaxLength(3000)]
+        [StringLength(3000)]
         public string Text { get; set; }
         public long RecipeId { get; set; }
         [ForeignKey("RecipeId")]

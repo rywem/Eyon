@@ -10,6 +10,8 @@ namespace Eyon.Models
         [Key]
         public long Id { get; set; }
         [Required]
+        [MaxLength(200)]
+        [StringLength(200)]
         [Display(Name = "Category Name")]
         public string Name { get; set; }
         [Required]
