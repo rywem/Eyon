@@ -20,6 +20,11 @@ namespace Eyon.DataAccess.Data.Repository
             this._db = db;
         }
 
+        public override void Add( Recipe entity )
+        {
+            entity.CreationDateTime = DateTime.Now.ToUniversalTime();
+            base.Add(entity);
+        }
         public void UpdateIfOwner( string currentUserId, Recipe recipe )
         {
             var objFromDb = ( from r in _db.Recipe
@@ -35,6 +40,7 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.Servings = recipe.Servings;
             objFromDb.Description = recipe.Description;
             objFromDb.PrepTime = recipe.PrepTime;
+            objFromDb.Privacy = recipe.Privacy;
             dbSet.Update(objFromDb);            
         }
     }

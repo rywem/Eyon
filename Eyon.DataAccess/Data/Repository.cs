@@ -21,9 +21,7 @@ namespace Eyon.DataAccess.Data
 
         public async virtual Task<T> GetAsync(long id )
         {
-
             return await dbSet.FindAsync(id);
-
         }
 
         public T Get(long id)

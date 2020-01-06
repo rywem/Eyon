@@ -17,6 +17,12 @@ namespace Eyon.DataAccess.Data.Repository
             this._db = db;
         }
 
+        public override void Add( UserImage entity )
+        {
+            entity.CreationDateTime = DateTime.Now.ToUniversalTime();
+            base.Add(entity);
+        }
+
         public void UpdateIfOwner( string currentUserId, UserImage userImage )
         {
             var objFromDb = ( from r in _db.UserImage

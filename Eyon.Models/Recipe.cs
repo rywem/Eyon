@@ -1,4 +1,5 @@
-﻿using Eyon.Models.Interfaces;
+﻿using Eyon.Models.Enums;
+using Eyon.Models.Interfaces;
 using Eyon.Models.Relationship;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,8 @@ namespace Eyon.Models
         public string PrepTime { get; set; }
         [MaxLength(100)]
         [StringLength(100)]
-        public string Servings { get; set; }        
+        public string Servings { get; set; }
+        public Privacy Privacy { get; set; }
         [MaxLength(3000)]
         [StringLength(3000)]
         [Required]

@@ -93,31 +93,23 @@
                     <span asp-validation-for="Recipe.Servings" class="text-danger"></span>
                 </div>
             </div>
-            <div class="form-group row col-12 p-0">
+            <div class="form-group row offset-3 col-9 p-0">
+                <div class="col-3">
+                    <label asp-for="Recipe.Privacy"></label>
+                </div>
+                <div class="col-4">
+                    <select asp-for="Recipe.Privacy" class="form-control" asp-items="Html.GetEnumSelectList<Eyon.Models.Enums.Privacy>()">
+                        <option selected="selected" value="">Please select</option>
+                    </select>
+                    <span asp-validation-for="Recipe.Servings" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row offset-3 col-9 p-0">
                 <div class="col-4">
                     <label>Add Images</label>
                 </div>
                 <div class="col-8">
                     <input type="file" name="files" id="uploadBox" multiple class="form-control" accept="image/gif, image/jpeg, image/png" />
-                    @*<span asp-validation-for="SiteImageId" class="text-danger"></span>
-                    <div class="row ">
-                        <div class="col-3">
-                            <label asp-for="SiteImage.Title" class="form-control border-0" />Title</label>
-                        </div>
-                        <div class="col-5">
-                            <input asp-for="SiteImage.Title" class="form-control" />
-                            <span asp-validation-for="SiteImage.Title" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row ">
-                        <div class="col-3">
-                            <label asp-for="SiteImage.Alt" class="form-control border-0" />Alt Text</label>
-                        </div>
-                        <div class="col-5">
-                            <input asp-for="SiteImage.Alt" class="form-control" />
-                            <span asp-validation-for="SiteImage.Alt" class="text-danger"></span>
-                        </div>
-                    </div>*@
                 </div>
             </div>
             <div class="form-group row">
@@ -125,12 +117,12 @@
                     @if ( Model.Recipe.Id != 0 )
                     {
                         // Edit button and back to list button
-                    <partial name="_EditAndBackToListButton" model="Model.Recipe.Id" />
+                        <partial name="_EditAndBackToListButton" model="Model.Recipe.Id" />
                     }
                     else
                     {
                         // Create button and back to list button
-                    <partial name="_CreateAndBackToListButton" />
+                        <partial name="_CreateAndBackToListButton" />
                     }
                 </div>
             </div>

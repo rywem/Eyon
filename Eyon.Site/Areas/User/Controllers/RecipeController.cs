@@ -37,6 +37,12 @@ namespace Eyon.Site.Areas.User.Controllers
             return View();
         }
 
+        public async Task<IActionResult> View(long id)
+        {
+            RecipeViewModel recipeViewModel = null;
+
+            return View(recipeViewModel);
+        }
         public async Task<IActionResult> Upsert(long? id)
         {
             RecipeViewModel recipeViewModel;

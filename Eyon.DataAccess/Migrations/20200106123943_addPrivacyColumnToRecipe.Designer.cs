@@ -4,14 +4,16 @@ using Eyon.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Eyon.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200106123943_addPrivacyColumnToRecipe")]
+    partial class addPrivacyColumnToRecipe
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1513,7 +1515,7 @@ namespace Eyon.DataAccess.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(1, 1, 1, 8, 0, 0, 0, DateTimeKind.Utc));
+                        .HasDefaultValue(new DateTime(2020, 1, 6, 12, 39, 42, 220, DateTimeKind.Utc).AddTicks(5263));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1530,9 +1532,7 @@ namespace Eyon.DataAccess.Migrations
                         .HasMaxLength(100);
 
                     b.Property<int>("Privacy")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(2);
+                        .HasColumnType("int");
 
                     b.Property<string>("Servings")
                         .HasColumnType("nvarchar(100)")
@@ -5627,7 +5627,7 @@ namespace Eyon.DataAccess.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(1, 1, 1, 8, 0, 0, 0, DateTimeKind.Utc));
+                        .HasDefaultValue(new DateTime(2020, 1, 6, 12, 39, 42, 227, DateTimeKind.Utc).AddTicks(4629));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");

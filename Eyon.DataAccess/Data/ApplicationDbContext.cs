@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Eyon.Models;
 using Eyon.Models.Relationship;
+using Eyon.Models.Enums;
 
 namespace Eyon.DataAccess.Data
 {
@@ -17,13 +18,21 @@ namespace Eyon.DataAccess.Data
         #region OnModelCreating
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            #region Default Values
+            
             modelBuilder.Entity<Recipe>()
                 .Property(r => r.CreationDateTime)
-                .HasDefaultValue(DateTime.Now.ToUniversalTime());
+                .HasDefaultValue(DateTime.MinValue.ToUniversalTime());
+
+            modelBuilder.Entity<Recipe>()
+                .Property(r => r.Privacy)
+                .HasDefaultValue(Privacy.Public);
 
             modelBuilder.Entity<UserImage>()
                 .Property(r => r.CreationDateTime)
-                .HasDefaultValue(DateTime.Now.ToUniversalTime());
+                .HasDefaultValue(DateTime.MinValue.ToUniversalTime());
+
+            #endregion
 
             #region Indexes
             // Indexes: https://stackoverflow.com/questions/18889218/unique-key-constraints-for-multiple-columns-in-entity-framework
