@@ -18,8 +18,8 @@ function loadDataTable() {
                 "data": "id",
                 "render": function (data) {
                     return `<div class="text-center">
-                                <a href="/User/Recipe/Upsert/${data}" class='btn btn-success text-white' style='cursor:pointer; width:100px'>
-                                    <i class='far fa-edit'></i> Edit
+                                <a href="/User/Recipe/View/${data}" class='btn btn-success text-white' style='cursor:pointer; width:100px'>
+                                    <i class="fas fa-search"></i>&nbsp;View
                                 </a>
                                 &nbsp;
                                 <a onclick=Delete("/User/Recipe/Delete/${data}") class='btn btn-danger text-white' style='cursor:pointer; width:100px'>

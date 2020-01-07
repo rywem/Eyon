@@ -5,4 +5,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>View</h1>
+
+<div class="jumbotron p-3 p-md-5 text-white rounded bg-primary">
+    <div class="col-md-6 px-0">
+        <h1 class="display-4">@Model.Recipe.Name</h1>
+    </div>
+    <p class="lead my-3 text-white">@Model.Recipe.Description</p>
+</div>
+<div class="row p-3">
+    <div class="card flex-md-row mb-4 box-shadow h-md-250">
+        <div class="card-body d-flex flex-column align-items-start">
+            <strong>Ingredients</strong>
+            <ul>
+                @foreach ( var ingredient in Model.Ingredients )
+                {
+                    <li>@ingredient.Text</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
