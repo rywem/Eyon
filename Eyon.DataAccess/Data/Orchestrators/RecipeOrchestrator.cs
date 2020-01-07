@@ -20,11 +20,11 @@ namespace Eyon.DataAccess.Data.Orchestrators
             this._unitOfWork = unitOfWork;
         }
 
-        public RecipeViewModel GetRecipeViewModel(long id, string currentApplicationUserId)
+        public RecipeViewModel GetRecipeViewModel(long id, string currentApplicationUserId, string includeProperties = null)
         {
             RecipeViewModel recipeViewModel = new RecipeViewModel();            
             recipeViewModel.Recipe = _unitOfWork.Recipe.GetFirstOrDefault( x => x.Id == id,
-                includeProperties: "CommunityRecipe,CommunityRecipe,Instructions,Ingredients,CookbookRecipes,CookbookRecipes.Cookbook", false); 
+                includeProperties: "CommunityRecipe,CommunityRecipe,Instruction,Ingredient,CookbookRecipe,CookbookRecipe.Cookbook,RecipeUserImage,RecipeUserImage.UserImage", false); 
 
             if ( recipeViewModel.Recipe != null )
             {
@@ -41,26 +41,26 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     recipeViewModel.CommunityName = Eyon.Models.Helpers.CommunityHelper.FullNameFormatter(recipeViewModel.Community);
                     recipeViewModel.CommunityId = recipeViewModel.Community.Id;
                 }
-                if ( recipeViewModel.Recipe.Instructions != null && recipeViewModel.Recipe.Instructions.Count > 0 )
+                if ( recipeViewModel.Recipe.Instruction != null && recipeViewModel.Recipe.Instruction.Count > 0 )
                 { 
-                    recipeViewModel.Instructions = recipeViewModel.Recipe.Instructions.ToList();                    
-                    recipeViewModel.InstructionsText = string.Join(Environment.NewLine, recipeViewModel.Instructions.OrderBy(x => x.StepNumber).Select(x => x.Text));                    
+                    recipeViewModel.Instruction = recipeViewModel.Recipe.Instruction.ToList();                    
+                    recipeViewModel.InstructionsText = string.Join(Environment.NewLine, recipeViewModel.Instruction.OrderBy(x => x.StepNumber).Select(x => x.Text));                    
                 }
 
-                if ( recipeViewModel.Recipe.Ingredients != null && recipeViewModel.Recipe.Ingredients.Count > 0 )
+                if ( recipeViewModel.Recipe.Ingredient != null && recipeViewModel.Recipe.Ingredient.Count > 0 )
                 {
-                    recipeViewModel.Ingredients = recipeViewModel.Recipe.Ingredients.ToList();
-                    recipeViewModel.IngredientsText = string.Join(Environment.NewLine, recipeViewModel.Recipe.Ingredients.ToList().Select(x => x.Text));
+                    recipeViewModel.Ingredient = recipeViewModel.Recipe.Ingredient.ToList();
+                    recipeViewModel.IngredientsText = string.Join(Environment.NewLine, recipeViewModel.Recipe.Ingredient.ToList().Select(x => x.Text));
                 }
 
-                if ( recipeViewModel.Recipe.RecipeCategories != null && recipeViewModel.Recipe.RecipeCategories.Count > 0 )
-                    recipeViewModel.Categories = recipeViewModel.Recipe.RecipeCategories.Select(x => x.Category).ToList();
+                if ( recipeViewModel.Recipe.RecipeCategory != null && recipeViewModel.Recipe.RecipeCategory.Count > 0 )
+                    recipeViewModel.Category = recipeViewModel.Recipe.RecipeCategory.Select(x => x.Category).ToList();
 
-                if ( recipeViewModel.Recipe.RecipeUserImages != null && recipeViewModel.Recipe.RecipeUserImages.Count > 0 )
-                    recipeViewModel.UserImages = recipeViewModel.Recipe.RecipeUserImages.Select(x => x.UserImage).ToList();
+                if ( recipeViewModel.Recipe.RecipeUserImage != null && recipeViewModel.Recipe.RecipeUserImage.Count > 0 )
+                    recipeViewModel.UserImage = recipeViewModel.Recipe.RecipeUserImage.Select(x => x.UserImage).ToList();
 
-                if ( recipeViewModel.Recipe.CookbookRecipes != null && recipeViewModel.Recipe.CookbookRecipes.Count > 0 )
-                    recipeViewModel.Cookbooks = recipeViewModel.Recipe.CookbookRecipes.Select(x => x.Cookbook).ToList();
+                if ( recipeViewModel.Recipe.CookbookRecipe != null && recipeViewModel.Recipe.CookbookRecipe.Count > 0 )
+                    recipeViewModel.Cookbooks = recipeViewModel.Recipe.CookbookRecipe.Select(x => x.Cookbook).ToList();
             }
             return recipeViewModel;
         }
@@ -121,13 +121,13 @@ namespace Eyon.DataAccess.Data.Orchestrators
             _unitOfWork.CommunityRecipe.Add(communityRecipe);
             await _unitOfWork.SaveAsync();
             // Add instructions
-            foreach ( var item in recipeViewModel.Instructions )
+            foreach ( var item in recipeViewModel.Instruction )
             {
                 item.RecipeId = recipeViewModel.Recipe.Id;
                 _unitOfWork.Instruction.Add(item);
             }            
 
-            foreach ( var item in recipeViewModel.Ingredients )
+            foreach ( var item in recipeViewModel.Ingredient )
             {
                 item.RecipeId = recipeViewModel.Recipe.Id;
                 _unitOfWork.Ingredient.Add(item);
@@ -146,20 +146,20 @@ namespace Eyon.DataAccess.Data.Orchestrators
         private async Task AddRecipeUserImageAsync(string currentApplicationUserId, RecipeViewModel recipeViewModel)
         {
 
-            if ( recipeViewModel.UserImages != null && recipeViewModel.UserImages.Count > 0 )
+            if ( recipeViewModel.UserImage != null && recipeViewModel.UserImage.Count > 0 )
             {
                 var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id);
                 var applicationUserFromDb = await _unitOfWork.ApplicationUser.GetFirstOrDefaultAsync(x => x.Id == currentApplicationUserId);
                 if ( recipeFromDb != null && applicationUserFromDb != null )
                 {
-                    foreach ( var item in recipeViewModel.UserImages )
+                    foreach ( var item in recipeViewModel.UserImage )
                     {
                         if ( item.Id == 0 )
                             _unitOfWork.UserImage.Add(item);
                     }
                     await _unitOfWork.SaveAsync();
 
-                    foreach ( var item in recipeViewModel.UserImages )
+                    foreach ( var item in recipeViewModel.UserImage )
                     {
                         _unitOfWork.RecipeUserImage.Add(new RecipeUserImage()
                         {
@@ -185,13 +185,13 @@ namespace Eyon.DataAccess.Data.Orchestrators
             _unitOfWork.Save();
             // Add instructions
 
-            foreach ( var item in recipeViewModel.Instructions )
+            foreach ( var item in recipeViewModel.Instruction )
             {
                 item.RecipeId = recipeViewModel.Recipe.Id;
                 _unitOfWork.Instruction.Add(item);
             }
             // Add ingregients
-            foreach ( var item in recipeViewModel.Ingredients )
+            foreach ( var item in recipeViewModel.Ingredient )
             {
                 item.RecipeId = recipeViewModel.Recipe.Id;
                 _unitOfWork.Ingredient.Add(item);
@@ -232,19 +232,19 @@ namespace Eyon.DataAccess.Data.Orchestrators
             // instructions
 
             // remove instructions
-            if ( recipeViewModel.Instructions.Count < recipeFromDb.Instructions.Count )
+            if ( recipeViewModel.Instruction.Count < recipeFromDb.Instruction.Count )
             {
-                var dbInstructionsList = recipeFromDb.Instructions.ToList();
-                for ( int i = recipeViewModel.Instructions.Count; i < recipeFromDb.Instructions.Count; i++ )
+                var dbInstructionsList = recipeFromDb.Instruction.ToList();
+                for ( int i = recipeViewModel.Instruction.Count; i < recipeFromDb.Instruction.Count; i++ )
                 {
                     var itemToRemove = dbInstructionsList[i];
                     _unitOfWork.Instruction.Remove(itemToRemove.Id);
                 }
             }
             // add or update new instructions
-            foreach ( var item in recipeViewModel.Instructions )
+            foreach ( var item in recipeViewModel.Instruction )
             {
-                var instructionFromDb = recipeFromDb.Instructions.FirstOrDefault(x => x.StepNumber == item.StepNumber);
+                var instructionFromDb = recipeFromDb.Instruction.FirstOrDefault(x => x.StepNumber == item.StepNumber);
 
                 if(instructionFromDb == null ) // add
                 {
@@ -264,11 +264,11 @@ namespace Eyon.DataAccess.Data.Orchestrators
             // ingredients
 
             // remove ingredients 
-            if ( recipeViewModel.Ingredients.Count < recipeFromDb.Ingredients.Count )
+            if ( recipeViewModel.Ingredient.Count < recipeFromDb.Ingredient.Count )
             {
-                var dbIngredientsList = recipeFromDb.Ingredients.ToList();
+                var dbIngredientsList = recipeFromDb.Ingredient.ToList();
                 
-                for ( int i = recipeViewModel.Ingredients.Count; i < recipeFromDb.Ingredients.Count; i++ )
+                for ( int i = recipeViewModel.Ingredient.Count; i < recipeFromDb.Ingredient.Count; i++ )
                 {
                     var itemToRemove = dbIngredientsList[i];
                     _unitOfWork.Ingredient.Remove(itemToRemove.Id);                    
@@ -277,9 +277,9 @@ namespace Eyon.DataAccess.Data.Orchestrators
             int ingredientCounter = 0;
 
             // add or update ingredients            
-            foreach ( var item in recipeViewModel.Ingredients )
+            foreach ( var item in recipeViewModel.Ingredient )
             {
-                var ingredientFromDb = recipeFromDb.Ingredients.FirstOrDefault(x => x.Number == item.Number );
+                var ingredientFromDb = recipeFromDb.Ingredient.FirstOrDefault(x => x.Number == item.Number );
                 if ( ingredientFromDb == null )
                 {
                     item.RecipeId = recipeFromDb.Id;

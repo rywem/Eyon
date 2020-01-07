@@ -89,14 +89,14 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 PostalCode postal = null;
                 CommunityPostalCode commmunityPostalCode = null;
                 var zipText = zip.Zipcode.ToUpper();
-                if ( community.CommunityPostalCodes != null )
+                if ( community.CommunityPostalCode != null )
                 {                    
-                    postal = community.CommunityPostalCodes.ToList().Select(x => x.PostalCode).Where(x => x.Text.Equals(zipText)).FirstOrDefault();
+                    postal = community.CommunityPostalCode.ToList().Select(x => x.PostalCode).Where(x => x.Text.Equals(zipText)).FirstOrDefault();
                 }
                 
                 //postal = community.CommunityPostalCodes.ToList().Select(x => x.PostalCode).Where(x => x.Text.Equals(zipText)).FirstOrDefault();
                 if ( postal != null )
-                    commmunityPostalCode = community.CommunityPostalCodes.FirstOrDefault(x => x.PostalCodeId == postal.Id);
+                    commmunityPostalCode = community.CommunityPostalCode.FirstOrDefault(x => x.PostalCodeId == postal.Id);
                 else
                     postal = await _unitOfWork.PostalCode.GetFirstOrDefaultAsync(x => x.Text.Equals(zipText) && x.CountryId == country.Id);
 
@@ -127,15 +127,15 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 CommunityGeocode communityGeocode = null;
                 string lati = zip.Lat.ToUpper();
                 string longi = zip.Long.ToUpper();
-                if ( community.CommunityGeocodes != null )
+                if ( community.CommunityGeocode != null )
                 {
                     // check if the postal code exists:
                     //geocode = await _unitOfWork.Geocode.GetFirstOrDefaultAsync(x => x.Latitude.Equals(lati) && x.Longitude.Equals(longi));
-                    geocode = community.CommunityGeocodes.ToList().Select(x => x.Geocode).Where(x => x.Latitude.Equals(lati) && x.Longitude.Equals(longi)).FirstOrDefault();
+                    geocode = community.CommunityGeocode.ToList().Select(x => x.Geocode).Where(x => x.Latitude.Equals(lati) && x.Longitude.Equals(longi)).FirstOrDefault();
                 }
                                     
                 if ( geocode != null )
-                    communityGeocode = community.CommunityGeocodes.FirstOrDefault(x => x.GeocodeId == geocode.Id);
+                    communityGeocode = community.CommunityGeocode.FirstOrDefault(x => x.GeocodeId == geocode.Id);
                 else
                     geocode = await _unitOfWork.Geocode.GetFirstOrDefaultAsync(x => x.Latitude.Equals(lati) && x.Longitude.Equals(longi));
                 

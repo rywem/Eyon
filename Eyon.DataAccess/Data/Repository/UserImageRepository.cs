@@ -26,7 +26,7 @@ namespace Eyon.DataAccess.Data.Repository
         public void UpdateIfOwner( string currentUserId, UserImage userImage )
         {
             var objFromDb = ( from r in _db.UserImage
-                              join a in _db.ApplicationUserRecipes on r.Id equals a.ObjectId
+                              join a in _db.ApplicationUserRecipe on r.Id equals a.ObjectId
                               where a.ApplicationUserId.Equals(currentUserId) && r.Id == userImage.Id
                               select r ).FirstOrDefault();
 

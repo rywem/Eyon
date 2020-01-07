@@ -6,10 +6,10 @@ using System.Text;
 
 namespace Eyon.DataAccess.Data.Repository
 {
-    public class OrganizationCookbooksRepository : Repository<OrganizationCookbooks>, IOrganizationCookbooksRepository
+    public class OrganizationCookbookRepository : Repository<OrganizationCookbook>, IOrganizationCookbookRepository
     {
         private readonly ApplicationDbContext _db;
-        public OrganizationCookbooksRepository( ApplicationDbContext db ) : base(db)
+        public OrganizationCookbookRepository( ApplicationDbContext db ) : base(db)
         {
             this._db = db;
         }

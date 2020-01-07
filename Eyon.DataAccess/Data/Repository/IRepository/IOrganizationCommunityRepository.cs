@@ -4,7 +4,7 @@ using System.Text;
 using Eyon.Models.Relationship;
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface IOrganizationCommunitiesRepository : IRepository<OrganizationCommunities>
+    public interface IOrganizationCommunityRepository : IRepository<OrganizationCommunity>
     {
     }
 }

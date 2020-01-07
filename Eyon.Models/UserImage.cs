@@ -17,7 +17,7 @@ namespace Eyon.Models
         public string FileType { get; set; }
         public string Encoded { get; set; }
         public DateTime CreationDateTime { get; set; }
-        public ICollection<ApplicationUserUserImage> ApplicationUserOwners { get; set; } 
+        public ICollection<ApplicationUserUserImage> ApplicationUserOwner { get; set; } 
         
 
         [NotMapped]

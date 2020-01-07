@@ -18,7 +18,7 @@ namespace Eyon.Models
         [StringLength(20)]
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Longitude { get; set; }
-        public ICollection<CommunityGeocode> CommunityGeocodes { get; set; }
-        public ICollection<PostalCodeGeocode> PostalCodeGeocodes { get; set; }
+        public ICollection<CommunityGeocode> CommunityGeocode { get; set; }
+        public ICollection<PostalCodeGeocode> PostalCodeGeocode { get; set; }
     }
 }

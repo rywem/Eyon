@@ -22,11 +22,11 @@ namespace Eyon.Models.ViewModels
 
         public long CommunityId { get; set; }
         public string CommunityName { get; set; }
-        public List<Category> Categories { get; set; }
-        public List<Ingredient> Ingredients { get; set; }
-        public List<Instruction> Instructions { get; set; }
+        public List<Category> Category { get; set; }
+        public List<Ingredient> Ingredient { get; set; }
+        public List<Instruction> Instruction { get; set; }
         public Community Community { get; set; }
-        public List<UserImage> UserImages { get; set; }
+        public List<UserImage> UserImage { get; set; }
         public List<Cookbook> Cookbooks { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         
@@ -35,8 +35,8 @@ namespace Eyon.Models.ViewModels
             this.Recipe = new Recipe();
             //this.Community = new Community();
             //this.Categories = new List<Category>();
-            this.Ingredients = new List<Ingredient>();
-            this.Instructions = new List<Instruction>();
+            this.Ingredient = new List<Ingredient>();
+            this.Instruction = new List<Instruction>();
             //this.RecipeSiteImages = new List<SiteImage>();
             //this.Cookbooks = new List<Cookbook>();
             //this.ApplicationUser = new ApplicationUser();

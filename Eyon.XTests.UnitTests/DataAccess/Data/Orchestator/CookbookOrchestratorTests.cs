@@ -78,7 +78,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Orchestator
             cookbookViewModel.CategoryIds = categoryInDb.Id.ToString();
             // Act
             _orchestrator.UpdateCookbook(cookbookViewModel);
-            var cookbookCategoriesFromDb = _unitOfWork.CookbookCategories.GetAll(f => f.CookbookId == cookbookInDb.Id && f.CategoryId == categoryInDb.Id).ToList();
+            var cookbookCategoriesFromDb = _unitOfWork.CookbookCategory.GetAll(f => f.CookbookId == cookbookInDb.Id && f.CategoryId == categoryInDb.Id).ToList();
 
             // Assert
             Assert.True(cookbookCategoriesFromDb.Count == 1);

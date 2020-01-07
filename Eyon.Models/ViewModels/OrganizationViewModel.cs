@@ -7,14 +7,14 @@ namespace Eyon.Models.ViewModels
     public class OrganizationViewModel
     {
         public Organization Organization { get; set; }
-        public List<Community> Communities { get; set; }
-        public List<Cookbook> Cookbooks { get; set; }
+        public List<Community> Community { get; set; }
+        public List<Cookbook> Cookbook { get; set; }
 
         public OrganizationViewModel()
         {
             this.Organization = new Organization();
-            this.Communities = new List<Community>();
-            this.Cookbooks = new List<Cookbook>();
+            this.Community = new List<Community>();
+            this.Cookbook = new List<Cookbook>();
         }
     }
 }

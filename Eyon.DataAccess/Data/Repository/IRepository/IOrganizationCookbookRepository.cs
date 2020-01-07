@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface IOrganizationCookbooksRepository : IRepository<OrganizationCookbooks>
+    public interface IOrganizationCookbookRepository : IRepository<OrganizationCookbook>
     {
     }
 }

@@ -6,8 +6,8 @@ namespace Eyon.Models.ViewModels
     public class CookbookViewModel
     {
         public Cookbook Cookbook { get; set; }
-        public List<Category> Categories { get; set; }
-        public List<Community> Communities { get; set; }
+        public List<Category> Category { get; set; }
+        public List<Community> Community { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "At least one category is required.")]
         [Display(Name ="Selected Category(s)")]        
@@ -16,17 +16,17 @@ namespace Eyon.Models.ViewModels
         public string CategoryNames { get; set; }
         public CookbookViewModel()
         {
-            this.Categories = new List<Category>();
-            this.Communities = new List<Community>();
+            this.Category = new List<Category>();
+            this.Community = new List<Community>();
             this.Cookbook = new Cookbook();
         }
 
 
         public void SetCategoryIds()
         {
-            if(Categories != null && Categories.Count > 0 )
+            if(Category != null && Category.Count > 0 )
             {
-                foreach (var cat in Categories)
+                foreach (var cat in Category)
                 {
                     if (string.IsNullOrEmpty(CategoryIds))
                     {
@@ -41,9 +41,9 @@ namespace Eyon.Models.ViewModels
         }
         public void SetCategoryNames()
         {
-            if (Categories != null && Categories.Count > 0)
+            if (Category != null && Category.Count > 0)
             {
-                foreach (var cat in Categories)
+                foreach (var cat in Category)
                 {
                     if (string.IsNullOrEmpty(CategoryIds))
                     {

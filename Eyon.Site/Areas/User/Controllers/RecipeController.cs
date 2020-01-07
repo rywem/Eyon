@@ -104,9 +104,9 @@ namespace Eyon.Site.Areas.User.Controllers
                         {
                             if (files[i].Length > 0 )
                             {
-                                if ( recipeViewModel.UserImages == null )
-                                    recipeViewModel.UserImages = new List<UserImage>();
-                                recipeViewModel.UserImages.Add(new UserImage()
+                                if ( recipeViewModel.UserImage == null )
+                                    recipeViewModel.UserImage = new List<UserImage>();
+                                recipeViewModel.UserImage.Add(new UserImage()
                                 {
                                     Encoded = files[i].ConvertToBase64(),
                                     FileType = Path.GetExtension(files[i].FileName).Trim('.'),
@@ -117,11 +117,11 @@ namespace Eyon.Site.Areas.User.Controllers
                     }
                     // Create Ingredients
                     string[] ingredientsSplit = recipeViewModel.IngredientsText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    recipeViewModel.Ingredients = new List<Ingredient>();
+                    recipeViewModel.Ingredient = new List<Ingredient>();
                     int step = 1;
                     foreach ( var item in ingredientsSplit )
                     {
-                        recipeViewModel.Ingredients.Add(new Ingredient()
+                        recipeViewModel.Ingredient.Add(new Ingredient()
                         {
                             Text = item,
                             Number = step,
@@ -133,10 +133,10 @@ namespace Eyon.Site.Areas.User.Controllers
                     string[] instructionsSplit = recipeViewModel.InstructionsText.Split(new[] { Environment.NewLine },StringSplitOptions.RemoveEmptyEntries);
 
                     step = 1;
-                    recipeViewModel.Instructions = new List<Instruction>();
+                    recipeViewModel.Instruction = new List<Instruction>();
                     foreach ( var item in instructionsSplit )
                     {
-                        recipeViewModel.Instructions.Add(new Instruction()
+                        recipeViewModel.Instruction.Add(new Instruction()
                         {
                             StepNumber = step,
                             Text = item,
@@ -173,7 +173,7 @@ namespace Eyon.Site.Areas.User.Controllers
             {
                 throw ex;                
             }
-            recipeViewModel.UserImages = null;
+            recipeViewModel.UserImage = null;
             return View(recipeViewModel);
         }
 

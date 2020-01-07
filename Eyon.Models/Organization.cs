@@ -17,8 +17,8 @@ namespace Eyon.Models
         [Required]
         public string Type { get; set; }
         public string Website { get; set; }
-        public ICollection<OrganizationCommunities> OrganizationCommunities { get; set; }
-        public ICollection<OrganizationCookbooks> OrganizationCookbooks { get; set; }                
+        public ICollection<OrganizationCommunity> OrganizationCommunity { get; set; }
+        public ICollection<OrganizationCookbook> OrganizationCookbook { get; set; }                
 
     }
 }

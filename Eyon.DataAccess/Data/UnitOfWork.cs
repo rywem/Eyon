@@ -13,9 +13,9 @@ namespace Eyon.DataAccess.Data{
 
         public ICookbookRepository Cookbook { get; private set; }
 
-        public ICookbookCategoriesRepository CookbookCategories { get; private set; }
+        public ICookbookCategoriesRepository CookbookCategory { get; private set; }
 
-        public ICommunityCookbookRepository CommunityCookbooks { get; private set; }
+        public ICommunityCookbookRepository CommunityCookbook { get; private set; }
 
         public ICommunityRepository Community { get; private set; }
 
@@ -24,9 +24,9 @@ namespace Eyon.DataAccess.Data{
 
         public ICommunityStateRepository CommunityState { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
-        public IOrganizationCommunitiesRepository OrganizationCommunities { get; private set; }
+        public IOrganizationCommunityRepository OrganizationCommunity { get; private set; }
         public IOrganizationRepository Organization { get; private set; }
-        public IOrganizationCookbooksRepository OrganizationCookbooks { get; private set; }
+        public IOrganizationCookbookRepository OrganizationCookbook { get; private set; }
 
         public IRecipeRepository Recipe { get; private set; }
         public IRecipeCategoryRepository RecipeCategory { get; private set; }
@@ -72,14 +72,14 @@ namespace Eyon.DataAccess.Data{
             this.SiteImage = new SiteImageRepository(this._db);
             this.Cookbook = new CookbookRepository(this._db);
             this.Community = new CommunityRepository(this._db);
-            this.CommunityCookbooks = new CommunityCookbookRepository(this._db);
-            this.CookbookCategories = new CookbookCategoriesRepository(this._db);
+            this.CommunityCookbook = new CommunityCookbookRepository(this._db);
+            this.CookbookCategory = new CookbookCategoryRepository(this._db);
             this.Country = new CountryRepository(this._db);
             this.State = new StateRepository(this._db);
             this.ApplicationUser = new ApplicationUserRepository(this._db);
             this.CommunityState = new CommunityStateRepository(this._db);
-            this.OrganizationCommunities = new OrganizationCommunitiesRepository(this._db);
-            this.OrganizationCookbooks = new OrganizationCookbooksRepository(this._db);
+            this.OrganizationCommunity = new OrganizationCommunityRepository(this._db);
+            this.OrganizationCookbook = new OrganizationCookbookRepository(this._db);
             this.Organization = new OrganizationRepository(this._db);
             this.CommunityRecipe = new CommunityRecipeRepository(this._db);
             this.ApplicationUserRecipe = new ApplicationUserRecipeRepository(this._db);

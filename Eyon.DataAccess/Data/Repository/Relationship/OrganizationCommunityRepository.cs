@@ -6,10 +6,10 @@ using Eyon.Models.Relationship;
 
 namespace Eyon.DataAccess.Data.Repository
 {
-    public class OrganizationCommunitiesRepository : Repository<OrganizationCommunities>, IOrganizationCommunitiesRepository
+    public class OrganizationCommunityRepository : Repository<OrganizationCommunity>, IOrganizationCommunityRepository
     {
         private readonly ApplicationDbContext _db;
-        public OrganizationCommunitiesRepository( ApplicationDbContext db ) : base(db)
+        public OrganizationCommunityRepository( ApplicationDbContext db ) : base(db)
         {
             this._db = db;
         }

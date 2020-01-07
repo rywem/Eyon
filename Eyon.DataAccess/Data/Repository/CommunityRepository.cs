@@ -36,7 +36,7 @@ namespace Eyon.DataAccess.Data.Repository
                           on c.Id equals cs.CommunityId into csc
                           from csci in csc.DefaultIfEmpty() // search state
                           // search postal code
-                          join cp in _db.CommunityPostalCodes
+                          join cp in _db.CommunityPostalCode
                           on c.Id equals cp.CommunityId into cpc
                           from cpci in cpc.DefaultIfEmpty()
                           join p in _db.PostalCode

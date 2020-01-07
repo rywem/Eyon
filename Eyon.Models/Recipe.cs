@@ -38,13 +38,13 @@ namespace Eyon.Models
         
         public DateTime CreationDateTime { get; set; } 
         public CommunityRecipe CommunityRecipe { get; set; }
-        public ICollection<Instruction> Instructions { get; set; }
-        public ICollection<RecipeUserImage> RecipeUserImages { get; set; }
+        public ICollection<Instruction> Instruction { get; set; }
+        public ICollection<RecipeUserImage> RecipeUserImage { get; set; }
         
-        public ICollection<Ingredient> Ingredients { get; set; }
-        public ICollection<RecipeCategory> RecipeCategories { get; set; }
-        public ICollection<CookbookRecipe> CookbookRecipes { get; set; }        
-        public ICollection<ApplicationUserRecipe> ApplicationUserOwners { get; set; }
+        public ICollection<Ingredient> Ingredient { get; set; }
+        public ICollection<RecipeCategory> RecipeCategory { get; set; }
+        public ICollection<CookbookRecipe> CookbookRecipe { get; set; }        
+        public ICollection<ApplicationUserRecipe> ApplicationUserOwner { get; set; }
 
         // TODO: Add EAV table with:  Calories, Yield, ReadyIn
 

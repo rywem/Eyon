@@ -18,10 +18,10 @@ namespace Eyon.Models
         public ICollection<CommunityCookbook> CommunityCookbooks { get; set; }
 
         public CommunityState CommunityState { get; set; }
-        public ICollection<OrganizationCommunities> OrganizationCommunities { get; set; }
-        public ICollection<CommunityWebReference> CommunityWebReferences { get; set; }
-        public ICollection<CommunityRecipe> CommunityRecipes { get; set; }
-        public ICollection<CommunityPostalCode> CommunityPostalCodes { get; set; }
-        public ICollection<CommunityGeocode> CommunityGeocodes { get; set; }
+        public ICollection<OrganizationCommunity> OrganizationCommunity { get; set; }
+        public ICollection<CommunityWebReference> CommunityWebReference { get; set; }
+        public ICollection<CommunityRecipe> CommunityRecipe { get; set; }
+        public ICollection<CommunityPostalCode> CommunityPostalCode { get; set; }
+        public ICollection<CommunityGeocode> CommunityGeocode { get; set; }
     }
 }

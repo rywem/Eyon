@@ -17,7 +17,7 @@ namespace Eyon.Models
         [Required]        
         public long CountryId { get; set; }
         public Country Country { get; set; }
-        public ICollection<CommunityPostalCode> CommunityPostalCodes { get; set; }
-        public ICollection<PostalCodeGeocode> PostalCodeGeocodes { get; set; }
+        public ICollection<CommunityPostalCode> CommunityPostalCode { get; set; }
+        public ICollection<PostalCodeGeocode> PostalCodeGeocode { get; set; }
     }
 }

@@ -78,26 +78,26 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(cc => cc.CommunityId);
             modelBuilder.Entity<Models.Relationship.CommunityCookbook>()
                 .HasOne(cc => cc.Cookbook)
-                .WithMany(cc => cc.CommunityCookbooks)
+                .WithMany(cc => cc.CommunityCookbook)
                 .HasForeignKey(cc => cc.CookbookId);
 
             modelBuilder.Entity<CommunityWebReference>()
                 .HasKey(bc => new { bc.WebReferenceId, bc.CommunityId });
             modelBuilder.Entity<CommunityWebReference>()
                 .HasOne(cc => cc.Community)
-                .WithMany(cc => cc.CommunityWebReferences)
+                .WithMany(cc => cc.CommunityWebReference)
                 .HasForeignKey(cc => cc.CommunityId);
 
             modelBuilder.Entity<CommunityPostalCode>()
                 .HasKey(bc => new { bc.CommunityId, bc.PostalCodeId });
             modelBuilder.Entity<CommunityPostalCode>()
                 .HasOne(cc => cc.Community)
-                .WithMany(cc => cc.CommunityPostalCodes)
+                .WithMany(cc => cc.CommunityPostalCode)
                 .HasForeignKey(cc => cc.CommunityId)
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Models.Relationship.CommunityPostalCode>()
                 .HasOne(cc => cc.PostalCode)
-                .WithMany(cc => cc.CommunityPostalCodes)
+                .WithMany(cc => cc.CommunityPostalCode)
                 .HasForeignKey(cc => cc.PostalCodeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -105,55 +105,55 @@ namespace Eyon.DataAccess.Data
                 .HasKey(bc => new { bc.GeocodeId, bc.CommunityId });
             modelBuilder.Entity<CommunityGeocode>()
                 .HasOne(cc => cc.Community)
-                .WithMany(cc => cc.CommunityGeocodes)
+                .WithMany(cc => cc.CommunityGeocode)
                 .HasForeignKey(cc => cc.CommunityId);
             modelBuilder.Entity<CommunityGeocode>()
                 .HasOne(cc => cc.Geocode)
-                .WithMany(cc => cc.CommunityGeocodes)
+                .WithMany(cc => cc.CommunityGeocode)
                 .HasForeignKey(cc => cc.GeocodeId);
 
             modelBuilder.Entity<PostalCodeGeocode>()
                 .HasKey(bc => new { bc.GeocodeId, bc.PostalCodeId });
             modelBuilder.Entity<PostalCodeGeocode>()
                 .HasOne(cc => cc.PostalCode)
-                .WithMany(cc => cc.PostalCodeGeocodes)
+                .WithMany(cc => cc.PostalCodeGeocode)
                 .HasForeignKey(cc => cc.PostalCodeId);
             modelBuilder.Entity<PostalCodeGeocode>()
                 .HasOne(cc => cc.Geocode)
-                .WithMany(cc => cc.PostalCodeGeocodes)
+                .WithMany(cc => cc.PostalCodeGeocode)
                 .HasForeignKey(cc => cc.GeocodeId);
 
             modelBuilder.Entity<CookbookCategories>()
                 .HasKey(bc => new { bc.CookbookId, bc.CategoryId });
             modelBuilder.Entity<CookbookCategories>()
                 .HasOne(cc => cc.Cookbook)
-                .WithMany(cc => cc.CookbookCategories)
+                .WithMany(cc => cc.CookbookCategory)
                 .HasForeignKey(cc => cc.CookbookId);
             modelBuilder.Entity<CookbookCategories>()
                 .HasOne(cc => cc.Category)
-                .WithMany(cc => cc.CookbookCategories)
+                .WithMany(cc => cc.CookbookCategory)
                 .HasForeignKey(cc => cc.CategoryId);
             
-            modelBuilder.Entity<OrganizationCommunities>()
+            modelBuilder.Entity<OrganizationCommunity>()
                 .HasKey(c => new { c.OrganizationId, c.CommunityId });
-            modelBuilder.Entity<OrganizationCommunities>()
+            modelBuilder.Entity<OrganizationCommunity>()
                 .HasOne(c => c.Community)
-                .WithMany(c => c.OrganizationCommunities)
+                .WithMany(c => c.OrganizationCommunity)
                 .HasForeignKey(c => c.CommunityId);
-            modelBuilder.Entity<OrganizationCommunities>()
+            modelBuilder.Entity<OrganizationCommunity>()
                 .HasOne(c => c.Organization)
-                .WithMany(c => c.OrganizationCommunities)
+                .WithMany(c => c.OrganizationCommunity)
                 .HasForeignKey(c => c.OrganizationId);
             
-            modelBuilder.Entity<OrganizationCookbooks>()
+            modelBuilder.Entity<OrganizationCookbook>()
                 .HasKey(o => new { o.OrganizationId, o.CookbookId });
-            modelBuilder.Entity<OrganizationCookbooks>()
+            modelBuilder.Entity<OrganizationCookbook>()
                 .HasOne(o => o.Organization)
-                .WithMany(o => o.OrganizationCookbooks)
+                .WithMany(o => o.OrganizationCookbook)
                 .HasForeignKey(o => o.OrganizationId);
-            modelBuilder.Entity<OrganizationCookbooks>()
+            modelBuilder.Entity<OrganizationCookbook>()
                 .HasOne(o => o.Cookbook)
-                .WithMany(o => o.OrganizationCookbooks)
+                .WithMany(o => o.OrganizationCookbook)
                 .HasForeignKey(o => o.CookbookId);
             
             modelBuilder.Entity<CommunityState>()
@@ -176,36 +176,36 @@ namespace Eyon.DataAccess.Data
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<CommunityRecipe>()
                 .HasOne(c => c.Community)
-                .WithMany(c => c.CommunityRecipes)
+                .WithMany(c => c.CommunityRecipe)
                 .HasForeignKey(c => c.CommunityId);
                 
             modelBuilder.Entity<RecipeUserImage>()
                 .HasKey(c => new { c.RecipeId, c.UserImageId });
             modelBuilder.Entity<RecipeUserImage>()
                 .HasOne(c => c.Recipe)
-                .WithMany(c => c.RecipeUserImages)
+                .WithMany(c => c.RecipeUserImage)
                 .HasForeignKey(c => c.RecipeId);
 
             modelBuilder.Entity<RecipeCategory>()
                 .HasKey(c => new { c.RecipeId, c.CategoryId });
             modelBuilder.Entity<RecipeCategory>()
                 .HasOne(c => c.Recipe)
-                .WithMany(c => c.RecipeCategories)
+                .WithMany(c => c.RecipeCategory)
                 .HasForeignKey(c => c.RecipeId);
             modelBuilder.Entity<RecipeCategory>()
                 .HasOne(c => c.Category)
-                .WithMany(c => c.RecipeCategories)
+                .WithMany(c => c.RecipeCategory)
                 .HasForeignKey(c => c.CategoryId);
 
             modelBuilder.Entity<CookbookRecipe>()
                 .HasKey(c => new { c.RecipeId, c.CookbookId });
             modelBuilder.Entity<CookbookRecipe>()
                 .HasOne(c => c.Cookbook)
-                .WithMany(c => c.CookbookRecipes)
+                .WithMany(c => c.CookbookRecipe)
                 .HasForeignKey(c => c.CookbookId);
             modelBuilder.Entity<CookbookRecipe>()
                 .HasOne(c => c.Recipe)
-                .WithMany(c => c.CookbookRecipes)
+                .WithMany(c => c.CookbookRecipe)
                 .HasForeignKey(c => c.RecipeId);
 
 
@@ -214,11 +214,11 @@ namespace Eyon.DataAccess.Data
                 .HasKey(c => new { c.ObjectId, c.ApplicationUserId});
             modelBuilder.Entity<ApplicationUserRecipe>()
                 .HasOne(c => c.ApplicationUser)
-                .WithMany(c => c.ApplicationUserRecipes)
+                .WithMany(c => c.ApplicationUserRecipe)
                 .HasForeignKey(c => c.ApplicationUserId);
             modelBuilder.Entity<ApplicationUserRecipe>()
                 .HasOne(c => c.Recipe)
-                .WithMany(c => c.ApplicationUserOwners)
+                .WithMany(c => c.ApplicationUserOwner)
                 .HasForeignKey(c => c.ObjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -230,7 +230,7 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(c => c.ApplicationUserId);
             modelBuilder.Entity<ApplicationUserUserImage>()
                 .HasOne(c => c.UserImage)
-                .WithMany(c => c.ApplicationUserOwners)
+                .WithMany(c => c.ApplicationUserOwner)
                 .HasForeignKey(c => c.ObjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -928,25 +928,25 @@ namespace Eyon.DataAccess.Data
         #endregion        
 
         #region Relationship Tables
-        public DbSet<CommunityCookbook> CommunityCookbooks { get; set; }
-        public DbSet<CookbookCategories> CookbookCategories { get; set; }
+        public DbSet<CommunityCookbook> CommunityCookbook { get; set; }
+        public DbSet<CookbookCategories> CookbookCategory { get; set; }
         public DbSet<CommunityState> CommunityState { get; set; }
-        public DbSet<OrganizationCookbooks> OrganizationCookbooks { get; set; }
-        public DbSet<OrganizationCommunities> OrganizationCommunities { get; set; }
+        public DbSet<OrganizationCookbook> OrganizationCookbook { get; set; }
+        public DbSet<OrganizationCommunity> OrganizationCommunity { get; set; }
 
         public DbSet<CookbookRecipe> CookbookRecipes { get; set; }
         //public DbSet<RecipeSiteImage> RecipeSiteImages { get; set; }
         public DbSet<RecipeUserImage> RecipeUserImage { get; set; }
-        public DbSet<RecipeCategory> RecipeCategories { get; set; }        
-        public DbSet<CommunityRecipe> CommunityRecipes { get; set; }
+        public DbSet<RecipeCategory> RecipeCategory { get; set; }        
+        public DbSet<CommunityRecipe> CommunityRecipe { get; set; }
 
-        public DbSet<CommunityGeocode> CommunityGeocodes { get; set; }
-        public DbSet<CommunityPostalCode> CommunityPostalCodes { get; set; }
-        public DbSet<CommunityWebReference> CommunityWebReferences { get; set; }
+        public DbSet<CommunityGeocode> CommunityGeocode { get; set; }
+        public DbSet<CommunityPostalCode> CommunityPostalCode { get; set; }
+        public DbSet<CommunityWebReference> CommunityWebReference { get; set; }
 
-        public DbSet<PostalCodeGeocode> PostalCodeGeocodes { get; set; }
+        public DbSet<PostalCodeGeocode> PostalCodeGeocode { get; set; }
 
-        public DbSet<ApplicationUserRecipe> ApplicationUserRecipes { get; set; }        
+        public DbSet<ApplicationUserRecipe> ApplicationUserRecipe { get; set; }        
         public DbSet<ApplicationUserUserImage> ApplicationUserUserImage { get; set; }
         // NOTE: Start making these names NOT PLURAL
 

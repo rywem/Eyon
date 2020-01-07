@@ -89,9 +89,9 @@ namespace Eyon.Site.Areas.Seller.Controllers
             {
                 try
                 {
-                    foreach (var item in objFromDb.CookbookCategories)
+                    foreach (var item in objFromDb.CookbookCategory)
                     {
-                        _unitOfWork.CookbookCategories.Remove(item);
+                        _unitOfWork.CookbookCategory.Remove(item);
 
                     }
                     _unitOfWork.Save();

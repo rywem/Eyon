@@ -25,11 +25,11 @@ namespace Eyon.Models
         [StringLength(50)]
         public string ISBN { get; set; }        
 
-        public ICollection<Eyon.Models.Relationship.CommunityCookbook> CommunityCookbooks { get; set; }
-        public ICollection<CookbookCategories> CookbookCategories { get; set; }
+        public ICollection<Eyon.Models.Relationship.CommunityCookbook> CommunityCookbook { get; set; }
+        public ICollection<CookbookCategories> CookbookCategory { get; set; }
 
-        public ICollection<OrganizationCookbooks> OrganizationCookbooks { get; set; }
-        public ICollection<CookbookRecipe> CookbookRecipes { get; set; }
+        public ICollection<OrganizationCookbook> OrganizationCookbook { get; set; }
+        public ICollection<CookbookRecipe> CookbookRecipe { get; set; }
 
         //public ICollection<CookbookApplicationUsers> CookbookApplicationUsers { get; set; }
         //public ICollection<CookbookSiteImages> CookbookSiteImages { get; set; }

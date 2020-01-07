@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Eyon.Models.Relationship
 {
-    public class OrganizationCookbooks
+    public class OrganizationCommunity
     {        
-        public long CookbookId { get; set; }
-        [ForeignKey("CookbookId")]
-        public Cookbook Cookbook { get; set; }
+        public long CommunityId { get; set; }
+        [ForeignKey("CommunityId")]
+        public Community Community { get; set; }
         public long OrganizationId { get; set; }
         [ForeignKey("OrganizationId")]
         public Organization Organization { get; set; }        
