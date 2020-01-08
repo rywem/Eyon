@@ -13,15 +13,48 @@
     <p class="lead my-3 text-white">@Model.Recipe.Description</p>
 </div>
 <div class="row p-3">
-    <div class="card flex-md-row mb-4 box-shadow h-md-250">
-        <div class="card-body d-flex flex-column align-items-start">
-            <strong>Ingredients</strong>
-            <ul>
-                @foreach ( var ingredient in Model.Ingredient )
+    <div class="col-md-4">
+        <div class="card flex-md-row mb-4 box-shadow h-md-250">
+            <div class="card-body d-flex flex-column align-items-start">
+                <strong>Ingredients</strong>
+                <ul>
+                    @foreach ( var ingredient in Model.Ingredient )
+                    {
+                        <li>@ingredient.Text</li>
+                    }
+                </ul>
+            </div>
+        </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                <div class="card-body d-flex flex-column align-items-start">
+                    <div class="card-body d-flex flex-column align-items-start">
+                        <strong>Instructions</strong>
+                        <ol>
+                            @foreach ( var instruction in Model.Instruction.OrderBy(x => x.StepNumber))
+                            {
+                                <li>@instruction.Text</li>
+                            }
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+<div class="row p-3">
+    <div class="col-md-12">
+        <div class="row my-3">
+            @if ( Model.Recipe.RecipeUserImage != null && Model.Recipe.RecipeUserImage.Count > 0 )
+                foreach ( var item in Model.Recipe.RecipeUserImage )
                 {
-                    <li>@ingredient.Text</li>
+                    <div class="col-lg-4 col-xl-3 col-md-6 pb-4">
+                        <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                            <img src="@item.UserImage.Image" class="card-img flex-auto d-none d-md-block" />
+                        </div>
+                    </div>
                 }
-            </ul>
         </div>
     </div>
 </div>
