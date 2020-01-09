@@ -1,16 +1,63 @@
 ﻿@model Eyon.Models.ViewModels.RecipeViewModel
-
+@using System.Globalization;
 @{
     ViewData["Title"] = "View";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
-<div class="jumbotron p-3 p-md-5 text-white rounded bg-primary">
-    <div class="col-md-6 px-0">
-        <h1 class="display-4">@Model.Recipe.Name</h1>
+<div class="jumbotron p-3 p-md-5 rounded bg-white shadow">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-md-12 px-0">
+                <h2 class="display-1">@Model.Recipe.Name</h2>
+            </div>
+            <div class="col-md-12 px-0">
+                <div class="row">
+                    <span class="col-2">@Model.Recipe.CreationDateTime.ToString("y", DateTimeFormatInfo.InvariantInfo)</span>
+                    <span class="col-4">By <a href="#">username (todo)</a></span>
+                </div>
+            </div>
+            <p class="lead my-3" >@Model.Recipe.Description</p>
+        </div>        
+
     </div>
-    <p class="lead my-3 text-white">@Model.Recipe.Description</p>
+</div>
+<div class="row p-3">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-4 pl-0">
+                <div class="card ">
+                    <div class="card-header p-1 text-center bg-primary">
+                        <label asp-for="@Model.Recipe.Servings" class="text-white"></label>
+                    </div>
+                    <div class="card-body text-center">
+                        @Html.DisplayFor(x => Model.Recipe.Servings)
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 ">
+                <div class="card ">
+                    <div class="card-header p-1 text-center bg-primary">
+                        <label asp-for="@Model.Recipe.PrepTime" class="text-white"></label>
+                    </div>
+                    <div class="card-body text-center">
+                        @Html.DisplayFor(x => Model.Recipe.PrepTime)
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 pr-0">
+                <div class="card ">
+                    <div class="card-header p-1 text-center bg-primary">
+                        <label asp-for="@Model.Recipe.Cooktime" class="text-white"></label>
+                    </div>
+                    <div class="card-body text-center">
+                        @Html.DisplayFor(x => Model.Recipe.Cooktime)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="row p-3">
     <div class="col-md-4">
