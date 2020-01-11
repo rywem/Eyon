@@ -145,5 +145,13 @@ namespace Eyon.Site.Areas.Seller.Controllers
 
             return Json(new { data = await _unitOfWork.Cookbook.GetAllOwnedAsync(claims.Value) });
         }
+
+        [HttpGet]
+        public IActionResult GetUserCookbooks()
+        {
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            return Json(new { data = _unitOfWork.Cookbook.GetAllOwned(claims.Value) });
+        }
     }
 }

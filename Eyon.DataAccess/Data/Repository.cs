@@ -18,6 +18,24 @@ namespace Eyon.DataAccess.Data
             this.dbSet = context.Set<T>();
         }
 
+        internal virtual IQueryable<T> ApplyQueryFilters( IQueryable<T> query, Expression<Func<T, bool>> filter = null, string includeProperties = null, bool tracking = true )
+        {
+            if ( filter != null )
+            {
+                query = query.Where(filter);
+            }
+            // include properties will be comma seperated
+            if ( includeProperties != null )
+            {
+                foreach ( var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) )
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            if ( tracking == false )
+                query.AsNoTracking();
+            return query;
+        }
 
         public async virtual Task<T> GetAsync(long id )
         {
@@ -77,48 +95,52 @@ namespace Eyon.DataAccess.Data
             return await query.ToListAsync();
         }
 
-
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null, bool tracking = true )
         {
             IQueryable<T> query = dbSet;
 
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-            // include properties will be comma seperated
-            if (includeProperties != null)
-            {
-                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(includeProperty);
-                }
-            }
-            if ( tracking == false )
-                query.AsNoTracking();
-            return query.FirstOrDefault();
+
+            //if (filter != null)
+            //{
+            //    query = query.Where(filter);
+            //}
+            //// include properties will be comma seperated
+            //if (includeProperties != null)
+            //{
+            //    foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            //    {
+            //        query = query.Include(includeProperty);
+            //    }
+            //}
+            //if ( tracking == false )
+            //    query.AsNoTracking();
+            //return query.FirstOrDefault();
+            return ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefault();
+
         }
 
         public async Task<T> GetFirstOrDefaultAsync( Expression<Func<T, bool>> filter = null, string includeProperties = null, bool tracking = true )
         {
             IQueryable<T> query = dbSet;
 
-            if ( filter != null )
-            {
-                query = query.Where(filter);
-            }
-            // include properties will be comma seperated
-            if ( includeProperties != null )
-            {
-                foreach ( var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) )
-                {
-                    query = query.Include(includeProperty);
-                }
-            }
-            if ( tracking == false )
-                query.AsNoTracking();
+            //if ( filter != null )
+            //{
+            //    query = query.Where(filter);
+            //}
+            //// include properties will be comma seperated
+            //if ( includeProperties != null )
+            //{
+            //    foreach ( var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) )
+            //    {
+            //        query = query.Include(includeProperty);
+            //    }
+            //}
+            //if ( tracking == false )
+            //    query.AsNoTracking();
 
-            return await query.FirstOrDefaultAsync();
+            //return await query.FirstOrDefaultAsync();
+
+            return await ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefaultAsync();
         }
         public bool Any( Expression<Func<T, bool>> filter )
         {

@@ -20,24 +20,24 @@ namespace Eyon.DataAccess.Data.Orchestrators
             this._unitOfWork = unitOfWork;
         }
 
-        public RecipeViewModel GetRecipeViewModel(long id, string currentApplicationUserId, string includeProperties = null)
+        public async Task<RecipeViewModel> GetRecipeViewModelAsync(long id, string currentApplicationUserId, string includeProperties = null)
         {
             RecipeViewModel recipeViewModel = new RecipeViewModel();            
-            recipeViewModel.Recipe = _unitOfWork.Recipe.GetFirstOrDefault( x => x.Id == id,
+            recipeViewModel.Recipe = await _unitOfWork.Recipe.GetFirstOrDefaultAsync( x => x.Id == id,
                 includeProperties: "CommunityRecipe,CommunityRecipe,Instruction,Ingredient,CookbookRecipe,CookbookRecipe.Cookbook,RecipeUserImage,RecipeUserImage.UserImage", false); 
 
             if ( recipeViewModel.Recipe != null )
             {
                 // check if it is private, if so, only allow owners to view.
-                if ( recipeViewModel.Recipe.Privacy == Models.Enums.Privacy.Private
-                    && _unitOfWork.Recipe.IsOwner(currentApplicationUserId, recipeViewModel.Recipe.Id) == false )
+                if ( await _unitOfWork.Recipe.UserCanViewAsync(currentApplicationUserId, recipeViewModel.Recipe.Id) )
                 {
                     throw new WebUserSafeException("An error occurred.");
                 }
+                recipeViewModel.IsOwner = await _unitOfWork.Recipe.IsOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe.Id);
 
                 if ( recipeViewModel.Recipe.CommunityRecipe != null )
                 {
-                    recipeViewModel.Community = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == recipeViewModel.Recipe.CommunityRecipe.CommunityId, includeProperties: "CommunityState,CommunityState.State,Country");
+                    recipeViewModel.Community = await _unitOfWork.Community.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.CommunityRecipe.CommunityId, includeProperties: "CommunityState,CommunityState.State,Country");
                     recipeViewModel.CommunityName = Eyon.Models.Helpers.CommunityHelper.FullNameFormatter(recipeViewModel.Community);
                     recipeViewModel.CommunityId = recipeViewModel.Community.Id;
                 }
@@ -166,11 +166,12 @@ namespace Eyon.DataAccess.Data.Orchestrators
                             RecipeId = recipeFromDb.Id,
                             UserImageId = item.Id
                         });
-                        _unitOfWork.ApplicationUserUserImage.Add(new ApplicationUserUserImage()
-                        {
-                            ApplicationUserId = currentApplicationUserId,
-                            ObjectId = item.Id
-                        });
+                        _unitOfWork.UserImage.AddOwnerRelationship(currentApplicationUserId, item, new ApplicationUserUserImage());
+                        //_unitOfWork.ApplicationUserUserImage.Add(new ApplicationUserUserImage()
+                        //{
+                        //    ApplicationUserId = currentApplicationUserId,
+                        //    ObjectId = item.Id
+                        //});
                     }
                     await _unitOfWork.SaveAsync();
                 }
@@ -179,6 +180,9 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
         public void AddRecipe( string currentApplicationUserId, RecipeViewModel recipeViewModel )
         {
+            if ( recipeViewModel.Recipe.Id != 0 )
+                throw new WebUserSafeException("An error occurred");
+
             _unitOfWork.Recipe.Add(recipeViewModel.Recipe);
             _unitOfWork.Save();
             _unitOfWork.Recipe.AddOwnerRelationship(currentApplicationUserId, recipeViewModel.Recipe, new Models.Relationship.ApplicationUserRecipe());
@@ -215,8 +219,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         }
 
         public async Task UpdateRecipeAsync( string currentApplicationUserId, RecipeViewModel recipeViewModel )
-        {
-            
+        {            
             if ( await _unitOfWork.Recipe.IsOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe.Id) == false )
             {
                 throw new WebUserSafeException("An error occurred.");
@@ -225,8 +228,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             if ( recipeFromDb == null )
             {
                 return;
-            }
-            //await _unitOfWork.Recipe.UpdateIfOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe);
+            }            
             _unitOfWork.Recipe.UpdateIfOwner(currentApplicationUserId, recipeViewModel.Recipe);
             await _unitOfWork.SaveAsync();
             // instructions

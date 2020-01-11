@@ -9,8 +9,8 @@ namespace Eyon.Models.ViewModels
 {
     public class RecipeViewModel
     {
-        public Recipe Recipe { get; set; }
-        
+        public Recipe Recipe { get; set; }        
+        public bool IsOwner { get; set; }
         [Required]
         [DisplayName("Ingredients")]
         [MaxLength(5000)]
@@ -30,8 +30,11 @@ namespace Eyon.Models.ViewModels
         public List<Cookbook> Cookbooks { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         
+        public string CookbookIds { get; set; }
+        
         public RecipeViewModel()
         {
+            this.IsOwner = false;
             this.Recipe = new Recipe();
             //this.Community = new Community();
             //this.Categories = new List<Category>();

@@ -42,14 +42,15 @@ namespace Eyon.Site.Areas.User.Controllers
             RecipeViewModel recipeViewModel = null;
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            bool isOwner = await _unitOfWork.Recipe.IsOwnerAsync(claims.Value, id);
-
-            if ( isOwner == false )
-                return RedirectToAction("Denied", "Error");
-
-            ViewBag.id = id;
-            recipeViewModel = recipeOrchestrator.GetRecipeViewModel(id, claims.Value);
-
+            try
+            {                               
+                ViewBag.id = id;
+                recipeViewModel = await recipeOrchestrator.GetRecipeViewModelAsync(id, claims.Value);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
             return View(recipeViewModel);
         }
         public async Task<IActionResult> Upsert(long? id)
@@ -70,7 +71,7 @@ namespace Eyon.Site.Areas.User.Controllers
                     return RedirectToAction("Denied", "Error");
 
                 ViewBag.id = id.GetValueOrDefault();
-                recipeViewModel = recipeOrchestrator.GetRecipeViewModel(id.GetValueOrDefault(), claims.Value);
+                recipeViewModel = await recipeOrchestrator.GetRecipeViewModelAsync(id.GetValueOrDefault(), claims.Value);
             }
 
             return View(recipeViewModel);
@@ -95,8 +96,7 @@ namespace Eyon.Site.Areas.User.Controllers
                 }
                 var files = HttpContext.Request.Form.Files;
                 if ( ModelState.IsValid )
-                {                   
-                    
+                {                    
                     if ( files.Count > 0)
                     {
                         for ( int i = 0; i < files.Count; i++ )
@@ -182,6 +182,14 @@ namespace Eyon.Site.Areas.User.Controllers
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             return Json(new { data = _unitOfWork.Recipe.GetAllOwned(claims.Value) });
-        }        
+        }
+
+        [HttpGet]
+        public IActionResult GetAvailableRecipes()
+        {
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            return Json(new { data = _unitOfWork.Recipe.GetAllAvailable(claims.Value) });
+        }
     }
 }

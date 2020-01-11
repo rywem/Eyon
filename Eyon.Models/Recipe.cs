@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Eyon.Models
 {
-    public class Recipe : IHasOwners<ApplicationUserRecipe>, ICreated, IModified
+    public class Recipe : IHasOwners<ApplicationUserRecipe>, ICreated, IModified, IPrivacy
     {        
         [Key]
         public long Id { get; set; }

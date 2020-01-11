@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
     public interface IRepository<T> where T : class
-    {        
+    {
+        //IQueryable<T> ApplyQueryFilters( Expression<Func<T, bool>> filter = null, string includeProperties = null, bool tracking = true );
         T Get(long id );
 
         Task<T> GetAsync( long id);

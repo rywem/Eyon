@@ -9,13 +9,24 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-    color: #28a745;
+    color: #272727;
     text-decoration: none;
 }
 
     a:hover {
         color: #056b46;
         text-decoration: none;
+    }
+
+    a.pagelink {
+        font-style: italic;
+        color: rgba(39,39,39,0.8);
+        cursor: pointer;
+    }
+    a.pagelink:hover {
+        font-style: italic;
+        color: rgba(20,10,10,0.95);
+        cursor: pointer;
     }
 
 .btn-primary {

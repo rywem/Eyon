@@ -45,34 +45,14 @@ namespace Eyon.DataAccess.Data
                     join k in dbSetRelation on e.Id equals k.ObjectId
                     where k.ApplicationUserId.Equals(ownerId)
                     select e;
-
-            if ( filter != null )
-            {
-                query = query.Where(filter);
-            }
-            // include properties will be comma seperated
-            if ( includeProperties != null )
-            {
-                foreach ( var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) )
-                {
-                    query = query.Include(includeProperty);
-                }
-            }
-
-            if ( orderBy != null )
-            {
-                return orderBy(query).ToList();
-            }
-            if ( tracking == false )
-            {
-                query.AsNoTracking();
-            }
-
-            return query.ToList();
+            
+            return ApplyQueryFilters(query, filter, includeProperties, tracking).ToList();
         }
 
 
-
+        /// <summary>
+        /// GetAllAvailable considers if the items are owned. 
+        /// </summary>        
         public async Task<IEnumerable<TRecord>> GetAllOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>, IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null, bool tracking = true )
         {
             IQueryable<TRecord> query = dbSet;
@@ -81,31 +61,8 @@ namespace Eyon.DataAccess.Data
                     join k in dbSetRelation on e.Id equals k.ObjectId
                     where k.ApplicationUserId.Equals(ownerId)
                     select e;
-
-            if ( filter != null )
-            {
-                query = query.Where(filter);
-            }
-            // include properties will be comma seperated
-            if ( includeProperties != null )
-            {
-                foreach ( var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) )
-                {
-                    query = query.Include(includeProperty);
-                }
-            }
-
-            if ( orderBy != null )
-            {
-                return orderBy(query).ToList();
-            }
-
-            if ( tracking == false )
-            {
-                query.AsNoTracking();
-            }
-
-            return await query.ToListAsync();
+            
+            return await ApplyQueryFilters(query, filter, includeProperties, tracking).ToListAsync();
         }
 
         public TRecord GetFirstOrDefaultOwned( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
@@ -116,31 +73,8 @@ namespace Eyon.DataAccess.Data
                     join k in dbSetRelation on e.Id equals k.ObjectId
                     where k.ApplicationUserId.Equals(ownerId)
                     select e;
-
-            if ( filter != null )
-            {
-                query = query.Where(filter);
-            }
-            // include properties will be comma seperated
-            if ( includeProperties != null )
-            {
-                foreach ( var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) )
-                {
-                    query = query.Include(includeProperty);
-                }
-            }
-
-            if(tracking == false )
-            {
-                query.AsNoTracking();
-            }
-
-            if ( tracking == false )
-            {
-                query.AsNoTracking();
-            }
-
-            return query.FirstOrDefault();
+            
+            return ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefault();
         }
         public bool IsOwner( string userIdToCheck, long entityId )
         {                    
@@ -176,32 +110,8 @@ namespace Eyon.DataAccess.Data
 
         public async Task<TRecord> GetFirstOrDefaultOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
         {
-            IQueryable<TRecord> query = dbSet;
-
-            query = from e in dbSet
-                    join k in dbSetRelation on e.Id equals k.ObjectId
-                    where k.ApplicationUserId.Equals(ownerId)
-                    select e;
-
-            if ( filter != null )
-            {
-                query = query.Where(filter);
-            }
-            // include properties will be comma seperated
-            if ( includeProperties != null )
-            {
-                foreach ( var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) )
-                {
-                    query = query.Include(includeProperty);
-                }
-            }
-
-            if ( tracking == false )
-            {
-                query.AsNoTracking();
-            }
-
-            return await query.FirstOrDefaultAsync();
+            IQueryable<TRecord> query = dbSet;           
+            return await ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefaultAsync();
         }
     }
 }
