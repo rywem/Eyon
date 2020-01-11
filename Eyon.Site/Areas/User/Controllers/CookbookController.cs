@@ -12,8 +12,9 @@ using System.Security.Claims;
 
 namespace Eyon.Site.Areas.Seller.Controllers
 {
-    [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," + Utilities.Statics.Roles.Seller)]
-    [Area("Seller")]
+    [Area("User")]
+    [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," +
+           Utilities.Statics.Roles.Seller + "," + Utilities.Statics.Roles.Customer + "," + Utilities.Statics.Roles.User)]
     public class CookbookController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

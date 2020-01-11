@@ -230,6 +230,18 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(c => c.ObjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<ApplicationUserOrganization>()
+                .HasKey(c => new { c.ObjectId, c.ApplicationUserId });
+            modelBuilder.Entity<ApplicationUserOrganization>()
+                .HasOne(c => c.ApplicationUser)
+                .WithMany(c => c.ApplicationUserOrganization)
+                .HasForeignKey(c => c.ApplicationUserId);
+            modelBuilder.Entity<ApplicationUserOrganization>()
+                .HasOne(c => c.Organization)
+                .WithMany(c => c.ApplicationUserOwner)
+                .HasForeignKey(c => c.ObjectId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ApplicationUserCookbook>()
                 .HasKey(c => new { c.ObjectId, c.ApplicationUserId });
             modelBuilder.Entity<ApplicationUserCookbook>()

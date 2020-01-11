@@ -18,5 +18,6 @@ namespace Eyon.Models
         public ICollection<ApplicationUserRecipe> ApplicationUserRecipe { get; set; }
         public ICollection<ApplicationUserCookbook> ApplicationUserCookbook { get; set; }
         public ICollection<ApplicationUserUserImage> ApplicationUserUserImage { get; set; }
+        public ICollection<ApplicationUserOrganization> ApplicationUserOrganization { get; set; }
     }
 }
