@@ -9,7 +9,7 @@
             }
             $.ajax({
                 async: true,
-                url: '/Admin/Category/SearchCategories?filter=' + _filter,
+                url: '/User/Category/SearchCategories?filter=' + _filter,
                 type: 'GET',
                 success: function (data) {
                     $.each(data.categories, function (index, item) {

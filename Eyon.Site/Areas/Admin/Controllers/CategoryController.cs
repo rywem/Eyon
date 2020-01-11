@@ -153,6 +153,26 @@ namespace Eyon.Site.Areas.Admin.Controllers
         {
             return Json(new { data = await _unitOfWork.Category.GetAllAsync(includeProperties: "SiteImage") });
         }
-        
+        [HttpGet]
+        [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," +
+            Utilities.Statics.Roles.Seller + "," + Utilities.Statics.Roles.Customer + "," + Utilities.Statics.Roles.User)]
+        [Area("User")]
+        public IActionResult SearchCategories( string filter )
+        {
+            var x = ( from p in _unitOfWork.Category.Search(filter, includeProperties: "SiteImage")
+                      select new
+                      {
+                          name = p.Name,
+                          displayOrder = p.DisplayOrder,
+                          id = p.Id,
+                          imageTitle = p.SiteImage.Title,
+                          imageAlt = p.SiteImage.Alt,
+                          image = p.SiteImage.Image
+                      } );
+
+
+            return Json(new { categories = x });
+        }
+
     }
 }
