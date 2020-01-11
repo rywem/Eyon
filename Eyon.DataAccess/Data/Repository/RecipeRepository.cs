@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Eyon.DataAccess.Data.Repository
 {
-    public class RecipeRepository : OwnerRepository<Recipe, ApplicationUserRecipe>, IRecipeRepository
+    public class RecipeRepository : PrivacyRepository<Recipe, ApplicationUserRecipe>, IRecipeRepository
     {
         private readonly ApplicationDbContext _db;
 
