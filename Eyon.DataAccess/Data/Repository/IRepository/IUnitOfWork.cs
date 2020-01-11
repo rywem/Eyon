@@ -8,7 +8,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         ICategoryRepository Category { get; }
         ISiteImageRepository SiteImage { get; }
         ICookbookRepository Cookbook { get; }
-        ICookbookCategoriesRepository CookbookCategory { get; }
+        ICookbookCategoryRepository CookbookCategory { get; }
         ICommunityCookbookRepository CommunityCookbook { get; }
         ICommunityRepository Community { get; }
         ICountryRepository Country { get; }

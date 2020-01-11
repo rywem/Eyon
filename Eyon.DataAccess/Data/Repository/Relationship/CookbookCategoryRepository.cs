@@ -6,7 +6,7 @@ using Eyon.Models.Relationship;
 
 namespace Eyon.DataAccess.Data.Repository
 {
-    public class CookbookCategoryRepository : Repository<CookbookCategories>, ICookbookCategoriesRepository
+    public class CookbookCategoryRepository : Repository<CookbookCategories>, ICookbookCategoryRepository
     {
         private readonly ApplicationDbContext _db;
 

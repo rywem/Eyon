@@ -2,7 +2,7 @@
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface ICookbookCategoriesRepository : IRepository<CookbookCategories>
+    public interface ICookbookCategoryRepository : IRepository<CookbookCategories>
     {        
     }    
 }
