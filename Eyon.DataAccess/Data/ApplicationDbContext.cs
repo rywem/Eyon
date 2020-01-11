@@ -32,6 +32,10 @@ namespace Eyon.DataAccess.Data
                 .Property(r => r.Privacy)
                 .HasDefaultValue(Privacy.Public);
 
+            modelBuilder.Entity<Cookbook>()
+                .Property(r => r.Privacy)
+                .HasDefaultValue(Privacy.Public);
+
             modelBuilder.Entity<UserImage>()
                 .Property(r => r.CreationDateTime)
                 .HasDefaultValue(DateTime.MinValue.ToUniversalTime());

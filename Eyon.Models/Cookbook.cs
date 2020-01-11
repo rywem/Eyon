@@ -1,4 +1,5 @@
-﻿using Eyon.Models.Interfaces;
+﻿using Eyon.Models.Enums;
+using Eyon.Models.Interfaces;
 using Eyon.Models.Relationship;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eyon.Models
 {
-    public class Cookbook : IHasOwners<ApplicationUserCookbook>, ICreated, IModified
+    public class Cookbook : IHasOwners<ApplicationUserCookbook>, ICreated, IModified, IPrivacy
     {
         [Key]
         public long Id { get; set; }
@@ -27,14 +28,15 @@ namespace Eyon.Models
         [MaxLength(50)]
         [StringLength(50)]
         public string ISBN { get; set; }
+        public Privacy Privacy { get; set; }
         public DateTime CreationDateTime { get; set; }
+        public DateTime ModifiedDateTime { get; set; }
         public ICollection<Eyon.Models.Relationship.CommunityCookbook> CommunityCookbook { get; set; }
         public ICollection<CookbookCategories> CookbookCategory { get; set; }
 
         public ICollection<OrganizationCookbook> OrganizationCookbook { get; set; }
         public ICollection<CookbookRecipe> CookbookRecipe { get; set; }
         public ICollection<ApplicationUserCookbook> ApplicationUserOwner { get; set; }        
-        public DateTime ModifiedDateTime { get; set; }
 
         //public ICollection<CookbookApplicationUsers> CookbookApplicationUsers { get; set; }
         //public ICollection<CookbookSiteImages> CookbookSiteImages { get; set; }
