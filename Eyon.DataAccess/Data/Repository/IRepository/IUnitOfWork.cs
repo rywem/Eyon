@@ -15,6 +15,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         IStateRepository State { get; }
         ICommunityStateRepository CommunityState { get; }
         IApplicationUserRepository ApplicationUser { get; }
+        IApplicationUserOrganizationRepository ApplicationUserOrganization { get; }
         IOrganizationRepository Organization { get; }
         IOrganizationCommunityRepository OrganizationCommunity { get; }
         IOrganizationCookbookRepository OrganizationCookbook { get; }       

@@ -108,6 +108,15 @@ namespace Eyon.DataAccess.Data{
             }
         }
 
+        private Lazy<IApplicationUserOrganizationRepository> _ApplicationUserOrganization;
+        public IApplicationUserOrganizationRepository ApplicationUserOrganization
+        {
+            get
+            {
+                return _ApplicationUserOrganization.Value;
+            }
+        }
+
         private Lazy<IPostalCodeRepository> _PostalCode;
         public IPostalCodeRepository PostalCode
         {
@@ -202,14 +211,14 @@ namespace Eyon.DataAccess.Data{
             }
         }
         
-        private Lazy<IRecipeIngredientRepository> _RecipeIngredient;
-        public IRecipeIngredientRepository RecipeIngredient
-        {
-            get
-            {
-                return _RecipeIngredient.Value;
-            }
-        }
+        //private Lazy<IRecipeIngredientRepository> _RecipeIngredient;
+        //public IRecipeIngredientRepository RecipeIngredient
+        //{
+        //    get
+        //    {
+        //        return _RecipeIngredient.Value;
+        //    }
+        //}
         
         private Lazy<IRecipeUserImageRepository> _RecipeUserImage;
         public IRecipeUserImageRepository RecipeUserImage
@@ -332,6 +341,7 @@ namespace Eyon.DataAccess.Data{
             this._CommunityPostalCode = new Lazy<ICommunityPostalCodeRepository>(() => new CommunityPostalCodeRepository(this._db));
             this._CommunityWebReference = new Lazy<ICommunityWebReferenceRepository>(() => new CommunityWebReferenceRepository(this._db));
             this._RecipeUserImage = new Lazy<IRecipeUserImageRepository>(() => new RecipeUserImageRepository(this._db));
+            this._ApplicationUserOrganization = new Lazy<IApplicationUserOrganizationRepository>(() => new ApplicationUserOrganizationRepository(this._db));            
             this._ApplicationUserUserImage = new Lazy<IApplicationUserUserImageRepository>(() => new ApplicationUserUserImageRepository(this._db));
             this._CommunityCookbook = new Lazy<ICommunityCookbookRepository>(() => new CommunityCookbookRepository(this._db));
             this._CookbookCategory = new Lazy<ICookbookCategoryRepository>(() => new CookbookCategoryRepository(this._db));

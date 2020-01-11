@@ -1,10 +1,11 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
+using Eyon.Models.Relationship;
 using System.Linq;
 
 namespace Eyon.DataAccess.Data.Repository
 {
-    public class OrganizationRepository : Repository<Organization>, IOrganizationRepository
+    public class OrganizationRepository : OwnerRepository<Organization, ApplicationUserOrganization>, IOrganizationRepository
     {
         private readonly ApplicationDbContext _db;
 
@@ -23,6 +24,9 @@ namespace Eyon.DataAccess.Data.Repository
             dbSet.Update(objFromDb);
         }
 
-
+        public void UpdateIfOwner( string currentUserId, Organization organization )
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
