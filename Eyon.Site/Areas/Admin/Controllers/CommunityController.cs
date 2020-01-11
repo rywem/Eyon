@@ -20,9 +20,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private CommunityOrchestrator _communityOrchestrator;
-        //[BindProperty]
-        //public CommunityViewModel communityViewModel { get; set; }
-
+        
         public CommunityController( IUnitOfWork unitOfWork )
         {
             this._unitOfWork = unitOfWork;
