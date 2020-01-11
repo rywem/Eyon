@@ -146,7 +146,9 @@ namespace Eyon.Site.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," + Utilities.Statics.Roles.Seller)]
+        [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," +
+                    Utilities.Statics.Roles.Seller + "," + Utilities.Statics.Roles.Customer + "," + Utilities.Statics.Roles.User)]
+        [Area("User")]
         public async Task<IActionResult> GetAll()
         {
             return Json(new { data = await _unitOfWork.Category.GetAllAsync(includeProperties: "SiteImage") });
