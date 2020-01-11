@@ -8,6 +8,7 @@ using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Eyon.DataAccess.Data.Orchestrators;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Eyon.Site.Areas.Seller.Controllers
 {
@@ -46,32 +47,54 @@ namespace Eyon.Site.Areas.Seller.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert()
         {
-            if (ModelState.IsValid)
+
+            try
             {
-                //todo validate the user submitting has permission to add or edit this cookbook.
-                try
+                var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+                var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                if( cookbookViewModel.Cookbook.Id != 0 )
                 {
-                    if (cookbookViewModel.Cookbook.Id == 0) //New cookbook
+                    bool isOwner = _unitOfWork.Cookbook.IsOwner(claims.Value, cookbookViewModel.Cookbook.Id);
+                    if ( isOwner == false )
                     {
-                        cookbookOrchestrator.AddCookbookTransaction(cookbookViewModel);
+                        ModelState.AddModelError("Recipe.Id", "An error occurred.");
+                        return RedirectToAction("Denied", "Error");
                     }
-                    else
-                    {
-                        cookbookOrchestrator.UpdateCookbookTransaction(cookbookViewModel);
-                    }
-                }
-                catch (Models.Errors.WebUserSafeException usEx)
-                {
-                    ModelState.AddModelError("CategoryIds", usEx.Message);
-                    return View(cookbookViewModel);
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("CategoryIds", "An error occurred.");
-                    return View(cookbookViewModel);
                 }
 
-                return RedirectToAction(nameof(Index));
+                if ( ModelState.IsValid )
+                {
+                    //todo validate the user submitting has permission to add or edit this cookbook.
+                    try
+                    {
+
+                        if ( cookbookViewModel.Cookbook.Id == 0 ) //New cookbook
+                        {
+                            cookbookOrchestrator.AddCookbookTransaction(claims.Value, cookbookViewModel);
+                        }
+                        else
+                        {
+                            cookbookOrchestrator.UpdateCookbookTransaction(claims.Value, cookbookViewModel);
+                        }
+                    }
+                    catch ( Models.Errors.WebUserSafeException usEx )
+                    {
+                        ModelState.AddModelError("CategoryIds", usEx.Message);
+                        return View(cookbookViewModel);
+                    }
+                    catch ( Exception ex )
+                    {
+                        ModelState.AddModelError("CategoryIds", "An error occurred.");
+                        return View(cookbookViewModel);
+                    }
+
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch ( Exception ex )
+            {
+                throw ex;
             }
             return View(cookbookViewModel);
         }

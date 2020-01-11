@@ -41,7 +41,7 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.Description = recipe.Description;
             objFromDb.PrepTime = recipe.PrepTime;
             objFromDb.Privacy = recipe.Privacy;
-            dbSet.Update(objFromDb);            
+            dbSet.Update(objFromDb);
         }
     }
 }

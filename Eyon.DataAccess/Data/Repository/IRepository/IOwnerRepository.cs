@@ -22,7 +22,6 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
                         IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null, bool tracking = true );
         Task<IEnumerable<TRecord>> GetAllOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>,
                         IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null, bool tracking = true );
-
-        void UpdateOwned( TRecord entity, string ownerId );
+        
     }
 }

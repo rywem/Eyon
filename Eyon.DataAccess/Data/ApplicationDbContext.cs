@@ -226,6 +226,18 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(c => c.ObjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<ApplicationUserCookbook>()
+                .HasKey(c => new { c.ObjectId, c.ApplicationUserId });
+            modelBuilder.Entity<ApplicationUserCookbook>()
+                .HasOne(c => c.ApplicationUser)
+                .WithMany(c => c.ApplicationUserCookbook)
+                .HasForeignKey(c => c.ApplicationUserId);
+            modelBuilder.Entity<ApplicationUserCookbook>()
+                .HasOne(c => c.Cookbook)
+                .WithMany(c => c.ApplicationUserOwner)
+                .HasForeignKey(c => c.ObjectId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ApplicationUserUserImage>()
                 .HasKey(a => new { a.ObjectId, a.ApplicationUserId });
             modelBuilder.Entity<ApplicationUserUserImage>()
@@ -950,7 +962,8 @@ namespace Eyon.DataAccess.Data
 
         public DbSet<PostalCodeGeocode> PostalCodeGeocode { get; set; }
 
-        public DbSet<ApplicationUserRecipe> ApplicationUserRecipe { get; set; }        
+        public DbSet<ApplicationUserRecipe> ApplicationUserRecipe { get; set; }
+        public DbSet<ApplicationUserCookbook> ApplicationUserCookbook { get; set; }
         public DbSet<ApplicationUserUserImage> ApplicationUserUserImage { get; set; }
         // NOTE: Start making these names NOT PLURAL
 

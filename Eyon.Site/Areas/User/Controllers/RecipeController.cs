@@ -82,7 +82,6 @@ namespace Eyon.Site.Areas.User.Controllers
         {
             try
             {
-                
                 var claimsIdentity = (ClaimsIdentity)this.User.Identity;
                 var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 if ( recipeViewModel.Recipe.Id != 0 )

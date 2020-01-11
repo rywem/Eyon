@@ -203,10 +203,5 @@ namespace Eyon.DataAccess.Data
 
             return await query.FirstOrDefaultAsync();
         }
-
-        public void UpdateOwned( TRecord entity, string ownerId )
-        {
-            throw new NotImplementedException();
-        }
     }
 }

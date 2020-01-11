@@ -5,6 +5,7 @@ using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models.Errors;
 using Eyon.Models.ViewModels;
 using Eyon.DataAccess.Data.Repository;
+using Eyon.Models.Relationship;
 
 namespace Eyon.DataAccess.Data.Orchestrators
 {
@@ -46,11 +47,13 @@ namespace Eyon.DataAccess.Data.Orchestrators
         /// </summary>
         /// <param name="cookbookViewModel">The CookbookViewModel </param>
         /// <returns>The cookbookviewmodel</returns>
-        public void AddCookbook(CookbookViewModel cookbookViewModel)
+        public void AddCookbook(string currentUserId, CookbookViewModel cookbookViewModel)
         {
             if (cookbookViewModel.Cookbook.Id != 0) //New cookbook
                 throw new WebUserSafeException("Cookbook already exists.");
             _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
+            _unitOfWork.Save();
+            _unitOfWork.Cookbook.AddOwnerRelationship(currentUserId, cookbookViewModel.Cookbook, new ApplicationUserCookbook());
             _unitOfWork.Save();
             if (!string.IsNullOrEmpty(cookbookViewModel.CategoryIds))
             {
@@ -69,7 +72,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                                 CategoryId = id,
                                 CookbookId = cookbookViewModel.Cookbook.Id
                             });
-                            _unitOfWork.Save();
+                            _unitOfWork.Save();                            
                         }
                         else
                         {
@@ -82,13 +85,13 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
         }
 
-        public void AddCookbookTransaction(CookbookViewModel cookbookViewModel)
+        public void AddCookbookTransaction(string currentUserId, CookbookViewModel cookbookViewModel)
         {
             using (var transaction = _unitOfWork.BeginTransaction())
             {
                 try
                 {
-                    AddCookbook(cookbookViewModel);
+                    AddCookbook(currentUserId, cookbookViewModel);
                     // Todo, add community
                     transaction.Commit();
                 }
@@ -100,14 +103,14 @@ namespace Eyon.DataAccess.Data.Orchestrators
             }
         }
 
-        public void UpdateCookbookTransaction(CookbookViewModel cookbookViewModel)
+        public void UpdateCookbookTransaction(string currentUserId, CookbookViewModel cookbookViewModel)
         {
             using (var transaction = _unitOfWork.BeginTransaction())
             {
                 try
                 {
 
-                    UpdateCookbookTransaction(cookbookViewModel);
+                    UpdateCookbook( currentUserId, cookbookViewModel);
                     transaction.Commit();
                 }
                 catch (Exception ex)
@@ -120,8 +123,12 @@ namespace Eyon.DataAccess.Data.Orchestrators
         }
 
 
-        public void UpdateCookbook(CookbookViewModel cookbookViewModel)
+        public void UpdateCookbook(string currentUserId, CookbookViewModel cookbookViewModel)
         {
+            if ( _unitOfWork.Cookbook.IsOwner(currentUserId, cookbookViewModel.Cookbook.Id)  == false)
+            {
+                throw new WebUserSafeException("An error occurred.");
+            }
             var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == cookbookViewModel.Cookbook.Id, includeProperties: "CommunityCookbooks,CookbookCategories");
             if (objFromDb == null || objFromDb.Id == 0)
                 throw new WebUserSafeException("Record not found in database");
@@ -173,7 +180,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 }
             }
             //Todo add other relationship updates
-            _unitOfWork.Cookbook.Update(cookbookViewModel.Cookbook);
+            _unitOfWork.Cookbook.UpdateIfOwner(currentUserId, cookbookViewModel.Cookbook);
             _unitOfWork.Save();
         }
     }
