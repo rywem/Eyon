@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
     public interface IUnitOfWork : IDisposable
-    {
+    {        
         ICategoryRepository Category { get; }
         ISiteImageRepository SiteImage { get; }
         ICookbookRepository Cookbook { get; }
@@ -17,16 +17,14 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         IApplicationUserRepository ApplicationUser { get; }
         IOrganizationRepository Organization { get; }
         IOrganizationCommunityRepository OrganizationCommunity { get; }
-        IOrganizationCookbookRepository OrganizationCookbook { get; }
-        IApplicationUserRecipeRepository ApplicationUserRecipe { get; }
-
-
+        IOrganizationCookbookRepository OrganizationCookbook { get; }       
         IRecipeRepository Recipe { get; }
         IRecipeCategoryRepository RecipeCategory { get; }
         IRecipeUserImageRepository RecipeUserImage { get; }
         IUserImageRepository UserImage { get; }
+        IApplicationUserRecipeRepository ApplicationUserRecipe { get; }
         IApplicationUserUserImageRepository ApplicationUserUserImage { get; }
-
+        IApplicationUserCookbookRepository ApplicationUserCookbook { get; }
         IIngredientRepository Ingredient { get; }
         IInstructionRepository Instruction { get; }
         ICookbookRecipeRepository CookbookRecipe { get; }
