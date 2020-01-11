@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Eyon.Models;
 using Eyon.Models.Relationship;
+using Eyon.Models.Security;
 using Eyon.Models.Enums;
 
 namespace Eyon.DataAccess.Data
@@ -21,6 +22,10 @@ namespace Eyon.DataAccess.Data
             #region Default Values
             
             modelBuilder.Entity<Recipe>()
+                .Property(r => r.CreationDateTime)
+                .HasDefaultValue(DateTime.MinValue.ToUniversalTime());
+
+            modelBuilder.Entity<Cookbook>()
                 .Property(r => r.CreationDateTime)
                 .HasDefaultValue(DateTime.MinValue.ToUniversalTime());
 
