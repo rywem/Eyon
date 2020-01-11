@@ -19,7 +19,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         public CookbookViewModel GetCookbookViewModel(long id)
         {
             CookbookViewModel cookbookViewModel = new CookbookViewModel();
-            cookbookViewModel.Cookbook = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == id, includeProperties: "CommunityCookbooks,CookbookCategories,CookbookCategories.Category");
+            cookbookViewModel.Cookbook = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == id, includeProperties: "CommunityCookbook,CookbookCategory,CookbookCategory.Category");
 
             if (cookbookViewModel.Cookbook != null && cookbookViewModel.Cookbook.Id > 0)
             {
@@ -129,7 +129,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             {
                 throw new WebUserSafeException("An error occurred.");
             }
-            var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == cookbookViewModel.Cookbook.Id, includeProperties: "CommunityCookbooks,CookbookCategories");
+            var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == cookbookViewModel.Cookbook.Id, includeProperties: "CommunityCookbook,CookbookCategory");
             if (objFromDb == null || objFromDb.Id == 0)
                 throw new WebUserSafeException("Record not found in database");
 
