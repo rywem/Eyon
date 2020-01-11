@@ -103,10 +103,12 @@ namespace Eyon.Site.Areas.Seller.Controllers
         [HttpDelete]
         public IActionResult Delete(long id)
         {
-            var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == id, includeProperties: "CommunityCookbooks,CookbookCategories");
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefaultOwned(claims.Value, x => x.Id == id, includeProperties: "CommunityCookbook,CookbookCategory,ApplicationUserOwner");
 
             if (objFromDb == null)
-                return Json(new { success = false, message = "Error while deleting, Id does not exist. " });
+                return Json(new { success = false, message = "An error occurred." });
 
             using (var transaction = _unitOfWork.BeginTransaction())
             {
@@ -116,6 +118,10 @@ namespace Eyon.Site.Areas.Seller.Controllers
                     {
                         _unitOfWork.CookbookCategory.Remove(item);
 
+                    }
+                    foreach ( var item in objFromDb.ApplicationUserOwner )
+                    {
+                        _unitOfWork.ApplicationUserCookbook.Remove(item);
                     }
                     _unitOfWork.Save();
                     _unitOfWork.Cookbook.Remove(objFromDb);
@@ -132,9 +138,12 @@ namespace Eyon.Site.Areas.Seller.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAll()
-        {
-            return Json(new { data = _unitOfWork.Cookbook.GetAll() });
+        public async Task<IActionResult> GetAll()
+        {            
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            return Json(new { data = await _unitOfWork.Cookbook.GetAllOwnedAsync(claims.Value) });
         }
     }
 }
