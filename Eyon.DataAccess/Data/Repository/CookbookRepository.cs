@@ -20,6 +20,12 @@ namespace Eyon.DataAccess.Data.Repository
             this._db = db;
         }
 
+        public override void Add( Cookbook entity )
+        {
+            entity.CreationDateTime = DateTime.Now.ToUniversalTime();
+            entity.ModifiedDateTime = entity.CreationDateTime;
+            base.Add(entity);
+        }
 
         public void Update(Cookbook cookbook)
         {
@@ -29,6 +35,7 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.Author = cookbook.Author;
             objFromDb.Description = cookbook.Description;
             objFromDb.ISBN = cookbook.ISBN;
+            objFromDb.ModifiedDateTime = DateTime.Now.ToUniversalTime();
             dbSet.Update(objFromDb);
         }
 

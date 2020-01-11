@@ -23,6 +23,7 @@ namespace Eyon.DataAccess.Data.Repository
         public override void Add( Recipe entity )
         {
             entity.CreationDateTime = DateTime.Now.ToUniversalTime();
+            entity.ModifiedDateTime = entity.CreationDateTime;
             base.Add(entity);
         }
         public void UpdateIfOwner( string currentUserId, Recipe recipe )
@@ -41,6 +42,7 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.Description = recipe.Description;
             objFromDb.PrepTime = recipe.PrepTime;
             objFromDb.Privacy = recipe.Privacy;
+            objFromDb.ModifiedDateTime = DateTime.Now.ToUniversalTime();
             dbSet.Update(objFromDb);
         }
     }

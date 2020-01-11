@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Eyon.Models
 {
-    public class Recipe : IHasOwners<ApplicationUserRecipe>, ICreated
+    public class Recipe : IHasOwners<ApplicationUserRecipe>, ICreated, IModified
     {        
         [Key]
         public long Id { get; set; }
@@ -34,18 +34,17 @@ namespace Eyon.Models
         [MaxLength(3000)]
         [StringLength(3000)]
         [Required]
-        public string Description { get; set; } 
-        
-        public DateTime CreationDateTime { get; set; } 
+        public string Description { get; set; }         
+        public DateTime CreationDateTime { get; set; }
+        public DateTime ModifiedDateTime { get; set; }
         public CommunityRecipe CommunityRecipe { get; set; }
         public ICollection<Instruction> Instruction { get; set; }
-        public ICollection<RecipeUserImage> RecipeUserImage { get; set; }
-        
+        public ICollection<RecipeUserImage> RecipeUserImage { get; set; }        
         public ICollection<Ingredient> Ingredient { get; set; }
         public ICollection<RecipeCategory> RecipeCategory { get; set; }
         public ICollection<CookbookRecipe> CookbookRecipe { get; set; }        
         public ICollection<ApplicationUserRecipe> ApplicationUserOwner { get; set; }
-
+        
         // TODO: Add EAV table with:  Calories, Yield, ReadyIn
 
 
