@@ -1,10 +1,12 @@
-﻿using Eyon.Models.Relationship;
+﻿using Eyon.Models.Interfaces;
+using Eyon.Models.Relationship;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Eyon.Models
 {
-    public class Cookbook
+    public class Cookbook : IRecord, ICreated
     {
         [Key]
         public long Id { get; set; }
@@ -23,8 +25,8 @@ namespace Eyon.Models
         public string Copyright { get; set; }
         [MaxLength(50)]
         [StringLength(50)]
-        public string ISBN { get; set; }        
-
+        public string ISBN { get; set; }
+        public DateTime CreationDateTime { get; set; }
         public ICollection<Eyon.Models.Relationship.CommunityCookbook> CommunityCookbook { get; set; }
         public ICollection<CookbookCategories> CookbookCategory { get; set; }
 
