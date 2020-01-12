@@ -112,8 +112,25 @@
                     <input type="file" name="files" id="uploadBox" multiple class="form-control" accept="image/gif, image/jpeg, image/png" />
                 </div>
             </div>
-            <div class="form-group row offset-3 col-9 p-0">
-
+            <div class="form-group row">
+                <div class="col-4">
+                    Add to Cookbooks 
+                    <button type="button" class="btn btn-primary" id="addCookbooks" data-toggle="modal" data-target="#cookbooksModal">
+                        <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="col-8">                    
+                    <ul>
+                        <li>test 1</li>
+                        @if ( Model.Cookbooks != null && Model.Cookbooks.Count > 0 )
+                        {
+                            foreach ( var item in Model.Cookbooks )
+                            {
+                                <li>@Html.ActionLink(item.Name, "View", "Cookbook", new { id = item.Id }); </li>
+                            }                        
+                        }
+                    </ul>
+                </div>
             </div>
             <div class="form-group row">
                 <div class="col-9 offset-3">
@@ -132,10 +149,33 @@
         </div>
     </div>
 </form>
+<div class="modal fade" tabindex="-1" role="dialog" id="cookbooksModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @section Scripts {
     <script>
+
+
+
+        // Community
         $(function () {
             $('#CommunityName').autocomplete({
                 source: '@Url.Action("Suggest", "Community")',
@@ -145,6 +185,6 @@
                     $('#CommunityName').val(ui.item.label);
                 }
             });
-        });        
+        });
     </script>
 }
