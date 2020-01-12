@@ -48,64 +48,41 @@ namespace Eyon.DataAccess.Data
             }
             return false;
         }
+        /// <summary>
+        /// This will return a record if the userIdToCheck is the owner, or if the desired record's privacy is public
+        /// </summary>        
+        public TRecord GetFirstOrDefaultAvailable( string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
+        {            
+            IQueryable<TRecord> query = dbSet;
 
-        public TRecord GetFirstOrDefaultByPrivacy( string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
-        {
-            var objFromDb = base.GetFirstOrDefaultOwned(userIdToCheck, filter, includeProperties, tracking);
-            if ( objFromDb != null )
-                return objFromDb;
-            else
-            {
-                IQueryable<TRecord> query = dbSet;
+            query = from m in dbSet
+                    join d in dbSetRelation on m.Id equals d.ObjectId into ps
+                    from k in ps.DefaultIfEmpty()
+                    let sort = ps == null ? 1 : 0
+                    orderby sort
+                    where ( k.ApplicationUserId.Equals(userIdToCheck) || m.Privacy == Privacy.Public )
+                    select m;
 
-                query = from e in dbSet
-                        where e.Privacy == Models.Enums.Privacy.Public 
-
-                        select e;
-                
-                return ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefault();
-            }
+            return ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefault();
         }
+        /// <summary>
+        /// This will return a record if the userIdToCheck is the owner, or if the desired record's privacy is public
+        /// </summary>   
+        public async Task<TRecord> GetFirstOrDefaultAvailableAsync( string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
+        {                        
+            IQueryable<TRecord> query = dbSet;
 
-        public async Task<TRecord> GetFirstOrDefaultByPrivacyAsync( string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
-        {
-            // This can be refactored
-            var objFromDb = await base.GetFirstOrDefaultOwnedAsync(userIdToCheck, filter, includeProperties, tracking);
-            if ( objFromDb != null )
-                return objFromDb;
-            else
-            {
-                IQueryable<TRecord> query = dbSet;
+            query = from m in dbSet
+                    join d in dbSetRelation on m.Id equals d.ObjectId into ps
+                    from k in ps.DefaultIfEmpty()
+                    let sort = ps == null ? 1 : 0
+                    orderby sort
+                    where ( k.ApplicationUserId.Equals(userIdToCheck) || m.Privacy == Privacy.Public )
+                    select m;
 
-                query = from e in dbSet
-                        where e.Privacy == Models.Enums.Privacy.Public
-                        select e;                
-
-                return await ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefaultAsync();
-            }
+            return await ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefaultAsync();
         }
-
-        //public override IEnumerable<TRecord> GetAllOwned( string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>, IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null, bool tracking = true )
-        //{
-        //    IQueryable<TRecord> query = dbSet;
-        //    query = from e in dbSet
-        //            join k in dbSetRelation on e.Id equals k.ObjectId into ps
-        //            from k in ps.DefaultIfEmpty()
-        //            where (k.ApplicationUserId.Equals(userIdToCheck) || e.Privacy == Privacy.Public)
-        //            select e;
-        //    return ApplyQueryFilters(query, filter, includeProperties, tracking).ToList();
-        //}
-
-        //public override async Task<IEnumerable<TRecord>> GetAllOwnedAsync( string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>, IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null, bool tracking = true )
-        //{
-        //    IQueryable<TRecord> query = dbSet;
-        //    query = from e in dbSet
-        //            join k in dbSetRelation on e.Id equals k.ObjectId into ps
-        //            from k in ps.DefaultIfEmpty()
-        //            where ( k.ApplicationUserId.Equals(userIdToCheck) || e.Privacy == Privacy.Public )
-        //            select e;
-        //    return await ApplyQueryFilters(query, filter, includeProperties, tracking).ToListAsync();
-        //}
+       
         public IEnumerable<TRecord> GetAllAvailable( string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>, IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null, bool tracking = true )
         {
             IQueryable<TRecord> query = dbSet;

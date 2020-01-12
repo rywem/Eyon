@@ -14,8 +14,8 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         bool UserCanView( string userIdToCheck, long entityId );
 
         Task<bool> UserCanViewAsync( string userIdToCheck, long entityId );
-        TRecord GetFirstOrDefaultByPrivacy(string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true );
-        Task<TRecord> GetFirstOrDefaultByPrivacyAsync( string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true );
+        TRecord GetFirstOrDefaultAvailable(string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true );
+        Task<TRecord> GetFirstOrDefaultAvailableAsync( string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true );
 
         IEnumerable<TRecord> GetAllAvailable( string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, Func<IQueryable<TRecord>,
                         IOrderedQueryable<TRecord>> orderBy = null, string includeProperties = null, bool tracking = true );
