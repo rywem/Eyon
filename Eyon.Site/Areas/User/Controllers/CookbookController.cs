@@ -31,6 +31,10 @@ namespace Eyon.Site.Areas.Seller.Controllers
             return View();
         }
 
+        public IActionResult View(long id)
+        {
+            return View();
+        }
         public IActionResult Upsert(long? id)
         {
             cookbookViewModel = new CookbookViewModel();
