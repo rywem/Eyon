@@ -65,6 +65,9 @@ namespace Eyon.DataAccess.Data
             return await ApplyQueryFilters(query, filter, includeProperties, tracking).ToListAsync();
         }
 
+        /// <summary>
+        /// Selects a record if it is owned by the ownerId
+        /// </summary>        
         public TRecord GetFirstOrDefaultOwned( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
         {
             IQueryable<TRecord> query = dbSet;
@@ -75,6 +78,19 @@ namespace Eyon.DataAccess.Data
                     select e;
             
             return ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Selects a record if it is owned by the ownerId
+        /// </summary>
+        public async Task<TRecord> GetFirstOrDefaultOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
+        {
+            IQueryable<TRecord> query = dbSet;
+            query = from e in dbSet
+                    join k in dbSetRelation on e.Id equals k.ObjectId
+                    where k.ApplicationUserId.Equals(ownerId)
+                    select e;
+            return await ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefaultAsync();
         }
         public bool IsOwner( string userIdToCheck, long entityId )
         {                    
@@ -104,14 +120,6 @@ namespace Eyon.DataAccess.Data
                             }).AnyAsync(x => x.entityId > 0 && !string.IsNullOrEmpty(x.applicationUserId));
 
             return result;
-        }
-
-
-
-        public async Task<TRecord> GetFirstOrDefaultOwnedAsync( string ownerId, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
-        {
-            IQueryable<TRecord> query = dbSet;           
-            return await ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefaultAsync();
         }
     }
 }

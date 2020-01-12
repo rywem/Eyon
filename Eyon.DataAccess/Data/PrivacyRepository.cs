@@ -49,7 +49,7 @@ namespace Eyon.DataAccess.Data
             return false;
         }
         /// <summary>
-        /// This will return a record if the userIdToCheck is the owner, or if the desired record's privacy is public
+        /// This will return a record if the userIdToCheck is the owner, or if the desired record's Privacy is public
         /// </summary>        
         public TRecord GetFirstOrDefaultAvailable( string userIdToCheck, Expression<Func<TRecord, bool>> filter = null, string includeProperties = null, bool tracking = true )
         {            
