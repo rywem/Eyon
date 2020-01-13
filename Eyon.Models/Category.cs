@@ -1,11 +1,12 @@
-﻿using Eyon.Models.Relationship;
+﻿using Eyon.Models.Interfaces;
+using Eyon.Models.Relationship;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eyon.Models
 {
-    public class Category
+    public class Category : IRecord, INamed
     {
         [Key]
         public long Id { get; set; }

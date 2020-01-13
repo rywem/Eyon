@@ -9,6 +9,8 @@ using Eyon.DataAccess.Data.Repository;
 using System.Threading.Tasks;
 using Eyon.Models.Errors;
 using Eyon.Models.Relationship;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Eyon.Models.SiteObjects;
 
 namespace Eyon.DataAccess.Data.Orchestrators
 {
@@ -29,7 +31,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             if ( recipeViewModel.Recipe != null )
             {
                 // check if it is private, if so, only allow owners to view.
-                if ( await _unitOfWork.Recipe.UserCanViewAsync(currentApplicationUserId, recipeViewModel.Recipe.Id) )
+                if ( ! await _unitOfWork.Recipe.UserCanViewAsync(currentApplicationUserId, recipeViewModel.Recipe.Id)  )
                 {
                     throw new WebUserSafeException("An error occurred.");
                 }
@@ -60,7 +62,12 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     recipeViewModel.UserImage = recipeViewModel.Recipe.RecipeUserImage.Select(x => x.UserImage).ToList();
 
                 if ( recipeViewModel.Recipe.CookbookRecipe != null && recipeViewModel.Recipe.CookbookRecipe.Count > 0 )
-                    recipeViewModel.Cookbooks = recipeViewModel.Recipe.CookbookRecipe.Select(x => x.Cookbook).ToList();
+                {
+                    //recipeViewModel.SetCookbookIds();
+                    recipeViewModel.CookbookIds = string.Join(",", recipeViewModel.Recipe.CookbookRecipe.Select(x=> x.CookbookId.ToString()));
+                    recipeViewModel.CookbookSelector = new Models.SiteObjects.ListItemSelector<Cookbook>(recipeViewModel.Recipe.CookbookRecipe.Select(x => x.Cookbook).ToList(), "Cookbooks");
+                }                
+
             }
             return recipeViewModel;
         }

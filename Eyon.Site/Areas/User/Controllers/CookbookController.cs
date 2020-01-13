@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Eyon.DataAccess.Data.Orchestrators;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Eyon.Utilities.Extensions;
 
 namespace Eyon.Site.Areas.Seller.Controllers
 {
@@ -156,7 +157,24 @@ namespace Eyon.Site.Areas.Seller.Controllers
         {
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            return Json(new { data = _unitOfWork.Cookbook.GetAllOwned(claims.Value) });
+
+            var cookbooks = _unitOfWork.Cookbook.GetAllOwned(claims.Value, includeProperties: "CookbookRecipe");
+            
+            var data = from c in cookbooks
+                       select new
+                       {
+                           c.Id,
+                           c.Name,
+                           Privacy = c.Privacy.ToString(),
+                           c.Author,
+                           c.Copyright,
+                           c.ISBN,
+                           Created = c.CreationDateTime.ToFriendlyString(),
+                           Modified = c.ModifiedDateTime.ToFriendlyString(),
+                           RecipeCount = c.CookbookRecipe == null ? 0 : c.CookbookRecipe.Count
+                       };
+            return Json(new { data = data });
+            //return Json(new { data = _unitOfWork.Cookbook.GetAllOwned(claims.Value) });
         }
     }
 }

@@ -6651,8 +6651,8 @@ a.close.disabled {
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    /*width: 100%;
-    min-width: 600px;*/
+    width: 100%;
+    min-width: 600px;
     pointer-events: auto;
     background-color: #fff;
     background-clip: padding-box;
@@ -6661,9 +6661,9 @@ a.close.disabled {
     outline: 0;
 }
 
-.modal-width {
+.modal-width-table {
     width: 100%;
-    min-width: 600px;
+    min-width: 800px !important;
 }
 
 .modal-backdrop {

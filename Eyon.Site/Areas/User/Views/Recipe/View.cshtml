@@ -1,5 +1,5 @@
 ﻿@model Eyon.Models.ViewModels.RecipeViewModel
-@using System.Globalization;
+@using Eyon.Utilities.Extensions;
 @{
     var title = Model.IsOwner == true ? "My Recipe" : "View Recipe";
     ViewData["Title"] = title;
@@ -16,7 +16,7 @@
             </div>
             <div class="col-md-12 px-0">
                 <div class="row">
-                    <span class="col-2">@Model.Recipe.CreationDateTime.ToString("y", DateTimeFormatInfo.InvariantInfo)</span>
+                    <span class="col-2">@Model.Recipe.CreationDateTime.ToFriendlyString("y")</span>
                     <span class="col-3">By <a href="#" class="pagelink">username (todo)</a></span>
                 </div>
 

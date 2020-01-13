@@ -120,14 +120,12 @@
                     </button>
                 </div>
                 <div class="col-8">                    
-                    <ul>
-                        <li>test 1</li>
-                        @if ( Model.Cookbooks != null && Model.Cookbooks.Count > 0 )
+                    @Html.HiddenFor(x => x.CookbookIds)
+                    <ul id="selectedCookbookList">                        
+                        @foreach ( var item in Model.CookbookSelector.SelectedItems )
                         {
-                            foreach ( var item in Model.Cookbooks )
-                            {
-                                <li>@Html.ActionLink(item.Name, "View", "Cookbook", new { id = item.Id }); </li>
-                            }                        
+                            string id = "selectedCookbookItem_" + @item.Value;
+                            <li id="@id" class="selectedCookbookItem">@item.Text <i class="far fa-window-close"></i></li>
                         }
                     </ul>
                 </div>
@@ -151,7 +149,7 @@
 </form>
 <div class="modal fade" tabindex="-1" role="dialog" id="cookbooksModal">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content modal-width-table">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -159,7 +157,18 @@
                 </button>
             </div>
             <div class="modal-body">
-                
+                <table id="dtCookbooks" class="table table-striped table-borderd table-sm" cellspacing="0" with="100%">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Privacy</th>
+                            <th>Created</th>
+                            <th>Last Modified</th>
+                            <th>Recipes</th>
+                            <th>Select</th>
+                        </tr>                        
+                    </thead>                    
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -171,9 +180,55 @@
 
 
 @section Scripts {
+    <script src="~/js/library/list_item_selector.js"></script>
+
     <script>
+        var itemIds = [0, 1, 2];
+        var names = ['red', 'green', 'blue'];        
+        cookbookSelector = new ListItemSelector('Cookbooks', itemIds, names);
+        cookbookSelector.updateSelected(4, "test");
+        //cookbookSelector.addOrRemoveItemFromArray(cookbookSelector.getItemIds(), 4);
+        cookbookSelector.printIds();
+        // Add pagination to dt
+        var dataTable;
+        $(document).ready(function () {
+            dataTable = $('#dtCookbooks').DataTable({
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "ajax": {
+                    "url": "/user/cookbook/GetUserCookbooks",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                        { "data": "name" },
+                        { "data" : "privacy" },
+                        { "data": "created" },
+                        { "data": "modified" },
+                        { "data": "recipeCount" },
+                        //{
+                        //    "data": "id",
+                        //    "render": function (data) {
+                        //        return `<input type="checkbox" onclick=selectCookbook(${data}) />`;
+                        //    }
+                        //},
+                    ],
+                 "language": {
+                    "emptyTable": "No records found"
+                },
+                "width": "100%",
+                "createdRow": function (row, data, dataIndex) {
+                    $(row).addClass("text-center");
+                }
+            });
 
-
+            $('#dtCookbooks tbody').on('click', 'tr', function () {                
+                var data = dataTable.row(this).data();
+                cookbookSelector.updateSelected(data["id"], data["name"]);
+                cookbookSelector.printCommaSeparatedStringToDocumentId("CookbookIds");
+                cookbookSelector.buildNamesList("#selectedCookbookList","selectedCookbookItem");                
+            });
+        });
 
         // Community
         $(function () {
