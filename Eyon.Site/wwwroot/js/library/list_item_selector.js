@@ -1,24 +1,29 @@
 ﻿class ListItemSelector {
     itemIdsArray = [];
-    constructor(localName, initialItemIdsArray, initialNamesArray) {
+    itemNamesArray = [];
+    name = '';    
+    
+    constructor(objName, initialItemIdsArray, initialNamesArray, elementId_ItemIds, self, functionToCreateListItem) {
         this.itemIdsArray = initialItemIdsArray;
         this.itemNamesArray = initialNamesArray;
-        this.LocalName = localName;
+        this.name = objName;
+        this.elementIdItemIds = elementId_ItemIds;
+        this.self = self;
+        this.createListItem = functionToCreateListItem;
     }
 
-    printIds() {
-        if (this.itemIdsArray !== 'undefined' && this.itemIdsArray !== '') {
-            for (var i = 0; i < this.itemIdsArray.length; i++) {
-                console.log(this.itemIdsArray[i]);
-            }
-        }
+    buildUI() {
+        this.printCommaSeparatedStringToDocumentId();
+        this.buildNamesList();
     }
 
     updateSelected(id, name) {
-        this.addOrRemoveItemFromArray(this.itemIdsArray, id);
-        this.addOrRemoveItemFromArray(this.itemNamesArray, name);
+        this.itemIdsArray = this.addOrRemoveItemFromArray(this.itemIdsArray, id);
+        this.itemNamesArray = this.addOrRemoveItemFromArray(this.itemNamesArray, name);
+        this.buildUI();
     }
 
+    // Private 
     addOrRemoveItemFromArray(arrayToChange, theValueToAddOrRemove) {
         var val = theValueToAddOrRemove;
         if (typeof arrayToChange !== "undefined" && arrayToChange !== null) {
@@ -34,20 +39,37 @@
         else {
             arrayToChange = [val];
         }
+        return arrayToChange;
     }
 
     // Prints a comma separated string to a textbox
-    printCommaSeparatedStringToDocumentId(htmlElementId) {
-        document.getElementById(htmlElementId).value = this.itemIdsArray.toString();
+    printCommaSeparatedStringToDocumentId() {
+        document.getElementById(this.elementIdItemIds).value = this.itemIdsArray.toString();
     }
 
-    buildNamesList(ul_or_ol_jquery_selector, li_class, data) {
-        var list = $(ul_or_ol_jquery_selector);
+    buildNamesList() {
+        var list = $('#'+this.getListId());
         list.empty();
+        var self = this;
         for (var i = 0; i < this.itemNamesArray.length; i++) {
-            var id = li_class + "_" + this.itemIdsArray[i];
+            var id = this.itemIdsArray[i];
+            var li_id = this.getListItemId(this.itemIdsArray[i]);
             var name = this.itemNamesArray[i];
-            list.append(`<li id="${id}" class="${li_class}">${name}<i class="far fa-window-close"></i></li>`)
+            var li_class = this.getListItemClass();
+            var self = this.self;
+            //list.append(`<li id="${li_id}" class="${li_class}">${name}<div class="badge badge-danger" onclick="${self}.updateSelected(${id}, '${name}')"><i class="far fa-window-close"></i></div></li>`)
+            list.append(this.createListItem(id, name, li_id, li_class, self));
         }
+    }
+
+    getListId() {
+        return 'list_selected_' + this.name.toLowerCase();
+    }
+
+    getListItemClass() {
+        return "list_item_selected_" + this.name.toLowerCase();
+    }
+    getListItemId(id) {
+        return this.getListItemClass() + '_' + id;
     }
 }

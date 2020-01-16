@@ -49,7 +49,7 @@ namespace Eyon.Models.SiteObjects
             }
         }
 
-        public ListItemSelector( List<T> items, string pluralName, string name = null )
+        public ListItemSelector( List<T> items, string pluralName, string name = null, bool setIds = true )
         {
             this.Items = items;
             this.PluralName = pluralName;
@@ -57,6 +57,9 @@ namespace Eyon.Models.SiteObjects
                 this.Name = name;
             else
                 this.Name = nameof(T);
+
+            if ( setIds == true )
+                SetItemIds();
         }
 
         private void SetSelectedItems()
@@ -71,6 +74,29 @@ namespace Eyon.Models.SiteObjects
             else
                 _selectedItems = new List<SelectListItem>();
         }
+
+
+        public string GetListId()
+        {
+            return string.Format("list_selected_{0}", Name.ToLower());            
+        }
+
+        public string GetListItemClass()
+        {            
+            return string.Format("list_item_selected_{0}", Name.ToLower());            
+        }
+
+        public string GetListItemId( string id )
+        {
+            return string.Format("{0}_{1}", GetListItemClass(), id);
+        }
+        
+
+        public string GetListItemId(long id )
+        {
+            return GetListItemId(id.ToString());
+        }
+
         private void SetItemIds()
         {
             if ( Items != null && Items.Count > 0 )
@@ -95,7 +121,6 @@ namespace Eyon.Models.SiteObjects
                         throw new WebUserSafeException(string.Format("Invalid id: {0} selected.", itemsStringArray[i]));
                 }
             }
-             
             return items;
         }
     }

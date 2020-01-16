@@ -120,12 +120,12 @@
                     </button>
                 </div>
                 <div class="col-8">                    
-                    @Html.HiddenFor(x => x.CookbookIds)
-                    <ul id="selectedCookbookList">                        
+                    @Html.HiddenFor(x => x.CookbookSelector.ItemIds)
+                    <ul id="@Model.CookbookSelector.GetListId()">                        
                         @foreach ( var item in Model.CookbookSelector.SelectedItems )
                         {
-                            string id = "selectedCookbookItem_" + @item.Value;
-                            <li id="@id" class="selectedCookbookItem">@item.Text <i class="far fa-window-close"></i></li>
+                            
+                            <li id="@Model.CookbookSelector.GetListItemId(item.Value)" class="@Model.CookbookSelector.GetListItemClass()">@item.Text <i class="far fa-window-close"></i></li>
                         }
                     </ul>
                 </div>
@@ -183,14 +183,39 @@
     <script src="~/js/library/list_item_selector.js"></script>
 
     <script>
-        var itemIds = [0, 1, 2];
-        var names = ['red', 'green', 'blue'];        
-        cookbookSelector = new ListItemSelector('Cookbooks', itemIds, names);
-        cookbookSelector.updateSelected(4, "test");
-        //cookbookSelector.addOrRemoveItemFromArray(cookbookSelector.getItemIds(), 4);
-        cookbookSelector.printIds();
-        // Add pagination to dt
+        var name;
+        var cookbookItemIds = [];
+        var cookbookNames = [];
+        var cookbookInitialIdsArray = [];
+        var cookbookInitialNamesArray = [];
+        var elementId_itemIds = 'CookbookSelector_ItemIds';
         var dataTable;
+        @{
+            <text>
+                name = '@Model.CookbookSelector.Name';
+            </text>
+            foreach ( var item in Model.CookbookSelector.SelectedItems )
+            {
+                long id = 0;
+                if (long.TryParse(item.Value, out id) )
+                {
+                    <text>
+                        cookbookInitialIdsArray.push(@item.Value);
+                    </text>
+                    <text>
+                        cookbookInitialNamesArray.push(@item.Text);
+                    </text>
+                }
+            }
+        }
+
+        cookbookSelector = new ListItemSelector(name, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, 'cookbookSelector', function (id, name, li_id, li_class, self) {
+            return `<li id="${li_id}" class="${li_class}">${name}<div class="badge badge-danger" onclick="${self}.updateSelected(${id}, '${name}')"><i class="far fa-window-close"></i></div></li>`
+        });
+        cookbookSelector.buildUI();
+
+
+
         $(document).ready(function () {
             dataTable = $('#dtCookbooks').DataTable({
                 "paging": true,
@@ -206,12 +231,14 @@
                         { "data": "created" },
                         { "data": "modified" },
                         { "data": "recipeCount" },
-                        //{
-                        //    "data": "id",
-                        //    "render": function (data) {
-                        //        return `<input type="checkbox" onclick=selectCookbook(${data}) />`;
-                        //    }
-                        //},
+                        {
+                            "data": "id",
+                            "render": function (data) {
+                                return `<input type="checkbox" onclick=selectCookbook(${data}) />`;
+                                //var cbId = 'cb_' + data.id;
+                                //return `<input type="checkbox" id="${cbId}' />`;
+                            }
+                        },
                     ],
                  "language": {
                     "emptyTable": "No records found"
@@ -222,11 +249,10 @@
                 }
             });
 
-            $('#dtCookbooks tbody').on('click', 'tr', function () {                
+            $('#dtCookbooks tbody').on('click', 'tr', function () {
                 var data = dataTable.row(this).data();
                 cookbookSelector.updateSelected(data["id"], data["name"]);
-                cookbookSelector.printCommaSeparatedStringToDocumentId("CookbookIds");
-                cookbookSelector.buildNamesList("#selectedCookbookList","selectedCookbookItem");                
+                cookbookSelector.buildUI();
             });
         });
 
