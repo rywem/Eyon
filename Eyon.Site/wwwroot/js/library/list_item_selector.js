@@ -3,13 +3,19 @@
     itemNamesArray = [];
     name = '';    
     
-    constructor(objName, initialItemIdsArray, initialNamesArray, elementId_ItemIds, self, functionToCreateListItem) {
+    constructor(objName, initialItemIdsArray, initialNamesArray, elementId_ItemIds, functionToCreateListItem) {
         this.itemIdsArray = initialItemIdsArray;
         this.itemNamesArray = initialNamesArray;
         this.name = objName;
-        this.elementIdItemIds = elementId_ItemIds;
-        this.self = self;
-        this.createListItem = functionToCreateListItem;
+        this.elementIdItemIds = elementId_ItemIds;        
+        this.createListItemFunction = functionToCreateListItem;
+    }
+
+    containsId(id) {
+        if (typeof arrayToChange !== "undefined" && arrayToChange !== null) {
+            return this.itemIdsArray.includes(id);
+        }
+        return false;
     }
 
     buildUI() {
@@ -58,7 +64,7 @@
             var li_class = this.getListItemClass();
             var self = this.self;
             //list.append(`<li id="${li_id}" class="${li_class}">${name}<div class="badge badge-danger" onclick="${self}.updateSelected(${id}, '${name}')"><i class="far fa-window-close"></i></div></li>`)
-            list.append(this.createListItem(id, name, li_id, li_class, self));
+            list.append(this.createListItemFunction(id, name, li_id, li_class, self));
         }
     }
 

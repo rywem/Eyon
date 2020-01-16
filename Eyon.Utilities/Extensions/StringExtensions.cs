@@ -2,11 +2,20 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-
+using System.Web;
 namespace Eyon.Utilities.Extensions
 {
     public static class StringExtensions
     {
+        public static string ToHtmlEncode(this string value)
+        {
+            return HttpUtility.HtmlEncode(value);
+        }
+
+        public static string ToHtmlDecode(this string value )
+        {
+            return HttpUtility.HtmlDecode(value); 
+        }
         public static string ToProperCase(this string s, CultureInfo culture = null)
         {
             if ( string.IsNullOrEmpty(s) )

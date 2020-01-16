@@ -151,7 +151,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content modal-width-table">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Click to select</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -165,14 +165,12 @@
                             <th>Created</th>
                             <th>Last Modified</th>
                             <th>Recipes</th>
-                            <th>Select</th>
                         </tr>                        
                     </thead>                    
                 </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
@@ -181,7 +179,7 @@
 
 @section Scripts {
     <script src="~/js/library/list_item_selector.js"></script>
-
+    <script src="~/js/library/string_helper.js"></script>
     <script>
         var name;
         var cookbookItemIds = [];
@@ -200,7 +198,7 @@
                 if (long.TryParse(item.Value, out id) )
                 {
                     <text>
-                        cookbookInitialIdsArray.push(@item.Value);
+                        cookbookInitialIdsArray.push(@id);
                     </text>
                     <text>
                         cookbookInitialNamesArray.push(@item.Text);
@@ -209,12 +207,15 @@
             }
         }
 
-        cookbookSelector = new ListItemSelector(name, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, 'cookbookSelector', function (id, name, li_id, li_class, self) {
-            return `<li id="${li_id}" class="${li_class}">${name}<div class="badge badge-danger" onclick="${self}.updateSelected(${id}, '${name}')"><i class="far fa-window-close"></i></div></li>`
+        cookbookSelector = new ListItemSelector(name, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, 'cookbookSelector', function (id, name, li_id, li_class) {
+            return `<li id="${li_id}" class="${li_class}">${name}<div class="badge badge-danger" onclick="updateSelected(${id}, '${textEscape(name)}')"><i class="far fa-window-close"></i></div></li>`
         });
         cookbookSelector.buildUI();
 
 
+        function updateSelected(id, name) {
+            cookbookSelector.updateSelected(id, name);
+        }
 
         $(document).ready(function () {
             dataTable = $('#dtCookbooks').DataTable({
@@ -231,14 +232,16 @@
                         { "data": "created" },
                         { "data": "modified" },
                         { "data": "recipeCount" },
-                        {
-                            "data": "id",
-                            "render": function (data) {
-                                return `<input type="checkbox" onclick=selectCookbook(${data}) />`;
-                                //var cbId = 'cb_' + data.id;
-                                //return `<input type="checkbox" id="${cbId}' />`;
-                            }
-                        },
+                        //{
+                        //    "data": "id",
+                        //    "render": function (data) {
+                        //        var checked = '';
+                                
+                        //        return `<input type="checkbox" onclick=selectCookbook(${data}) />`;
+                        //        //var cbId = 'cb_' + data.id;
+                        //        //return `<input type="checkbox" id="${cbId}' />`;
+                        //    }
+                        //},
                     ],
                  "language": {
                     "emptyTable": "No records found"
@@ -246,10 +249,15 @@
                 "width": "100%",
                 "createdRow": function (row, data, dataIndex) {
                     $(row).addClass("text-center");
+
+                    if (cookbookSelector.containsId(data.id)) {
+                        $(row).toggleClass("selected");
+                    }
                 }
             });
 
             $('#dtCookbooks tbody').on('click', 'tr', function () {
+                $(this).toggleClass('selected');
                 var data = dataTable.row(this).data();
                 cookbookSelector.updateSelected(data["id"], data["name"]);
                 cookbookSelector.buildUI();
