@@ -182,12 +182,13 @@
     <script src="~/js/library/list_item_selector.js"></script>
     <script src="~/js/library/string_helper.js"></script>
     <script>
+        // Initialize data.
         var name;        
         var cookbookInitialIdsArray = [];
         var cookbookInitialNamesArray = [];
         var elementId_itemIds = 'CookbookSelector_ItemIds';
         var dataTable;
-        var data;
+        var userCookbookData;
         @{
             <text>
                 name = '@Model.CookbookSelector.Name';
@@ -207,20 +208,16 @@
             }
         }
 
-        cookbookSelector = new ListItemSelector(name, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, function (id, name, btnId, li_class) {
-            //return `<li><span>${name}</span><div class="badge badge-danger" onclick="updateSelected(${id}, '${textEscape(name)}')" id="${btnId}")"><i class="far fa-window-close"></i></div></li>`
+        cookbookSelector = new ListItemSelector(name, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, function (id, name, btnId, li_class) {            
             return `<li><span>${name}</span><div class="badge badge-danger" id="${btnId}")"><i class="far fa-window-close"></i></div></li>`
         });
         cookbookSelector.buildUI();
 
 
-        //function updateSelected(id, name) {
-        //    cookbookSelector.updateSelected(id, name);
-        //}
-
         $(document).ready(function () {
-            getCookbookData();
-            createCookbookDataTable();            
+            var ajax = getCookbookData();
+            ajax.then(() => createCookbookDataTable());
+            
             $("#addCookbooks").click(function () {                
                 dataTable.rows().invalidate().draw()
             })
@@ -231,7 +228,7 @@
             dataTable = $('#dtCookbooks').DataTable({
                 "paging": true,
                 "pagingType": "simple_numbers",
-                "data": data.data,
+                "data": userCookbookData.data,
                 "columns": [
                         { "data": "name" },
                         { "data" : "privacy" },
@@ -276,15 +273,15 @@
         }        
 
         function getCookbookData() {
-            $.ajax({
+            return $.ajax({
                 async: false,
                 url: "/user/cookbook/GetUserCookbooks",
                 type: "GET",
                 datatype: "json",
                 success: function (json) {
-                    data = json;
+                    userCookbookData = json;
                 }
-            });
+            });            
         }
         // End Region: Generate Cookbook DataTable 
 
