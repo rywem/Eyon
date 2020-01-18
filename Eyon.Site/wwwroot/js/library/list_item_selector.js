@@ -27,7 +27,9 @@
 
     buildUI() {
         this.printCommaSeparatedStringToDocumentId();
+        this.removeOnClickListeners();
         this.buildNamesList();
+        this.addOnClickListeners();
     }
 
     // Private 
@@ -60,11 +62,52 @@
         var self = this;
         for (var i = 0; i < this.itemNamesArray.length; i++) {
             var id = this.itemIdsArray[i];
-            var li_id = this.getListItemId(this.itemIdsArray[i]);
+            var btnId = this.getListItemId(this.itemIdsArray[i]);
             var name = this.itemNamesArray[i];
             var li_class = this.getListItemClass();
-            var self = this.self;            
-            list.append(this.createListItemFunction(id, name, li_id, li_class, self));
+            //var self = this.self;            
+            list.append(this.createListItemFunction(id, name, btnId, li_class, self));
+            //var self = this; 
+            //var btn = $('#' + btnId);
+            //var data = { id : id, name : name }
+            //$(document).on('click', '#' + btnId, data, function () {
+            //    self.updateSelected(data.id, data.name);
+            //    //console.log("test");
+            //    //alert("test");
+            //});
+        }
+    }
+
+    removeOnClickListeners() {
+        for (var i = 0; i < this.itemIdsArray.length; i++) {
+            var id = this.itemIdsArray[i];
+            var btnId = this.getListItemId(this.itemIdsArray[i]);
+            var name = this.itemNamesArray[i];
+
+            var self = this;
+            var btn = $('#' + btnId);
+            var data = { id: id, name: name }
+            if (this.containsId(id)) {
+                $(document).off('click', '#' + btnId);
+            }
+        }
+    }
+    addOnClickListeners() {
+        for (var i = 0; i < this.itemIdsArray.length; i++) {
+            var id = this.itemIdsArray[i];
+            var btnId = this.getListItemId(this.itemIdsArray[i]);
+            var name = this.itemNamesArray[i];            
+            
+            var self = this;
+            var btn = $('#' + btnId);
+            var data = { id: id, name: name }
+            if (this.containsId(id)) {
+                $(document).on('click', '#' + btnId, data, function () {
+                    self.updateSelected(data.id, data.name);
+                    //console.log("test");
+                    //alert("test");
+                });
+            }            
         }
     }
 

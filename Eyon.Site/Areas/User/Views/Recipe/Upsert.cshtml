@@ -207,15 +207,16 @@
             }
         }
 
-        cookbookSelector = new ListItemSelector(name, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, function (id, name, li_id, li_class) {
-            return `<li id="${li_id}" class="${li_class}"><span>${name}</span><div class="badge badge-danger" onclick="updateSelected(${id}, '${textEscape(name)}')"><i class="far fa-window-close"></i></div></li>`
+        cookbookSelector = new ListItemSelector(name, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, function (id, name, btnId, li_class) {
+            //return `<li><span>${name}</span><div class="badge badge-danger" onclick="updateSelected(${id}, '${textEscape(name)}')" id="${btnId}")"><i class="far fa-window-close"></i></div></li>`
+            return `<li><span>${name}</span><div class="badge badge-danger" id="${btnId}")"><i class="far fa-window-close"></i></div></li>`
         });
         cookbookSelector.buildUI();
 
 
-        function updateSelected(id, name) {
-            cookbookSelector.updateSelected(id, name);
-        }
+        //function updateSelected(id, name) {
+        //    cookbookSelector.updateSelected(id, name);
+        //}
 
         $(document).ready(function () {
             getCookbookData();
@@ -268,10 +269,10 @@
         }
 
         function removeButton(id) {
-            return `<button type="button" class="btn btn-danger" id="cookbook_tr_btn_${id}" /><i id="cbIcon" class="far fa-window-close"></i></button>`
+            return `<button type="button" class="btn btn-danger" /><i id="cbIcon" class="far fa-window-close"></i></button>`
         }
         function addButton(id) {
-            return `<button type="button" class="btn btn-primary" id="cookbook_tr_btn_${id}" /><i id="cbIcon" class="fa fa-plus-square-o"></i></button>`
+            return `<button type="button" class="btn btn-primary" /><i id="cbIcon" class="fa fa-plus-square-o"></i></button>`
         }        
 
         function getCookbookData() {
