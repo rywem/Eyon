@@ -225,6 +225,7 @@
             })
         });
 
+        // region: Generate Cookbook DataTable 
         function createCookbookDataTable() {            
             dataTable = $('#dtCookbooks').DataTable({
                 "paging": true,
@@ -239,11 +240,9 @@
                         {
                             "data": "id",
                             "render": function (data) {
-                                if (cookbookSelector.containsId(data)) {
-                                    //return `<button type="button" class="btn btn-danger" id="cookbook_tr_btn_${data}" /><i class="far fa-window-close"></i></button>`
+                                if (cookbookSelector.containsId(data)) {                                    
                                     return removeButton(data);
-                                } else {
-                                    //return `<button type="button" class="btn btn-primary" id="cookbook_tr_btn_${data}" /><i class="fa fa-plus-square-o"></i></button>`
+                                } else {                                    
                                     return addButton(data);
                                 }
                             }
@@ -273,8 +272,7 @@
         }
         function addButton(id) {
             return `<button type="button" class="btn btn-primary" id="cookbook_tr_btn_${id}" /><i id="cbIcon" class="fa fa-plus-square-o"></i></button>`
-        }
-        
+        }        
 
         function getCookbookData() {
             $.ajax({
@@ -287,8 +285,9 @@
                 }
             });
         }
+        // End Region: Generate Cookbook DataTable 
 
-        // Community
+        // Region: Community
         $(function () {
             $('#CommunityName').autocomplete({
                 source: '@Url.Action("Suggest", "Community")',
@@ -299,5 +298,6 @@
                 }
             });
         });
+        // End Region: Community
     </script>
 }
