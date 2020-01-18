@@ -252,3 +252,40 @@ li.nostyle {
     border-radius: 0.5em;
     border: 1px solid rgba(0, 0, 0, 0.3);
 }
+
+
+ol#list_selected_cookbook {
+    list-style: none;
+    counter-reset: cookbook-counter;
+}
+    ol#list_selected_cookbook li {
+        counter-increment: cookbook-counter;
+        margin: 0.25rem;        
+    }
+        ol#list_selected_cookbook li span {
+            display: inline-block;
+            text-shadow: 0 0 1px black;
+            min-width: 250px !important;
+            padding-bottom: 5px;
+        }
+        
+        ol#list_selected_cookbook li::before {
+            content: counter(cookbook-counter);
+            background: #28a745;
+            width: 1.25rem;
+            height: 1.25rem;
+            padding-top: 0.1rem;
+            border-radius: 50%;
+            display: inline-block;
+            line-height: 1rem;
+            color: white;
+            text-align: center;
+            margin-right: 0.25rem;
+            font-family: 'PT Serif', serif;
+        }
+
+        ol#list_selected_cookbook li div {
+            /*text-shadow: 1 1 1px blue;*/
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: 0.25rem;
+        }
