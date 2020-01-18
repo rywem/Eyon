@@ -40,6 +40,7 @@ namespace Eyon.Site.Areas.User.Controllers
             return Forbidden();
         }
 
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
