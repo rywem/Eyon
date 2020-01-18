@@ -13,6 +13,7 @@
 
     // public 
     updateSelected(id, name) {
+        this.removeOnClickListeners();
         this.itemIdsArray = this.addOrRemoveItemFromArray(this.itemIdsArray, id);
         this.itemNamesArray = this.addOrRemoveItemFromArray(this.itemNamesArray, name);
         this.buildUI();
@@ -26,8 +27,7 @@
     }
 
     buildUI() {
-        this.printCommaSeparatedStringToDocumentId();
-        this.removeOnClickListeners();
+        this.printCommaSeparatedStringToDocumentId();        
         this.buildNamesList();
         this.addOnClickListeners();
     }
@@ -64,17 +64,8 @@
             var id = this.itemIdsArray[i];
             var btnId = this.getListItemId(this.itemIdsArray[i]);
             var name = this.itemNamesArray[i];
-            var li_class = this.getListItemClass();
-            //var self = this.self;            
-            list.append(this.createListItemFunction(id, name, btnId, li_class, self));
-            //var self = this; 
-            //var btn = $('#' + btnId);
-            //var data = { id : id, name : name }
-            //$(document).on('click', '#' + btnId, data, function () {
-            //    self.updateSelected(data.id, data.name);
-            //    //console.log("test");
-            //    //alert("test");
-            //});
+            var li_class = this.getListItemClass();            
+            list.append(this.createListItemFunction(id, name, btnId, li_class, self));            
         }
     }
 
@@ -103,9 +94,7 @@
             var data = { id: id, name: name }
             if (this.containsId(id)) {
                 $(document).on('click', '#' + btnId, data, function () {
-                    self.updateSelected(data.id, data.name);
-                    //console.log("test");
-                    //alert("test");
+                    self.updateSelected(data.id, data.name);                    
                 });
             }            
         }
