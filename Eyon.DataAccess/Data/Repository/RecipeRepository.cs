@@ -34,7 +34,7 @@ namespace Eyon.DataAccess.Data.Repository
                               select r ).FirstOrDefault();
 
             if ( objFromDb == null )
-                throw new WebUserSafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  recipe.Id {1}", currentUserId, recipe.Id)));
+                throw new SafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  recipe.Id {1}", currentUserId, recipe.Id)));
 
             objFromDb.Name = recipe.Name;
             objFromDb.Cooktime = recipe.Cooktime;

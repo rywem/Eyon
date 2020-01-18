@@ -208,9 +208,9 @@ namespace Eyon.DataAccess.Data.Orchestrators
         public void AddCommunity( CommunityViewModel communityViewModel )
         {
             if ( communityViewModel.Community.Id != 0 )
-                throw new WebUserSafeException("Community already exists");
+                throw new SafeException("Community already exists");
             if ( communityViewModel.Community.CountryId == 0 )
-                throw new WebUserSafeException("Country required.");
+                throw new SafeException("Country required.");
 
             _unitOfWork.Community.Add(communityViewModel.Community);
             _unitOfWork.Save();
@@ -260,14 +260,14 @@ namespace Eyon.DataAccess.Data.Orchestrators
         public void UpdateCommunity(CommunityViewModel communityViewModel )
         {
             if ( _unitOfWork.Community.Any(x => x.Id == communityViewModel.Community.Id) == false )
-                throw new WebUserSafeException("Community does not exists");
+                throw new SafeException("Community does not exists");
             
             //Disallow updates to country at this time.
             var communityFromDb = _unitOfWork.Community.Get(communityViewModel.Community.Id);
             if ( communityViewModel.Community.CountryId != 0 )
             {
                 if ( communityViewModel.Community.CountryId != communityFromDb.CountryId )
-                    throw new WebUserSafeException("Changing country disallowed.");
+                    throw new SafeException("Changing country disallowed.");
             }
             else
                 communityViewModel.Community.CountryId = communityFromDb.CountryId;
@@ -297,12 +297,12 @@ namespace Eyon.DataAccess.Data.Orchestrators
         private void CreateStateRelationship( CommunityViewModel communityViewModel )
         {           
             if ( communityViewModel.StateId.GetValueOrDefault() == 0 )
-                throw new WebUserSafeException("State/Province required.");
+                throw new SafeException("State/Province required.");
 
             var state = _unitOfWork.State.GetFirstOrDefault(x => x.CountryId == communityViewModel.Community.CountryId
                                                             && x.Id == communityViewModel.StateId.GetValueOrDefault());
             if ( state == null || state.Id == 0 )
-                throw new WebUserSafeException("Invalid State selected.");
+                throw new SafeException("Invalid State selected.");
 
             var communityState = new Models.Relationship.CommunityState()
             {

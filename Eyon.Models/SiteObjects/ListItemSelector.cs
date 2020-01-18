@@ -118,7 +118,7 @@ namespace Eyon.Models.SiteObjects
                     if ( long.TryParse(itemsStringArray[i], out id) )
                         items.Add(id);
                     else
-                        throw new WebUserSafeException(string.Format("Invalid id: {0} selected.", itemsStringArray[i]));
+                        throw new SafeException(string.Format("Invalid id: {0} selected.", itemsStringArray[i]));
                 }
             }
             return items;

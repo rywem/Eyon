@@ -28,7 +28,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         public void AddOrganization( OrganizationViewModel organizationViewModel )
         {
             if ( organizationViewModel.Organization.Id != 0 )
-                throw new WebUserSafeException("Organization already exists.");
+                throw new SafeException("Organization already exists.");
 
             _unitOfWork.Organization.Add(organizationViewModel.Organization);
             _unitOfWork.Save();
@@ -75,7 +75,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         public void UpdateOrganization( OrganizationViewModel organizationViewModel )
         {
             if ( organizationViewModel.Organization.Id == 0 )
-                throw new WebUserSafeException("Organization not found.");
+                throw new SafeException("Organization not found.");
 
             _unitOfWork.Organization.Update(organizationViewModel.Organization);
             _unitOfWork.Save();

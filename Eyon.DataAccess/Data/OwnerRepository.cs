@@ -27,7 +27,7 @@ namespace Eyon.DataAccess.Data
             var userFromDb = userDbSet.FirstOrDefault(x => x.Id.Equals(ownerId));
             var entityFromDb = dbSet.FirstOrDefault(c => c.Id == addedEntity.Id);
             if ( userFromDb == null || entityFromDb == null || entityFromDb.Id == 0 )
-                throw new WebUserSafeException("An error occurred.");
+                throw new SafeException("An error occurred.");
             else
             {         
                 // TODO Refactor

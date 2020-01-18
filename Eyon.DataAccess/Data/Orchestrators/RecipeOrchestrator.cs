@@ -33,7 +33,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 // check if it is private, if so, only allow owners to view.
                 if ( ! await _unitOfWork.Recipe.UserCanViewAsync(currentApplicationUserId, recipeViewModel.Recipe.Id)  )
                 {
-                    throw new WebUserSafeException("An error occurred.");
+                    throw new SafeException("An error occurred.");
                 }
                 recipeViewModel.IsOwner = await _unitOfWork.Recipe.IsOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe.Id);
 
@@ -113,7 +113,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             var communityFromDb = await _unitOfWork.Community.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.CommunityId);
 
             if ( communityFromDb == null )
-                throw new WebUserSafeException("An error occurred");
+                throw new SafeException("An error occurred");
 
             _unitOfWork.Recipe.Add(recipeViewModel.Recipe);
             await _unitOfWork.SaveAsync();
@@ -188,7 +188,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         public void AddRecipe( string currentApplicationUserId, RecipeViewModel recipeViewModel )
         {
             if ( recipeViewModel.Recipe.Id != 0 )
-                throw new WebUserSafeException("An error occurred");
+                throw new SafeException("An error occurred");
 
             _unitOfWork.Recipe.Add(recipeViewModel.Recipe);
             _unitOfWork.Save();
@@ -229,7 +229,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         {            
             if ( await _unitOfWork.Recipe.IsOwnerAsync(currentApplicationUserId, recipeViewModel.Recipe.Id) == false )
             {
-                throw new WebUserSafeException("An error occurred.");
+                throw new SafeException("An error occurred.");
             }
             var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,Instructions,Ingredients");            
             if ( recipeFromDb == null )
@@ -324,7 +324,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             {
                 var newCommunityFromDb = await _unitOfWork.Community.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.CommunityId);
                 if ( newCommunityFromDb == null )
-                    throw new WebUserSafeException("An error occurred");
+                    throw new SafeException("An error occurred");
 
                 _unitOfWork.CommunityRecipe.Remove(recipeFromDb.CommunityRecipe);
                 _unitOfWork.CommunityRecipe.Add(new CommunityRecipe() { RecipeId = recipeFromDb.Id, CommunityId = newCommunityFromDb.Id });

@@ -57,7 +57,7 @@ namespace Eyon.Site.Areas.Seller.Controllers
                         organizationOrchestrator.UpdateOrganizationTransaction(organizationViewModel);
                     }
                 }
-                catch ( Models.Errors.WebUserSafeException usEx )
+                catch ( Models.Errors.SafeException usEx )
                 {
                     ModelState.AddModelError(string.Empty, usEx.Message);
                     return View(organizationViewModel);

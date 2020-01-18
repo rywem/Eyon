@@ -156,7 +156,7 @@ namespace Eyon.Site.Areas.User.Controllers
                             await recipeOrchestrator.UpdateRecipeTransactionAsync(claims.Value, recipeViewModel);
                         }
                     }
-                    catch ( Models.Errors.WebUserSafeException usEx )
+                    catch ( Models.Errors.SafeException usEx )
                     {
                         throw usEx;                        
                     }

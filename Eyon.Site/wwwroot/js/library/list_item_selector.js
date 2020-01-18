@@ -11,8 +11,15 @@
         this.createListItemFunction = functionToCreateListItem;
     }
 
+    // public 
+    updateSelected(id, name) {
+        this.itemIdsArray = this.addOrRemoveItemFromArray(this.itemIdsArray, id);
+        this.itemNamesArray = this.addOrRemoveItemFromArray(this.itemNamesArray, name);
+        this.buildUI();
+    }
+    // public 
     containsId(id) {
-        if (typeof arrayToChange !== "undefined" && arrayToChange !== null) {
+        if (typeof this.itemIdsArray !== "undefined" && this.itemIdsArray !== null) {
             return this.itemIdsArray.includes(id);
         }
         return false;
@@ -21,12 +28,6 @@
     buildUI() {
         this.printCommaSeparatedStringToDocumentId();
         this.buildNamesList();
-    }
-
-    updateSelected(id, name) {
-        this.itemIdsArray = this.addOrRemoveItemFromArray(this.itemIdsArray, id);
-        this.itemNamesArray = this.addOrRemoveItemFromArray(this.itemNamesArray, name);
-        this.buildUI();
     }
 
     // Private 
@@ -62,8 +63,7 @@
             var li_id = this.getListItemId(this.itemIdsArray[i]);
             var name = this.itemNamesArray[i];
             var li_class = this.getListItemClass();
-            var self = this.self;
-            //list.append(`<li id="${li_id}" class="${li_class}">${name}<div class="badge badge-danger" onclick="${self}.updateSelected(${id}, '${name}')"><i class="far fa-window-close"></i></div></li>`)
+            var self = this.self;            
             list.append(this.createListItemFunction(id, name, li_id, li_class, self));
         }
     }

@@ -20,7 +20,7 @@ namespace Eyon.DataAccess.Data.Repository
             var objFromDb = _db.Ingredient.FirstOrDefault(s => s.Id == ingredient.Id);
 
             if ( objFromDb == null )
-                throw new WebUserSafeException("An error occurred.");
+                throw new SafeException("An error occurred.");
             objFromDb.Number = ingredient.Number;
             objFromDb.Text = ingredient.Text;
             dbSet.Update(objFromDb);

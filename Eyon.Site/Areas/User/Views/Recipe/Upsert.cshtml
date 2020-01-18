@@ -165,6 +165,7 @@
                             <th>Created</th>
                             <th>Last Modified</th>
                             <th>Recipes</th>
+                            <th></th>
                         </tr>                        
                     </thead>                    
                 </table>
@@ -181,13 +182,12 @@
     <script src="~/js/library/list_item_selector.js"></script>
     <script src="~/js/library/string_helper.js"></script>
     <script>
-        var name;
-        var cookbookItemIds = [];
-        var cookbookNames = [];
+        var name;        
         var cookbookInitialIdsArray = [];
         var cookbookInitialNamesArray = [];
         var elementId_itemIds = 'CookbookSelector_ItemIds';
         var dataTable;
+        var data;
         @{
             <text>
                 name = '@Model.CookbookSelector.Name';
@@ -207,7 +207,7 @@
             }
         }
 
-        cookbookSelector = new ListItemSelector(name, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, 'cookbookSelector', function (id, name, li_id, li_class) {
+        cookbookSelector = new ListItemSelector(name, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, function (id, name, li_id, li_class) {
             return `<li id="${li_id}" class="${li_class}">${name}<div class="badge badge-danger" onclick="updateSelected(${id}, '${textEscape(name)}')"><i class="far fa-window-close"></i></div></li>`
         });
         cookbookSelector.buildUI();
@@ -218,51 +218,75 @@
         }
 
         $(document).ready(function () {
+            getCookbookData();
+            createCookbookDataTable();            
+            $("#addCookbooks").click(function () {                
+                dataTable.rows().invalidate().draw()
+            })
+        });
+
+        function createCookbookDataTable() {            
             dataTable = $('#dtCookbooks').DataTable({
                 "paging": true,
                 "pagingType": "simple_numbers",
-                "ajax": {
-                    "url": "/user/cookbook/GetUserCookbooks",
-                    "type": "GET",
-                    "datatype": "json"
-                },
+                "data": data.data,
                 "columns": [
                         { "data": "name" },
                         { "data" : "privacy" },
                         { "data": "created" },
                         { "data": "modified" },
                         { "data": "recipeCount" },
-                        //{
-                        //    "data": "id",
-                        //    "render": function (data) {
-                        //        var checked = '';
-                                
-                        //        return `<input type="checkbox" onclick=selectCookbook(${data}) />`;
-                        //        //var cbId = 'cb_' + data.id;
-                        //        //return `<input type="checkbox" id="${cbId}' />`;
-                        //    }
-                        //},
+                        {
+                            "data": "id",
+                            "render": function (data) {
+                                if (cookbookSelector.containsId(data)) {
+                                    //return `<button type="button" class="btn btn-danger" id="cookbook_tr_btn_${data}" /><i class="far fa-window-close"></i></button>`
+                                    return removeButton(data);
+                                } else {
+                                    //return `<button type="button" class="btn btn-primary" id="cookbook_tr_btn_${data}" /><i class="fa fa-plus-square-o"></i></button>`
+                                    return addButton(data);
+                                }
+                            }
+                        },
                     ],
                  "language": {
                     "emptyTable": "No records found"
                 },
                 "width": "100%",
-                "createdRow": function (row, data, dataIndex) {
-                    $(row).addClass("text-center");
-
-                    if (cookbookSelector.containsId(data.id)) {
-                        $(row).toggleClass("selected");
-                    }
+                "createdRow": function (row, data, dataIndex) {                    
+                    $(row).addClass("text-center");                    
                 }
             });
 
-            $('#dtCookbooks tbody').on('click', 'tr', function () {
-                $(this).toggleClass('selected');
-                var data = dataTable.row(this).data();
+            $('#dtCookbooks tbody').on('click', 'button', function () {
+                var data = dataTable.row( $(this).parents('tr') ).data();
                 cookbookSelector.updateSelected(data["id"], data["name"]);
-                cookbookSelector.buildUI();
+                $(this).toggleClass("btn-primary");
+                $(this).toggleClass("btn-danger");
+                $(this).children("#cbIcon").toggleClass("far fa-window-close");
+                $(this).children("#cbIcon").toggleClass("fa fa-plus-square-o");
             });
-        });
+        }
+
+        function removeButton(id) {
+            return `<button type="button" class="btn btn-danger" id="cookbook_tr_btn_${id}" /><i id="cbIcon" class="far fa-window-close"></i></button>`
+        }
+        function addButton(id) {
+            return `<button type="button" class="btn btn-primary" id="cookbook_tr_btn_${id}" /><i id="cbIcon" class="fa fa-plus-square-o"></i></button>`
+        }
+        
+
+        function getCookbookData() {
+            $.ajax({
+                async: false,
+                url: "/user/cookbook/GetUserCookbooks",
+                type: "GET",
+                datatype: "json",
+                success: function (json) {
+                    data = json;
+                }
+            });
+        }
 
         // Community
         $(function () {

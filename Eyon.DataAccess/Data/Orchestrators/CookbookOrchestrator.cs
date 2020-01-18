@@ -50,7 +50,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         public void AddCookbook(string currentUserId, CookbookViewModel cookbookViewModel)
         {
             if (cookbookViewModel.Cookbook.Id != 0) //New cookbook
-                throw new WebUserSafeException("Cookbook already exists.");
+                throw new SafeException("Cookbook already exists.");
             _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
             _unitOfWork.Save();
             _unitOfWork.Cookbook.AddOwnerRelationship(currentUserId, cookbookViewModel.Cookbook, new ApplicationUserCookbook());
@@ -76,7 +76,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                         }
                         else
                         {
-                            throw new WebUserSafeException("Invalid category selected.");
+                            throw new SafeException("Invalid category selected.");
                         }
                     }
                 }
@@ -127,11 +127,11 @@ namespace Eyon.DataAccess.Data.Orchestrators
         {
             if ( _unitOfWork.Cookbook.IsOwner(currentUserId, cookbookViewModel.Cookbook.Id)  == false)
             {
-                throw new WebUserSafeException("An error occurred.");
+                throw new SafeException("An error occurred.");
             }
             var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == cookbookViewModel.Cookbook.Id, includeProperties: "CommunityCookbook,CookbookCategory");
             if (objFromDb == null || objFromDb.Id == 0)
-                throw new WebUserSafeException("Record not found in database");
+                throw new SafeException("Record not found in database");
 
             if (!string.IsNullOrEmpty(cookbookViewModel.CategoryIds))
             {
@@ -149,7 +149,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                         }
                         else
                         {
-                            throw new WebUserSafeException("Invalid category selected.");
+                            throw new SafeException("Invalid category selected.");
                         }
                     }
 

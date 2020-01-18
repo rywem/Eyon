@@ -32,7 +32,7 @@ namespace Eyon.DataAccess.Data.Repository
 
             if ( objFromDb == null )
                 if ( objFromDb == null )
-                    throw new WebUserSafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  userImage.Id {1}", currentUserId, userImage.Id)));
+                    throw new SafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  userImage.Id {1}", currentUserId, userImage.Id)));
 
             objFromDb.Description = userImage.Description;
             dbSet.Update(objFromDb);            

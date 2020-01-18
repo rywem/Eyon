@@ -84,7 +84,7 @@ namespace Eyon.Site.Areas.Seller.Controllers
                             cookbookOrchestrator.UpdateCookbookTransaction(claims.Value, cookbookViewModel);
                         }
                     }
-                    catch ( Models.Errors.WebUserSafeException usEx )
+                    catch ( Models.Errors.SafeException usEx )
                     {
                         ModelState.AddModelError("CategoryIds", usEx.Message);
                         return View(cookbookViewModel);
