@@ -75,7 +75,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [Authorize(Roles = Utilities.Statics.Roles.Admin)]
         public async Task<IActionResult> Upload(IFormCollection formCollection)        
         {
-            return RedirectToAction("Error", "Denied");
+            //return RedirectToAction("Error", "Denied");
             if ( ModelState.IsValid)
             {                                
                 var files = HttpContext.Request.Form.Files;
@@ -96,7 +96,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [Authorize(Roles = Utilities.Statics.Roles.Admin)]
         public IActionResult Upload()
         {
-            return RedirectToAction("Error", "Denied");
+            //return RedirectToAction("Error", "Denied");
             return View();
         }
 

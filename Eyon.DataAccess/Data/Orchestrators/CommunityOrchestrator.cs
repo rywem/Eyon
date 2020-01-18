@@ -51,15 +51,11 @@ namespace Eyon.DataAccess.Data.Orchestrators
             if ( stateFromDb != null )
             {
                 Community community = null;
-                var communities = await _unitOfWork.Community.GetAllAsync(x => x.CountryId == country.Id && x.Name == city, includeProperties: "CommunityState,CommunityPostalCodes,CommunityPostalCodes.PostalCode,CommunityGeocodes,CommunityGeocodes.Geocode");
+                var communities = await _unitOfWork.Community.GetAllAsync(x => x.CountryId == country.Id && x.Name == city, includeProperties: "CommunityState,CommunityState.State,CommunityPostalCode,CommunityPostalCode.PostalCode,CommunityGeocode,CommunityGeocode.Geocode");
 
                 if ( communities != null )
                 {
                     community = communities.ToList().Where(x => x.CommunityState.State.Code.Equals(state)).FirstOrDefault();
-                    if ( community != null )
-                    {
-                        string x = "";
-                    }
                 }
                 if ( community == null )
                 {
@@ -73,7 +69,6 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     await _unitOfWork.SaveAsync();
                 }
                 
-
                 // Create state relationship
                 if ( community.CommunityState == null )
                 {
