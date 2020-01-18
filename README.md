@@ -44,3 +44,10 @@ Project Goal:
 6. [jQuery Serializer JSON](https://cdnjs.com/libraries/jquery.serializeJSON) - jQuery Serializer
 7. Images: 
 	- [Unsplash](https://unsplash.com/) - Free images for use in projects. [License Details](https://unsplash.com/license)
+    
+    
+
+### Azure Notes
+1. (All Services) Budget alerts
+    - All services -> Cost Management + Billing > Cost Management: Azure subscription 1 - Budgets > Create budget
+
