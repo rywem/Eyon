@@ -126,7 +126,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 RecipeId = recipeViewModel.Recipe.Id
             };
             _unitOfWork.CommunityRecipe.Add(communityRecipe);
-            await _unitOfWork.SaveAsync();
+            //await _unitOfWork.SaveAsync();
             // Add instructions
             foreach ( var item in recipeViewModel.Instruction )
             {
@@ -138,10 +138,30 @@ namespace Eyon.DataAccess.Data.Orchestrators
             {
                 item.RecipeId = recipeViewModel.Recipe.Id;
                 _unitOfWork.Ingredient.Add(item);
-            }            
-            await _unitOfWork.SaveAsync();
+            }
 
-            await AddRecipeUserImageAsync(currentApplicationUserId, recipeViewModel);
+            if (!string.IsNullOrEmpty(recipeViewModel.CookbookSelector.ItemIds))
+            {
+                foreach (var id in recipeViewModel.CookbookSelector.ParseItemIds())
+                {
+                    // Only add the relation if the current user owns the cookbook id
+                    var cookbookFromDb = await _unitOfWork.Cookbook.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == id);
+
+                    if (cookbookFromDb != null)
+                    {
+                        CookbookRecipe cookbookRecipe = new CookbookRecipe();
+                        cookbookRecipe.CookbookId = cookbookFromDb.Id;
+                        cookbookRecipe.RecipeId = recipeViewModel.Recipe.Id;
+                        _unitOfWork.CookbookRecipe.Add(cookbookRecipe);
+                    }
+                    else
+                    {
+                        throw new SafeException("An error occurred.", new Exception("Attempted to insert CookbookRecipe relation, but did not own cookbook or cookbook did not exist."));
+                    }
+                }
+            }
+            await _unitOfWork.SaveAsync();
+            await AddRecipeUserImageAsync(currentApplicationUserId, recipeViewModel);            
         }
 
 
@@ -207,7 +227,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 item.RecipeId = recipeViewModel.Recipe.Id;
                 _unitOfWork.Ingredient.Add(item);
             }
-            _unitOfWork.Save();
+            _unitOfWork.Save();            
         }
 
         public void UpdateRecipe(RecipeViewModel recipeViewModel)
@@ -231,7 +251,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             {
                 throw new SafeException("An error occurred.");
             }
-            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,Instructions,Ingredients");            
+            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,Instructions,Ingredients,CookbookRecipe");            
             if ( recipeFromDb == null )
             {
                 return;
@@ -331,6 +351,44 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 await _unitOfWork.SaveAsync();
             }
             // Update cookbooks, add cookbooks/remove cookbooks
+            if (!string.IsNullOrEmpty(recipeViewModel.CookbookSelector.ItemIds))
+            {
+                var cookbookIdList = recipeViewModel.CookbookSelector.ParseItemIds();
+                foreach (var id in cookbookIdList)
+                {
+                    //if existing relation does not exist, add the relationship
+                    if (recipeFromDb.CookbookRecipe != null && !recipeFromDb.CookbookRecipe.Any(x => x.CookbookId == id))
+                    {
+                        // Only add the relation if the current user owns the target cookbook and the cookbook exists.
+                        var cookbookFromDb = await _unitOfWork.Cookbook.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == id);
+                        if (cookbookFromDb != null)
+                        {
+                            CookbookRecipe cookbookRecipe = new CookbookRecipe();
+                            cookbookRecipe.CookbookId = cookbookFromDb.Id;
+                            cookbookRecipe.RecipeId = recipeViewModel.Recipe.Id;
+                            _unitOfWork.CookbookRecipe.Add(cookbookRecipe);
+                        }
+                        else
+                        {
+                            throw new SafeException("An error occurred.", new Exception("Attempted to insert CookbookRecipe relation, but did not own cookbook or cookbook did not exist."));
+                        }
+                    }
+                }
+
+                if (recipeFromDb.CookbookRecipe != null) 
+                {
+                    // check to see if any cookbooks have been removed.
+                    foreach (var item in recipeFromDb.CookbookRecipe)
+                    {
+                        if ( !cookbookIdList.Any(x => x == item.CookbookId) )
+                        {
+
+                            _unitOfWork.CookbookRecipe.Remove(item);
+                        }
+                    }
+                }
+                await _unitOfWork.SaveAsync();
+            }
 
             // Update RecipeSiteImages,  add/remove
 
