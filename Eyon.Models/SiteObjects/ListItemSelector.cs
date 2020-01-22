@@ -49,10 +49,14 @@ namespace Eyon.Models.SiteObjects
             }
         }
 
-        public ListItemSelector( List<T> items, string pluralName, string name = null, bool setIds = true )
+        public ListItemSelector(string name, bool setIds = true) : this(new List<T>(), name, setIds)
         {
-            this.Items = items;
-            this.PluralName = pluralName;
+            
+        }
+
+        public ListItemSelector( List<T> items, string name = null, bool setIds = true )
+        {
+            this.Items = items;            
             if ( name != null )
                 this.Name = name;
             else
@@ -61,6 +65,13 @@ namespace Eyon.Models.SiteObjects
             if ( setIds == true )
                 SetItemIds();
         }
+
+        public void AddListItems (List<T> items)
+        {
+            Items.AddRange(items);
+            SetItemIds();
+        }
+
 
         private void SetSelectedItems()
         {

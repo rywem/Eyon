@@ -42,7 +42,7 @@ namespace Eyon.Models.ViewModels
             this.IsOwner = false;
             this.Recipe = new Recipe();
             this.Cookbooks = new List<Cookbook>();
-            this.CookbookSelector = new ListItemSelector<Cookbook>(Cookbooks, "Cookbooks", "Cookbook");
+            this.CookbookSelector = new ListItemSelector<Cookbook>(Cookbooks, "Cookbook");
             //this.SelectedCookbookItems = new List<SelectListItem>();
 
             //this.Community = new Community();

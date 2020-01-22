@@ -65,9 +65,8 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 {
                     //recipeViewModel.SetCookbookIds();
                     recipeViewModel.CookbookIds = string.Join(",", recipeViewModel.Recipe.CookbookRecipe.Select(x=> x.CookbookId.ToString()));
-                    recipeViewModel.CookbookSelector = new Models.SiteObjects.ListItemSelector<Cookbook>(recipeViewModel.Recipe.CookbookRecipe.Select(x => x.Cookbook).ToList(), "Cookbooks");
-                }                
-
+                    recipeViewModel.CookbookSelector.AddListItems(recipeViewModel.Recipe.CookbookRecipe.Select(x => x.Cookbook).ToList());
+                }                    
             }
             return recipeViewModel;
         }
@@ -126,7 +125,6 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 RecipeId = recipeViewModel.Recipe.Id
             };
             _unitOfWork.CommunityRecipe.Add(communityRecipe);
-            //await _unitOfWork.SaveAsync();
             // Add instructions
             foreach ( var item in recipeViewModel.Instruction )
             {
@@ -193,12 +191,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                             RecipeId = recipeFromDb.Id,
                             UserImageId = item.Id
                         });
-                        _unitOfWork.UserImage.AddOwnerRelationship(currentApplicationUserId, item, new ApplicationUserUserImage());
-                        //_unitOfWork.ApplicationUserUserImage.Add(new ApplicationUserUserImage()
-                        //{
-                        //    ApplicationUserId = currentApplicationUserId,
-                        //    ObjectId = item.Id
-                        //});
+                        _unitOfWork.UserImage.AddOwnerRelationship(currentApplicationUserId, item, new ApplicationUserUserImage());                        
                     }
                     await _unitOfWork.SaveAsync();
                 }
@@ -251,7 +244,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             {
                 throw new SafeException("An error occurred.");
             }
-            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,Instructions,Ingredients,CookbookRecipe");            
+            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,Instruction,Ingredient,CookbookRecipe");            
             if ( recipeFromDb == null )
             {
                 return;
@@ -351,9 +344,10 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 await _unitOfWork.SaveAsync();
             }
             // Update cookbooks, add cookbooks/remove cookbooks
+            List<long> cookbookIdList = new List<long>();
             if (!string.IsNullOrEmpty(recipeViewModel.CookbookSelector.ItemIds))
             {
-                var cookbookIdList = recipeViewModel.CookbookSelector.ParseItemIds();
+                cookbookIdList = recipeViewModel.CookbookSelector.ParseItemIds();
                 foreach (var id in cookbookIdList)
                 {
                     //if existing relation does not exist, add the relationship
@@ -374,21 +368,19 @@ namespace Eyon.DataAccess.Data.Orchestrators
                         }
                     }
                 }
-
-                if (recipeFromDb.CookbookRecipe != null) 
+            }
+            if (recipeFromDb.CookbookRecipe != null)
+            {
+                // check to see if any cookbooks have been removed.
+                foreach (var item in recipeFromDb.CookbookRecipe)
                 {
-                    // check to see if any cookbooks have been removed.
-                    foreach (var item in recipeFromDb.CookbookRecipe)
+                    if (!cookbookIdList.Any(x => x == item.CookbookId))
                     {
-                        if ( !cookbookIdList.Any(x => x == item.CookbookId) )
-                        {
-
-                            _unitOfWork.CookbookRecipe.Remove(item);
-                        }
+                        _unitOfWork.CookbookRecipe.Remove(item);
                     }
                 }
-                await _unitOfWork.SaveAsync();
             }
+            await _unitOfWork.SaveAsync();
 
             // Update RecipeSiteImages,  add/remove
 

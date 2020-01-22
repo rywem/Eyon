@@ -1,4 +1,5 @@
 ﻿@model Eyon.Models.ViewModels.RecipeViewModel
+@using System.Web;
 @{
     var title = "Create Recipe";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -122,11 +123,10 @@
                 <div class="col-8">                    
                     @Html.HiddenFor(x => x.CookbookSelector.ItemIds)
                     <ol id="@Model.CookbookSelector.GetListId()">                        
-                        @foreach ( var item in Model.CookbookSelector.SelectedItems )
+                        @*@foreach ( var item in Model.CookbookSelector.SelectedItems )
                         {
-                            
                             <li id="@Model.CookbookSelector.GetListItemId(item.Value)" class="@Model.CookbookSelector.GetListItemClass()"><span>@item.Text </span><i class="far fa-window-close"></i></li>
-                        }
+                        }*@
                     </ol>
                 </div>
             </div>
@@ -134,6 +134,7 @@
                 <div class="col-9 offset-3">
                     @if ( Model.Recipe.Id != 0 )
                     {
+                        
                         // Edit button and back to list button
                         <partial name="_EditAndBackToListButton" model="Model.Recipe.Id" />
                     }
@@ -191,7 +192,7 @@
         var userCookbookData;
         @{
             <text>
-                name = '@Model.CookbookSelector.Name';
+                name = `@Model.CookbookSelector.Name`;
             </text>
             foreach ( var item in Model.CookbookSelector.SelectedItems )
             {
@@ -201,15 +202,15 @@
                     <text>
                         cookbookInitialIdsArray.push(@id);
                     </text>
-                    <text>
-                        cookbookInitialNamesArray.push(@item.Text);
+                    <text>                        
+                        cookbookInitialNamesArray.push('@Html.Raw(HttpUtility.JavaScriptStringEncode(@item.Text))');
                     </text>
                 }
             }
         }
 
         cookbookSelector = new ListItemSelector(name, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, function (id, name, btnId, li_class) {            
-            return `<li><span>${name}</span><div class="badge badge-danger" id="${btnId}")"><i class="far fa-window-close"></i></div></li>`
+            return `<li><span>${name}</span><div class="badge badge-danger" id="${btnId}" ><i class="far fa-window-close"></i></div></li>`
         });
         cookbookSelector.buildUI();
 
