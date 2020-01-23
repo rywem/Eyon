@@ -75,29 +75,29 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [Authorize(Roles = Utilities.Statics.Roles.Admin)]
         public async Task<IActionResult> Upload(IFormCollection formCollection)        
         {
-            //return RedirectToAction("Error", "Denied");
-            if ( ModelState.IsValid)
-            {                                
-                var files = HttpContext.Request.Form.Files;
-                if ( files[0].Length > 0 && files[0].Length < 2097152 )
-                {                    
-                    using ( var stream = new MemoryStream())
-                    {                                                
-                        await files[0].CopyToAsync(stream);
-                        stream.Seek(0, SeekOrigin.Begin);                        
-                        var records = Eyon.DataAccess.SeedData.Location.ZipCodeFile.LoadZipcodesFromStream(stream, true);
-                        await _communityOrchestrator.UploadCommunities(records, 192);
-                    }
-                }
-            }
-            return View();
+            return RedirectToAction("Error", "Denied");
+            //if ( ModelState.IsValid)
+            //{                                
+            //    var files = HttpContext.Request.Form.Files;
+            //    if ( files[0].Length > 0 && files[0].Length < 2097152 )
+            //    {                    
+            //        using ( var stream = new MemoryStream())
+            //        {                                                
+            //            await files[0].CopyToAsync(stream);
+            //            stream.Seek(0, SeekOrigin.Begin);                        
+            //            var records = Eyon.DataAccess.SeedData.Location.ZipCodeFile.LoadZipcodesFromStream(stream, true);
+            //            await _communityOrchestrator.UploadCommunities(records, 192);
+            //        }
+            //    }
+            //}
+            //return View();
         }
 
         [Authorize(Roles = Utilities.Statics.Roles.Admin)]
         public IActionResult Upload()
         {
-            //return RedirectToAction("Error", "Denied");
-            return View();
+            return RedirectToAction("Error", "Denied");
+            //return View();
         }
 
 
