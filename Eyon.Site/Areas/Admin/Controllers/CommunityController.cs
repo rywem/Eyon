@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Security.AccessControl;
-
+using Eyon.Site.WebUtilities;
+using Eyon.Models.SiteObjects;
 
 namespace Eyon.Site.Areas.Admin.Controllers
 {
@@ -20,11 +21,15 @@ namespace Eyon.Site.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private CommunityOrchestrator _communityOrchestrator;
+
+        private readonly long _fileSizeLimit = 2097152;
+        private readonly string[] _permittedExtensions = { ".csv" };
         
-        public CommunityController( IUnitOfWork unitOfWork )
+        public CommunityController( IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
             this._communityOrchestrator = new CommunityOrchestrator(_unitOfWork);
+            //_fileSizeLimit = config.GetValue<long>("FileSizeLimit");
         }
 
         public IActionResult Index()
@@ -73,9 +78,27 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Utilities.Statics.Roles.Admin)]
-        public async Task<IActionResult> Upload(IFormCollection formCollection)        
+        public async Task<IActionResult> Upload(FileUpload fileUpload)        
         {
-            return RedirectToAction("Error", "Denied");
+            //return RedirectToAction("Error", "Denied");
+
+            foreach (var formFile in fileUpload.FormFiles)
+            {
+                var formFileContent = await FileHelpers.ProcessFormFile<FileUpload>(formFile, ModelState, _permittedExtensions, _fileSizeLimit);
+
+                if (!ModelState.IsValid)
+                {
+                    return View("Upload");
+                }
+                using (var stream = new MemoryStream(formFileContent))
+                {
+                    //await formFileContent.CopyToAsync(stream);
+                    //stream.Seek(0, SeekOrigin.Begin);
+                    var records = Eyon.DataAccess.SeedData.Location.ZipCodeFile.LoadZipcodesFromStream(stream, true);
+                    await _communityOrchestrator.UploadCommunities(records, 192);
+                }
+            }
+            return View("Upload");
             //if ( ModelState.IsValid)
             //{                                
             //    var files = HttpContext.Request.Form.Files;
@@ -96,10 +119,32 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [Authorize(Roles = Utilities.Statics.Roles.Admin)]
         public IActionResult Upload()
         {
-            return RedirectToAction("Error", "Denied");
-            //return View();
+            //return RedirectToAction("Error", "Denied");
+            return View();
         }
 
+        public async Task<IActionResult> OnPostUploadAsync(FileUpload fileUpload)
+        {
+            //var files = HttpContext.Request.Form.Files;
+
+            foreach (var formFile in fileUpload.FormFiles)
+            {
+                var formFileContent = await FileHelpers.ProcessFormFile<FileUpload>(formFile, ModelState, _permittedExtensions, _fileSizeLimit);
+
+                if (!ModelState.IsValid)
+                {
+                    return View("Upload");
+                }
+                using (var stream = new MemoryStream(formFileContent))
+                {
+                    //await formFileContent.CopyToAsync(stream);
+                    //stream.Seek(0, SeekOrigin.Begin);
+                    var records = Eyon.DataAccess.SeedData.Location.ZipCodeFile.LoadZipcodesFromStream(stream, true);
+                    await _communityOrchestrator.UploadCommunities(records, 192);
+                }
+            }
+            return View("Upload");
+        }
 
         public IActionResult Submit()
         {

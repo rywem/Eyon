@@ -123,10 +123,7 @@
                 <div class="col-8">                    
                     @Html.HiddenFor(x => x.CookbookSelector.ItemIds)
                     <ol id="@Model.CookbookSelector.GetListId()">                        
-                        @*@foreach ( var item in Model.CookbookSelector.SelectedItems )
-                        {
-                            <li id="@Model.CookbookSelector.GetListItemId(item.Value)" class="@Model.CookbookSelector.GetListItemClass()"><span>@item.Text </span><i class="far fa-window-close"></i></li>
-                        }*@
+
                     </ol>
                 </div>
             </div>

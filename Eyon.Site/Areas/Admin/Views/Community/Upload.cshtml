@@ -1,4 +1,5 @@
-﻿@using Eyon.DataAccess.SeedData.Location;
+﻿@model Eyon.Models.SiteObjects.FileUpload;
+@using Eyon.DataAccess.SeedData.Location;
 @{
     var title = "Upload Communities";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -21,24 +22,17 @@
         <div class="col-9">
             <div class="form-group row">
                 <div class="col-4">
-                    @Html.Label("FileType", "File Type")
+                    <label asp-for="FormFiles"></label>
                 </div>
                 <div class="col-8">
-                    @Html.DropDownList("FileType", selectItems, "Select File Type")
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <div class="col-4">
-                    @Html.Label("SelectFile", "Select File")
-                </div>
-                <div class="col-8">
-                    <input type="file" name="files" id="uploadBox" multiple class="form-control" accept="text/csv" />
+                    @*<input type="file" name="files" id="uploadBox" multiple class="form-control" accept="text/csv" />*@
+                    <input asp-for="FormFiles" type="file" multiple class="form-control" accept="text/csv"  />
+                    <span asp-validation-for="FormFiles"></span>
                 </div>
             </div>
             <div class="form-group row">
                 <div class="offset-4 col-8">
-                    <button type="submit" class="btn btn-primary form-control">Submit</button>
+                    <input asp-page-handler="Upload" type="submit" class="btn btn-primary form-control" value="Submit" />
                 </div>
             </div>
         </div>

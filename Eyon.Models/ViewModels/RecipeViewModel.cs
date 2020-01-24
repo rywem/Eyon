@@ -30,7 +30,6 @@ namespace Eyon.Models.ViewModels
         public Community Community { get; set; }
         public List<UserImage> UserImage { get; set; }
         public List<Cookbook> Cookbooks { get; set; }
-        //public List<SelectListItem> SelectedCookbookItems { get; set; }
         public ListItemSelector<Cookbook> CookbookSelector { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
