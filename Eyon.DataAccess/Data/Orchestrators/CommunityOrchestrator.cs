@@ -192,7 +192,6 @@ namespace Eyon.DataAccess.Data.Orchestrators
             var countryFromDb = await _unitOfWork.Country.GetFirstOrDefaultAsync(x => x.Id == countryId);
 
             if ( countryFromDb != null ) {
-                int counter = 0;
                 foreach ( var zip in zipcodes )
                 {
                     await AddZipcodeTransaction(zip, countryFromDb);                    
