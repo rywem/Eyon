@@ -84,36 +84,19 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
             foreach (var formFile in fileUpload.FormFiles)
             {
-                var formFileContent = await FileHelpers.ProcessFormFile<FileUpload>(formFile, ModelState, _permittedExtensions, _fileSizeLimit);
+                var formFileContent = await FileHelpers.ProcessFormFileAsync<FileUpload>(formFile, ModelState, _permittedExtensions, _fileSizeLimit);
 
                 if (!ModelState.IsValid)
                 {
                     return View("Upload");
                 }
                 using (var stream = new MemoryStream(formFileContent))
-                {
-                    //await formFileContent.CopyToAsync(stream);
-                    //stream.Seek(0, SeekOrigin.Begin);
+                {                    
                     var records = Eyon.DataAccess.SeedData.Location.ZipCodeFile.LoadZipcodesFromStream(stream, true);
                     await _communityOrchestrator.UploadCommunities(records, 192);
                 }
             }
             return View("Upload");
-            //if ( ModelState.IsValid)
-            //{                                
-            //    var files = HttpContext.Request.Form.Files;
-            //    if ( files[0].Length > 0 && files[0].Length < 2097152 )
-            //    {                    
-            //        using ( var stream = new MemoryStream())
-            //        {                                                
-            //            await files[0].CopyToAsync(stream);
-            //            stream.Seek(0, SeekOrigin.Begin);                        
-            //            var records = Eyon.DataAccess.SeedData.Location.ZipCodeFile.LoadZipcodesFromStream(stream, true);
-            //            await _communityOrchestrator.UploadCommunities(records, 192);
-            //        }
-            //    }
-            //}
-            //return View();
         }
 
         [Authorize(Roles = Utilities.Statics.Roles.Admin)]
@@ -129,7 +112,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
             foreach (var formFile in fileUpload.FormFiles)
             {
-                var formFileContent = await FileHelpers.ProcessFormFile<FileUpload>(formFile, ModelState, _permittedExtensions, _fileSizeLimit);
+                var formFileContent = await FileHelpers.ProcessFormFileAsync<FileUpload>(formFile, ModelState, _permittedExtensions, _fileSizeLimit);
 
                 if (!ModelState.IsValid)
                 {

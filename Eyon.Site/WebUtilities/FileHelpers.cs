@@ -47,7 +47,7 @@ namespace Eyon.Site.WebUtilities
         // systems. For more information, see the topic that accompanies this sample
         // app.
 
-        public static async Task<byte[]> ProcessFormFile<T>(IFormFile formFile,
+        public static async Task<byte[]> ProcessFormFileAsync<T>(IFormFile formFile,
             ModelStateDictionary modelState, string[] permittedExtensions,
             long sizeLimit)
         {
