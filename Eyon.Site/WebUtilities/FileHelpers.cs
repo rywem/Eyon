@@ -47,9 +47,7 @@ namespace Eyon.Site.WebUtilities
         // systems. For more information, see the topic that accompanies this sample
         // app.
 
-        public static async Task<byte[]> ProcessFormFileAsync<T>(IFormFile formFile,
-            ModelStateDictionary modelState, string[] permittedExtensions,
-            long sizeLimit)
+        public static async Task<byte[]> ProcessFormFileAsync<T>(IFormFile formFile, ModelStateDictionary modelState, string[] permittedExtensions, long sizeLimit)
         {
             var fieldDisplayName = string.Empty;
 
@@ -57,10 +55,7 @@ namespace Eyon.Site.WebUtilities
             // property associated with this IFormFile. If a display
             // name isn't found, error messages simply won't show
             // a display name.
-            MemberInfo property =
-                typeof(T).GetProperty(
-                    formFile.Name.Substring(formFile.Name.IndexOf(".",
-                    StringComparison.Ordinal) + 1));
+            MemberInfo property = typeof(T).GetProperty(formFile.Name.Substring(formFile.Name.IndexOf(".", StringComparison.Ordinal) + 1));
 
             if (property != null)
             {
