@@ -22,6 +22,7 @@ namespace Eyon.Models
         public Country Country { get; set; }
 
         public ICollection<CommunityState> CommunityState { get; set; }
+        public ICollection<FeedState> FeedState { get; set; }
         [NotMapped]
         public TopicType Topic { get => TopicType.State; }
     }

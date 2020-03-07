@@ -21,5 +21,15 @@ namespace Eyon.Models
         public DateTime CreationDateTime { get; set; }
         public DateTime ModifiedDateTime { get; set; }
         public Privacy Privacy { get; set; }
+
+
+        public ICollection<FeedCommunity> FeedCommunity { get; set; }
+        public ICollection<FeedState> FeedState { get; set; }
+        public ICollection<FeedOrganization> FeedOrganization { get; set; }
+        public ICollection<FeedCategory> FeedCategory { get; set; }
+        public ICollection<FeedCountry> FeedCountry { get; set; }
+        public ICollection<FeedRecipe> FeedRecipe { get; set; }
+        public ICollection<FeedUser> FeedUser { get; set; }
+
     }
 }

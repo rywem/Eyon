@@ -25,6 +25,7 @@ namespace Eyon.Models
 
         public ICollection<CookbookCategories> CookbookCategory { get; set; }
         public ICollection<RecipeCategory> RecipeCategory { get; set; }
+        public ICollection<FeedCategory> FeedCategory { get; set; }
         [NotMapped]
         public TopicType Topic { get => TopicType.Category; }
     }

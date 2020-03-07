@@ -20,6 +20,14 @@ namespace Eyon.Models
         public ICollection<ApplicationUserCookbook> ApplicationUserCookbook { get; set; }
         public ICollection<ApplicationUserUserImage> ApplicationUserUserImage { get; set; }
         public ICollection<ApplicationUserOrganization> ApplicationUserOrganization { get; set; }
+        /// <summary>
+        /// Security access
+        /// </summary>
+        public ICollection<ApplicationUserFeed> ApplicationUserFeed { get; set; }
+        /// <summary>
+        /// For the feed
+        /// </summary>
+        public ICollection<FeedUser> FeedUser { get; set; }
         public string Name 
         { 
             get => string.IsNullOrWhiteSpace(LastName) ? FirstName : string.Format("{0} {1}", FirstName, LastName); 

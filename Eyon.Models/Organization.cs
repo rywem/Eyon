@@ -23,6 +23,7 @@ namespace Eyon.Models
         public ICollection<OrganizationCommunity> OrganizationCommunity { get; set; }
         public ICollection<OrganizationCookbook> OrganizationCookbook { get; set; }
         public ICollection<ApplicationUserOrganization> ApplicationUserOwner { get; set; }
+        public ICollection<FeedOrganization> FeedOrganization { get; set; }
         [NotMapped]
         public TopicType Topic { get => TopicType.Organization; }
     }

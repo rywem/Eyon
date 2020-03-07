@@ -44,6 +44,7 @@ namespace Eyon.Models
         public ICollection<RecipeCategory> RecipeCategory { get; set; }
         public ICollection<CookbookRecipe> CookbookRecipe { get; set; }        
         public ICollection<ApplicationUserRecipe> ApplicationUserOwner { get; set; }
+        public ICollection<FeedRecipe> FeedRecipe { get; set; }
 
         [NotMapped]
         public TopicType Topic { get => TopicType.Recipe; }
