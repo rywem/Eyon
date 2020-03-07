@@ -7,6 +7,6 @@ namespace Eyon.Models.Interfaces
 {
     public interface ITopic
     {
-        Topic Topic { get; }
+        TopicType Topic { get; }
     }
 }

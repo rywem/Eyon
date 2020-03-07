@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Eyon.Models.Enums
 {
-    public enum Topic
+    public enum TopicType
     {
         Community = 0,
         User = 1,        

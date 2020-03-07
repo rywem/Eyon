@@ -1,4 +1,6 @@
-﻿using Eyon.Models.Relationship;
+﻿using Eyon.Models.Enums;
+using Eyon.Models.Interfaces;
+using Eyon.Models.Relationship;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,6 +23,6 @@ namespace Eyon.Models
 
         public ICollection<CommunityState> CommunityState { get; set; }
         [NotMapped]
-        public Topic Topic { get => Topic.State; }
+        public TopicType Topic { get => TopicType.State; }
     }
 }

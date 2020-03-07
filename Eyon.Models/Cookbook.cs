@@ -39,7 +39,7 @@ namespace Eyon.Models
         public ICollection<ApplicationUserCookbook> ApplicationUserOwner { get; set; }
 
         [NotMapped]
-        public Topic Topic { get => Topic.Cookbook; }
+        public TopicType Topic { get => TopicType.Cookbook; }
         //public ICollection<CookbookApplicationUsers> CookbookApplicationUsers { get; set; }
         //public ICollection<CookbookSiteImages> CookbookSiteImages { get; set; }
 

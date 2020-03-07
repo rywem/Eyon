@@ -46,7 +46,7 @@ namespace Eyon.Models
         public ICollection<ApplicationUserRecipe> ApplicationUserOwner { get; set; }
 
         [NotMapped]
-        public Topic Topic { get => Topic.Recipe; }
+        public TopicType Topic { get => TopicType.Recipe; }
         // TODO: Add EAV table with:  Calories, Yield, ReadyIn
 
 
