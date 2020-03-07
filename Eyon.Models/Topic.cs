@@ -5,6 +5,7 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Eyon.Models.Enums;
+using Eyon.Models.Relationship;
 
 namespace Eyon.Models
 {
@@ -19,5 +20,6 @@ namespace Eyon.Models
         public long ObjectId { get; set; }
         [Required]
         public TopicType TopicType { get; set; }
+        public ICollection<FeedTopic> FeedTopic { get; set; }
     }
 }
