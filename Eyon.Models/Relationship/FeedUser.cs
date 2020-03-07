@@ -16,7 +16,7 @@ namespace Eyon.Models.Relationship
         public long FeedId { get; set; }
         [ForeignKey("FeedId")]
         public Feed Feed { get; set; }
-        public long ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
         public ApplicationUser ApplicationUser { get; set; }
     }

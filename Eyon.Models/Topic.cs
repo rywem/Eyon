@@ -12,7 +12,7 @@ namespace Eyon.Models
     {
         [Key]
         public long Id { get; set; }
-        [Key]
+        [Required]
         public string Name { get; set; }
 
         [Required]
