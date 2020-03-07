@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Eyon.Models.Interfaces
 {
-    public interface ITopic
+    public interface ITopicType
     {
         TopicType Topic { get; }
     }

@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eyon.Models
 {
-    public class Cookbook : IHasOwners<ApplicationUserCookbook>, ICreated, IModified, IPrivacy, INamed, ITopic
+    public class Cookbook : IHasOwners<ApplicationUserCookbook>, ICreated, IModified, IPrivacy, INamed, ITopicType
     {
         [Key]
         public long Id { get; set; }
