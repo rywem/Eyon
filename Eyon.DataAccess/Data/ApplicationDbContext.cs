@@ -72,7 +72,7 @@ namespace Eyon.DataAccess.Data
                 .IsUnique();
 
             modelBuilder.Entity<Topic>()
-                .HasIndex(p => new { p.ObjectId, p.TopicType })
+                .HasIndex(p => new { p.ObjectId, p.TopicType })                
                 .IsUnique();
 
             modelBuilder.Entity<Topic>()
