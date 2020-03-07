@@ -258,6 +258,17 @@ namespace Eyon.DataAccess.Data
                 .WithMany(c => c.FeedState)
                 .HasForeignKey(c => c.StateId);
 
+            modelBuilder.Entity<FeedTopic>()
+                .HasKey(c => new { c.FeedId, c.TopicId });
+            modelBuilder.Entity<FeedTopic>()
+                .HasOne(c => c.Feed)
+                .WithMany(c => c.FeedTopic)
+                .HasForeignKey(c => c.FeedId);
+            modelBuilder.Entity<FeedTopic>()
+                .HasOne(c => c.Topic)
+                .WithMany(c => c.FeedTopic)
+                .HasForeignKey(c => c.TopicId);
+
             modelBuilder.Entity<FeedOrganization>()
                 .HasKey(c => new { c.FeedId, c.OrganizationId });
             modelBuilder.Entity<FeedOrganization>()
@@ -269,7 +280,6 @@ namespace Eyon.DataAccess.Data
                 .WithMany(c => c.FeedOrganization)
                 .HasForeignKey(c => c.OrganizationId);
 
-
             modelBuilder.Entity<FeedCategory>()
                 .HasKey(c => new { c.FeedId, c.CategoryId });
             modelBuilder.Entity<FeedCategory>()
@@ -280,8 +290,6 @@ namespace Eyon.DataAccess.Data
                 .HasOne(c => c.Category)
                 .WithMany(c => c.FeedCategory)
                 .HasForeignKey(c => c.CategoryId);
-
-
 
             modelBuilder.Entity<FeedCountry>()
                 .HasKey(c => new { c.FeedId, c.CountryId });
