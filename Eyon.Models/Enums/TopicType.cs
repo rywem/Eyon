@@ -13,5 +13,6 @@ namespace Eyon.Models.Enums
         Recipe = 4,
         Organization = 5,
         State = 6,
+        Country = 7
     }
 }

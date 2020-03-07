@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Eyon.Models.Interfaces
 {
-    public interface INamed
+    public interface IRelationship
     {
-        string Name { get; }
+        long ObjectId { get; set; }
     }
 }

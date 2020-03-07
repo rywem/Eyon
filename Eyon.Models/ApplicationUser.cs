@@ -1,11 +1,12 @@
-﻿using Eyon.Models.Relationship;
+﻿using Eyon.Models.Interfaces;
+using Eyon.Models.Relationship;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Eyon.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser, INamed
     {
         [Required]
         public string FirstName { get; set; }
@@ -19,5 +20,9 @@ namespace Eyon.Models
         public ICollection<ApplicationUserCookbook> ApplicationUserCookbook { get; set; }
         public ICollection<ApplicationUserUserImage> ApplicationUserUserImage { get; set; }
         public ICollection<ApplicationUserOrganization> ApplicationUserOrganization { get; set; }
+        public string Name 
+        { 
+            get => string.IsNullOrWhiteSpace(LastName) ? FirstName : string.Format("{0} {1}", FirstName, LastName); 
+        }
     }
 }
