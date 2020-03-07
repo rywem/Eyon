@@ -6,6 +6,13 @@ using System.Text;
 
 namespace Eyon.Models.Relationship
 {
+    /// <summary>
+    /// ApplicationUserFeed class controls security. 
+    /// </summary>
+    /// <remarks>
+    /// Do not confuse this class with FeedUsers, which 
+    /// controls populating the feed with user activity.
+    /// </remarks>
     public class ApplicationUserFeed : IOwnerApplicationUserRelationship
     {
         public string ApplicationUserId { get; set; }

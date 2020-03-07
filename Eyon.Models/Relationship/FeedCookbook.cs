@@ -5,13 +5,13 @@ using System.Text;
 
 namespace Eyon.Models.Relationship
 {
-    public class FeedCategory
+    public class FeedCookbook
     {
         public long FeedId { get; set; }
         [ForeignKey("FeedId")]
         public Feed Feed { get; set; }
-        public long CategoryId { get; set; }
-        [ForeignKey("CategoryId")]
-        public Category Category { get; set; }
+        public long CookbookId { get; set; }
+        [ForeignKey("CookbookId")]
+        public Cookbook Cookbook { get; set; }
     }
 }
