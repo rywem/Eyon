@@ -234,8 +234,102 @@ namespace Eyon.DataAccess.Data
                 .WithMany(c => c.CookbookRecipe)
                 .HasForeignKey(c => c.RecipeId);
 
+            #region feed relationship tables
 
-           #region ownership tables 
+            modelBuilder.Entity<FeedCommunity>()
+                .HasKey(c => new { c.FeedId, c.CommunityId });
+            modelBuilder.Entity<FeedCommunity>()
+                .HasOne(c => c.Feed)
+                .WithMany(c => c.FeedCommunity)
+                .HasForeignKey(c => c.FeedId);
+            modelBuilder.Entity<FeedCommunity>()
+                .HasOne(c => c.Community)
+                .WithMany(c => c.FeedCommunity)
+                .HasForeignKey(c => c.CommunityId);
+
+            modelBuilder.Entity<FeedState>()
+                .HasKey(c => new { c.FeedId, c.StateId });
+            modelBuilder.Entity<FeedState>()
+                .HasOne(c => c.Feed)
+                .WithMany(c => c.FeedState)
+                .HasForeignKey(c => c.FeedId);
+            modelBuilder.Entity<FeedState>()
+                .HasOne(c => c.State)
+                .WithMany(c => c.FeedState)
+                .HasForeignKey(c => c.StateId);
+
+            modelBuilder.Entity<FeedOrganization>()
+                .HasKey(c => new { c.FeedId, c.OrganizationId });
+            modelBuilder.Entity<FeedOrganization>()
+                .HasOne(c => c.Feed)
+                .WithMany(c => c.FeedOrganization)
+                .HasForeignKey(c => c.FeedId);
+            modelBuilder.Entity<FeedOrganization>()
+                .HasOne(c => c.Organization)
+                .WithMany(c => c.FeedOrganization)
+                .HasForeignKey(c => c.OrganizationId);
+
+
+            modelBuilder.Entity<FeedCategory>()
+                .HasKey(c => new { c.FeedId, c.CategoryId });
+            modelBuilder.Entity<FeedCategory>()
+                .HasOne(c => c.Feed)
+                .WithMany(c => c.FeedCategory)
+                .HasForeignKey(c => c.FeedId);
+            modelBuilder.Entity<FeedCategory>()
+                .HasOne(c => c.Category)
+                .WithMany(c => c.FeedCategory)
+                .HasForeignKey(c => c.CategoryId);
+
+
+
+            modelBuilder.Entity<FeedCountry>()
+                .HasKey(c => new { c.FeedId, c.CountryId });
+            modelBuilder.Entity<FeedCountry>()
+                .HasOne(c => c.Feed)
+                .WithMany(c => c.FeedCountry)
+                .HasForeignKey(c => c.FeedId);
+            modelBuilder.Entity<FeedCountry>()
+                .HasOne(c => c.Country)
+                .WithMany(c => c.FeedCountry)
+                .HasForeignKey(c => c.CountryId);
+
+            modelBuilder.Entity<FeedCookbook>()
+                .HasKey(c => new { c.FeedId, c.CookbookId });
+            modelBuilder.Entity<FeedCookbook>()
+                .HasOne(c => c.Feed)
+                .WithMany(c => c.FeedCookbook)
+                .HasForeignKey(c => c.FeedId);
+            modelBuilder.Entity<FeedCookbook>()
+                .HasOne(c => c.Cookbook)
+                .WithMany(c => c.FeedCookbook)
+                .HasForeignKey(c => c.CookbookId);
+
+            modelBuilder.Entity<FeedRecipe>()
+                .HasKey(c => new { c.FeedId, c.RecipeId });
+            modelBuilder.Entity<FeedRecipe>()
+                .HasOne(c => c.Feed)
+                .WithMany(c => c.FeedRecipe)
+                .HasForeignKey(c => c.FeedId);
+            modelBuilder.Entity<FeedRecipe>()
+                .HasOne(c => c.Recipe)
+                .WithMany(c => c.FeedRecipe)
+                .HasForeignKey(c => c.RecipeId);
+
+            modelBuilder.Entity<FeedUser>()
+                .HasKey(c => new { c.FeedId, c.ApplicationUserId });
+            modelBuilder.Entity<FeedUser>()
+                .HasOne(c => c.Feed)
+                .WithMany(c => c.FeedUser)
+                .HasForeignKey(c => c.FeedId);
+            modelBuilder.Entity<FeedUser>()
+                .HasOne(c => c.ApplicationUser)
+                .WithMany(c => c.FeedUser)
+                .HasForeignKey(c => c.ApplicationUserId);
+
+            #endregion
+
+            #region ownership tables 
             modelBuilder.Entity<ApplicationUserRecipe>()
                 .HasKey(c => new { c.ObjectId, c.ApplicationUserId});
             modelBuilder.Entity<ApplicationUserRecipe>()
@@ -280,6 +374,18 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(c => c.ApplicationUserId);
             modelBuilder.Entity<ApplicationUserUserImage>()
                 .HasOne(c => c.UserImage)
+                .WithMany(c => c.ApplicationUserOwner)
+                .HasForeignKey(c => c.ObjectId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ApplicationUserFeed>()
+                .HasKey(c => new { c.ObjectId, c.ApplicationUserId });
+            modelBuilder.Entity<ApplicationUserFeed>()
+                .HasOne(c => c.ApplicationUser)
+                .WithMany(c => c.ApplicationUserFeed)
+                .HasForeignKey(c => c.ApplicationUserId);
+            modelBuilder.Entity<ApplicationUserFeed>()
+                .HasOne(c => c.Feed)
                 .WithMany(c => c.ApplicationUserOwner)
                 .HasForeignKey(c => c.ObjectId)
                 .OnDelete(DeleteBehavior.Restrict);
