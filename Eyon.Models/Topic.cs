@@ -8,7 +8,7 @@ using Eyon.Models.Enums;
 
 namespace Eyon.Models
 {
-    public class Topic : IRecord, IRelationship, INamed
+    public class Topic : IRecord, IDynamicsForeignRelationship, INamed
     {
         [Key]
         public long Id { get; set; }

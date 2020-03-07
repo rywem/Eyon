@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Eyon.Models.Interfaces
 {
-    public interface IRelationship
+    public interface IDynamicsForeignRelationship
     {
         long ObjectId { get; set; }
     }
