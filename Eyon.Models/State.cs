@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eyon.Models
 {
-    public class State
+    public class State : ITopic
     {
         [Key]
         public long Id { get; set; }
@@ -20,5 +20,7 @@ namespace Eyon.Models
         public Country Country { get; set; }
 
         public ICollection<CommunityState> CommunityState { get; set; }
+        [NotMapped]
+        public Topic Topic { get => Topic.State; }
     }
 }

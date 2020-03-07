@@ -1,4 +1,5 @@
-﻿using Eyon.Models.Interfaces;
+﻿using Eyon.Models.Enums;
+using Eyon.Models.Interfaces;
 using Eyon.Models.Relationship;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eyon.Models
 {
-    public class Category : IRecord, INamed
+    public class Category : IRecord, INamed, ITopic
     {
         [Key]
         public long Id { get; set; }
@@ -24,6 +25,7 @@ namespace Eyon.Models
 
         public ICollection<CookbookCategories> CookbookCategory { get; set; }
         public ICollection<RecipeCategory> RecipeCategory { get; set; }
-
+        [NotMapped]
+        public Topic Topic { get => Topic.Category; }
     }
 }

@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Eyon.Models
 {
-    public class Recipe : IHasOwners<ApplicationUserRecipe>, ICreated, IModified, IPrivacy, INamed
+    public class Recipe : IHasOwners<ApplicationUserRecipe>, ICreated, IModified, IPrivacy, INamed, ITopic
     {        
         [Key]
         public long Id { get; set; }
@@ -44,7 +44,9 @@ namespace Eyon.Models
         public ICollection<RecipeCategory> RecipeCategory { get; set; }
         public ICollection<CookbookRecipe> CookbookRecipe { get; set; }        
         public ICollection<ApplicationUserRecipe> ApplicationUserOwner { get; set; }
-        
+
+        [NotMapped]
+        public Topic Topic { get => Topic.Recipe; }
         // TODO: Add EAV table with:  Calories, Yield, ReadyIn
 
 

@@ -1,11 +1,13 @@
-﻿using Eyon.Models.Relationship;
+﻿using Eyon.Models.Enums;
+using Eyon.Models.Interfaces;
+using Eyon.Models.Relationship;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eyon.Models
 {
-    public class Community
+    public class Community : ITopic
     {
         [Key]
         public long Id { get; set; }
@@ -23,5 +25,7 @@ namespace Eyon.Models
         public ICollection<CommunityRecipe> CommunityRecipe { get; set; }
         public ICollection<CommunityPostalCode> CommunityPostalCode { get; set; }
         public ICollection<CommunityGeocode> CommunityGeocode { get; set; }
+        [NotMapped]
+        public Topic Topic { get => Topic.Community; }
     }
 }
