@@ -13,7 +13,7 @@ namespace Eyon.DataAccess.Data
 {
     public class PrivacyRepository<TRecord, TRelation> : OwnerRepository<TRecord, TRelation> , IPrivacyRepository<TRecord, TRelation>
         where TRecord : class, IPrivacy
-        where TRelation : class, IOwner
+        where TRelation : class, IOwnerApplicationUserRelationship
     {        
 
         public PrivacyRepository( DbContext context ) : base(context)

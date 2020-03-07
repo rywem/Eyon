@@ -9,7 +9,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 {
     public interface IPrivacyRepository<TRecord, TOwnerRelation> : IOwnerRepository<TRecord, TOwnerRelation>
         where TRecord : class, IPrivacy
-        where TOwnerRelation : class, IOwner
+        where TOwnerRelation : class, IOwnerApplicationUserRelationship
     {
         bool UserCanView( string userIdToCheck, long entityId );
 

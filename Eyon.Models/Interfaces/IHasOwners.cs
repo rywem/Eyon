@@ -5,7 +5,7 @@ using System.Text;
 namespace Eyon.Models.Interfaces
 {
     public interface IHasOwners<T> : IRecord
-        where T :  IOwner
+        where T :  IOwnerApplicationUserRelationship
     {
         ICollection<T> ApplicationUserOwner { get; set; }
     }

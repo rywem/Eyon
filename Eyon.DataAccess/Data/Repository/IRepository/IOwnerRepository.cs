@@ -9,7 +9,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 {
     public interface IOwnerRepository<TRecord, TOwnerRelation> 
         where TRecord : class, IRecord
-        where TOwnerRelation : class, IOwner
+        where TOwnerRelation : class, IOwnerApplicationUserRelationship
     {
         void AddOwnerRelationship( string ownerId, TRecord entity, TOwnerRelation relationEntity );
 

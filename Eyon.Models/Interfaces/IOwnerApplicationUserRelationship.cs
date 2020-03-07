@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Eyon.Models.Interfaces
 {
-    public interface IOwner
+    public interface IOwnerApplicationUserRelationship
     {
         long ObjectId { get; set; }
         string ApplicationUserId { get; set; }

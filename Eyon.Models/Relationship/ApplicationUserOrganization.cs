@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Eyon.Models.Relationship
 {
-    public class ApplicationUserOrganization : IOwner
+    public class ApplicationUserOrganization : IOwnerApplicationUserRelationship
     {
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]

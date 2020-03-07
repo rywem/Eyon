@@ -12,7 +12,7 @@ namespace Eyon.DataAccess.Data
 {
     public class OwnerRepository<TRecord, TRelation> : Repository<TRecord> , IOwnerRepository<TRecord, TRelation>
         where TRecord : class, IRecord
-        where TRelation : class, IOwner
+        where TRelation : class, IOwnerApplicationUserRelationship
     {
         internal DbSet<TRelation> dbSetRelation;
 
