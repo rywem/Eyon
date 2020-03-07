@@ -55,12 +55,10 @@ namespace Eyon.DataAccess.Data
                 .HasIndex(x => x.CreationDateTime)
                 .IsClustered(false);
 
-
             modelBuilder.Entity<WebReference>()
                 .HasIndex(u => u.Url)
                 .IsUnique();
 
-            
             modelBuilder.Entity<PostalCode>()
                 .HasIndex(p => new { p.Text, p.CountryId })
                 .IsUnique();
@@ -72,6 +70,26 @@ namespace Eyon.DataAccess.Data
             modelBuilder.Entity<CommunityGeocode>()
                 .HasIndex(p => new { p.CommunityId, p.GeocodeId })
                 .IsUnique();
+
+            modelBuilder.Entity<Topic>()
+                .HasIndex(p => new { p.ObjectId, p.TopicType })
+                .IsUnique();
+
+            modelBuilder.Entity<Topic>()
+                .HasIndex(p => p.Name)
+                .IsClustered(false);
+
+            modelBuilder.Entity<Feed>()
+                .HasIndex(x => x.CreationDateTime)
+                .IsClustered(false);
+
+            modelBuilder.Entity<Feed>()
+                .HasIndex(x => x.ModifiedDateTime)
+                .IsClustered(false);
+
+            modelBuilder.Entity<Feed>()
+                .HasIndex(x => x.Privacy)
+                .IsClustered(false);
 
             #endregion
 
