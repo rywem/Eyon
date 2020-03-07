@@ -7,7 +7,7 @@ using System.Text;
 namespace Eyon.Models.Relationship
 {
     /// <summary>
-    /// ApplicationUserFeed class controls security. 
+    /// ApplicationUserFeed class controls access security. 
     /// </summary>
     /// <remarks>
     /// Do not confuse this class with FeedUsers, which 
