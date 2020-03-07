@@ -7,7 +7,7 @@ namespace Eyon.Models.Enums
     public enum TopicType
     {
         Community = 0,
-        User = 1,        
+        Profile = 1,        
         Category = 2,
         Cookbook = 3,
         Recipe = 4,

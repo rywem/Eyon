@@ -3,10 +3,11 @@ using Eyon.Models.Relationship;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eyon.Models
 {
-    public class ApplicationUser : IdentityUser, INamed
+    public class ApplicationUser : IdentityUser
     {
         [Required]
         public string FirstName { get; set; }
@@ -24,13 +25,6 @@ namespace Eyon.Models
         /// Security access
         /// </summary>
         public ICollection<ApplicationUserFeed> ApplicationUserFeed { get; set; }
-        /// <summary>
-        /// For the feed
-        /// </summary>
-        public ICollection<FeedUser> FeedUser { get; set; }
-        public string Name 
-        { 
-            get => string.IsNullOrWhiteSpace(LastName) ? FirstName : string.Format("{0} {1}", FirstName, LastName); 
-        }
+        public Profile Profile { get; set; }
     }
 }

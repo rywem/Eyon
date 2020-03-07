@@ -10,8 +10,7 @@ namespace Eyon.Models.Relationship
     /// ApplicationUserFeed class controls access security. 
     /// </summary>
     /// <remarks>
-    /// Do not confuse this class with FeedUsers, which 
-    /// controls populating the feed with user activity.
+    /// Follow Profiles, ApplicationUsers for Security
     /// </remarks>
     public class ApplicationUserFeed : IOwnerApplicationUserRelationship
     {

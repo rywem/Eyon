@@ -324,16 +324,16 @@ namespace Eyon.DataAccess.Data
                 .WithMany(c => c.FeedRecipe)
                 .HasForeignKey(c => c.RecipeId);
 
-            modelBuilder.Entity<FeedUser>()
-                .HasKey(c => new { c.FeedId, c.ApplicationUserId });
-            modelBuilder.Entity<FeedUser>()
+            modelBuilder.Entity<FeedProfile>()
+                .HasKey(c => new { c.FeedId, c.ProfileId });
+            modelBuilder.Entity<FeedProfile>()
                 .HasOne(c => c.Feed)
                 .WithMany(c => c.FeedUser)
                 .HasForeignKey(c => c.FeedId);
-            modelBuilder.Entity<FeedUser>()
-                .HasOne(c => c.ApplicationUser)
-                .WithMany(c => c.FeedUser)
-                .HasForeignKey(c => c.ApplicationUserId);
+            modelBuilder.Entity<FeedProfile>()
+                .HasOne(c => c.Profile)
+                .WithMany(c => c.FeedProfile)
+                .HasForeignKey(c => c.ProfileId);
 
             #endregion
 
