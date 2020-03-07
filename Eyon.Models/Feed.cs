@@ -28,6 +28,7 @@ namespace Eyon.Models
         public ICollection<FeedOrganization> FeedOrganization { get; set; }
         public ICollection<FeedCategory> FeedCategory { get; set; }
         public ICollection<FeedCountry> FeedCountry { get; set; }
+        public ICollection<FeedCookbook> FeedCookbook { get; set; }
         public ICollection<FeedRecipe> FeedRecipe { get; set; }
         public ICollection<FeedUser> FeedUser { get; set; }
 
