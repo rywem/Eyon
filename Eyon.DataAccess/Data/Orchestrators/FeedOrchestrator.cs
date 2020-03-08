@@ -18,7 +18,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         {
             throw new NotImplementedException();
             FeedViewModel feedViewModel = new FeedViewModel();
-            //feedViewModel.Feed = _unitOfWork.Feed.G
+            //feedViewModel.Feed = _unitOfWork.Feed.Get
             return feedViewModel;
         }
     }

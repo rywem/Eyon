@@ -5901,9 +5901,6 @@ namespace Eyon.DataAccess.Migrations
                     b.Property<long>("ObjectId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("Privacy")
-                        .HasColumnType("int");
-
                     b.Property<int>("TopicType")
                         .HasColumnType("int");
 
