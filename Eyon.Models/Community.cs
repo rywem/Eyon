@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eyon.Models
 {
-    public class Community : ITopicType, INamed
+    public class Community : ITopicItem
     {
         [Key]
         public long Id { get; set; }

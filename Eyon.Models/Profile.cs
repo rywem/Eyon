@@ -12,7 +12,7 @@ namespace Eyon.Models
     /// <summary>
     /// Profiles attach to the ApplicationUser. Follow Profiles
     /// </summary>
-    public class Profile : IRecord, INamed, ICreated, IModified, ITopicType
+    public class Profile : ICreated, IModified, ITopicItem
     {
         [Key]
         public long Id { get; set; }

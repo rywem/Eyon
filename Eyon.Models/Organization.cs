@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Eyon.Models
 {
-    public class Organization : IRecord, IHasOwners<ApplicationUserOrganization>, ITopicType, INamed
+    public class Organization : IHasOwners<ApplicationUserOrganization>, ITopicItem
     {
         [Key]
         public long Id { get; set; }
