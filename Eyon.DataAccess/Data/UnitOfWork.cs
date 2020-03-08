@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Eyon.DataAccess.Data.Repository;
 using System;
+using Eyon.Models.Interfaces;
 
 namespace Eyon.DataAccess.Data{
     public class UnitOfWork : IUnitOfWork
@@ -311,8 +312,8 @@ namespace Eyon.DataAccess.Data{
             }
         }
 
-        private Lazy<ITopicRepository> _Topic;
-        public ITopicRepository Topic
+        private Lazy<ITopicRepository<ITopicItem>> _Topic;
+        public ITopicRepository<ITopicItem> Topic
         {
             get
             {
@@ -421,7 +422,7 @@ namespace Eyon.DataAccess.Data{
             this._db = db;
             #region model constructors
             //this._x = new Lazy<IXRepository>(() => new XRepository(this._db));
-            this._Topic = new Lazy<ITopicRepository>(() => new TopicRepository(this._db));
+            this._Topic = new Lazy<ITopicRepository<ITopicItem>>(() => new TopicRepository(this._db));
             this._Feed = new Lazy<IFeedRepository>(() => new FeedRepository(this._db));
             this._Category = new Lazy<ICategoryRepository>(() => new CategoryRepository(_db));
             this._SiteImage = new Lazy<ISiteImageRepository>(() => new SiteImageRepository(this._db));

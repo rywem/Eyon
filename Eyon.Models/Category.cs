@@ -27,6 +27,6 @@ namespace Eyon.Models
         public ICollection<RecipeCategory> RecipeCategory { get; set; }
         public ICollection<FeedCategory> FeedCategory { get; set; }
         [NotMapped]
-        public TopicType Topic { get => TopicType.Category; }
+        public TopicType TopicType { get => TopicType.Category; }
     }
 }

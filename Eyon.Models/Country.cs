@@ -17,6 +17,6 @@ namespace Eyon.Models
         public string Code { get; set; }
         public ICollection<FeedCountry> FeedCountry { get; set; }
         [NotMapped]
-        public TopicType Topic => TopicType.Country;
+        public TopicType TopicType => TopicType.Country;
     }
 }

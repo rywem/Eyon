@@ -56,6 +56,10 @@ namespace Eyon.DataAccess.Data.Orchestrators
             _unitOfWork.Cookbook.AddOwnerRelationship(currentUserId, cookbookViewModel.Cookbook, new ApplicationUserCookbook());
             _unitOfWork.Save();
 
+            if ( cookbookViewModel.Cookbook.Privacy == Models.Enums.Privacy.Public )
+            {
+
+            }
             if (!string.IsNullOrEmpty(cookbookViewModel.CategoryIds))
             {
                 string[] categories = cookbookViewModel.CategoryIds.Split(',');

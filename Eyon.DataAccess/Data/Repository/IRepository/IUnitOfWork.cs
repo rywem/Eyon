@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eyon.Models.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
@@ -40,7 +41,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 
 
         IFeedRepository Feed { get; }
-        ITopicRepository Topic { get; }
+        ITopicRepository<ITopicItem> Topic { get; }
         IApplicationUserFeedRepository ApplicationUserFeed { get; }
         IFeedCategoryRepository FeedCategory { get; }
         IFeedCommunityRepository FeedCommunity { get; }

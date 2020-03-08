@@ -22,7 +22,7 @@ namespace Eyon.Models
         public DateTime CreationDateTime { get; set; }
         public DateTime ModifiedDateTime { get; set; }
 
-        public TopicType Topic => TopicType.Profile;
+        public TopicType TopicType => TopicType.Profile;
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
         public ApplicationUser ApplicationUser { get; set; }

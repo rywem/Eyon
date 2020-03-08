@@ -27,6 +27,6 @@ namespace Eyon.Models
         public ICollection<CommunityGeocode> CommunityGeocode { get; set; }
         public ICollection<FeedCommunity> FeedCommunity { get; set; }
         [NotMapped]
-        public TopicType Topic { get => TopicType.Community; }
+        public TopicType TopicType { get => TopicType.Community; }
     }
 }

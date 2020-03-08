@@ -32,6 +32,6 @@ namespace Eyon.Models
         public ICollection<CommunityState> CommunityState { get; set; }
         public ICollection<FeedState> FeedState { get; set; }
         [NotMapped]
-        public TopicType Topic { get => TopicType.State; }
+        public TopicType TopicType { get => TopicType.State; }
     }
 }

@@ -25,6 +25,6 @@ namespace Eyon.Models
         public ICollection<ApplicationUserOrganization> ApplicationUserOwner { get; set; }
         public ICollection<FeedOrganization> FeedOrganization { get; set; }
         [NotMapped]
-        public TopicType Topic { get => TopicType.Organization; }
+        public TopicType TopicType { get => TopicType.Organization; }
     }
 }
