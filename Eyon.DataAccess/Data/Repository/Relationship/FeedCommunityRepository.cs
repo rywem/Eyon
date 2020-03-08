@@ -18,7 +18,7 @@ namespace Eyon.DataAccess.Data.Repository
         public override void Add( FeedCommunity entityToAdd )
         {
             if (_db.FeedCommunity.Any(x => x.FeedId == entityToAdd.FeedId && x.CommunityId == entityToAdd.CommunityId) )
-                throw new SafeException("An error ocurred.", new Exception(string.Format("FeedCategory already exists. FeedId {0},  CategoryId {1}", entityToAdd.FeedId, entityToAdd.CommunityId)));
+                throw new SafeException("An error ocurred.", new Exception(string.Format("FeedCategory already exists. FeedId {0},  CommunityId {1}", entityToAdd.FeedId, entityToAdd.CommunityId)));
 
             base.Add(entityToAdd);
         }
