@@ -1082,6 +1082,8 @@ namespace Eyon.DataAccess.Data
         public DbSet<Geocode> Geocode { get; set; }
         public DbSet<WebReference> WebReference { get; set; }
         public DbSet<UserImage> UserImage { get; set; }
+        public DbSet<Feed> Feed { get; set; }
+        public DbSet<Topic> Topic { get; set; }
 
         #region location tables
         public DbSet<Community> Community { get; set; }
@@ -1099,7 +1101,7 @@ namespace Eyon.DataAccess.Data
         public DbSet<OrganizationCommunity> OrganizationCommunity { get; set; }
 
         public DbSet<CookbookRecipe> CookbookRecipes { get; set; }
-        //public DbSet<RecipeSiteImage> RecipeSiteImages { get; set; }
+        
         public DbSet<RecipeUserImage> RecipeUserImage { get; set; }
         public DbSet<RecipeCategory> RecipeCategory { get; set; }        
         public DbSet<CommunityRecipe> CommunityRecipe { get; set; }
@@ -1113,6 +1115,17 @@ namespace Eyon.DataAccess.Data
         public DbSet<ApplicationUserRecipe> ApplicationUserRecipe { get; set; }
         public DbSet<ApplicationUserCookbook> ApplicationUserCookbook { get; set; }
         public DbSet<ApplicationUserUserImage> ApplicationUserUserImage { get; set; }
+        public DbSet<ApplicationUserFeed> ApplicationUserFeed { get; set; }
+
+        public DbSet<FeedCategory> FeedCategory { get; set; }
+        public DbSet<FeedCommunity> FeedCommunity { get; set; }
+        public DbSet<FeedCookbook> FeedCookbook { get; set; }
+        public DbSet<FeedCountry> FeedCountry { get; set; }
+        public DbSet<FeedOrganization> FeedOrganization { get; set; }
+        public DbSet<FeedProfile> FeedProfile { get; set; }
+        public DbSet<FeedRecipe> FeedRecipe { get; set; }
+        public DbSet<FeedState> FeedState { get; set; }
+        public DbSet<FeedTopic> FeedTopic { get; set; }
         // NOTE: Start making these names NOT PLURAL
 
         #endregion
