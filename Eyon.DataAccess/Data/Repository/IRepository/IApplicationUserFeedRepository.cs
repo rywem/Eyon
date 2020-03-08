@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface IApplicationUserFeedRepository : IRepository<ApplicationUserUserImage>
+    public interface IApplicationUserFeedRepository : IRepository<ApplicationUserFeed>
     {
        
     }    
