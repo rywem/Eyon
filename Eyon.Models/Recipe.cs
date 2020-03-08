@@ -27,8 +27,8 @@ namespace Eyon.Models
         [MaxLength(100)]
         [StringLength(100)]
         public string PrepTime { get; set; }
-        [MaxLength(100)]
-        [StringLength(100)]
+        [MaxLength(20)]
+        [StringLength(20)]
         public string Servings { get; set; }
         public Privacy Privacy { get; set; }
         [MaxLength(3000)]

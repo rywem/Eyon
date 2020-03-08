@@ -12,10 +12,18 @@ namespace Eyon.Models
         [Key]
         public long Id { get; set; }
         [Required]
+        [MaxLength(50)]
+        [StringLength(50)]
         public string Name { get; set; }
+        [MaxLength(50)]
+        [StringLength(50)]
         public string Code { get; set; }
         [Required]
+        [MaxLength(50)]
+        [StringLength(50)]
         public string Type { get; set; }
+        [MaxLength(50)]
+        [StringLength(50)]
         public string LocalName { get; set; }        
         public long CountryId { get; set; }
         [ForeignKey("CountryId")]

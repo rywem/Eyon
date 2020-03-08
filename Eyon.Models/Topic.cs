@@ -13,7 +13,9 @@ namespace Eyon.Models
     {
         [Key]
         public long Id { get; set; }
-        [Required]
+        [Required]        
+        [MaxLength(100)]
+        [StringLength(100)]        
         public string Name { get; set; }
 
         [Required]

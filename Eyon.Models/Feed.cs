@@ -12,7 +12,11 @@ namespace Eyon.Models
     public class Feed : ICreated, IModified, IPrivacy, IHasOwners<ApplicationUserFeed>
     {
         [Key]
-        public long Id { get; set; }        
+        public long Id { get; set; }
+        
+        [MaxLength(600)]
+        [StringLength(600)]        
+        public string Text { get; set; }
         public ICollection<ApplicationUserFeed> ApplicationUserOwner { get; set; }
         public DateTime CreationDateTime { get; set; }
         public DateTime ModifiedDateTime { get; set; }
