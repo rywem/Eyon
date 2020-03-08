@@ -1,5 +1,6 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
+using Eyon.Models.Enums;
 using Eyon.Models.Errors;
 using Eyon.Models.Relationship;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,12 @@ namespace Eyon.DataAccess.Data.Repository
             entity.ModifiedDateTime = entity.CreationDateTime;
             base.Add(entity);
         }
+
+        public Task<IEnumerable<Feed>> GetPublicFeedList( FeedSortBy sortBy = FeedSortBy.New, int take = 100, int skip = 0)
+        {
+            throw new NotImplementedException();
+        }
+
         public void UpdateIfOwner( string currentUserId, Feed feed )
         {
             var objFromDb = ( from r in _db.Feed

@@ -71,8 +71,6 @@ namespace Eyon.DataAccess.Data.Orchestrators
             return recipeViewModel;
         }
 
-
-
         public async Task AddRecipeTransactionAsync( string currentApplicationUserId, RecipeViewModel recipeViewModel )
         {
             using ( var transaction = _unitOfWork.BeginTransaction() )
@@ -151,6 +149,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                         cookbookRecipe.CookbookId = cookbookFromDb.Id;
                         cookbookRecipe.RecipeId = recipeViewModel.Recipe.Id;
                         _unitOfWork.CookbookRecipe.Add(cookbookRecipe);
+
                     }
                     else
                     {

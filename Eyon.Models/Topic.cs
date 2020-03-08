@@ -9,7 +9,7 @@ using Eyon.Models.Relationship;
 
 namespace Eyon.Models
 {
-    public class Topic : IRecord, IDynamicForeignRelationship, INamed
+    public class Topic : IRecord, IDynamicForeignRelationship, INamed, IPrivacy
     {
         [Key]
         public long Id { get; set; }
@@ -22,6 +22,7 @@ namespace Eyon.Models
         public long ObjectId { get; set; }
         [Required]
         public TopicType TopicType { get; set; }
+        public Privacy Privacy { get; set; }
         public ICollection<FeedTopic> FeedTopic { get; set; }
     }
 }
