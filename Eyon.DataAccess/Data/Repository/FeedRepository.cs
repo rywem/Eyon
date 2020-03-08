@@ -44,7 +44,8 @@ namespace Eyon.DataAccess.Data.Repository
             if ( objFromDb == null )
                 throw new SafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  recipe.Id {1}", currentUserId, feed.Id)));
 
-            objFromDb.Privacy = feed.Privacy;            
+            objFromDb.Privacy = feed.Privacy;
+            objFromDb.Text = feed.Text;
             objFromDb.ModifiedDateTime = DateTime.Now.ToUniversalTime();
             dbSet.Update(objFromDb);
         }
