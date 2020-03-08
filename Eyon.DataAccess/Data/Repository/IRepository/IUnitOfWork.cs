@@ -38,6 +38,21 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         ICommunityRecipeRepository CommunityRecipe { get;  }
         IPostalCodeRepository PostalCode { get; }
 
+
+        IFeedRepository Feed { get; }
+        ITopicRepository Topic { get; }
+        IApplicationUserFeedRepository ApplicationUserFeed { get; }
+        IFeedCategoryRepository FeedCategory { get; }
+        IFeedCommunityRepository FeedCommunity { get; }
+        IFeedCookbookRepository FeedCookbook { get; }
+        IFeedCountryRepository FeedCountry { get; }
+        IFeedOrganizationRepository FeedOrganization { get; }
+        IFeedProfileRepository FeedProfile { get; }
+        IFeedRecipeRepository FeedRecipe { get; }
+        IFeedStateRepository FeedState { get; }
+        IFeedTopicRepository FeedTopic { get; }
+
+
         IDatabaseTransaction BeginTransaction();
         void Save();
         Task<int> SaveAsync();

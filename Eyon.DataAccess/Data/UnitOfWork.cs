@@ -211,15 +211,6 @@ namespace Eyon.DataAccess.Data{
             }
         }
         
-        //private Lazy<IRecipeIngredientRepository> _RecipeIngredient;
-        //public IRecipeIngredientRepository RecipeIngredient
-        //{
-        //    get
-        //    {
-        //        return _RecipeIngredient.Value;
-        //    }
-        //}
-        
         private Lazy<IRecipeUserImageRepository> _RecipeUserImage;
         public IRecipeUserImageRepository RecipeUserImage
         {
@@ -308,14 +299,130 @@ namespace Eyon.DataAccess.Data{
             {
                 return _CommunityRecipe.Value;
             }
-        }        
+        }
 
+
+        private Lazy<IFeedRepository> _Feed;
+        public IFeedRepository Feed
+        {
+            get
+            {
+                return _Feed.Value;
+            }
+        }
+
+        private Lazy<ITopicRepository> _Topic;
+        public ITopicRepository Topic
+        {
+            get
+            {
+                return _Topic.Value;
+            }
+        }
+
+        private Lazy<IApplicationUserFeedRepository> _ApplicationUserFeed;
+        public IApplicationUserFeedRepository ApplicationUserFeed
+        {
+            get
+            {
+                return _ApplicationUserFeed.Value;
+            }
+        }
+        private Lazy<IFeedCategoryRepository> _FeedCategory;
+        public IFeedCategoryRepository FeedCategory
+        {
+            get
+            {
+                return _FeedCategory.Value;
+            }
+        }
+        private Lazy<IFeedCommunityRepository> _FeedCommunity;
+        public IFeedCommunityRepository FeedCommunity
+        {
+            get
+            {
+                return _FeedCommunity.Value;
+            }
+        }
+        private Lazy<IFeedCookbookRepository> _FeedCookbook;
+        public IFeedCookbookRepository FeedCookbook
+        {
+            get
+            {
+                return _FeedCookbook.Value;
+            }
+        }
+
+        private Lazy<IFeedCountryRepository> _FeedCountry;
+        public IFeedCountryRepository FeedCountry
+        {
+            get
+            {
+                return _FeedCountry.Value;
+            }
+        }
+
+        private Lazy<IFeedOrganizationRepository> _FeedOrganization;
+        public IFeedOrganizationRepository FeedOrganization
+        {
+            get
+            {
+                return _FeedOrganization.Value;
+            }
+        }
+
+        private Lazy<IFeedProfileRepository> _FeedProfile;
+        public IFeedProfileRepository FeedProfile
+        {
+            get
+            {
+                return _FeedProfile.Value;
+            }
+        }
+
+        private Lazy<IFeedRecipeRepository> _FeedRecipe;
+        public IFeedRecipeRepository FeedRecipe
+        {
+            get
+            {
+                return _FeedRecipe.Value;
+            }
+        }
+
+        private Lazy<IFeedStateRepository> _FeedState;
+        public IFeedStateRepository FeedState
+        {
+            get
+            {
+                return _FeedState.Value;
+            }
+        }
+        private Lazy<IFeedTopicRepository> _FeedTopic;
+        public IFeedTopicRepository FeedTopic
+        {
+            get
+            {
+                return _FeedTopic.Value;
+            }
+        }
+        /*
+        private Lazy<IXRepository> _X;
+        public IXRepository X
+        {
+            get
+            {
+                return _X.Value;
+            }
+        }
+        */
         #endregion
         public UnitOfWork(ApplicationDbContext db)
         {
             this._db = db;
             #region model constructors
             //this._x = new Lazy<IXRepository>(() => new XRepository(this._db));
+            this._Topic = new Lazy<ITopicRepository>(() => new TopicRepository(this._db));
+            this._Feed = new Lazy<IFeedRepository>(() => new FeedRepository(this._db));
             this._Category = new Lazy<ICategoryRepository>(() => new CategoryRepository(_db));
             this._SiteImage = new Lazy<ISiteImageRepository>(() => new SiteImageRepository(this._db));
             this._Recipe = new Lazy<IRecipeRepository>(() => new RecipeRepository(this._db));
@@ -334,6 +441,16 @@ namespace Eyon.DataAccess.Data{
             #endregion
             #region relationship constructors
             //this._x = new Lazy<IXRepository>(() => new XRepository(this._db));
+            this._FeedTopic = new Lazy<IFeedTopicRepository>(() => new FeedTopicRepository(this._db));
+            this._FeedState = new Lazy<IFeedStateRepository>(() => new FeedStateRepository(this._db));
+            this._FeedRecipe = new Lazy<IFeedRecipeRepository>(() => new FeedRecipeRepository(this._db));
+            this._FeedProfile = new Lazy<IFeedProfileRepository>(() => new FeedProfileRepository(this._db));
+            this._FeedOrganization = new Lazy<IFeedOrganizationRepository>(() => new FeedOrganizationRepository(this._db));
+            this._FeedCountry = new Lazy<IFeedCountryRepository>(() => new FeedCountryRepository(this._db));
+            this._FeedCookbook = new Lazy<IFeedCookbookRepository>(() => new FeedCookbookRepository(this._db));
+            this._FeedCommunity = new Lazy<IFeedCommunityRepository>(() => new FeedCommunityRepository(this._db));
+            this._FeedCategory = new Lazy<IFeedCategoryRepository>(() => new FeedCategoryRepository(this._db));
+            this._ApplicationUserFeed = new Lazy<IApplicationUserFeedRepository>(() => new ApplicationUserFeedRepository(this._db));
             this._RecipeCategory = new Lazy<IRecipeCategoryRepository>(() => new RecipeCategoryRepository(this._db));
             this._CookbookRecipe = new Lazy<ICookbookRecipeRepository>(() => new CookbookRecipeRepository(this._db));
             this._CommunityGeocode = new Lazy<ICommunityGeocodeRepository>(() => new CommunityGeocodeRepository(this._db));
