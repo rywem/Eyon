@@ -8,6 +8,6 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
     public interface ITopicRepository<T> : IRepository<Topic>
         where T : ITopicItem
     {
-        void Add (T entity);
+        Topic AddFromEntity( T entity);
     }
 }

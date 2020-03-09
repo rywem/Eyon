@@ -34,13 +34,19 @@ namespace Eyon.DataAccess.Data.Repository
         //    throw new NotImplementedException();
         //}
 
-        public void Add( ITopicItem entity )
+            /// <summary>
+            /// Adds a topic object from an ITopicItem entity.
+            /// </summary>
+            /// <param name="entity">A class that inherits from ITopicItem</param>
+            /// <returns>The new Topic object</returns>
+        public Topic AddFromEntity( ITopicItem entity )
         {
             Topic topic = new Topic();
             topic.Name = entity.Name;
             topic.ObjectId = entity.Id;
             topic.TopicType = entity.TopicType;
             base.Add(topic);
+            return topic;
         }
     }
 }

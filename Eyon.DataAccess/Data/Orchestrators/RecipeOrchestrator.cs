@@ -115,6 +115,8 @@ namespace Eyon.DataAccess.Data.Orchestrators
             _unitOfWork.Recipe.Add(recipeViewModel.Recipe);
             await _unitOfWork.SaveAsync();
             _unitOfWork.Recipe.AddOwnerRelationship(currentApplicationUserId, recipeViewModel.Recipe, new ApplicationUserRecipe());
+            await _unitOfWork.SaveAsync();            
+            _unitOfWork.Topic.AddFromEntity(recipeViewModel.Recipe);
             await _unitOfWork.SaveAsync();
 
             var communityRecipe = new CommunityRecipe()

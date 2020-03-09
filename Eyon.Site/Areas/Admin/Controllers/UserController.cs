@@ -51,7 +51,6 @@ namespace Eyon.Site.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        
         /// <summary>
         /// Adds a new employee
         /// </summary>

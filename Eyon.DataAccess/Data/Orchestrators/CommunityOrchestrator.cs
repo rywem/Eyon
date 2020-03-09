@@ -67,6 +67,9 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     };
                     _unitOfWork.Community.Add(community);
                     await _unitOfWork.SaveAsync();
+
+                    _unitOfWork.Topic.AddFromEntity(community);
+                    await _unitOfWork.SaveAsync();
                 }
                 
                 // Create state relationship
@@ -181,6 +184,50 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 {
                     transaction.Rollback();
                     throw safeException;
+                }
+            }
+        }
+
+        public async Task RunSync()
+        {
+            var communities = await _unitOfWork.Community.GetAllAsync();
+            //List<Community> communities = coms.ToList();
+            
+            //int skip = 0;
+            //int take = 500;
+
+            //for ( int i = 0; i < communities.Count; i++ )
+            //{
+            //    Community currentCommunity = communities[i];
+            //    if ( currentCommunity.FeedCommunity != null && currentCommunity.FeedCommunity.Count > 0 )
+            //        continue;
+            //    else
+            //    {
+            //        tasks.Add(Task.Factory.StartNew(() =>
+            //        {
+            //            _unitOfWork.Topic.AddFromEntity(currentCommunity);
+            //            _unitOfWork.Save();
+            //        }));
+            //    }
+            //}
+            //Task.WaitAll(tasks.ToArray());
+
+            
+            foreach ( var community in communities )
+            {
+                try
+                {
+                    //if ( community.FeedCommunity != null && community.FeedCommunity.Count > 0 )
+                    //    continue;
+
+                    if ( _unitOfWork.Topic.Any(x => x.ObjectId == community.Id && x.TopicType == community.TopicType) )
+                        continue;
+                    _unitOfWork.Topic.AddFromEntity(community);
+                    await _unitOfWork.SaveAsync();
+                }
+                catch(Exception ex )
+                {
+                    int i = 1;
                 }
             }
         }

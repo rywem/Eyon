@@ -32,6 +32,9 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
             _unitOfWork.Organization.Add(organizationViewModel.Organization);
             _unitOfWork.Save();
+
+            _unitOfWork.Topic.AddFromEntity(organizationViewModel.Organization);
+            _unitOfWork.Save();
         }
 
         public void AddOrganizationTransaction( OrganizationViewModel organizationViewModel )
