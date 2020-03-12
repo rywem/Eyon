@@ -6,7 +6,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 {
     public interface ICategoryRepository : IRepository<Models.Category>
     {
-        IEnumerable<Models.SiteObjects.SelectBoxItem> GetCategoryListForDropDown();
+        IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> GetCategoryListForDropDown();
         IEnumerable<Category> Search(string query, string includeProperties = null);
 
         void Update(Category category);

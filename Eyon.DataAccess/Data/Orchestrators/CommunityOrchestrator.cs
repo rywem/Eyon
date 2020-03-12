@@ -25,7 +25,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         {
             CommunityViewModel communityViewModel = new CommunityViewModel();
             communityViewModel.CountryList = _unitOfWork.Country.GetCountryListForDropDown();
-            communityViewModel.StateList = new List<Models.SiteObjects.SelectBoxItem>();
+            communityViewModel.StateList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
             return communityViewModel;
         }
 

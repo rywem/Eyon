@@ -3,9 +3,8 @@ using Eyon.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Eyon.Models.SiteObjects;
 
 namespace Eyon.DataAccess.Data.Repository
 {
@@ -18,9 +17,9 @@ namespace Eyon.DataAccess.Data.Repository
             this._db = db;
         }
 
-        public IEnumerable<SelectBoxItem> GetCategoryListForDropDown()
+        public IEnumerable<SelectListItem> GetCategoryListForDropDown()
         {
-            return _db.Category.Select(i => new SelectBoxItem()
+            return _db.Category.Select(i => new SelectListItem()
             {
                 Text = i.Name,
                 Value = i.Id.ToString()

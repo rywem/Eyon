@@ -1,5 +1,4 @@
-﻿//using Microsoft.AspNetCore.Mvc.Rendering;
-using Eyon.Models.SiteObjects;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Eyon.Models.ViewModels
@@ -8,8 +7,8 @@ namespace Eyon.Models.ViewModels
     {
         public Community Community { get; set; }
         public long? StateId { get; set; }
-        public IEnumerable<SelectBoxItem> CountryList { get; set; }
-        public IEnumerable<SelectBoxItem> StateList { get; set; }
+        public IEnumerable<SelectListItem> CountryList { get; set; }
+        public IEnumerable<SelectListItem> StateList { get; set; }
         public CommunityViewModel()
         {
             Community = new Community();

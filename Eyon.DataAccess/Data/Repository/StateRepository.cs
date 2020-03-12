@@ -1,5 +1,6 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -14,10 +15,10 @@ namespace Eyon.DataAccess.Data.Repository
         {
             this._db = db;
         }
-        public IEnumerable<Models.SiteObjects.SelectBoxItem> GetStateListForDropDown(long countryId)
+        public IEnumerable<SelectListItem> GetStateListForDropDown(long countryId)
         {
             TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            return _db.State.Where(i => i.CountryId == countryId).Select(m => new Models.SiteObjects.SelectBoxItem()
+            return _db.State.Where(i => i.CountryId == countryId).Select(m => new SelectListItem()
             {
                 Text = ti.ToTitleCase(m.LocalName.ToLower()),
                 Value = m.Id.ToString()
