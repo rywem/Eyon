@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Eyon.Models.SiteObjects
+{
+    public class SelectBoxItem
+    {
+        public string Text { get; set; }
+        public string Value { get; set; }
+        public SelectBoxItem()
+        {
+
+        }
+
+
+    }
+}

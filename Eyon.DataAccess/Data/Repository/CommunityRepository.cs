@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.AspNetCore.Mvc.Rendering;
+//using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -19,9 +19,9 @@ namespace Eyon.DataAccess.Data.Repository
             this._db = db;
         }
 
-        public IEnumerable<SelectListItem> GetCategoryListForDropDown()
+        public IEnumerable<Models.SiteObjects.SelectBoxItem> GetCategoryListForDropDown()
         {
-            return _db.Category.Select(i => new SelectListItem()
+            return _db.Category.Select(i => new Models.SiteObjects.SelectBoxItem()
             {
                 Text = i.Name,
                 Value = i.Id.ToString()

@@ -1,6 +1,6 @@
 ﻿using Eyon.Models.Errors;
 using Eyon.Models.Interfaces;
-using Microsoft.AspNetCore.Mvc.Rendering;
+//using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,8 +32,8 @@ namespace Eyon.Models.SiteObjects
             }
         }
 
-        private List<SelectListItem> _selectedItems;
-        public List<SelectListItem> SelectedItems 
+        private List<SelectBoxItem> _selectedItems;
+        public List<SelectBoxItem> SelectedItems 
         { 
             get
             {
@@ -77,13 +77,13 @@ namespace Eyon.Models.SiteObjects
         {
             if ( Items != null && Items.Count > 0 )
                 _selectedItems = ( from k in Items
-                                   select new SelectListItem
+                                   select new SelectBoxItem
                                    {
                                        Text = k.Name,
                                        Value = k.Id.ToString()
                                    } ).ToList();
             else
-                _selectedItems = new List<SelectListItem>();
+                _selectedItems = new List<SelectBoxItem>();
         }
 
 
