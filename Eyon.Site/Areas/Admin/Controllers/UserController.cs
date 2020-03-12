@@ -33,6 +33,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         public IActionResult Lock( string id )
         {
+            
             // Todo check current user credentials
             if ( id == null )
                 return NotFound();
