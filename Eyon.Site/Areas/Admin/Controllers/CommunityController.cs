@@ -28,8 +28,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         public CommunityController( IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
-            this._communityOrchestrator = new CommunityOrchestrator(_unitOfWork);
-            //_fileSizeLimit = config.GetValue<long>("FileSizeLimit");
+            this._communityOrchestrator = new CommunityOrchestrator(_unitOfWork);            
         }
 
         public IActionResult Index()
