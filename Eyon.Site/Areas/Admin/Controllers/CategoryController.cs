@@ -80,7 +80,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
                             await _unitOfWork.SaveAsync();
                             Category.SiteImageId = Category.SiteImage.Id;
                             _unitOfWork.Category.Add(Category);
-                            _unitOfWork.Topic.AddFromEntity(Category);
+                            _unitOfWork.Topic.AddFromITopicItem(Category);
                             await _unitOfWork.SaveAsync();
                         }
                         else

@@ -39,7 +39,7 @@ namespace Eyon.DataAccess.Data.Repository
             /// </summary>
             /// <param name="entity">A class that inherits from ITopicItem</param>
             /// <returns>The new Topic object</returns>
-        public Topic AddFromEntity( ITopicItem entity )
+        public Topic AddFromITopicItem( ITopicItem entity )
         {
             Topic topic = new Topic();
             topic.Name = entity.Name;

@@ -24,7 +24,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 if ( _unitOfWork.Topic.Any(x => x.ObjectId == category.Id && x.TopicType == category.TopicType) )
                     continue;
 
-                _unitOfWork.Topic.AddFromEntity(category);
+                _unitOfWork.Topic.AddFromITopicItem(category);
                 await _unitOfWork.SaveAsync();
             }
         }

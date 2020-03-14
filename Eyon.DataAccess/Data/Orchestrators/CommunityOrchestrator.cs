@@ -68,7 +68,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     _unitOfWork.Community.Add(community);
                     await _unitOfWork.SaveAsync();
 
-                    _unitOfWork.Topic.AddFromEntity(community);
+                    _unitOfWork.Topic.AddFromITopicItem(community);
                     await _unitOfWork.SaveAsync();
                 }
                 
@@ -222,7 +222,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
                     if ( _unitOfWork.Topic.Any(x => x.ObjectId == community.Id && x.TopicType == community.TopicType) )
                         continue;
-                    _unitOfWork.Topic.AddFromEntity(community);
+                    _unitOfWork.Topic.AddFromITopicItem(community);
                     await _unitOfWork.SaveAsync();
                 }
                 catch(Exception ex )

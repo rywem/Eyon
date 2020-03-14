@@ -27,7 +27,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 if ( _unitOfWork.Topic.Any(x => x.ObjectId == country.Id && x.TopicType == country.TopicType) )
                     continue;
 
-                _unitOfWork.Topic.AddFromEntity(country);
+                _unitOfWork.Topic.AddFromITopicItem(country);
                 await _unitOfWork.SaveAsync();
             }
         }

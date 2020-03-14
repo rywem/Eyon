@@ -116,7 +116,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             await _unitOfWork.SaveAsync();
             _unitOfWork.Recipe.AddOwnerRelationship(currentApplicationUserId, recipeViewModel.Recipe, new ApplicationUserRecipe());
             await _unitOfWork.SaveAsync();            
-            _unitOfWork.Topic.AddFromEntity(recipeViewModel.Recipe);
+            _unitOfWork.Topic.AddFromITopicItem(recipeViewModel.Recipe);
             await _unitOfWork.SaveAsync();
 
             var communityRecipe = new CommunityRecipe()
@@ -125,6 +125,8 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 RecipeId = recipeViewModel.Recipe.Id
             };
             _unitOfWork.CommunityRecipe.Add(communityRecipe);
+
+            //if ( )
             // Add instructions
             foreach ( var item in recipeViewModel.Instruction )
             {
@@ -151,7 +153,6 @@ namespace Eyon.DataAccess.Data.Orchestrators
                         cookbookRecipe.CookbookId = cookbookFromDb.Id;
                         cookbookRecipe.RecipeId = recipeViewModel.Recipe.Id;
                         _unitOfWork.CookbookRecipe.Add(cookbookRecipe);
-
                     }
                     else
                     {

@@ -58,7 +58,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
             if ( cookbookViewModel.Cookbook.Privacy == Models.Enums.Privacy.Public )
             {
-                _unitOfWork.Topic.AddFromEntity(cookbookViewModel.Cookbook);
+                _unitOfWork.Topic.AddFromITopicItem(cookbookViewModel.Cookbook);
                 _unitOfWork.Save();
             }
             if (!string.IsNullOrEmpty(cookbookViewModel.CategoryIds))
