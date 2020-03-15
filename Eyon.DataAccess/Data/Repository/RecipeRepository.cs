@@ -43,6 +43,7 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.PrepTime = recipe.PrepTime;
             objFromDb.Privacy = recipe.Privacy;
             objFromDb.ModifiedDateTime = DateTime.Now.ToUniversalTime();
+            recipe.ModifiedDateTime = objFromDb.ModifiedDateTime;
             dbSet.Update(objFromDb);
         }
     }

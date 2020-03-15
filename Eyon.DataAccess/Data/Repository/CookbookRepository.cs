@@ -36,6 +36,7 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.Description = cookbook.Description;
             objFromDb.ISBN = cookbook.ISBN;
             objFromDb.ModifiedDateTime = DateTime.Now.ToUniversalTime();
+            cookbook.ModifiedDateTime = objFromDb.ModifiedDateTime;
             dbSet.Update(objFromDb);
         }
 
@@ -55,6 +56,7 @@ namespace Eyon.DataAccess.Data.Repository
             objFromDb.Description = cookbook.Description;
             objFromDb.ISBN = cookbook.ISBN;
             objFromDb.ModifiedDateTime = DateTime.Now.ToUniversalTime();
+            cookbook.ModifiedDateTime = objFromDb.ModifiedDateTime;
             dbSet.Update(objFromDb);
         }
     }

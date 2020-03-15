@@ -5,9 +5,8 @@ using Eyon.Models.Interfaces;
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface ITopicRepository<T> : IRepository<Topic>
-        where T : ITopicItem
+    public interface ITopicRepository : IRepository<Topic>
     {
-        Topic AddFromITopicItem( T entity);
+        Topic AddFromITopicItem( ITopicItem entity );
     }
 }

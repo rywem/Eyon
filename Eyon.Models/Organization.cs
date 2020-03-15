@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Eyon.Models
 {
-    public class Organization : IHasOwners<ApplicationUserOrganization>, ITopicItem
+    public class Organization : IHasOwners<ApplicationUserOrganization>, ITopicItem, IFeedItem
     {
         [Key]
         public long Id { get; set; }
@@ -26,5 +26,8 @@ namespace Eyon.Models
         public ICollection<FeedOrganization> FeedOrganization { get; set; }
         [NotMapped]
         public TopicType TopicType { get => TopicType.Organization; }
+        public DateTime CreationDateTime { get; set; }
+        public DateTime ModifiedDateTime { get; set; }
+        public Privacy Privacy { get; set; }
     }
 }

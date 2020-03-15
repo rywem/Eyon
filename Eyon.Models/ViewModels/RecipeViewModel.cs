@@ -24,14 +24,17 @@ namespace Eyon.Models.ViewModels
 
         public long CommunityId { get; set; }
         public string CommunityName { get; set; }
-        public List<Category> Category { get; set; }
+
+        public Feed Feed { get; set; }
+        public Topic Topic { get; set; }
+        public List<Category> Categories { get; set; }
         public List<Ingredient> Ingredient { get; set; }
         public List<Instruction> Instruction { get; set; }
         public Community Community { get; set; }
         public List<UserImage> UserImage { get; set; }
         public List<Cookbook> Cookbooks { get; set; }
         public ListItemSelector<Cookbook> CookbookSelector { get; set; }
-
+        public ListItemSelector<Category> CategorySelector { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         
         public string CookbookIds { get; set; }
@@ -41,11 +44,9 @@ namespace Eyon.Models.ViewModels
             this.IsOwner = false;
             this.Recipe = new Recipe();
             this.Cookbooks = new List<Cookbook>();
+            this.Categories = new List<Category>();
             this.CookbookSelector = new ListItemSelector<Cookbook>(Cookbooks, "Cookbook");
-            //this.SelectedCookbookItems = new List<SelectListItem>();
-
-            //this.Community = new Community();
-            //this.Categories = new List<Category>();
+            this.CategorySelector = new ListItemSelector<Category>(Categories, "Category");
             this.Ingredient = new List<Ingredient>();
             this.Instruction = new List<Instruction>();            
         }

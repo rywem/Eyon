@@ -2,6 +2,7 @@
 using Eyon.Models;
 using Eyon.Models.Enums;
 using Eyon.Models.Errors;
+using Eyon.Models.Interfaces;
 using Eyon.Models.Relationship;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -30,10 +31,22 @@ namespace Eyon.DataAccess.Data.Repository
         }
 
         public override void Add( Feed entity )
-        {            
-            entity.CreationDateTime = DateTime.Now.ToUniversalTime();
-            entity.ModifiedDateTime = entity.CreationDateTime;
+        {
             base.Add(entity);
+        }
+
+        public Feed AddFromIFeedItem( IFeedItem entity )
+        {
+            var dateTimeNow = DateTime.UtcNow;
+            Feed feed = new Feed()
+            {
+                Text = entity.Description,
+                CreationDateTime = entity.CreationDateTime,
+                ModifiedDateTime = entity.ModifiedDateTime,
+                Privacy = entity.Privacy
+            };
+            base.Add(feed);
+            return feed;
         }
 
         public Task<IEnumerable<Feed>> GetPublicFeedList( FeedSortBy sortBy = FeedSortBy.New, int take = 100, int skip = 0)
@@ -41,19 +54,19 @@ namespace Eyon.DataAccess.Data.Repository
             throw new NotImplementedException();
         }
 
-        public void UpdateIfOwner( string currentUserId, Feed feed )
+        public void UpdateFromIFeedItem( string currentUserId, Feed feed, IFeedItem entity )
         {
             var objFromDb = ( from r in _db.Feed
-                              join a in _db.ApplicationUserRecipe on r.Id equals a.ObjectId
+                              join a in _db.ApplicationUserFeed on r.Id equals a.ObjectId
                               where a.ApplicationUserId.Equals(currentUserId) && r.Id == feed.Id
                               select r ).FirstOrDefault();
 
             if ( objFromDb == null )
-                throw new SafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  recipe.Id {1}", currentUserId, feed.Id)));
+                    throw new SafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  recipe.Id {1}", currentUserId, feed.Id)));
 
-            objFromDb.Privacy = feed.Privacy;
-            objFromDb.Text = feed.Text;
-            objFromDb.ModifiedDateTime = DateTime.Now.ToUniversalTime();
+            feed.Privacy = entity.Privacy;
+            objFromDb.Text = entity.Description;
+            objFromDb.ModifiedDateTime = entity.ModifiedDateTime;
             dbSet.Update(objFromDb);
         }
     }

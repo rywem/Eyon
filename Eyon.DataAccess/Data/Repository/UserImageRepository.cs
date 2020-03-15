@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Eyon.DataAccess.Data.Repository
 {
-    public class UserImageRepository : OwnerRepository<UserImage, ApplicationUserUserImage>, IUserImageRepository
+    public class UserImageRepository : PrivacyRepository<UserImage, ApplicationUserUserImage>, IUserImageRepository
     {
         private readonly ApplicationDbContext _db;
 
@@ -19,7 +19,8 @@ namespace Eyon.DataAccess.Data.Repository
 
         public override void Add( UserImage entity )
         {
-            entity.CreationDateTime = DateTime.Now.ToUniversalTime();
+            entity.CreationDateTime = DateTime.UtcNow;
+            entity.ModifiedDateTime = entity.CreationDateTime;
             base.Add(entity);
         }
 
@@ -31,10 +32,13 @@ namespace Eyon.DataAccess.Data.Repository
                               select r ).FirstOrDefault();
 
             if ( objFromDb == null )
-                if ( objFromDb == null )
-                    throw new SafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  userImage.Id {1}", currentUserId, userImage.Id)));
+                throw new SafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  userImage.Id {1}", currentUserId, userImage.Id)));
 
             objFromDb.Description = userImage.Description;
+            objFromDb.ModifiedDateTime = DateTime.UtcNow;
+            objFromDb.Description = userImage.Description;
+            objFromDb.Privacy = userImage.Privacy;
+            userImage.ModifiedDateTime = objFromDb.ModifiedDateTime;
             dbSet.Update(objFromDb);            
         }
     }    

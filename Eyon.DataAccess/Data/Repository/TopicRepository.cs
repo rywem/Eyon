@@ -20,7 +20,7 @@ namespace Eyon.DataAccess.Data.Repository
     /// of data and is not the primary information location. Privacy 
     /// information is also stored on the base object's table. 
     /// </remarks>
-    public class TopicRepository : Repository<Topic>, ITopicRepository<ITopicItem>
+    public class TopicRepository : Repository<Topic>, ITopicRepository
     {
         private readonly ApplicationDbContext _db;
 

@@ -1,4 +1,5 @@
-﻿using Eyon.Models.Interfaces;
+﻿using Eyon.Models.Enums;
+using Eyon.Models.Interfaces;
 using Eyon.Models.Relationship;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eyon.Models
 {
-    public class UserImage : IHasOwners<ApplicationUserUserImage>, ICreated
+    public class UserImage : IHasOwners<ApplicationUserUserImage>, IFeedItem
     {
         [Key]
         public long Id { get; set; }
@@ -17,8 +18,9 @@ namespace Eyon.Models
         public string FileType { get; set; }
         public string Encoded { get; set; }
         public DateTime CreationDateTime { get; set; }
-        public ICollection<ApplicationUserUserImage> ApplicationUserOwner { get; set; } 
-        
+        public DateTime ModifiedDateTime { get; set; }
+        public Privacy Privacy { get; set; }
+        public ICollection<ApplicationUserUserImage> ApplicationUserOwner { get; set; }
 
         [NotMapped]
         public string Image 

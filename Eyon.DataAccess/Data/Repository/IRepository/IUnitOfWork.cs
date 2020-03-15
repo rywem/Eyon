@@ -41,7 +41,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 
 
         IFeedRepository Feed { get; }
-        ITopicRepository<ITopicItem> Topic { get; }
+        ITopicRepository Topic { get; }
         IApplicationUserFeedRepository ApplicationUserFeed { get; }
         IFeedCategoryRepository FeedCategory { get; }
         IFeedCommunityRepository FeedCommunity { get; }
