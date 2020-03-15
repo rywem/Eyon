@@ -54,7 +54,7 @@ namespace Eyon.DataAccess.Data.Repository
             throw new NotImplementedException();
         }
 
-        public void UpdateFromIFeedItem( string currentUserId, Feed feed, IFeedItem entity )
+        public void Update( string currentUserId, Feed feed, IFeedItem entity )
         {
             var objFromDb = ( from r in _db.Feed
                               join a in _db.ApplicationUserFeed on r.Id equals a.ObjectId

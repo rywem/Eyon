@@ -25,8 +25,6 @@ namespace Eyon.Models.ViewModels
         public long CommunityId { get; set; }
         public string CommunityName { get; set; }
 
-        public Feed Feed { get; set; }
-        public Topic Topic { get; set; }
         public List<Category> Categories { get; set; }
         public List<Ingredient> Ingredient { get; set; }
         public List<Instruction> Instruction { get; set; }

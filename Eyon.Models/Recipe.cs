@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Eyon.Models
 {
-    public class Recipe : IHasOwners<ApplicationUserRecipe>, ITopicItem, IFeedItem
+    public class Recipe : IHasOwners<ApplicationUserRecipe>, ICreated, IModified, IPrivacy, ITopicItem, IFeedItem
     {        
         [Key]
         public long Id { get; set; }
@@ -44,7 +44,7 @@ namespace Eyon.Models
         public ICollection<RecipeCategory> RecipeCategory { get; set; }
         public ICollection<CookbookRecipe> CookbookRecipe { get; set; }        
         public ICollection<ApplicationUserRecipe> ApplicationUserOwner { get; set; }
-        //public FeedRecipe FeedRecipe { get; set; }
+        public FeedRecipe FeedRecipe { get; set; }
 
         [NotMapped]
         public TopicType TopicType { get => TopicType.Recipe; }

@@ -10,7 +10,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 {
     public interface IFeedRepository : IRepository<Feed>, IPrivacyRepository<Feed, ApplicationUserFeed>        
     {
-        void UpdateFromIFeedItem( string currentUserId, Feed feed, IFeedItem entity);
+        void Update( string currentUserId, Feed feed, IFeedItem entity);
 
         Feed AddFromIFeedItem( IFeedItem entity );
         Task<IEnumerable<Feed>> GetPublicFeedList( FeedSortBy sortBy, int take, int skip );
