@@ -62,9 +62,6 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 if ( recipeViewModel.Recipe.RecipeUserImage != null && recipeViewModel.Recipe.RecipeUserImage.Count > 0 )
                     recipeViewModel.UserImage = recipeViewModel.Recipe.RecipeUserImage.Select(x => x.UserImage).ToList();
 
-                if(recipeViewModel.Recipe.FeedRecipe != null )
-                    recipeViewModel.Feed = recipeViewModel.Recipe.FeedRecipe.Feed;
-
                 if ( recipeViewModel.Recipe.CookbookRecipe != null && recipeViewModel.Recipe.CookbookRecipe.Count > 0 )
                 {
                     recipeViewModel.CookbookIds = string.Join(",", recipeViewModel.Recipe.CookbookRecipe.Select(x=> x.CookbookId.ToString()));
@@ -132,7 +129,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
             feedCaller.AddFeedTopic(feed, topic);
             _unitOfWork.CommunityRecipe.Add(new CommunityRecipe() { CommunityId = communityFromDb.Id, RecipeId = recipeViewModel.Recipe.Id });            
             feedCaller.AddFeedRecipe(feed, recipeViewModel.Recipe);            
-            feedCaller.AddFeedCommunity(feed, communityFromDb);
+            await feedCaller.AddFeedCommunityStateCountryRelationshipsAsync(feed, communityFromDb);
             // Add instructions
             foreach ( var item in recipeViewModel.Instruction )
             {
@@ -257,7 +254,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 throw new SafeException("An error occurred.", new Exception(string.Format("Attempted to insert update recipe, but was not the owner. Violating userId {0}, Attempted to update Recipe ID {1}", currentApplicationUserId, recipeViewModel.Recipe.Id)));
             }
 
-            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,Instruction,Ingredient,CookbookRecipe,FeedRecipe,FeedRecipe.Feed");            
+            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,CommunityRecipe.Community,Instruction,Ingredient,CookbookRecipe,FeedRecipe,FeedRecipe.Feed");            
             if ( recipeFromDb == null )
             {
                 return;
@@ -346,7 +343,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     RecipeId = recipeFromDb.Id
                 };
                 _unitOfWork.CommunityRecipe.Add(communityRecipe);                
-                feedCaller.AddFeedCommunity(recipeFromDb.FeedRecipe.Feed, newCommunityFromDb);
+                await feedCaller.AddFeedCommunityStateCountryRelationshipsAsync(recipeFromDb.FeedRecipe.Feed, newCommunityFromDb);
                 await _unitOfWork.SaveAsync();
             }
             else if ( recipeFromDb.CommunityRecipe != null && recipeViewModel.CommunityId != recipeFromDb.CommunityRecipe.CommunityId )
@@ -358,11 +355,11 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 var feedCommunityFromDb = await _unitOfWork.FeedCommunity.GetFirstOrDefaultAsync(x => x.FeedId == recipeFromDb.FeedRecipe.Feed.Id && x.CommunityId == recipeFromDb.CommunityRecipe.CommunityId);
                 if ( feedCommunityFromDb  != null )
                 {                    
-                    feedCaller.RemoveFeedCommunity(feedCommunityFromDb);
+                    feedCaller.RemoveFeedCommunityStateCountryRelationships(recipeFromDb.FeedRecipe.Feed, recipeFromDb.CommunityRecipe.Community);
                 }
                 _unitOfWork.CommunityRecipe.Remove(recipeFromDb.CommunityRecipe);                
                 _unitOfWork.CommunityRecipe.Add(new CommunityRecipe() { RecipeId = recipeFromDb.Id, CommunityId = newCommunityFromDb.Id });                
-                feedCaller.AddFeedCommunity(recipeFromDb.FeedRecipe.Feed, newCommunityFromDb);
+                await feedCaller.AddFeedCommunityStateCountryRelationshipsAsync(recipeFromDb.FeedRecipe.Feed, newCommunityFromDb);
                 await _unitOfWork.SaveAsync();
             }
             // Update cookbooks, add cookbooks/remove cookbooks
@@ -401,7 +398,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     {
                         var feedCookbookFromDb = await _unitOfWork.FeedCookbook.GetFirstOrDefaultAsync(x => x.FeedId == recipeFromDb.FeedRecipe.Feed.Id && x.CookbookId == item.CookbookId);
                         if ( feedCookbookFromDb != null )
-                            _unitOfWork.FeedCookbook.Remove(feedCookbookFromDb);
+                            feedCaller.RemoveFeedCookbook(feedCookbookFromDb);
 
                         _unitOfWork.CookbookRecipe.Remove(item);
                     }
@@ -411,7 +408,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
             // Update RecipeSiteImages,  add/remove
 
-            // Update Categories: Add Relations, remove relations       
+            // Update Categories: Add Relations, remove relations
 
         }
         public async Task UpdateRecipeTransactionAsync( string currentApplicationUserId, RecipeViewModel recipeViewModel )
