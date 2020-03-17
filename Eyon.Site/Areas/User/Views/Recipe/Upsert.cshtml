@@ -224,12 +224,12 @@
         var cookbookSelectorName;        
         var cookbookInitialIdsArray = [];
         var cookbookInitialNamesArray = [];
-        var elementId_itemIds = 'CookbookSelector_ItemIds';
+        var cookbook_elementId_itemIds = 'CookbookSelector_ItemIds';
         var dataTable;
         var userCookbookData;
 
         // initialize categories data 
-        var categoriesName;
+        var categorySelectorName;
         var category_elementId_itemIds = 'CategorySelector_ItemIds';
 
 
@@ -252,7 +252,7 @@
             }
         }
 
-        cookbookSelector = new ListItemSelector(cookbookSelectorName, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, function (id, name, btnId, li_class) {            
+        cookbookSelector = new ListItemSelector(cookbookSelectorName, cookbookInitialIdsArray, cookbookInitialNamesArray, cookbook_elementId_itemIds, function (id, name, btnId, li_class) {            
             return `<li><span>${name}</span><div class="badge badge-danger" id="${btnId}" ><i class="far fa-window-close"></i></div></li>`
         });
         cookbookSelector.buildUI();
