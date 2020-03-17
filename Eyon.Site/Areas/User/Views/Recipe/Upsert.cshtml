@@ -115,29 +115,36 @@
             </div>
             <div class="form-group row">
                 <div class="col-4">
-                    Add to Cookbooks 
+                    Add to Cookbooks
                     <button type="button" class="btn btn-primary" id="addCookbooks" data-toggle="modal" data-target="#cookbooksModal">
                         <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
                     </button>
                 </div>
-                <div class="col-8">                    
-                    @Html.HiddenFor(x => x.CookbookSelector.ItemIds)
-                    <ol id="@Model.CookbookSelector.GetListId()">                        
-
-                    </ol>
-                </div>
                 <div class="col-8">
-                    @Html.HiddenFor(x => x.CategorySelector.ItemIds)
-                    <ol id="@Model.CategorySelector.GetListId()">
-
+                    @Html.HiddenFor(x => x.CookbookSelector.ItemIds)
+                    <ol id="@Model.CookbookSelector.GetListId()">
                     </ol>
                 </div>
             </div>
             <div class="form-group row">
+                <div class="col-4">
+                    Add Categories
+                    <button type="button" class="btn btn-primary" id="addCategories" data-toggle="modal" data-target="#categoriesModal">
+                        <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="col-8">
+                    @Html.HiddenFor(x => x.CategorySelector.ItemIds)
+                    <ol id="@Model.CategorySelector.GetListId()">
+                    </ol>
+                </div>
+            </div>
+
+            <div class="form-group row">
                 <div class="col-9 offset-3">
                     @if ( Model.Recipe.Id != 0 )
                     {
-                        
+
                         // Edit button and back to list button
                         <partial name="_EditAndBackToListButton" model="Model.Recipe.Id" />
                     }
@@ -213,18 +220,22 @@
     <script src="~/js/library/list_item_selector.js"></script>
     <script src="~/js/library/string_helper.js"></script>
     <script>
-        // Initialize data.
-        var name;        
+        // Initialize cookbook data.
+        var cookbookSelectorName;        
         var cookbookInitialIdsArray = [];
         var cookbookInitialNamesArray = [];
         var elementId_itemIds = 'CookbookSelector_ItemIds';
         var dataTable;
         var userCookbookData;
 
+        // initialize categories data 
+        var categoriesName;
+        var category_elementId_itemIds = 'CategorySelector_ItemIds';
+
 
         @{
             <text>
-                name = `@Model.CookbookSelector.Name`;
+                cookbookSelectorName = `@Model.CookbookSelector.Name`;
             </text>
             foreach ( var item in Model.CookbookSelector.SelectedItems )
             {
@@ -241,7 +252,7 @@
             }
         }
 
-        cookbookSelector = new ListItemSelector(name, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, function (id, name, btnId, li_class) {            
+        cookbookSelector = new ListItemSelector(cookbookSelectorName, cookbookInitialIdsArray, cookbookInitialNamesArray, elementId_itemIds, function (id, name, btnId, li_class) {            
             return `<li><span>${name}</span><div class="badge badge-danger" id="${btnId}" ><i class="far fa-window-close"></i></div></li>`
         });
         cookbookSelector.buildUI();
