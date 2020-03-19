@@ -221,21 +221,26 @@
     <script src="~/js/library/string_helper.js"></script>
     <script>
         // Initialize cookbook data.
-        var cookbookSelectorName;        
+        var cookbookSelectorName;
         var cookbookInitialIdsArray = [];
         var cookbookInitialNamesArray = [];
         var cookbook_elementId_itemIds = 'CookbookSelector_ItemIds';
-        var dataTable;
+        var cookbookDataTable;
         var userCookbookData;
 
-        // initialize categories data 
+        // initialize categories data
         var categorySelectorName;
         var category_elementId_itemIds = 'CategorySelector_ItemIds';
+        var categoryInitialIdsArray = [];
+        var categoryInitialNamesArray = [];
+        var categoryDataTable;
+        var userCategoryData;
 
 
         @{
             <text>
                 cookbookSelectorName = `@Model.CookbookSelector.Name`;
+                categorySelectorName = `@Model.CategorySelector.Name`;
             </text>
             foreach ( var item in Model.CookbookSelector.SelectedItems )
             {
@@ -245,31 +250,59 @@
                     <text>
                         cookbookInitialIdsArray.push(@id);
                     </text>
-                    <text>                        
+                    <text>
                         cookbookInitialNamesArray.push('@Html.Raw(HttpUtility.JavaScriptStringEncode(@item.Text))');
+                    </text>
+                }
+            }
+
+            foreach ( var item in Model.CategorySelector.SelectedItems )
+            {
+                long id = 0;
+                if (long.TryParse(item.Value, out id) )
+                {
+                    <text>
+                        categoryInitialIdsArray.push(@id);
+                    </text>
+                    <text>
+                        categoryInitialNamesArray.push('@Html.Raw(HttpUtility.JavaScriptStringEncode(@item.Text))');
                     </text>
                 }
             }
         }
 
-        cookbookSelector = new ListItemSelector(cookbookSelectorName, cookbookInitialIdsArray, cookbookInitialNamesArray, cookbook_elementId_itemIds, function (id, name, btnId, li_class) {            
+        cookbookSelector = new ListItemSelector(cookbookSelectorName, cookbookInitialIdsArray, cookbookInitialNamesArray, cookbook_elementId_itemIds, function (id, name, btnId, li_class) {
             return `<li><span>${name}</span><div class="badge badge-danger" id="${btnId}" ><i class="far fa-window-close"></i></div></li>`
         });
         cookbookSelector.buildUI();
 
+        categorySelector = new ListItemSelector(categorySelectorName, categoryInitialIdsArray, categoryInitialNamesArray, category_elementId_itemIds, function (id, name, btnId, li_class) {
+            return `<li><span>${name}</span><div class="badge badge-danger" id="${btnId}" ><i class="far fa-window-close"></i></div></li>`
+        });
+        categorySelector.buildUI();
 
         $(document).ready(function () {
             var ajax = getCookbookData();
             ajax.then(() => createCookbookDataTable());
-            
-            $("#addCookbooks").click(function () {                
-                dataTable.rows().invalidate().draw()
-            })
+
+
+            var ajaxCategory = getCategoryData();
+            ajaxCategory.then(() => createCategoryDataTable());
+
+            $("#addCookbooks").click(function () {
+                cookbookDataTable.rows().invalidate().draw()
+            });
+
+            $("#addCategories").click(function () {
+                categoryDataTable.rows().invalidate().draw()
+            });
+
+
         });
 
-        // region: Generate Cookbook DataTable 
-        function createCookbookDataTable() {            
-            dataTable = $('#dtCookbooks').DataTable({
+        // region: Generate Cookbook DataTable
+        function createCookbookDataTable() {
+            cookbookDataTable = $('#dtCookbooks').DataTable({
                 "paging": true,
                 "pagingType": "simple_numbers",
                 "data": userCookbookData.data,
@@ -282,9 +315,9 @@
                         {
                             "data": "id",
                             "render": function (data) {
-                                if (cookbookSelector.containsId(data)) {                                    
+                                if (cookbookSelector.containsId(data)) {
                                     return removeButton(data);
-                                } else {                                    
+                                } else {
                                     return addButton(data);
                                 }
                             }
@@ -294,13 +327,13 @@
                     "emptyTable": "No records found"
                 },
                 "width": "100%",
-                "createdRow": function (row, data, dataIndex) {                    
-                    $(row).addClass("text-center");                    
+                "createdRow": function (row, data, dataIndex) {
+                    $(row).addClass("text-center");
                 }
             });
 
             $('#dtCookbooks tbody').on('click', 'button', function () {
-                var data = dataTable.row( $(this).parents('tr') ).data();
+                var data = cookbookDataTable.row( $(this).parents('tr') ).data();
                 cookbookSelector.updateSelected(data["id"], data["name"]);
                 $(this).toggleClass("btn-primary");
                 $(this).toggleClass("btn-danger");
@@ -314,7 +347,7 @@
         }
         function addButton(id) {
             return `<button type="button" class="btn btn-primary" /><i id="cbIcon" class="fa fa-plus-square-o"></i></button>`
-        }        
+        }
 
         function getCookbookData() {
             return $.ajax({
@@ -325,9 +358,68 @@
                 success: function (json) {
                     userCookbookData = json;
                 }
-            });            
+            });
         }
-        // End Region: Generate Cookbook DataTable 
+        // End Region: Generate Cookbook DataTable
+
+        // Begin Region: Generate Category DataTable
+        
+        function createCategoryDataTable() {
+            categoryDataTable = $('#dtCategories').DataTable({
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "data": userCategoryData.data,
+                "columns": [
+                        { "data": "name" },                                                
+                        {
+                            "data": "id",
+                            "render": function (data) {
+                                if (categorySelector.containsId(data)) {
+                                    return removeCategoryButton(data);
+                                } else {
+                                    return addCategoryButton(data);
+                                }
+                            }
+                        },
+                    ],
+                 "language": {
+                    "emptyTable": "No records found"
+                },
+                "width": "100%",
+                "createdRow": function (row, data, dataIndex) {
+                    $(row).addClass("text-center");
+                }
+            });
+
+            $('#dtCategories tbody').on('click', 'button', function () {
+                var data = categoryDataTable.row( $(this).parents('tr') ).data();
+                categorySelector.updateSelected(data["id"], data["name"]);
+                $(this).toggleClass("btn-primary");
+                $(this).toggleClass("btn-danger");
+                $(this).children("#catIcon").toggleClass("far fa-window-close");
+                $(this).children("#catIcon").toggleClass("fa fa-plus-square-o");
+            });
+        }
+        function removeCategoryButton(id) {
+            return `<button type="button" class="btn btn-danger" /><i id="catIcon" class="far fa-window-close"></i></button>`
+        }
+        function addCategoryButton(id) {
+            return `<button type="button" class="btn btn-primary" /><i id="catIcon" class="fa fa-plus-square-o"></i></button>`
+        }
+        function getCategoryData() {
+            return $.ajax({
+                async: false,
+                url: "/user/category/GetAll",
+                type: "GET",
+                datatype: "json",
+                success: function (json) {
+                    userCategoryData = json;
+                }
+            });
+        }
+        
+        // End Region
+
 
         // Region: Community
         $(function () {

@@ -27,7 +27,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         {
             RecipeViewModel recipeViewModel = new RecipeViewModel();            
             recipeViewModel.Recipe = await _unitOfWork.Recipe.GetFirstOrDefaultAsync( x => x.Id == id,
-                includeProperties: "CommunityRecipe,CommunityRecipe,Instruction,Ingredient,CookbookRecipe,CookbookRecipe.Cookbook,RecipeUserImage,RecipeUserImage.UserImage,FeedRecipe,FeedRecipe.Feed", false); 
+                includeProperties: "CommunityRecipe,CommunityRecipe,Instruction,Ingredient,CookbookRecipe,CookbookRecipe.Cookbook,RecipeUserImage,RecipeUserImage.UserImage,FeedRecipe,FeedRecipe.Feed,RecipeCategory,RecipeCategory.Category", false); 
 
             if ( recipeViewModel.Recipe != null )
             {
@@ -64,9 +64,15 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
                 if ( recipeViewModel.Recipe.CookbookRecipe != null && recipeViewModel.Recipe.CookbookRecipe.Count > 0 )
                 {
-                    recipeViewModel.CookbookIds = string.Join(",", recipeViewModel.Recipe.CookbookRecipe.Select(x=> x.CookbookId.ToString()));
+                    //recipeViewModel.CookbookIds = string.Join(",", recipeViewModel.Recipe.CookbookRecipe.Select(x=> x.CookbookId.ToString()));
                     recipeViewModel.CookbookSelector.AddListItems(recipeViewModel.Recipe.CookbookRecipe.Select(x => x.Cookbook).ToList());
-                }                    
+                }
+
+                if ( recipeViewModel.Recipe.RecipeCategory != null && recipeViewModel.Recipe.RecipeCategory.Count > 0 )
+                {
+                    //recipeViewModel.CookbookIds = string.Join(",", recipeViewModel.Recipe.CookbookRecipe.Select(x => x.CookbookId.ToString()));
+                    recipeViewModel.CategorySelector.AddListItems(recipeViewModel.Recipe.RecipeCategory.Select(x => x.Category).ToList());
+                }
             }
             return recipeViewModel;
         }
