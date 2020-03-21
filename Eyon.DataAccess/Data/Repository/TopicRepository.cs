@@ -29,16 +29,11 @@ namespace Eyon.DataAccess.Data.Repository
             this._db = db;
         }
 
-        //public void Add( ITopicItem entity )
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-            /// <summary>
-            /// Adds a topic object from an ITopicItem entity.
-            /// </summary>
-            /// <param name="entity">A class that inherits from ITopicItem</param>
-            /// <returns>The new Topic object</returns>
+        /// <summary>
+        /// Adds a topic object from an ITopicItem entity.
+        /// </summary>
+        /// <param name="entity">A class that inherits from ITopicItem</param>
+        /// <returns>The new Topic object</returns>
         public Topic AddFromITopicItem( ITopicItem entity )
         {
             Topic topic = new Topic();

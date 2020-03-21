@@ -300,6 +300,40 @@ ol#list_selected_cookbook {
             margin: 0.25rem;
         }
 
+ol#list_selected_category {
+    list-style: none;
+
+}
+    ol#list_selected_category li {
+        border: 1px hidden rgb(35, 68, 186);
+        border-radius: 5px;
+        display: inline;
+        background-color: rgb(181, 216, 255);
+        color: rgb(35, 68, 186);
+        margin-right: 0.3em;
+        padding-left: 0.3em;
+        font-weight: 200;
+        white-space: nowrap;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    }
+        ol#list_selected_category li div {
+            display: inline-block;
+            padding: 0.3em 0.5em;
+            font-size: 75%;
+            font-weight: normal;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            margin-bottom: 0.3em;
+            vertical-align: middle;
+            cursor: pointer;
+            -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+        }
 .text-emphasis {
     text-shadow: 0 0 1px black;
 }

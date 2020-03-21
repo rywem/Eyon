@@ -114,26 +114,30 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-4">
+                <div class="col-3">
                     Add to Cookbooks
+                </div>
+                <div class="col-2">
                     <button type="button" class="btn btn-primary" id="addCookbooks" data-toggle="modal" data-target="#cookbooksModal">
                         <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
                     </button>
                 </div>
-                <div class="col-8">
+                <div class="col-7">
                     @Html.HiddenFor(x => x.CookbookSelector.ItemIds)
                     <ol id="@Model.CookbookSelector.GetListId()">
                     </ol>
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-4">
+                <div class="col-3">
                     Add Categories
+                </div>
+                <div class="col-2">
                     <button type="button" class="btn btn-primary" id="addCategories" data-toggle="modal" data-target="#categoriesModal">
                         <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
                     </button>
                 </div>
-                <div class="col-8">
+                <div class="col-7">
                     @Html.HiddenFor(x => x.CategorySelector.ItemIds)
                     <ol id="@Model.CategorySelector.GetListId()">
                     </ol>
@@ -277,7 +281,7 @@
         cookbookSelector.buildUI();
 
         categorySelector = new ListItemSelector(categorySelectorName, categoryInitialIdsArray, categoryInitialNamesArray, category_elementId_itemIds, function (id, name, btnId, li_class) {
-            return `<li><span>${name}</span><div class="badge badge-danger" id="${btnId}" ><i class="far fa-window-close"></i></div></li>`
+            return `<li><span>${name}</span><div id="${btnId}" ><i class="far fa-window-close"></i></div></li>`
         });
         categorySelector.buildUI();
 

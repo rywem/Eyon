@@ -12,6 +12,8 @@ using Eyon.Models.Relationship;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Eyon.Models.SiteObjects;
 using Eyon.DataAccess.Data.Caller;
+using Eyon.DataAccess.Data.Abstraction;
+using Eyon.DataAccess.Data.Security;
 
 namespace Eyon.DataAccess.Data.Orchestrators
 {
@@ -126,16 +128,16 @@ namespace Eyon.DataAccess.Data.Orchestrators
             await _unitOfWork.SaveAsync();            
             var topic  = _unitOfWork.Topic.AddFromITopicItem(recipeViewModel.Recipe);
             await _unitOfWork.SaveAsync();
-            //recipeViewModel.Feed = _unitOfWork.Feed.AddFromIFeedItem(recipeViewModel.Recipe);
-            var feed = feedCaller.AddFeed(recipeViewModel.Recipe);
+            var feed = _unitOfWork.Feed.AddFromIFeedItem(recipeViewModel.Recipe);            
             await _unitOfWork.SaveAsync();
             // Add security relationship to feed record                        
             feedCaller.AddOwnerRelationship(currentApplicationUserId, feed);
-            await _unitOfWork.SaveAsync();            
-            feedCaller.AddFeedTopic(feed, topic);
+            await _unitOfWork.SaveAsync();
+            _unitOfWork.FeedTopic.AddFromEntities(feed, topic);
             _unitOfWork.CommunityRecipe.Add(new CommunityRecipe() { CommunityId = communityFromDb.Id, RecipeId = recipeViewModel.Recipe.Id });            
-            feedCaller.AddFeedRecipe(feed, recipeViewModel.Recipe);            
+            _unitOfWork.FeedRecipe.AddFromEntities(feed, recipeViewModel.Recipe);
             await feedCaller.AddFeedCommunityStateCountryRelationshipsAsync(feed, communityFromDb);
+
             // Add instructions
             foreach ( var item in recipeViewModel.Instruction )
             {
@@ -158,12 +160,9 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
                     if (cookbookFromDb != null)
                     {
-                        //CookbookRecipe cookbookRecipe = new CookbookRecipe();
-                        //cookbookRecipe.CookbookId = cookbookFromDb.Id;
-                        //cookbookRecipe.RecipeId = recipeViewModel.Recipe.Id;
-                        //_unitOfWork.CookbookRecipe.Add(cookbookRecipe);
                         _unitOfWork.CookbookRecipe.AddFromEntities(cookbookFromDb, recipeViewModel.Recipe);
-                        feedCaller.AddFeedCookbook(feed, cookbookFromDb);
+                        //feedCaller.AddFeedCookbook(feed, cookbookFromDb);
+                        _unitOfWork.FeedCookbook.AddFromEntities(feed, cookbookFromDb);
                     }
                     else
                     {
@@ -172,9 +171,9 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 }
                 await _unitOfWork.SaveAsync();
             }
-
+            
             if ( !string.IsNullOrEmpty(recipeViewModel.CategorySelector.ItemIds) )
-            {
+            {                
                 foreach ( var id in recipeViewModel.CategorySelector.ParseItemIds() )
                 {
                     var categoryFromDb = await _unitOfWork.Category.GetFirstOrDefaultAsync(x => x.Id == id);
@@ -182,10 +181,10 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     if ( categoryFromDb != null )
                     {
                         _unitOfWork.RecipeCategory.AddFromEntities(recipeViewModel.Recipe, categoryFromDb);
+                        _unitOfWork.FeedCategory.AddFromEntities(feed, categoryFromDb);
                     }
                 }
             }
-
             await _unitOfWork.SaveAsync();
             await AddRecipeUserImageAsync(currentApplicationUserId, recipeViewModel);            
         }
@@ -254,6 +253,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
         public void UpdateRecipe(RecipeViewModel recipeViewModel)
         {
+            throw new NotImplementedException();
             // Update Ingredients, Add Ingredients/Remove Ingredients
 
             // Update Instructions, Add Instructions/Remove Instructions
@@ -275,7 +275,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 throw new SafeException("An error occurred.", new Exception(string.Format("Attempted to insert update recipe, but was not the owner. Violating userId {0}, Attempted to update Recipe ID {1}", currentApplicationUserId, recipeViewModel.Recipe.Id)));
             }
 
-            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,CommunityRecipe.Community,Instruction,Ingredient,CookbookRecipe,FeedRecipe,FeedRecipe.Feed");            
+            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,CommunityRecipe.Community,Instruction,Ingredient,CookbookRecipe,FeedRecipe,FeedRecipe.Feed,RecipeCategory");
             if ( recipeFromDb == null )
             {
                 return;
@@ -383,7 +383,8 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 await feedCaller.AddFeedCommunityStateCountryRelationshipsAsync(recipeFromDb.FeedRecipe.Feed, newCommunityFromDb);
                 await _unitOfWork.SaveAsync();
             }
-            // Update cookbooks, add cookbooks/remove cookbooks
+            // Update cookbooks
+            // add cookbooks/remove cookbooks
             List<long> cookbookIdList = new List<long>();
             if (!string.IsNullOrEmpty(recipeViewModel.CookbookSelector.ItemIds))
             {
@@ -391,17 +392,14 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 foreach (var id in cookbookIdList)
                 {
                     //if existing relation does not exist, add the relationship
-                    if (recipeFromDb.CookbookRecipe != null && !recipeFromDb.CookbookRecipe.Any(x => x.CookbookId == id))
+                    if ( recipeFromDb.CookbookRecipe == null || (recipeFromDb.CookbookRecipe != null && !recipeFromDb.CookbookRecipe.Any(x => x.CookbookId == id)))
                     {
                         // Only add the relation if the current user owns the target cookbook and the cookbook exists.
                         var cookbookFromDb = await _unitOfWork.Cookbook.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == id);
                         if (cookbookFromDb != null)
                         {
-                            CookbookRecipe cookbookRecipe = new CookbookRecipe();
-                            cookbookRecipe.CookbookId = cookbookFromDb.Id;
-                            cookbookRecipe.RecipeId = recipeViewModel.Recipe.Id;
-                            _unitOfWork.CookbookRecipe.Add(cookbookRecipe);                            
-                            feedCaller.AddFeedCookbook(recipeFromDb.FeedRecipe.Feed, cookbookFromDb);
+                            _unitOfWork.CookbookRecipe.AddFromEntities(cookbookFromDb, recipeViewModel.Recipe);
+                            _unitOfWork.FeedCookbook.AddFromEntities(recipeFromDb.FeedRecipe.Feed, cookbookFromDb);
                         }
                         else
                         {
@@ -410,7 +408,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     }
                 }
             }
-            if (recipeFromDb.CookbookRecipe != null)
+            if (recipeFromDb.CookbookRecipe != null )
             {
                 // check to see if any cookbooks have been removed.
                 foreach (var item in recipeFromDb.CookbookRecipe)
@@ -425,11 +423,53 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     }
                 }
             }
+
+
+            // Update Categories
+            List<long> categoryIdList = new List<long>();
+
+            if ( !string.IsNullOrEmpty(recipeViewModel.CategorySelector.ItemIds) )
+            {
+                categoryIdList = recipeViewModel.CategorySelector.ParseItemIds();
+                foreach ( var id in categoryIdList )
+                {
+                    //if existing relation does not exist, add the relationship
+                    if ( recipeFromDb.RecipeCategory == null || (recipeFromDb.RecipeCategory != null && !recipeFromDb.RecipeCategory.Any(x => x.CategoryId == id)) )
+                    {
+                        // Only add the relation if the category exists
+                        var categoryFromDb = await _unitOfWork.Category.GetFirstOrDefaultAsync(x => x.Id == id);
+                        if ( categoryFromDb != null )
+                        {                            
+                            _unitOfWork.RecipeCategory.AddFromEntities(recipeFromDb, categoryFromDb);
+                            _unitOfWork.FeedCategory.AddFromEntities(recipeFromDb.FeedRecipe.Feed, categoryFromDb);
+                        }
+                        else
+                        {
+                            throw new SafeException("An error occurred.", new Exception("Attempted to insert CookbookRecipe relation, but did not own cookbook or cookbook did not exist."));
+                        }
+                    }
+                }
+            }
+            // Check to see if any categories were removed.
+            if ( recipeFromDb.RecipeCategory != null )
+            {
+                // check to see if any categories have been removed.
+                foreach ( var item in recipeFromDb.RecipeCategory )
+                {
+                    if ( !categoryIdList.Any(x => x == item.CategoryId) )
+                    {
+                        var feedCategoryFromDb = await _unitOfWork.FeedCategory.GetFirstOrDefaultAsync(x => x.FeedId == recipeFromDb.FeedRecipe.Feed.Id && x.CategoryId == item.CategoryId);
+                        if ( feedCategoryFromDb != null )
+                            feedCaller.RemoveFeedCategory(feedCategoryFromDb);
+
+                        _unitOfWork.RecipeCategory.Remove(item);
+                    }
+                }
+            }
+
             await _unitOfWork.SaveAsync();
 
-            // Update RecipeSiteImages,  add/remove
-
-            // Update Categories: Add Relations, remove relations
+            // To do: Update RecipeSiteImages,  add/remove
 
         }
         public async Task UpdateRecipeTransactionAsync( string currentApplicationUserId, RecipeViewModel recipeViewModel )
@@ -447,6 +487,97 @@ namespace Eyon.DataAccess.Data.Orchestrators
                     throw ex;
                 }
             }
+        }
+
+        public async Task DeleteRecipeTransactionAsync( string currentApplicationUserId, Recipe recipe )
+        {
+            using ( var transaction = _unitOfWork.BeginTransaction() )
+            {
+                try
+                {
+                    await DeleteRecipeAsync( currentApplicationUserId, recipe);
+                    await transaction.CommitAsync();
+                }
+                catch ( Exception ex )
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+            }
+        }
+
+        private async Task DeleteRecipeAsync( string currentApplicationUserId, Recipe recipe )
+        {
+            //var recipe = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipe.Id, includeProperties: "ApplicationUserRecipe,CommunityRecipe,CommunityRecipe,Instruction,Ingredient,CookbookRecipe,RecipeUserImage,RecipeUserImage.UserImage,FeedRecipe,FeedRecipe.Feed,RecipeCategory", false);
+
+            //if ( recipeFromDb == null )
+                //throw new SafeException("An error occurred.", new Exception(string.Format("Owned item not found. Recipe ID {0},  Current application user ID {1}", recipe.Id, currentApplicationUserId)));
+
+            if ( recipe.CommunityRecipe != null )
+            {
+                _unitOfWork.CommunityRecipe.Remove(recipe.CommunityRecipe);
+            }
+
+            if ( recipe.Instruction != null )
+            {
+                foreach ( var item in recipe.Instruction )
+                {
+                    _unitOfWork.Instruction.Remove(item);
+                }
+            }
+            if ( recipe.Ingredient != null )
+            {
+                foreach ( var item in recipe.Ingredient )
+                {
+                    _unitOfWork.Ingredient.Remove(item);
+                }
+            }
+            if ( recipe.RecipeUserImage != null )
+            {
+                foreach ( var item in recipe.RecipeUserImage )
+                {
+                    _unitOfWork.UserImage.Remove(item.UserImage);
+                    _unitOfWork.RecipeUserImage.Remove(item);
+                }
+            }
+
+            if ( recipe.RecipeCategory != null )
+            {
+                foreach ( var item in recipe.RecipeCategory )
+                {
+                    _unitOfWork.RecipeCategory.Remove(item);
+                }
+            }
+
+            if ( recipe.CookbookRecipe != null )
+            {
+                foreach ( var item in recipe.CookbookRecipe )
+                {
+                    _unitOfWork.CookbookRecipe.Remove(item);
+                }
+            }
+            
+            var topic = await _unitOfWork.Topic.GetFirstOrDefaultAsync(x => x.ObjectId == recipe.Id && x.TopicType == recipe.TopicType);
+            if ( topic != null )
+                _unitOfWork.Topic.Remove(topic);
+
+            await _unitOfWork.SaveAsync();
+            if ( recipe.FeedRecipe != null )
+            {
+                FeedSecurity feedSecurity = new FeedSecurity(_unitOfWork);
+                await feedSecurity.DeleteAsync(currentApplicationUserId, recipe.FeedRecipe.FeedId, false);
+            }
+
+            if ( recipe.ApplicationUserOwner != null )
+            {
+                foreach ( var item in recipe.ApplicationUserOwner )
+                {
+                    _unitOfWork.ApplicationUserRecipe.Remove(item);
+                }
+            }
+
+            _unitOfWork.Recipe.Remove(recipe);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

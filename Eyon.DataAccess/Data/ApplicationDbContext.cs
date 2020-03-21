@@ -328,7 +328,7 @@ namespace Eyon.DataAccess.Data
                 .HasKey(c => new { c.FeedId, c.ProfileId });
             modelBuilder.Entity<FeedProfile>()
                 .HasOne(c => c.Feed)
-                .WithMany(c => c.FeedUser)
+                .WithMany(c => c.FeedProfile)
                 .HasForeignKey(c => c.FeedId);
             modelBuilder.Entity<FeedProfile>()
                 .HasOne(c => c.Profile)

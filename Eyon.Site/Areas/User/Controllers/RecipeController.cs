@@ -6,7 +6,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Eyon.DataAccess.Data.Orchestrators;
 using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.DataAccess.Data.Security;
 using Eyon.Models;
+using Eyon.Models.Errors;
 using Eyon.Models.ViewModels;
 using Eyon.Site.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -22,13 +24,14 @@ namespace Eyon.Site.Areas.User.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private RecipeOrchestrator recipeOrchestrator;
-
+        private readonly RecipeSecurity _recipeSecurity;        
         [BindProperty]
         public RecipeViewModel recipeViewModel { get; set; }
 
         public RecipeController( IUnitOfWork unitOfWork )
         {
             this._unitOfWork = unitOfWork;
+            this._recipeSecurity = new RecipeSecurity(_unitOfWork);
             this.recipeOrchestrator = new RecipeOrchestrator(_unitOfWork);
         }
 
@@ -174,6 +177,29 @@ namespace Eyon.Site.Areas.User.Controllers
             }
             recipeViewModel.UserImage = null;
             return View(recipeViewModel);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(long id )
+        {
+            try
+            {
+                var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+                var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                await _recipeSecurity.DeleteAsync(claims.Value, id);
+            }
+            catch ( SafeException exception )
+            {
+                ModelState.AddModelError("Recipe.Id", "An error occurred");
+                if ( exception.ErrorType == Models.Enums.ErrorType.Denied )
+                    return RedirectToAction("Denied", "Error");
+                throw exception;
+            }
+            catch (Exception ex )
+            {
+                throw ex;
+            }
+            return Json(new { success = true, message = "Delete successful." });
         }
 
         [HttpGet]

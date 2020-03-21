@@ -29,19 +29,15 @@ namespace Eyon.DataAccess.Data.Caller
             _unitOfWork.Feed.AddOwnerRelationship(currentApplicationUserId, feed, new ApplicationUserFeed());
         }
 
-        public FeedTopic AddFeedTopic(Feed feed, Topic topic)
-        {
-            var feedTopic = new FeedTopic() { FeedId = feed.Id, TopicId = topic.Id };
-            _unitOfWork.FeedTopic.Add(feedTopic);
-            return feedTopic;
-        }
+        //public FeedTopic AddFeedTopic(Feed feed, Topic topic)
+        //{
+        //    return _unitOfWork.FeedTopic.AddFromEntities(feed, topic);
+        //}
 
-        public FeedRecipe AddFeedRecipe(Feed feed, Recipe recipe )
-        {
-            var feedRecipe = new FeedRecipe() { FeedId = feed.Id, RecipeId = recipe.Id };
-            _unitOfWork.FeedRecipe.Add(feedRecipe );
-            return feedRecipe;
-        }
+        //public FeedRecipe AddFeedRecipe(Feed feed, Recipe recipe )
+        //{            
+        //    return _unitOfWork.FeedRecipe.AddFromEntities(feed, recipe );
+        //}
 
         /// <summary>
         /// Adds the FeedCommunity, FeedState, and FeedCountry relationships
@@ -50,17 +46,19 @@ namespace Eyon.DataAccess.Data.Caller
         /// <param name="community">A Community object</param>
         public void AddFeedCommunityStateCountryRelationships(Feed feed, Community community )
         {
-            var communityFromDb = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == community.Id, includeProperties: "CommunityState,CommunityState.State,CommunityState.State.Country");
+            var communityFromDb = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == community.Id, includeProperties: "Country,CommunityState,CommunityState.State");
 
             if ( communityFromDb != null )
             {
-                AddFeedCommunity(feed, communityFromDb);
-                if ( communityFromDb.CommunityState != null && communityFromDb.CommunityState.State != null)
-                {
-                    AddFeedState(feed, communityFromDb.CommunityState.State);
+                _unitOfWork.FeedCommunity.AddFromEntities(feed, communityFromDb);
 
-                    if ( communityFromDb.CommunityState.State.Country != null )
-                        AddFeedCountry(feed, communityFromDb.CommunityState.State.Country);
+                if ( communityFromDb.Country != null )
+                {
+                    _unitOfWork.FeedCountry.AddFromEntities(feed, communityFromDb.Country);
+                }
+                if ( communityFromDb.CommunityState != null && communityFromDb.CommunityState.State != null )
+                {
+                    _unitOfWork.FeedState.AddFromEntities(feed, communityFromDb.CommunityState.State);
                 }
             }
         }
@@ -73,40 +71,48 @@ namespace Eyon.DataAccess.Data.Caller
         /// <returns>A task</returns>
         public async Task AddFeedCommunityStateCountryRelationshipsAsync( Feed feed, Community community )
         {
-            var communityFromDb = await _unitOfWork.Community.GetFirstOrDefaultAsync(x => x.Id == community.Id, includeProperties: "CommunityState,CommunityState.State,CommunityState.State.Country");
+            var communityFromDb = await _unitOfWork.Community.GetFirstOrDefaultAsync(x => x.Id == community.Id, includeProperties: "Country,CommunityState,CommunityState.State");
 
             if ( communityFromDb != null )
             {
-                AddFeedCommunity(feed, communityFromDb);
+                _unitOfWork.FeedCommunity.AddFromEntities(feed, communityFromDb);
+
+                if ( communityFromDb.Country != null )
+                {
+                    _unitOfWork.FeedCountry.AddFromEntities(feed, communityFromDb.Country);
+                }
                 if ( communityFromDb.CommunityState != null && communityFromDb.CommunityState.State != null )
                 {
-                    AddFeedState(feed, communityFromDb.CommunityState.State);
-
-                    if ( communityFromDb.CommunityState.State.Country != null )
-                        AddFeedCountry(feed, communityFromDb.CommunityState.State.Country);
+                    _unitOfWork.FeedState.AddFromEntities(feed, communityFromDb.CommunityState.State);
                 }
             }
         }
 
-        public FeedCommunity AddFeedCommunity(Feed feed, Community community)
-        {
-            return _unitOfWork.FeedCommunity.AddFromEntities(feed, community);
-        }
+        //public FeedCommunity AddFeedCommunity(Feed feed, Community community)
+        //{
+        //    return _unitOfWork.FeedCommunity.AddFromEntities(feed, community);
+        //}
 
-        public FeedState AddFeedState(Feed feed, State state)
-        {
-            return _unitOfWork.FeedState.AddFromEntities(feed, state);
-        }
+        //public FeedState AddFeedState(Feed feed, State state)
+        //{
+        //    return _unitOfWork.FeedState.AddFromEntities(feed, state);
+        //}
 
-        public FeedCountry AddFeedCountry(Feed feed, Country country )
-        {
-            return _unitOfWork.FeedCountry.AddFromEntities(feed, country);
-        }
+        //public FeedCountry AddFeedCountry(Feed feed, Country country )
+        //{
+        //    return _unitOfWork.FeedCountry.AddFromEntities(feed, country);
+        //}
 
-        public FeedCookbook AddFeedCookbook(Feed feed, Cookbook cookbook )
-        {
-            return _unitOfWork.FeedCookbook.AddFromEntities(feed, cookbook);
-        }
+        //public FeedCookbook AddFeedCookbook(Feed feed, Cookbook cookbook )
+        //{
+        //    return _unitOfWork.FeedCookbook.AddFromEntities(feed, cookbook);
+        //}
+
+        //public FeedCategory AddFeedCategory( Feed feed, Category category)
+        //{
+        //    return _unitOfWork.FeedCategory.AddFromEntities(feed, category);
+        //}
+
         #endregion
 
         #region Update
@@ -118,6 +124,17 @@ namespace Eyon.DataAccess.Data.Caller
         #endregion
 
         #region Remove
+
+
+        public void RemoveFeedCategory( Feed feed, Category category )
+        {
+            var feedCategory = _unitOfWork.FeedCategory.GetFirstOrDefault(x => x.FeedId == feed.Id && x.CategoryId == category.Id);
+            RemoveFeedCategory(feedCategory);
+        }
+        public void RemoveFeedCategory( FeedCategory feedCategory )
+        {
+            _unitOfWork.FeedCategory.Remove(feedCategory);
+        }
 
         public void RemoveFeedCommunity( Feed feed, Community community )
         {
@@ -138,36 +155,35 @@ namespace Eyon.DataAccess.Data.Caller
 
         public void RemoveFeedCommunityStateCountryRelationships(Feed feed, Community community)
         {
-            var communityFromDb = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == community.Id, includeProperties: "CommunityState,CommunityState.State,CommunityState.State.Country");
+            var communityFromDb = _unitOfWork.Community.GetFirstOrDefault(x => x.Id == community.Id, includeProperties: "CommunityState,CommunityState.State,Country");
             if ( communityFromDb != null )
             {
                 RemoveFeedCommunity(feed, communityFromDb);
+                if ( communityFromDb.Country != null )
+                {
+                    RemoveFeedCountry(feed, communityFromDb.Country);
+                }
                 if ( communityFromDb.CommunityState != null && communityFromDb.CommunityState.State != null )
                 {
                     RemoveFeedState(feed, communityFromDb.CommunityState.State);
 
-                    if ( communityFromDb.CommunityState.State.Country != null )
-                    {
-                        RemoveFeedCountry(feed, communityFromDb.CommunityState.State.Country);
-                    }
                 }
             }
         }
 
         public async Task RemoveFeedCommunityStateCountryRelationshipsAsync( Feed feed, Community community )
         {
-            var communityFromDb = await _unitOfWork.Community.GetFirstOrDefaultAsync(x => x.Id == community.Id, includeProperties: "CommunityState,CommunityState.State,CommunityState.State.Country");
+            var communityFromDb = await _unitOfWork.Community.GetFirstOrDefaultAsync(x => x.Id == community.Id, includeProperties: "CommunityState,CommunityState.State,Country");
             if ( communityFromDb != null )
             {
                 await RemoveFeedCommunityAsync(feed, communityFromDb);
+                if ( communityFromDb.Country != null )
+                {
+                    await RemoveFeedCountryAsync(feed, communityFromDb.Country);
+                }
                 if ( communityFromDb.CommunityState != null && communityFromDb.CommunityState.State != null )
                 {
                     await RemoveFeedStateAsync(feed, communityFromDb.CommunityState.State);
-
-                    if ( communityFromDb.CommunityState.State.Country != null )
-                    {
-                        await RemoveFeedCountryAsync(feed, communityFromDb.CommunityState.State.Country);
-                    }
                 }
             }
         }
@@ -219,6 +235,7 @@ namespace Eyon.DataAccess.Data.Caller
         {
             _unitOfWork.FeedCountry.Remove(feedCountry);
         }
+
         #endregion
     }
 }

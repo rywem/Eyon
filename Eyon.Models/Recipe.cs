@@ -46,10 +46,11 @@ namespace Eyon.Models
         public ICollection<ApplicationUserRecipe> ApplicationUserOwner { get; set; }
         public FeedRecipe FeedRecipe { get; set; }
 
+
+
         [NotMapped]
         public TopicType TopicType { get => TopicType.Recipe; }
         // TODO: Add EAV table with:  Calories, Yield, ReadyIn
-
 
     }
 }

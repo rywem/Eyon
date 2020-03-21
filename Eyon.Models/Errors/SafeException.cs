@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eyon.Models.Enums;
+using System;
 
 namespace Eyon.Models.Errors
 {    
@@ -8,6 +9,7 @@ namespace Eyon.Models.Errors
     public class SafeException : Exception
     {
         public string SafeMessage { get; set; }
+        public ErrorType ErrorType { get; set; } = ErrorType.Server;
         public SafeException(string safeMessage) : base(safeMessage)
         {
             this.SafeMessage = safeMessage;
@@ -16,6 +18,11 @@ namespace Eyon.Models.Errors
         public SafeException( string safeMessage, Exception innerException ) : base(safeMessage, innerException)
         {
             
+        }
+
+        public SafeException( ErrorType errorType, Exception innerException ) : base(errorType.ToString(), innerException)
+        {
+            this.ErrorType = errorType;
         }
     }
 }
