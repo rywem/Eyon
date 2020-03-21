@@ -149,13 +149,13 @@ namespace Eyon.DataAccess.Data
                 .WithMany(cc => cc.PostalCodeGeocode)
                 .HasForeignKey(cc => cc.GeocodeId);
 
-            modelBuilder.Entity<CookbookCategories>()
+            modelBuilder.Entity<CookbookCategory>()
                 .HasKey(bc => new { bc.CookbookId, bc.CategoryId });
-            modelBuilder.Entity<CookbookCategories>()
+            modelBuilder.Entity<CookbookCategory>()
                 .HasOne(cc => cc.Cookbook)
                 .WithMany(cc => cc.CookbookCategory)
                 .HasForeignKey(cc => cc.CookbookId);
-            modelBuilder.Entity<CookbookCategories>()
+            modelBuilder.Entity<CookbookCategory>()
                 .HasOne(cc => cc.Category)
                 .WithMany(cc => cc.CookbookCategory)
                 .HasForeignKey(cc => cc.CategoryId);
@@ -1094,7 +1094,7 @@ namespace Eyon.DataAccess.Data
 
         #region Relationship Tables
         public DbSet<CommunityCookbook> CommunityCookbook { get; set; }
-        public DbSet<CookbookCategories> CookbookCategory { get; set; }
+        public DbSet<CookbookCategory> CookbookCategory { get; set; }
         public DbSet<CommunityState> CommunityState { get; set; }
         public DbSet<OrganizationCookbook> OrganizationCookbook { get; set; }
         public DbSet<OrganizationCommunity> OrganizationCommunity { get; set; }

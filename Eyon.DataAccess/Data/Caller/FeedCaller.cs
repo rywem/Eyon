@@ -90,34 +90,22 @@ namespace Eyon.DataAccess.Data.Caller
 
         public FeedCommunity AddFeedCommunity(Feed feed, Community community)
         {
-            var feedCommunity = new FeedCommunity() { CommunityId = community.Id, FeedId = feed.Id };
-            _unitOfWork.FeedCommunity.Add(feedCommunity);
-            return feedCommunity;
+            return _unitOfWork.FeedCommunity.AddFromEntities(feed, community);
         }
 
         public FeedState AddFeedState(Feed feed, State state)
         {
-            var feedState = new FeedState() { FeedId = feed.Id, StateId = state.Id };
-            _unitOfWork.FeedState.Add(feedState);
-            return feedState;
+            return _unitOfWork.FeedState.AddFromEntities(feed, state);
         }
 
         public FeedCountry AddFeedCountry(Feed feed, Country country )
         {
-            var feedCountry = new FeedCountry() { FeedId = feed.Id, CountryId = country.Id };
-            _unitOfWork.FeedCountry.Add(feedCountry);
-            return feedCountry;
+            return _unitOfWork.FeedCountry.AddFromEntities(feed, country);
         }
 
         public FeedCookbook AddFeedCookbook(Feed feed, Cookbook cookbook )
         {
-            var feedCookbook = new FeedCookbook()
-            {
-                CookbookId = cookbook.Id,
-                FeedId = feed.Id
-            };
-            _unitOfWork.FeedCookbook.Add(feedCookbook);
-            return feedCookbook;
+            return _unitOfWork.FeedCookbook.AddFromEntities(feed, cookbook);
         }
         #endregion
 

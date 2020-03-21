@@ -32,7 +32,7 @@ namespace Eyon.Models
         public DateTime CreationDateTime { get; set; }
         public DateTime ModifiedDateTime { get; set; }
         public ICollection<Eyon.Models.Relationship.CommunityCookbook> CommunityCookbook { get; set; }
-        public ICollection<CookbookCategories> CookbookCategory { get; set; }
+        public ICollection<CookbookCategory> CookbookCategory { get; set; }
 
         public ICollection<OrganizationCookbook> OrganizationCookbook { get; set; }
         public ICollection<CookbookRecipe> CookbookRecipe { get; set; }

@@ -23,7 +23,7 @@ namespace Eyon.Models
         [ForeignKey("SiteImageId")]
         public SiteImage SiteImage { get; set; }
 
-        public ICollection<CookbookCategories> CookbookCategory { get; set; }
+        public ICollection<CookbookCategory> CookbookCategory { get; set; }
         public ICollection<RecipeCategory> RecipeCategory { get; set; }
         public ICollection<FeedCategory> FeedCategory { get; set; }
         [NotMapped]

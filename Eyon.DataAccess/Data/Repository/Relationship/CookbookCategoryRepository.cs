@@ -6,7 +6,7 @@ using Eyon.Models;
 
 namespace Eyon.DataAccess.Data.Repository
 {
-    public class CookbookCategoryRepository : Repository<CookbookCategories>, ICookbookCategoryRepository
+    public class CookbookCategoryRepository : Repository<CookbookCategory>, ICookbookCategoryRepository
     {
         private readonly ApplicationDbContext _db;
 
@@ -15,7 +15,7 @@ namespace Eyon.DataAccess.Data.Repository
             this._db = db;
         }
 
-        public override void Add(CookbookCategories cookbookCategory)
+        public override void Add(CookbookCategory cookbookCategory)
         {
             if (_db.Category.Any(x => x.Id == cookbookCategory.CategoryId) == false)
                 throw new Exception("Category does not exist in database.");
@@ -29,9 +29,9 @@ namespace Eyon.DataAccess.Data.Repository
             base.Add(cookbookCategory);
         }
 
-        public CookbookCategories AddFromEntities( Cookbook firstEntity, Category secondEntity )
+        public CookbookCategory AddFromEntities( Cookbook firstEntity, Category secondEntity )
         {
-            var newObj = new CookbookCategories()
+            var newObj = new CookbookCategory()
             {
                 CookbookId = firstEntity.Id,
                 CategoryId = secondEntity.Id

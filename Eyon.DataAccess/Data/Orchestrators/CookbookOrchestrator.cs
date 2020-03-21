@@ -73,7 +73,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                         long id = 0;
                         if (long.TryParse(categories[i], out id) && id != 0)
                         {
-                            _unitOfWork.CookbookCategory.Add(new Eyon.Models.Relationship.CookbookCategories()
+                            _unitOfWork.CookbookCategory.Add(new Eyon.Models.Relationship.CookbookCategory()
                             {
                                 CategoryId = id,
                                 CookbookId = cookbookViewModel.Cookbook.Id
@@ -175,7 +175,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
                         var exist = objFromDb.CookbookCategory.FirstOrDefault(x => x.CategoryId == item);
                         if (exist == null)
                         {
-                            _unitOfWork.CookbookCategory.Add(new Eyon.Models.Relationship.CookbookCategories()
+                            _unitOfWork.CookbookCategory.Add(new Eyon.Models.Relationship.CookbookCategory()
                             {
                                 CategoryId = item,
                                 CookbookId = objFromDb.Id
