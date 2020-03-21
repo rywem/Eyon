@@ -158,11 +158,11 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
                     if (cookbookFromDb != null)
                     {
-                        CookbookRecipe cookbookRecipe = new CookbookRecipe();
-                        cookbookRecipe.CookbookId = cookbookFromDb.Id;
-                        cookbookRecipe.RecipeId = recipeViewModel.Recipe.Id;
-                        _unitOfWork.CookbookRecipe.Add(cookbookRecipe);
-
+                        //CookbookRecipe cookbookRecipe = new CookbookRecipe();
+                        //cookbookRecipe.CookbookId = cookbookFromDb.Id;
+                        //cookbookRecipe.RecipeId = recipeViewModel.Recipe.Id;
+                        //_unitOfWork.CookbookRecipe.Add(cookbookRecipe);
+                        _unitOfWork.CookbookRecipe.AddFromEntities(cookbookFromDb, recipeViewModel.Recipe);
                         feedCaller.AddFeedCookbook(feed, cookbookFromDb);
                     }
                     else
@@ -170,7 +170,22 @@ namespace Eyon.DataAccess.Data.Orchestrators
                         throw new SafeException("An error occurred.", new Exception("Attempted to insert CookbookRecipe relation, but did not own cookbook or cookbook did not exist."));
                     }
                 }
+                await _unitOfWork.SaveAsync();
             }
+
+            if ( !string.IsNullOrEmpty(recipeViewModel.CategorySelector.ItemIds) )
+            {
+                foreach ( var id in recipeViewModel.CategorySelector.ParseItemIds() )
+                {
+                    var categoryFromDb = await _unitOfWork.Category.GetFirstOrDefaultAsync(x => x.Id == id);
+
+                    if ( categoryFromDb != null )
+                    {
+                        _unitOfWork.RecipeCategory.AddFromEntities(recipeViewModel.Recipe, categoryFromDb);
+                    }
+                }
+            }
+
             await _unitOfWork.SaveAsync();
             await AddRecipeUserImageAsync(currentApplicationUserId, recipeViewModel);            
         }
