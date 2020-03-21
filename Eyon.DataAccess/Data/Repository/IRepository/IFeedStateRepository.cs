@@ -2,7 +2,7 @@
 using Eyon.Models.Relationship;
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface IFeedStateRepository : IRepository<FeedState>
+    public interface IFeedStateRepository : IRepository<FeedState>, IManyToManyRelationshipRepository<FeedState, Feed, State>
     {        
     }    
 }

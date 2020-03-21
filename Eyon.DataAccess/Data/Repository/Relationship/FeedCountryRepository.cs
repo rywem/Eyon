@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using Eyon.Models.Relationship;
 using Eyon.Models.Errors;
+using Eyon.Models;
 
 namespace Eyon.DataAccess.Data.Repository
 {
@@ -21,6 +22,17 @@ namespace Eyon.DataAccess.Data.Repository
                 throw new SafeException("An error ocurred.", new Exception(string.Format("FeedCategory already exists. FeedId {0},  CountryId {1}", entityToAdd.FeedId, entityToAdd.CountryId)));
 
             base.Add(entityToAdd);
+        }
+
+        public FeedCountry AddFromEntities( Feed firstEntity, Country secondEntity )
+        {
+            var newObj = new FeedCountry()
+            {
+                FeedId = firstEntity.Id,
+                CountryId = secondEntity.Id
+            };
+            base.Add(newObj);
+            return newObj;
         }
     }
 }

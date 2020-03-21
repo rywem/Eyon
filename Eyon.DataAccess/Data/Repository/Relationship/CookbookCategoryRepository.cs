@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 using Eyon.Models.Relationship;
-
+using Eyon.Models;
 
 namespace Eyon.DataAccess.Data.Repository
 {
@@ -27,6 +27,17 @@ namespace Eyon.DataAccess.Data.Repository
                 throw new Exception("Cookbook Category relationship already exists in the database.");
 
             base.Add(cookbookCategory);
+        }
+
+        public CookbookCategories AddFromEntities( Cookbook firstEntity, Category secondEntity )
+        {
+            var newObj = new CookbookCategories()
+            {
+                CookbookId = firstEntity.Id,
+                CategoryId = secondEntity.Id
+            };
+            base.Add(newObj);
+            return newObj;
         }
     }
 }

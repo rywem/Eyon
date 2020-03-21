@@ -1,4 +1,5 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Models;
 using Eyon.Models.Relationship;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,17 @@ namespace Eyon.DataAccess.Data.Repository
         public OrganizationCookbookRepository( ApplicationDbContext db ) : base(db)
         {
             this._db = db;
+        }
+
+        public OrganizationCookbook AddFromEntities( Organization firstEntity, Cookbook secondEntity )
+        {
+            var newObj = new OrganizationCookbook()
+            {
+                OrganizationId = firstEntity.Id,
+                CookbookId = secondEntity.Id
+            };
+            base.Add(newObj);
+            return newObj;
         }
     }
 }

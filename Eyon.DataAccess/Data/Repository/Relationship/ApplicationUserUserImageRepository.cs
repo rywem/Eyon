@@ -1,4 +1,5 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Models;
 using Eyon.Models.Relationship;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,17 @@ namespace Eyon.DataAccess.Data.Repository
         public ApplicationUserUserImageRepository( ApplicationDbContext db ) : base(db)
         {
             this._db = db;
+        }
+
+        public ApplicationUserUserImage AddFromEntities( ApplicationUser firstEntity, UserImage secondEntity )
+        {
+            var newObj = new ApplicationUserUserImage()
+            {
+                ApplicationUserId = firstEntity.Id,
+                ObjectId = secondEntity.Id
+            };
+            base.Add(newObj);
+            return newObj;
         }
     }
 }

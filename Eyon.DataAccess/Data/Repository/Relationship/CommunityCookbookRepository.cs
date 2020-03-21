@@ -1,4 +1,5 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Models;
 using Eyon.Models.Relationship;
 
 namespace Eyon.DataAccess.Data.Repository
@@ -10,6 +11,17 @@ namespace Eyon.DataAccess.Data.Repository
         public CommunityCookbookRepository(ApplicationDbContext db) : base(db)
         {
             this._db = db;
+        }
+
+        public CommunityCookbook AddFromEntities( Community community, Cookbook cookbook )
+        {
+            var newObj = new CommunityCookbook()
+            {
+                CommunityId = community.Id,
+                CookbookId = cookbook.Id
+            };
+            base.Add(newObj);
+            return newObj;
         }
     }
 }

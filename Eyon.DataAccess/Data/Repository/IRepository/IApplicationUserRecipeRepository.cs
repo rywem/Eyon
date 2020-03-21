@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 namespace Eyon.DataAccess.Data.Repository.IRepository
 {
-    public interface IApplicationUserRecipeRepository : IRepository<ApplicationUserRecipe>
+    public interface IApplicationUserRecipeRepository : IRepository<ApplicationUserRecipe>, IManyToManyRelationshipRepository<ApplicationUserRecipe, ApplicationUser, Recipe>
     {
-       
+
+
     }    
 }

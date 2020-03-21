@@ -1,4 +1,5 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Models;
 using Eyon.Models.Relationship;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,17 @@ namespace Eyon.DataAccess.Data.Repository
         public CommunityWebReferenceRepository( ApplicationDbContext db ) : base(db)
         {
             this._db = db;
+        }
+
+        public CommunityWebReference AddFromEntities( Community firstEntity, WebReference secondEntity )
+        {
+            var newObj = new CommunityWebReference()
+            {
+                CommunityId = firstEntity.Id,
+                WebReferenceId = secondEntity.Id
+            };
+            base.Add(newObj);
+            return newObj;
         }
     }
 }

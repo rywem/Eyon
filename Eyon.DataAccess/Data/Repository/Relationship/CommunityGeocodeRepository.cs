@@ -1,4 +1,5 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Models;
 using Eyon.Models.Relationship;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,17 @@ namespace Eyon.DataAccess.Data.Repository
         public CommunityGeocodeRepository( ApplicationDbContext db ) : base(db)
         {
             this._db = db;
+        }
+
+        public CommunityGeocode AddFromEntities( Community community, Geocode geocode )
+        {
+            var newObj = new CommunityGeocode()
+            {
+                CommunityId = community.Id,
+                GeocodeId = geocode.Id
+            };
+            base.Add(newObj);
+            return newObj;
         }
     }
 }
