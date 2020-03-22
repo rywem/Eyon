@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Eyon.DataAccess.Data.Orchestrators;
 using Eyon.DataAccess.Data.Repository.IRepository;
-using Eyon.DataAccess.Data.Security;
+using Eyon.DataAccess.Security;
 using Eyon.Models;
 using Eyon.Models.Errors;
 using Eyon.Models.ViewModels;
@@ -46,9 +46,9 @@ namespace Eyon.Site.Areas.User.Controllers
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             try
-            {                               
+            {
                 ViewBag.id = id;
-                recipeViewModel = await recipeOrchestrator.GetRecipeViewModelAsync(id, claims.Value);
+                recipeViewModel = await _recipeSecurity.GetAsync(claims.Value, id);
             }
             catch(Exception ex)
             {
@@ -74,7 +74,7 @@ namespace Eyon.Site.Areas.User.Controllers
                     return RedirectToAction("Denied", "Error");
 
                 ViewBag.id = id.GetValueOrDefault();
-                recipeViewModel = await recipeOrchestrator.GetRecipeViewModelAsync(id.GetValueOrDefault(), claims.Value);
+                recipeViewModel = await _recipeSecurity.GetAsync(claims.Value, id.GetValueOrDefault());
             }
 
             return View(recipeViewModel);
@@ -152,11 +152,11 @@ namespace Eyon.Site.Areas.User.Controllers
                         if ( recipeViewModel.Recipe.Id == 0 ) //New cookbook
                         {
 
-                            await recipeOrchestrator.AddRecipeTransactionAsync(claims.Value, recipeViewModel);
+                            await _recipeSecurity.AddAsync(claims.Value, recipeViewModel);
                         }
                         else
                         {
-                            await recipeOrchestrator.UpdateRecipeTransactionAsync(claims.Value, recipeViewModel);
+                            await _recipeSecurity.UpdateAsync(claims.Value, recipeViewModel);
                         }
                     }
                     catch ( Eyon.Models.Errors.SafeException usEx )

@@ -20,6 +20,10 @@ namespace Eyon.Models.Errors
             
         }
 
+        public SafeException( ErrorType errorType ) : base(errorType.ToString())
+        {
+            this.ErrorType = errorType;
+        }
         public SafeException( ErrorType errorType, Exception innerException ) : base(errorType.ToString(), innerException)
         {
             this.ErrorType = errorType;

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Eyon.DataAccess.Data.Security
+namespace Eyon.DataAccess.Security
 {
     public class FeedSecurity
     {

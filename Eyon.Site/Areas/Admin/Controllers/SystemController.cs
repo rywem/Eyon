@@ -66,7 +66,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
                 default:
                     break;
             }
-            return View();
+            return View("Sync");
         }
     }
 }
