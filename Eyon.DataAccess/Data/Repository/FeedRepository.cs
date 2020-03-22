@@ -50,15 +50,23 @@ namespace Eyon.DataAccess.Data.Repository
             return feed;
         }
 
-        public async Task<FeedViewModel> GetPublicFeedList( FeedSortBy sortBy = FeedSortBy.New, int skip = 0, int take = 100 )
+        public async Task<FeedViewModel> GetPublicFeedList( FeedSortBy sortBy = FeedSortBy.New, int skip = 0, int take = 0 )
         {
 
             FeedViewModel feedViewModel = new FeedViewModel();
+            Func<IQueryable<Feed>, IQueryable<Feed>> additionalQueryable = null;
+            
+            if(skip > 0 && take > 0)
+                additionalQueryable = x => x.Skip(skip).Take(take);
+            else if ( skip > 0)
+                 additionalQueryable = x => x.Skip(skip);            
+            else if ( take > 0 )
+                additionalQueryable += x => x.Take(take);
 
             switch ( sortBy )
             {
                 case FeedSortBy.New:
-                    var query = await GetAllAsync(x => x.Privacy == Privacy.Public, r => r.OrderByDescending(x => x.CreationDateTime), includeProperties: "FeedTopic,FeedTopic.Topic", skip: skip, take: take);
+                    var query = await GetAllAsync(x => x.Privacy == Privacy.Public, r => r.OrderByDescending(x => x.CreationDateTime), includeProperties: "FeedTopic,FeedTopic.Topic", additionalQueryable);
                     feedViewModel.FeedItems = (from f in query
                                               select new FeedItemViewModel()
                                               {

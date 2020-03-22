@@ -13,9 +13,9 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
 
         Task<T> GetAsync( long id);
         IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>,
-                        IOrderedQueryable<T>> orderBy = null, string includeProperties = null, int skip = 0, int take = 0 );
+                        IOrderedQueryable<T>> orderBy = null, string includeProperties = null, Func<IQueryable<T>, IQueryable<T>> additionalQueryables = null );
         Task<IEnumerable<T>> GetAllAsync( Expression<Func<T, bool>> filter = null, Func<IQueryable<T>,
-                        IOrderedQueryable<T>> orderBy = null, string includeProperties = null , int skip = 0, int take = 0 );
+                        IOrderedQueryable<T>> orderBy = null, string includeProperties = null , Func<IQueryable<T>, IQueryable<T>> additionalQueryables = null );
 
         T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null, bool tracking = true);
 

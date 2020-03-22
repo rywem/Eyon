@@ -49,7 +49,8 @@ namespace Eyon.DataAccess.Data
             return dbSet.Find(id);
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>,IOrderedQueryable<T>> orderBy = null, string includeProperties = null, int skip = 0, int take = 0 )
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>,IOrderedQueryable<T>> orderBy = null, 
+            string includeProperties = null, Func<IQueryable<T>, IQueryable<T>> additionalQueryables = null )
         {
             IQueryable<T> query = dbSet;
 
@@ -67,19 +68,16 @@ namespace Eyon.DataAccess.Data
             }
 
             if (orderBy != null)
-            {
                 query = orderBy(query);
-            }
 
-            if ( skip > 0 )
-                query.Skip(skip);
-            if ( take > 0 )
-                query.Take(take);
+            if ( additionalQueryables != null)
+                query = additionalQueryables(query);
 
             return query.ToList();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync( Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null, int skip = 0, int take = 0 )
+        public async Task<IEnumerable<T>> GetAllAsync( Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, 
+            string includeProperties = null, Func<IQueryable<T>, IQueryable<T>> additionalQueryables = null )
         {
             IQueryable<T> query = dbSet;
 
@@ -96,21 +94,12 @@ namespace Eyon.DataAccess.Data
                 }
             }
 
-            //if ( orderBy != null )
-            //{
-            //    return orderBy(query).ToList();
-            //}
-
             if ( orderBy != null )
-            {
                 query = orderBy(query);
-                //return orderBy(query).ToList();
-            }
 
-            if ( skip > 0 )
-                query.Skip(skip);
-            if ( take > 0 )
-                query.Take(take);
+            if ( additionalQueryables != null )
+                query = additionalQueryables(query);
+
             return await query.ToListAsync();
         }
 

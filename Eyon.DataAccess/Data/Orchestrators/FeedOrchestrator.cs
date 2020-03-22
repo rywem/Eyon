@@ -20,7 +20,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         {
             this._unitOfWork = unitOfWork;
         }
-        public async Task<FeedViewModel> GetPublicFeedViewModel( FeedSortBy sortBy = FeedSortBy.New, int skip = 0, int take = 100 )
+        public async Task<FeedViewModel> GetPublicFeedViewModel( FeedSortBy sortBy = FeedSortBy.New, int skip = 0, int take = 0 )
         {
             return await _unitOfWork.Feed.GetPublicFeedList(sortBy, skip, take );
         }
