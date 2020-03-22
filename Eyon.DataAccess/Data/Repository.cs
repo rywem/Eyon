@@ -66,12 +66,9 @@ namespace Eyon.DataAccess.Data
                 }
             }
 
-            
-
             if (orderBy != null)
             {
-                query = orderBy(query).AsQueryable();
-                //return orderBy(query).ToList();
+                query = orderBy(query);
             }
 
             if ( skip > 0 )

@@ -58,7 +58,7 @@ namespace Eyon.DataAccess.Data.Repository
             switch ( sortBy )
             {
                 case FeedSortBy.New:
-                    var query = await GetAllAsync(x => x.Privacy == Privacy.Public, r => r.OrderByDescending(x => x.CreationDateTime), includeProperties: "FeedTopic,FeedTopic.Feed", skip: skip, take: take);
+                    var query = await GetAllAsync(x => x.Privacy == Privacy.Public, r => r.OrderByDescending(x => x.CreationDateTime), includeProperties: "FeedTopic,FeedTopic.Topic", skip: skip, take: take);
                     feedViewModel.FeedItems = (from f in query
                                               select new FeedItemViewModel()
                                               {

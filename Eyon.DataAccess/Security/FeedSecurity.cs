@@ -21,7 +21,7 @@ namespace Eyon.DataAccess.Security
             this._feedOrchestrator = new FeedOrchestrator(this._unitOfWork);
         }
 
-        public async Task<FeedViewModel> GetFeedAsync(string currentApplicationUserId = null, FeedSortBy sortBy = FeedSortBy.New, int skip = 0, int take = 100)
+        public async Task<FeedViewModel> GetFeedAsync(string currentApplicationUserId = null, FeedSortBy sortBy = FeedSortBy.New, int skip = 0, int take = 0)
         {
             if ( currentApplicationUserId == null )
             {
