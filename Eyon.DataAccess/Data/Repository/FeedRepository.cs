@@ -4,6 +4,7 @@ using Eyon.Models.Enums;
 using Eyon.Models.Errors;
 using Eyon.Models.Interfaces;
 using Eyon.Models.Relationship;
+using Eyon.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -49,9 +50,36 @@ namespace Eyon.DataAccess.Data.Repository
             return feed;
         }
 
-        public Task<IEnumerable<Feed>> GetPublicFeedList( FeedSortBy sortBy = FeedSortBy.New, int take = 100, int skip = 0)
+        public async Task<FeedViewModel> GetPublicFeedList( FeedSortBy sortBy = FeedSortBy.New, int skip = 0, int take = 100 )
         {
-            throw new NotImplementedException();
+
+            FeedViewModel feedViewModel = new FeedViewModel();
+
+            switch ( sortBy )
+            {
+                case FeedSortBy.New:
+                    var query = await GetAllAsync(x => x.Privacy == Privacy.Public, r => r.OrderByDescending(x => x.CreationDateTime), includeProperties: "FeedTopic,FeedTopic.Feed", skip: skip, take: take);
+                    feedViewModel.FeedItems = (from f in query
+                                              select new FeedItemViewModel()
+                                              {
+                                                  CreationDateTime = f.CreationDateTime,
+                                                  ModifiedDateTime = f.ModifiedDateTime,
+                                                  Description = f.Text,
+                                                  Privacy = f.Privacy,
+                                                  Id = f.Id,
+                                                  Topics = ( f.FeedTopic != null && f.FeedTopic.Count > 0 ) ? f.FeedTopic.Select(x => x.Topic).ToList() : new List<Topic>()
+                                              }).ToList();
+
+                    break;
+                case FeedSortBy.Popular:
+                case FeedSortBy.Random:
+                default:
+                    throw new NotImplementedException();
+                    //break;
+            }
+            
+
+            return feedViewModel;
         }
 
         public void Update( string currentUserId, Feed feed, IFeedItem entity )

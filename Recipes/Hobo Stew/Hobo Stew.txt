@@ -1,9 +1,8 @@
-Title: 
 Hobo Stew
-Description: 
+
 A quick and easy dinner.
 
-Ingredients
+
 1 lb ground beef
 1 medium onion
 3 cloves garlic
@@ -17,7 +16,7 @@ Ingredients
 1 cup cooked rice (optional)
 
 
-Instructions
+
 In a medium pot, saute onions until soft.
 Add beef, brown until brown.
 Add garlic, until fragrant.

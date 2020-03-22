@@ -6,11 +6,11 @@ namespace Eyon.Models.ViewModels
 {
     public class FeedViewModel
     {
-        public List<Feed> Feed { get; set; }
+        public List<FeedItemViewModel> FeedItems { get; set; }
 
         public FeedViewModel()
         {
-            this.Feed = new List<Feed>();
+            this.FeedItems = new List<FeedItemViewModel>();
         }
     }
 }

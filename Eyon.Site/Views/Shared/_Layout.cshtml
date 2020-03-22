@@ -54,6 +54,7 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropDown">
                                     <a class="dropdown-item text-white" asp-area="User" asp-controller="Recipe" asp-action="Index">My Recipes</a>
                                     <a class="dropdown-item text-white" asp-area="User" asp-controller="Cookbook" asp-action="Index">My Cookbooks</a>
+                                    <a class="dropdown-item text-white" asp-area="User" asp-controller="Feed" asp-action="Index">Feed</a>
                                 </div>
                             </li>
                             @if ( User.IsInRole(Eyon.Utilities.Statics.Roles.Seller)

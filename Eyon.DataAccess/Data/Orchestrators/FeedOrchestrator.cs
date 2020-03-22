@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
+using Eyon.Models.Enums;
 
 namespace Eyon.DataAccess.Data.Orchestrators
 {
@@ -18,12 +20,9 @@ namespace Eyon.DataAccess.Data.Orchestrators
         {
             this._unitOfWork = unitOfWork;
         }
-        public FeedViewModel GetPublicFeedViewModel()
+        public async Task<FeedViewModel> GetPublicFeedViewModel( FeedSortBy sortBy = FeedSortBy.New, int skip = 0, int take = 100 )
         {
-            throw new NotImplementedException();
-            FeedViewModel feedViewModel = new FeedViewModel();
-            //feedViewModel.Feed = _unitOfWork.Feed.Get
-            return feedViewModel;
+            return await _unitOfWork.Feed.GetPublicFeedList(sortBy, skip, take );
         }
 
         public async Task DeleteAsync( Feed feed )

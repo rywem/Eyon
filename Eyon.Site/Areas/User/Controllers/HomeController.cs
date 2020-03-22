@@ -23,6 +23,7 @@ namespace Eyon.Site.Areas.User.Controllers
         
         public IActionResult Index()
         {
+
             return View();
         }
 

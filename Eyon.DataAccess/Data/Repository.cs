@@ -34,6 +34,7 @@ namespace Eyon.DataAccess.Data
             }
             if ( tracking == false )
                 query.AsNoTracking();
+
             return query;
         }
 
@@ -48,7 +49,7 @@ namespace Eyon.DataAccess.Data
             return dbSet.Find(id);
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>,IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>,IOrderedQueryable<T>> orderBy = null, string includeProperties = null, int skip = 0, int take = 0 )
         {
             IQueryable<T> query = dbSet;
 
@@ -65,14 +66,23 @@ namespace Eyon.DataAccess.Data
                 }
             }
 
+            
+
             if (orderBy != null)
             {
-                return orderBy(query).ToList();
+                query = orderBy(query).AsQueryable();
+                //return orderBy(query).ToList();
             }
+
+            if ( skip > 0 )
+                query.Skip(skip);
+            if ( take > 0 )
+                query.Take(take);
+
             return query.ToList();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync( Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null )
+        public async Task<IEnumerable<T>> GetAllAsync( Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null, int skip = 0, int take = 0 )
         {
             IQueryable<T> query = dbSet;
 
@@ -89,10 +99,21 @@ namespace Eyon.DataAccess.Data
                 }
             }
 
+            //if ( orderBy != null )
+            //{
+            //    return orderBy(query).ToList();
+            //}
+
             if ( orderBy != null )
             {
-                return orderBy(query).ToList();
+                query = orderBy(query);
+                //return orderBy(query).ToList();
             }
+
+            if ( skip > 0 )
+                query.Skip(skip);
+            if ( take > 0 )
+                query.Take(take);
             return await query.ToListAsync();
         }
 

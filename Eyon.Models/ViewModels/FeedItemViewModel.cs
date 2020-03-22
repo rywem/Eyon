@@ -6,16 +6,16 @@ using System.Text;
 
 namespace Eyon.Models.ViewModels
 {
-    public class FeedItemViewModel : IFeedItem, ITopicItem
+    public class FeedItemViewModel : IFeedItem
     {
         public long Id { get; set; }
-
-        public string Name { get; set; }
+        
         public string Description { get; set; }
-        public TopicType TopicType { get; set; }
 
         public DateTime CreationDateTime { get; set; }
         public DateTime ModifiedDateTime { get; set; }
         public Privacy Privacy { get; set; }
+
+        public List<Topic> Topics { get; set; }
     }
 }
