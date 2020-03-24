@@ -1,11 +1,6 @@
 ﻿using Xunit;
 using System;
-using Eyon.DataAccess.Data.Repository;
 using Eyon.DataAccess.Data.Repository.IRepository;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory;
-using System.Collections.Generic;
-using System.Text;
 using Eyon.Models;
 
 namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository.Relationship
@@ -21,8 +16,6 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository.Relationship
         [Fact]
         public void AddApplicationUserCookbook_FromEntities()
         {
-            Guid guid = new Guid();
-
             ApplicationUser applicationUser = new ApplicationUser()
             {
                 Id = Guid.NewGuid().ToString()
