@@ -337,3 +337,8 @@ ol#list_selected_category {
 .text-emphasis {
     text-shadow: 0 0 1px black;
 }
+
+.feed-item {
+    width: 30rem;
+    border: 1px solid black;
+}
