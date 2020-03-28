@@ -13,7 +13,12 @@ namespace Eyon.XConsole
     {
         static void Main(string[] args)
         {
-
+            Eyon.Utilities.IniParse parse = new IniParse();
+            var key = parse.Get("AWS", "key");
+            var iv = parse.Get("AWS", "iv");
+            Console.WriteLine(key);
+            Console.WriteLine(iv);
+            Console.ReadLine();
         }
 
 

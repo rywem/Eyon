@@ -29,4 +29,11 @@
     <ProjectReference Include="..\Eyon.DataAccess\Eyon.DataAccess.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Update="config.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
