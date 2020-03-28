@@ -7,8 +7,25 @@
 
 
 
-@foreach (var item in Model.FeedItems) {
-    <div class="row">
-        <partial name="_FeedItemPartialView" model="item" />
+    <div class="container pb-3">
+        @foreach ( var feedItem in Model.FeedItems )
+        {
+
+            <div class="row" style="border: 1px solid black; 
+                                    padding: 0 0 0 0;">
+                <div class="col-sm-8">
+                    <div class="card feed-item">
+                        @if ( feedItem.Topics != null && feedItem.Topics.Count > 0 )
+                        {
+                            <div class="card-header">
+                                @feedItem.Topics[0].Name
+                            </div>
+                        }
+                        <div class="card-body">
+                            @feedItem.Description
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-}
