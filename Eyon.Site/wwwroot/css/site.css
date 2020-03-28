@@ -339,6 +339,7 @@ ol#list_selected_category {
 }
 
 .feed-item {
-    width: 30rem;
     border: 1px solid black;
+    margin-bottom: 3em; 
+    
 }
