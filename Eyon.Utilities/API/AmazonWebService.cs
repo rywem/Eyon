@@ -20,12 +20,13 @@ namespace Eyon.Utilities.API
         }
         public void Initialize()
         {
-            IniParse parse = new IniParse();
-            var key = parse.Get("AWS", "key");
-            var iv = parse.Get("AWS", "iv");
-            _client = new AmazonS3Client(_encryptedAccessKey.Decrypt(key, iv), _encryptedSecretKey.Decrypt(key, iv), Amazon.RegionEndpoint.USEast2);
-            key = "xxxxxxxxxxxxxxxxxxxxxxxxxx";
-            iv = "xxxxxxxxxxxxxxxxxxxxxxxxxx";
+
+            using ( Eyon.Utilities.API.AwsCsvHelper helper = new Utilities.API.AwsCsvHelper() )
+            {       
+                var key = helper.GetKey();
+                var iv = helper.GetIV();
+                _client = new AmazonS3Client(_encryptedAccessKey.Decrypt(key, iv), _encryptedSecretKey.Decrypt(key, iv), Amazon.RegionEndpoint.USEast2);
+            }
         }
         public async Task<string> GetAsync(string bucketName, string fileKeyName)
         {

@@ -13,9 +13,13 @@ namespace Eyon.XConsole
     {
         static void Main(string[] args)
         {
-            Eyon.Utilities.IniParse parse = new IniParse();
-            var x = parse.Get("AWS", "key");
-            var y = parse.Get("AWS", "iv");
+            using ( Eyon.Utilities.API.AwsCsvHelper helper = new Utilities.API.AwsCsvHelper() )
+            {
+                var key = helper.GetKey();
+                Console.WriteLine(key);
+                var iv = helper.GetIV();
+                Console.WriteLine(iv);
+            }
         }
 
 
