@@ -17,11 +17,11 @@ namespace Eyon.DataAccess.Data.Repository
         {
             var objFromDb = _db.SiteImage.FirstOrDefault(s => s.Id == siteImage.Id);
 
-            objFromDb.Encoded = siteImage.Encoded;
+            objFromDb.FileName = siteImage.FileName;
+            objFromDb.FileNameThumb = siteImage.FileNameThumb;
             objFromDb.FileType = siteImage.FileType;
-            objFromDb.Title = siteImage.Title;
+            objFromDb.Description = siteImage.Description;
             objFromDb.Alt = siteImage.Alt;
-            //_db.SaveChanges();
             dbSet.Update(objFromDb);
         }
     }    

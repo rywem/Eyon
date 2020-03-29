@@ -25,5 +25,15 @@ namespace Eyon.Utilities.Extensions
 
             return newImage;
         }
+
+        public static Image Resize(this Image image, int width, int height )
+        {
+            var newImage = new Bitmap(width, height);
+
+            using ( var graphics = Graphics.FromImage(newImage) )
+                graphics.DrawImage(image, 0, 0, width, height);
+
+            return newImage;
+        }
     }
 }

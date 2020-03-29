@@ -1,8 +1,16 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using Eyon.Models;
+using Eyon.DataAccess.Data.Repository;
 using System.Threading.Tasks;
+using Eyon.Models.Errors;
+using Eyon.Models.Relationship;
+using Eyon.Models.SiteObjects;
+using Eyon.DataAccess.Security;
 
 namespace Eyon.DataAccess.Data.Orchestrators
 {
@@ -27,6 +35,35 @@ namespace Eyon.DataAccess.Data.Orchestrators
                 _unitOfWork.Topic.AddFromITopicItem(category);
                 await _unitOfWork.SaveAsync();
             }
+        }
+
+        internal async Task AddTransactionAsync( Category category )
+        {
+            using ( var transaction = _unitOfWork.BeginTransaction() )
+            {
+                try
+                {
+                    await AddAsync(category);
+                    await transaction.CommitAsync();
+                }
+                catch ( Exception ex )
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+            }
+        }
+
+        internal async Task AddAsync(Category category )
+        {
+            if ( category.SiteImage != null )
+            {
+                _unitOfWork.SiteImage.Add(category.SiteImage);
+                await _unitOfWork.SaveAsync();
+                category.SiteImageId = category.SiteImage.Id;
+            }
+            _unitOfWork.Category.Add(category);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

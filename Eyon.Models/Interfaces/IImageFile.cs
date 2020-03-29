@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Eyon.Models.Interfaces
 {
-    public interface IFeedItem : IRecord, ICreated, IModified, IPrivacy, IDescription
+    public interface IImageFile : IRecord, IFile, IDescription
     {
+        public string FileNameThumb { get; set; }
     }
 }
