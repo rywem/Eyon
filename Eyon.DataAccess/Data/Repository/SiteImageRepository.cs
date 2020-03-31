@@ -1,5 +1,7 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
+using Eyon.Models.Errors;
+using System;
 using System.Linq;
 
 namespace Eyon.DataAccess.Data.Repository
@@ -16,6 +18,9 @@ namespace Eyon.DataAccess.Data.Repository
         public void Update(SiteImage siteImage)
         {
             var objFromDb = _db.SiteImage.FirstOrDefault(s => s.Id == siteImage.Id);
+
+            if ( objFromDb == null )
+                throw new SafeException(Models.Enums.ErrorType.AnErrorOccurred, new Exception(string.Format("SiteImage not found, Id {0} , FileName {1}", siteImage.Id, siteImage.FileName)));
 
             objFromDb.FileName = siteImage.FileName;
             objFromDb.FileNameThumb = siteImage.FileNameThumb;

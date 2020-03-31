@@ -8,5 +8,8 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
     public interface ITopicRepository : IRepository<Topic>
     {
         Topic AddFromITopicItem( ITopicItem entity );
+        void UpdateFromITopicItem( ITopicItem entity );
+        Topic FirstOrDefaultFromITopicItem( ITopicItem entity );
+        void RemoveFromITopicItem( ITopicItem entity );
     }
 }

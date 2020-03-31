@@ -33,6 +33,7 @@ namespace Eyon.Site
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
             services.AddScoped<DataAccess.Data.Repository.IRepository.IUnitOfWork, DataAccess.Data.UnitOfWork>();
+            
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(60);

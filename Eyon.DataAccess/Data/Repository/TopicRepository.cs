@@ -43,5 +43,27 @@ namespace Eyon.DataAccess.Data.Repository
             base.Add(topic);
             return topic;
         }
+
+        public void UpdateFromITopicItem( ITopicItem entity )
+        {
+            var objFromDb = _db.Topic.FirstOrDefault(x => x.ObjectId == entity.Id && x.TopicType == entity.TopicType);
+
+            if ( objFromDb == null )
+                throw new SafeException(Models.Enums.ErrorType.AnErrorOccurred, new Exception(string.Format("ITopicItem not found ObjectId {0} TopicType {1}", entity.Id, entity.TopicType)));
+
+            objFromDb.Name = entity.Name;
+            dbSet.Update(objFromDb);
+        }
+
+        public Topic FirstOrDefaultFromITopicItem( ITopicItem entity )
+        {
+            return _db.Topic.FirstOrDefault(x => x.ObjectId == entity.Id && x.TopicType == entity.TopicType);
+        }
+
+        public void RemoveFromITopicItem(ITopicItem entity )
+        {
+            var objFromDb = _db.Topic.FirstOrDefault(x => x.ObjectId == entity.Id && x.TopicType == entity.TopicType);
+            dbSet.Remove(objFromDb);
+        }
     }
 }

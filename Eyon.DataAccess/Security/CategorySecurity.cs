@@ -23,5 +23,10 @@ namespace Eyon.DataAccess.Security
         {
             await _categoryOrchestrator.AddTransactionAsync(category);
         }
+
+        public async Task UpdateAsync( Category category )
+        {
+            await _categoryOrchestrator.UpdateTransactionAsync(category);
+        }
     }
 }

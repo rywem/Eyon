@@ -68,7 +68,7 @@ namespace Eyon.Utilities.API
                     Key = fileKeyName
                 };
 
-                Console.WriteLine("Deleting an object");
+                Console.WriteLine("Deleting an object");                
                 await _client.DeleteObjectAsync(deleteObjectRequest);
             }
             catch ( AmazonS3Exception e )
@@ -80,6 +80,20 @@ namespace Eyon.Utilities.API
                 throw e;
             }
         }
+
+        public async Task<bool> TryDeleteAsync(string bucketName, string fileKeyName )
+        {
+            try
+            {
+                await DeleteAsync(bucketName, fileKeyName);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+        
 
         public async Task<bool> PutAsync(MemoryStream memoryStreamFile, string bucketName, string fileKeyName )
         {

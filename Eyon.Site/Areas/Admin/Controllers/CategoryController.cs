@@ -12,6 +12,8 @@ using Eyon.Site.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Eyon.Site.WebUtilities;
 using Eyon.Models.SiteObjects;
+using Microsoft.Extensions.Configuration;
+using Eyon.DataAccess.Security;
 
 namespace Eyon.Site.Areas.Admin.Controllers
 {
@@ -22,9 +24,13 @@ namespace Eyon.Site.Areas.Admin.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly long _fileSizeLimit = 2097152;
         private readonly string[] _permittedExtensions = { ".jpg", ".jpeg", ".gif", ".png" };
-        public CategoryController(IUnitOfWork unitOfWork)
+        private readonly IConfiguration _config;
+        private readonly CategorySecurity _categorySecurity;
+        public CategoryController(IUnitOfWork unitOfWork, IConfiguration config)
         {
+            this._config = config;
             this._unitOfWork = unitOfWork;
+            this._categorySecurity = new CategorySecurity(_unitOfWork);
         }
         public IActionResult Index()
         {
@@ -51,83 +57,130 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upsert(Category Category)
+        public async Task<IActionResult> Upsert(Category category)
         {
             var files = HttpContext.Request.Form.Files;
-            byte[] formFileContent;
+            byte[] formFileContent = null;
             if( files != null && files.Count > 0)
                 formFileContent = await FileHelpers.ProcessFormFileAsync<FileUpload>(files[0], ModelState, _permittedExtensions, _fileSizeLimit);
             if (ModelState.IsValid)
             {
-                // If New
-                if ( Category.Id == 0 )
-                {
 
-                }
-                else
+                try
                 {
-
-                }
-
-                using (var transaction = _unitOfWork.BeginTransaction())
-                {
-                    try
+                    if ( category.Id == 0 )
                     {
-                        //var files = HttpContext.Request.Form.Files;
-                        //var formFileContent = await FileHelpers.ProcessFormFileAsync<FileUpload>(files[0], ModelState, _permittedExtensions, _fileSizeLimit);
-                        string s = string.Empty;
-                        if (Category.Id == 0)
+                        if ( formFileContent != null )
                         {
-
-                            if (files[0].Length > 0)
+                            var siteImage = new SiteImage()
                             {
-                                Category.SiteImage = new SiteImage()
-                                {
-                                    Description = Category.SiteImage.Description,
-                                    Alt = Category.SiteImage.Alt,
-                                    FileType = Path.GetExtension(files[0].FileName).Trim('.'),
-                                    //Encoded = files[0].ConvertToBase64()
-                                };
-                            }
-                            else
-                            {
-                                ModelState.AddModelError("SiteImageId", "Please add an image file");
-                                return View(Category);
-                            }
-                            _unitOfWork.SiteImage.Add(Category.SiteImage);
-                            await _unitOfWork.SaveAsync();
-                            Category.SiteImageId = Category.SiteImage.Id;
-                            _unitOfWork.Category.Add(Category);
-                            _unitOfWork.Topic.AddFromITopicItem(Category);
-                            await _unitOfWork.SaveAsync();
+                                Description = category.SiteImage.Description,
+                                Alt = category.SiteImage.Alt
+                            };
+                            var imageHelper = new Eyon.Site.Images.ImageHelper(_config);
+                            category.SiteImage = (SiteImage)await imageHelper.ProcessIImageFile(formFileContent, category.SiteImage);
                         }
                         else
                         {
-                            var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == Category.Id, includeProperties: "SiteImage");
-                            categoryFromDb.SiteImage.Alt = Category.SiteImage.Alt;
-                            categoryFromDb.SiteImage.Description = Category.SiteImage.Description;
-                            if (files.Count > 0)
-                            {
-                                categoryFromDb.SiteImage.FileType = Path.GetExtension(files[0].FileName).Trim('.');
-                                //categoryFromDb.SiteImage.Encoded = files[0].ConvertToBase64();
-                            }
-                            Category.SiteImage = categoryFromDb.SiteImage;
-                            _unitOfWork.SiteImage.Update(Category.SiteImage);
-                            await _unitOfWork.SaveAsync();
-                            Category.SiteImageId = Category.SiteImage.Id;
-                            _unitOfWork.Category.Update(Category);
+                            //category.SiteImage = null;
+                            ModelState.AddModelError("SiteImageId", "Please add an image file");
+                            return View(category);
                         }
-                        await _unitOfWork.SaveAsync();
-                        await transaction.CommitAsync();
+                        await _categorySecurity.AddAsync(category);
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        await transaction.RollbackAsync();
+                        if ( formFileContent != null )
+                        {
+                            List<Task> tasks = new List<Task>();
+                            var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == category.Id, includeProperties: "SiteImage");
+                            var imageHelper = new Eyon.Site.Images.ImageHelper(_config);
+                            // delete existing image from aws
+
+                            if ( !string.IsNullOrEmpty(categoryFromDb.SiteImage.FileName) )                            
+                                tasks.Add(imageHelper.TryDeleteAsync(categoryFromDb.SiteImage.FileName));
+                            
+                            if(!string.IsNullOrEmpty(categoryFromDb.SiteImage.FileNameThumb))
+                                tasks.Add(imageHelper.TryDeleteAsync(categoryFromDb.SiteImage.FileNameThumb));
+                            // create new image on aws                            
+                            var resultIImageTask = imageHelper.ProcessIImageFile(formFileContent, category.SiteImage);
+
+                            tasks.Add(resultIImageTask);
+                            await Task.WhenAll(tasks);
+                            category.SiteImage.FileName = resultIImageTask.Result.FileName;
+                            category.SiteImage.FileNameThumb = resultIImageTask.Result.FileNameThumb;
+                            category.SiteImage.FileType = resultIImageTask.Result.FileType;
+
+                        }
+                        else
+                            category.SiteImage = null;
+
+                        await _categorySecurity.UpdateAsync(category);
                     }
                 }
+                catch (Exception ex )
+                {
+                    // TODO log exception
+                }
+                //using (var transaction = _unitOfWork.BeginTransaction())
+                //{
+                //    try
+                //    {
+                //        //var files = HttpContext.Request.Form.Files;
+                //        //var formFileContent = await FileHelpers.ProcessFormFileAsync<FileUpload>(files[0], ModelState, _permittedExtensions, _fileSizeLimit);
+                //        string s = string.Empty;
+                //        if (category.Id == 0)
+                //        {
+
+                //            if (files[0].Length > 0)
+                //            {
+                //                category.SiteImage = new SiteImage()
+                //                {
+                //                    Description = category.SiteImage.Description,
+                //                    Alt = category.SiteImage.Alt,
+                //                    FileType = Path.GetExtension(files[0].FileName).Trim('.'),
+                //                    //Encoded = files[0].ConvertToBase64()
+                //                };
+                //            }
+                //            else
+                //            {
+                //                ModelState.AddModelError("SiteImageId", "Please add an image file");
+                //                return View(category);
+                //            }
+                //            _unitOfWork.SiteImage.Add(category.SiteImage);
+                //            await _unitOfWork.SaveAsync();
+                //            category.SiteImageId = category.SiteImage.Id;
+                //            _unitOfWork.Category.Add(category);
+                //            _unitOfWork.Topic.AddFromITopicItem(category);
+                //            await _unitOfWork.SaveAsync();
+                //        }
+                //        else
+                //        {
+                //            var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == category.Id, includeProperties: "SiteImage");
+                //            categoryFromDb.SiteImage.Alt = category.SiteImage.Alt;
+                //            categoryFromDb.SiteImage.Description = category.SiteImage.Description;
+                //            if (files.Count > 0)
+                //            {
+                //                categoryFromDb.SiteImage.FileType = Path.GetExtension(files[0].FileName).Trim('.');
+                //                //categoryFromDb.SiteImage.Encoded = files[0].ConvertToBase64();
+                //            }
+                //            category.SiteImage = categoryFromDb.SiteImage;
+                //            _unitOfWork.SiteImage.Update(category.SiteImage);
+                //            await _unitOfWork.SaveAsync();
+                //            category.SiteImageId = category.SiteImage.Id;
+                //            _unitOfWork.Category.Update(category);
+                //        }
+                //        await _unitOfWork.SaveAsync();
+                //        await transaction.CommitAsync();
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        await transaction.RollbackAsync();
+                //    }
+                //}
                 return RedirectToAction(nameof(Index));
             }
-            return View(Category);
+            return View(category);
         }
 
         [HttpDelete]

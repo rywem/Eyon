@@ -406,15 +406,15 @@ namespace Eyon.DataAccess.Data
 
             #region Seed Images 
 
-            modelBuilder.Entity<SiteImage>().HasData(
-                SeedData.Images.SeedImages()[0],
-                SeedData.Images.SeedImages()[1],
-                SeedData.Images.SeedImages()[2],
-                SeedData.Images.SeedImages()[3],
-                SeedData.Images.SeedImages()[4],
-                SeedData.Images.SeedImages()[5],
-                SeedData.Images.SeedImages()[6]
-                );
+            //modelBuilder.Entity<SiteImage>().HasData(
+            //    SeedData.Images.SeedImages()[0],
+            //    SeedData.Images.SeedImages()[1],
+            //    SeedData.Images.SeedImages()[2],
+            //    SeedData.Images.SeedImages()[3],
+            //    SeedData.Images.SeedImages()[4],
+            //    SeedData.Images.SeedImages()[5],
+            //    SeedData.Images.SeedImages()[6]
+            //    );
             #endregion
 
             #region Seed Categories

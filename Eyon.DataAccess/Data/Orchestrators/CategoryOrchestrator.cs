@@ -37,6 +37,37 @@ namespace Eyon.DataAccess.Data.Orchestrators
             }
         }
 
+        internal async Task UpdateTransactionAsync(Category category )
+        {
+            using ( var transaction = _unitOfWork.BeginTransaction() )
+            {
+                try
+                {
+                    await UpdateAsync(category);
+                    await transaction.CommitAsync();
+                }
+                catch ( Exception ex )
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+            }
+        }
+
+        private async Task UpdateAsync( Category category )
+        {
+            if ( category.SiteImage != null )
+            {
+                _unitOfWork.SiteImage.Remove(category.SiteImageId);
+                _unitOfWork.SiteImage.Update(category.SiteImage);
+                await _unitOfWork.SaveAsync();
+                category.SiteImageId = category.SiteImage.Id;
+            }
+            _unitOfWork.Category.Update(category);
+            _unitOfWork.Topic.UpdateFromITopicItem(category);
+            await _unitOfWork.SaveAsync();
+        }
+
         internal async Task AddTransactionAsync( Category category )
         {
             using ( var transaction = _unitOfWork.BeginTransaction() )
@@ -56,13 +87,12 @@ namespace Eyon.DataAccess.Data.Orchestrators
 
         internal async Task AddAsync(Category category )
         {
-            if ( category.SiteImage != null )
-            {
-                _unitOfWork.SiteImage.Add(category.SiteImage);
-                await _unitOfWork.SaveAsync();
-                category.SiteImageId = category.SiteImage.Id;
-            }
+            _unitOfWork.SiteImage.Add(category.SiteImage);
+            await _unitOfWork.SaveAsync();
+            category.SiteImageId = category.SiteImage.Id;            
             _unitOfWork.Category.Add(category);
+            await _unitOfWork.SaveAsync();
+            _unitOfWork.Topic.AddFromITopicItem(category);
             await _unitOfWork.SaveAsync();
         }
     }
