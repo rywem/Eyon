@@ -35,10 +35,14 @@ namespace Eyon.DataAccess.Data.Repository
                 throw new SafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  userImage.Id {1}", currentUserId, userImage.Id)));
 
             objFromDb.Description = userImage.Description;
-            objFromDb.ModifiedDateTime = DateTime.UtcNow;
+            userImage.ModifiedDateTime = objFromDb.ModifiedDateTime = DateTime.UtcNow;
             objFromDb.Description = userImage.Description;
             objFromDb.Privacy = userImage.Privacy;
-            userImage.ModifiedDateTime = objFromDb.ModifiedDateTime;
+            objFromDb.FileName = userImage.FileName;
+            objFromDb.FileNameThumb = userImage.FileNameThumb;
+            objFromDb.FileType = userImage.FileType;
+            
+            //userImage.ModifiedDateTime = objFromDb.ModifiedDateTime; // Write back to parameter object the correct time stamp.
             dbSet.Update(objFromDb);            
         }
     }    

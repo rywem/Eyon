@@ -6,14 +6,18 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Eyon.DataAccess.Data.Orchestrators;
 using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.DataAccess.Images;
 using Eyon.DataAccess.Security;
 using Eyon.Models;
 using Eyon.Models.Errors;
+using Eyon.Models.SiteObjects;
 using Eyon.Models.ViewModels;
 using Eyon.Site.Extensions;
+using Eyon.Site.WebUtilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Eyon.Site.Areas.User.Controllers
 {
@@ -24,15 +28,21 @@ namespace Eyon.Site.Areas.User.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private RecipeOrchestrator recipeOrchestrator;
-        private readonly RecipeSecurity _recipeSecurity;        
+        private readonly RecipeSecurity _recipeSecurity;
+        private readonly long _fileSizeLimit = 8388608;
+        private readonly string[] _permittedExtensions = { ".jpg", ".jpeg", ".gif", ".png" };
+        private readonly ImageHelper _imageHelper;
+        private readonly IConfiguration _config;
         [BindProperty]
         public RecipeViewModel recipeViewModel { get; set; }
 
-        public RecipeController( IUnitOfWork unitOfWork )
+        public RecipeController( IUnitOfWork unitOfWork, IConfiguration config )
         {
+            this._config = config;
             this._unitOfWork = unitOfWork;
             this._recipeSecurity = new RecipeSecurity(_unitOfWork);
             this.recipeOrchestrator = new RecipeOrchestrator(_unitOfWork);
+            this._imageHelper = new ImageHelper(_config);
         }
 
         public IActionResult Index()
@@ -98,22 +108,30 @@ namespace Eyon.Site.Areas.User.Controllers
                     }
                 }
                 var files = HttpContext.Request.Form.Files;
+                byte[] formFileContent = null;
+
+                List<byte[]> filesAsByteArrays = new List<byte[]>();
+
+                if ( files != null && files.Count > 0 )
+                {
+                    foreach ( var  item in files )
+                    {
+                        filesAsByteArrays.Add(await FileHelpers.ProcessFormFileAsync<FileUpload>(item, ModelState, _permittedExtensions, _fileSizeLimit));
+                    }
+                }
                 if ( ModelState.IsValid )
                 {                    
-                    if ( files.Count > 0)
+                    if ( filesAsByteArrays.Count > 0)
                     {
-                        for ( int i = 0; i < files.Count; i++ )
+                        for ( int i = 0; i < filesAsByteArrays.Count; i++ )
                         {
-                            if (files[i].Length > 0 )
+                            if ( filesAsByteArrays[i].Length > 0 )
                             {
                                 if ( recipeViewModel.UserImage == null )
                                     recipeViewModel.UserImage = new List<UserImage>();
-                                recipeViewModel.UserImage.Add(new UserImage()
-                                {
-                                    Encoded = files[i].ConvertToBase64(),
-                                    FileType = Path.GetExtension(files[i].FileName).Trim('.'),
-                                    Description = string.Empty
-                                });
+                                UserImage img = (UserImage)await _imageHelper.ProcessIImageFile(filesAsByteArrays[i], new UserImage());
+                                img.Description = recipeViewModel.Recipe.Description;
+                                recipeViewModel.UserImage.Add(img);
                             }
                         }
                     }

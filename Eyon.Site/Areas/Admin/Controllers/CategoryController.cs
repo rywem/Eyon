@@ -50,7 +50,6 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
             if (id != null)
             {
-                
                 category = _categorySecurity.Get(id.GetValueOrDefault());
             }
 
@@ -116,7 +115,6 @@ namespace Eyon.Site.Areas.Admin.Controllers
                             category.SiteImage.FileName = resultIImageTask.Result.FileName;
                             category.SiteImage.FileNameThumb = resultIImageTask.Result.FileNameThumb;
                             category.SiteImage.FileType = resultIImageTask.Result.FileType;
-                            
                         }
                         else
                             category.SiteImage = null;
