@@ -50,7 +50,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
 
             if (id != null)
             {
-                category = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == id.GetValueOrDefault(), includeProperties: "SiteImage");
+                
+                category = _categorySecurity.Get(id.GetValueOrDefault());
             }
 
             if (category == null || category.SiteImage == null)
@@ -98,7 +99,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
                         {
                             List<Task> tasks = new List<Task>();
                             var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == category.Id, includeProperties: "SiteImage");
-                            
+                            categoryFromDb.SiteImage.Alt = category.SiteImage.Alt;
+                            categoryFromDb.SiteImage.Description = category.SiteImage.Description;
                             // delete existing image from aws
 
                             if ( !string.IsNullOrEmpty(categoryFromDb.SiteImage.FileName) )                            
@@ -107,14 +109,14 @@ namespace Eyon.Site.Areas.Admin.Controllers
                             if(!string.IsNullOrEmpty(categoryFromDb.SiteImage.FileNameThumb))
                                 tasks.Add(_imageHelper.TryDeleteAsync(categoryFromDb.SiteImage.FileNameThumb));
                             // create new image on aws                            
+                            category.SiteImage = categoryFromDb.SiteImage;
                             var resultIImageTask = _imageHelper.ProcessIImageFile(formFileContent, category.SiteImage);
-
                             tasks.Add(resultIImageTask);
                             await Task.WhenAll(tasks);
                             category.SiteImage.FileName = resultIImageTask.Result.FileName;
                             category.SiteImage.FileNameThumb = resultIImageTask.Result.FileNameThumb;
                             category.SiteImage.FileType = resultIImageTask.Result.FileType;
-
+                            
                         }
                         else
                             category.SiteImage = null;
@@ -188,7 +190,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             using (var transaction = _unitOfWork.BeginTransaction())
             {
@@ -206,6 +208,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
                     {
                         return Json(new { success = false, message = "Error while deleting" });
                     }
+                    await _imageHelper.TryDeleteAsync(imageFromDb.FileName);
+                    await _imageHelper.TryDeleteAsync(imageFromDb.FileNameThumb);
 
                     _unitOfWork.Category.Remove(categoryFromDb);
                     _unitOfWork.Save();

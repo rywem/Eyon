@@ -58,7 +58,7 @@ namespace Eyon.DataAccess.Data.Orchestrators
         {
             if ( category.SiteImage != null )
             {
-                _unitOfWork.SiteImage.Remove(category.SiteImageId);
+                //_unitOfWork.SiteImage.Remove(category.SiteImageId);
                 _unitOfWork.SiteImage.Update(category.SiteImage);
                 await _unitOfWork.SaveAsync();
                 category.SiteImageId = category.SiteImage.Id;

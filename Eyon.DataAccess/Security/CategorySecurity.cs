@@ -37,8 +37,20 @@ namespace Eyon.DataAccess.Security
             var data = await _unitOfWork.Category.GetAllAsync(includeProperties: "SiteImage");
             using ( Eyon.Utilities.API.AmazonWebService service = new Utilities.API.AmazonWebService(_config.GetValue<string>("AWS:AccessKey")
                                                                                                         , _config.GetValue<string>("AWS:SecretKey")) )
-            {                return data.GetImagesUrl(x => x.SiteImage.Thumb = service.GetPreSignedUrl(_config.GetValue<string>("AWS:Bucket"), x.SiteImage.FileNameThumb));
+            {                
+                return data.GetImagesUrl(x => x.SiteImage.Thumb = service.GetPreSignedUrl(_config.GetValue<string>("AWS:Bucket"), x.SiteImage.FileNameThumb));
             }
+        }
+
+        public Category Get(long id)
+        {
+            var category = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == id, includeProperties: "SiteImage");
+            using ( Eyon.Utilities.API.AmazonWebService service = new Utilities.API.AmazonWebService(_config.GetValue<string>("AWS:AccessKey")
+                                                                                                        , _config.GetValue<string>("AWS:SecretKey")) )
+            {
+                category.SiteImage.Image = service.GetPreSignedUrl(_config.GetValue<string>("AWS:Bucket"), category.SiteImage.FileName);
+            }
+            return category;
         }
     }
 }
