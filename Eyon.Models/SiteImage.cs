@@ -14,8 +14,18 @@ namespace Eyon.Models
         public string FileName { get; set; }
         public string FileNameThumb { get; set; }
 
-        //[NotMapped]
-        //public string Image 
+        /// <summary>
+        /// The image src
+        /// </summary>
+        [NotMapped]
+        public string Image { get; set; }
+
+        /// <summary>
+        /// The thumb src
+        /// </summary>
+        [NotMapped]
+        public string Thumb { get; set; }
+
         //{
         //    get
         //    {

@@ -14,6 +14,8 @@ using Eyon.Site.WebUtilities;
 using Eyon.Models.SiteObjects;
 using Microsoft.Extensions.Configuration;
 using Eyon.DataAccess.Security;
+using Eyon.Site.Images;
+using Eyon.DataAccess.Images;
 
 namespace Eyon.Site.Areas.Admin.Controllers
 {
@@ -26,14 +28,16 @@ namespace Eyon.Site.Areas.Admin.Controllers
         private readonly string[] _permittedExtensions = { ".jpg", ".jpeg", ".gif", ".png" };
         private readonly IConfiguration _config;
         private readonly CategorySecurity _categorySecurity;
+        private readonly ImageHelper _imageHelper;
         public CategoryController(IUnitOfWork unitOfWork, IConfiguration config)
         {
             this._config = config;
             this._unitOfWork = unitOfWork;
-            this._categorySecurity = new CategorySecurity(_unitOfWork);
+            this._categorySecurity = new CategorySecurity(_unitOfWork, _config);
+            this._imageHelper = new ImageHelper(_config);
         }
         public IActionResult Index()
-        {
+        {            
             return View();
         }       
         public IActionResult Upsert(long? id)
@@ -77,8 +81,8 @@ namespace Eyon.Site.Areas.Admin.Controllers
                                 Description = category.SiteImage.Description,
                                 Alt = category.SiteImage.Alt
                             };
-                            var imageHelper = new Eyon.Site.Images.ImageHelper(_config);
-                            category.SiteImage = (SiteImage)await imageHelper.ProcessIImageFile(formFileContent, category.SiteImage);
+                            
+                            category.SiteImage = (SiteImage)await _imageHelper.ProcessIImageFile(formFileContent, category.SiteImage);
                         }
                         else
                         {
@@ -94,16 +98,16 @@ namespace Eyon.Site.Areas.Admin.Controllers
                         {
                             List<Task> tasks = new List<Task>();
                             var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == category.Id, includeProperties: "SiteImage");
-                            var imageHelper = new Eyon.Site.Images.ImageHelper(_config);
+                            
                             // delete existing image from aws
 
                             if ( !string.IsNullOrEmpty(categoryFromDb.SiteImage.FileName) )                            
-                                tasks.Add(imageHelper.TryDeleteAsync(categoryFromDb.SiteImage.FileName));
+                                tasks.Add(_imageHelper.TryDeleteAsync(categoryFromDb.SiteImage.FileName));
                             
                             if(!string.IsNullOrEmpty(categoryFromDb.SiteImage.FileNameThumb))
-                                tasks.Add(imageHelper.TryDeleteAsync(categoryFromDb.SiteImage.FileNameThumb));
+                                tasks.Add(_imageHelper.TryDeleteAsync(categoryFromDb.SiteImage.FileNameThumb));
                             // create new image on aws                            
-                            var resultIImageTask = imageHelper.ProcessIImageFile(formFileContent, category.SiteImage);
+                            var resultIImageTask = _imageHelper.ProcessIImageFile(formFileContent, category.SiteImage);
 
                             tasks.Add(resultIImageTask);
                             await Task.WhenAll(tasks);
@@ -224,7 +228,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [Area("User")]
         public async Task<IActionResult> GetAll()
         {
-            return Json(new { data = await _unitOfWork.Category.GetAllAsync(includeProperties: "SiteImage") });
+            return Json(new { data = await _categorySecurity.GetAll() });
         }
         [HttpGet]
         [Authorize(Roles = Utilities.Statics.Roles.Admin + "," + Utilities.Statics.Roles.Manager + "," +
@@ -232,7 +236,6 @@ namespace Eyon.Site.Areas.Admin.Controllers
         [Area("User")]
         public IActionResult SearchCategories( string filter )
         {
-            throw new NotImplementedException();
             var x = ( from p in _unitOfWork.Category.Search(filter, includeProperties: "SiteImage")
                       select new
                       {
@@ -241,12 +244,12 @@ namespace Eyon.Site.Areas.Admin.Controllers
                           id = p.Id,
                           imageTitle = p.SiteImage.Description,
                           imageAlt = p.SiteImage.Alt,
-                          //image = p.SiteImage.Image
+                          image = _imageHelper.GetAWSImageUrl(p.SiteImage.FileNameThumb)
                       } );
 
 
             return Json(new { categories = x });
         }
-
+        
     }
 }

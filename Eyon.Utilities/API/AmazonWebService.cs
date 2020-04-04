@@ -13,18 +13,29 @@ namespace Eyon.Utilities.API
         string _encryptedAccessKey;
         string _encryptedSecretKey;
         AmazonS3Client _client;
-        public AmazonWebService(string encryptedAccessKey, string encryptedSecretKey)
+        public AmazonWebService( string encryptedAccessKey, string encryptedSecretKey )
         {
             this._encryptedAccessKey = encryptedAccessKey;
             this._encryptedSecretKey = encryptedSecretKey;
+            this.Initialize();
         }
         public void Initialize()
         {
-
             using ( Eyon.Utilities.API.AwsCsvHelper helper = new Utilities.API.AwsCsvHelper() )
             {
                 _client = new AmazonS3Client(_encryptedAccessKey.Decrypt(helper.GetKey(), helper.GetIV()), _encryptedSecretKey.Decrypt(helper.GetKey(), helper.GetIV()), Amazon.RegionEndpoint.USEast2);
             }
+        }
+
+        public string GetPreSignedUrl( string bucketName, string fileKeyName )
+        {
+            GetPreSignedUrlRequest request = new GetPreSignedUrlRequest
+            {
+                BucketName = bucketName,
+                Key = fileKeyName,
+                Expires = DateTime.Now.AddMinutes(5)
+            };
+            return _client.GetPreSignedURL(request);
         }
         public async Task<string> GetAsync(string bucketName, string fileKeyName)
         {
@@ -47,7 +58,7 @@ namespace Eyon.Utilities.API
                         string title = response.Metadata["x-amz-meta-title"]; // Assume you have "title" as medata added to the object.
                         string contentType = response.Headers["Content-Type"];
                         responseBody = reader.ReadToEnd(); // Now you process the response body.
-
+                        
                     }
                 }
             }

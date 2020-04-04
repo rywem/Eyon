@@ -17,5 +17,14 @@ namespace Eyon.Utilities.Extensions
                 }
             }
         }
+
+        public static IEnumerable<T> GetImagesUrl<T>(this IEnumerable<T> list, Func<T, string> funcToGetUrl )
+        {
+            foreach ( var item in list )
+            {
+                funcToGetUrl(item);
+                yield return item;
+            }
+        }
     }
 }

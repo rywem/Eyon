@@ -15,7 +15,7 @@ function loadDataTable() {
         "columns": [
             { "data": "name", "width": "30%" },
             { "data": "displayOrder", "width": "20%" },
-            { "data": "siteImage.image", 
+            { "data": "siteImage.thumb", 
                "render": function (data) {
                    return ` <div class="img-thumbnail">
                                 <img src="${data}" class="inherit" />
