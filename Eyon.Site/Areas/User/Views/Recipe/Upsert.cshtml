@@ -21,84 +21,84 @@
 
         <div class="col-9">
             <div class="form-group row">
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <label asp-for="Recipe.Name"></label>
                 </div>
-                <div class="col-9">
+                <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9">
                     <input asp-for="Recipe.Name" class="form-control" />
                     <span asp-validation-for="Recipe.Name" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <label asp-for="Recipe.Description"></label>
                 </div>
-                <div class="col-9">
+                <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9">
                     <textarea asp-for="Recipe.Description" class="form-control" rows="3"></textarea>
                     <span asp-validation-for="Recipe.Description" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="form-group row">
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <label asp-for="IngredientsText"><b>Ingredients</b></label>
                 </div>
-                <div class="col-9">
+                <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9">
                     <textarea asp-for="IngredientsText" class="form-control col-sm-12" rows="4" placeholder="Put each ingredient on a different line"></textarea>
                     <span asp-validation-for="IngredientsText" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <label asp-for="InstructionsText"><b>Instructions</b></label>
                 </div>
-                <div class="col-9">
+                <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9">
                     <textarea asp-for="InstructionsText" class="form-control col-sm-12" rows="4" placeholder="Put each instruction on a different line"></textarea>
                     <span asp-validation-for="InstructionsText" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <label asp-for="CommunityId">Community</label>
                 </div>
-                <div class="col-9">
+                <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9">
                     <input asp-for="CommunityId" hidden />
                     <input type="text" asp-for="CommunityName" class="form-control" autocomplete="off" />
                     <span asp-validation-for="CommunityId" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row offset-3 col-9 p-0">
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <label asp-for="Recipe.PrepTime"></label>
                 </div>
-                <div class="col-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
                     <input asp-for="Recipe.PrepTime" class="form-control" />
                     <span asp-validation-for="Recipe.PrepTime" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row offset-3 col-9 p-0">
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <label asp-for="Recipe.Cooktime"></label>
                 </div>
-                <div class="col-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
                     <input asp-for="Recipe.Cooktime" class="form-control" />
                     <span asp-validation-for="Recipe.Cooktime" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row offset-3 col-9 p-0">
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <label asp-for="Recipe.Servings"></label>
                 </div>
-                <div class="col-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
                     <input asp-for="Recipe.Servings" class="form-control" />
                     <span asp-validation-for="Recipe.Servings" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row offset-3 col-9 p-0">
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <label asp-for="Recipe.Privacy"></label>
                 </div>
-                <div class="col-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
                     <select asp-for="Recipe.Privacy" class="form-control" asp-items="Html.GetEnumSelectList<Eyon.Models.Enums.Privacy>()">
                         <option selected="selected" value="">Please select</option>
                     </select>
@@ -106,30 +106,30 @@
                 </div>
             </div>
             <div class="form-group row offset-3 col-9 p-0">
-                <div class="col-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
                     <label>Add Images</label>
                 </div>
-                <div class="col-8">
+                <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8">
                     <input type="file" name="files" id="uploadBox" multiple class="form-control" accept="image/gif, image/jpeg, image/png" />
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     Add to Cookbooks
                 </div>
-                <div class="col-2">
+                <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
                     <button type="button" class="btn btn-primary" id="addCookbooks" data-toggle="modal" data-target="#cookbooksModal">
                         <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
                     </button>
                 </div>
-                <div class="col-7">
+                <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7">
                     @Html.HiddenFor(x => x.CookbookSelector.ItemIds)
                     <ol id="@Model.CookbookSelector.GetListId()">
                     </ol>
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     Add Categories
                 </div>
                 <div class="col-2">
@@ -162,9 +162,9 @@
         </div>
     </div>
 </form>
-<div class="modal fade" tabindex="-1" role="dialog" id="cookbooksModal">
+<div class="modal modal-width fade" tabindex="-1" role="dialog" id="cookbooksModal" >
     <div class="modal-dialog" role="document">
-        <div class="modal-content modal-width-table">
+        <div class="modal-content ">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Click to select</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -177,7 +177,6 @@
                         <tr>
                             <th>Name</th>
                             <th>Privacy</th>
-                            <th>Created</th>
                             <th>Last Modified</th>
                             <th>Recipes</th>
                             <th></th>
@@ -192,9 +191,9 @@
     </div>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="categoriesModal">
+<div class="modal fade" tabindex="-1" role="dialog" id="categoriesModal" >
     <div class="modal-dialog" role="document">
-        <div class="modal-content modal-width-table">
+        <div class="modal-content ">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Click to select</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -276,7 +275,7 @@
         }
 
         cookbookSelector = new ListItemSelector(cookbookSelectorName, cookbookInitialIdsArray, cookbookInitialNamesArray, cookbook_elementId_itemIds, function (id, name, btnId, li_class) {
-            return `<li><span>${name}</span><div class="badge badge-danger" id="${btnId}" ><i class="far fa-window-close"></i></div></li>`
+            return `<li><span>${name}</span><div class="badge badge-danger ps" id="${btnId}" ><i class="far fa-window-close"></i></div></li>`
         });
         cookbookSelector.buildUI();
 
@@ -312,8 +311,7 @@
                 "data": userCookbookData.data,
                 "columns": [
                         { "data": "name" },
-                        { "data" : "privacy" },
-                        { "data": "created" },
+                        { "data" : "privacy" },                        
                         { "data": "modified" },
                         { "data": "recipeCount" },
                         {
@@ -333,7 +331,11 @@
                 "width": "100%",
                 "createdRow": function (row, data, dataIndex) {
                     $(row).addClass("text-center");
-                }
+                },
+                "columnDefs": [
+                    { targets: "_all", className: 'fs' },
+                    { targets: 4, className: 'ps' }
+                ]
             });
 
             $('#dtCookbooks tbody').on('click', 'button', function () {
@@ -347,10 +349,10 @@
         }
 
         function removeButton(id) {
-            return `<button type="button" class="btn btn-danger" /><i id="cbIcon" class="far fa-window-close"></i></button>`
+            return `<button type="button" class="btn btn-danger ps" /><i id="cbIcon" class="far fa-window-close"></i></button>`
         }
         function addButton(id) {
-            return `<button type="button" class="btn btn-primary" /><i id="cbIcon" class="fa fa-plus-square-o"></i></button>`
+            return `<button type="button" class="btn btn-primary ps" /><i id="cbIcon" class="fa fa-plus-square-o"></i></button>`
         }
 
         function getCookbookData() {
@@ -374,7 +376,13 @@
                 "pagingType": "simple_numbers",
                 "data": userCategoryData.data,
                 "columns": [
-                        { "data": "name" },                                                
+                    { "data": "name" },
+                    {
+                        "data": "siteImage",
+                        "render": function (data) {
+                            return '<img src="' + data.thumb + '" style="max-width: 64px; max-height:64px" />';
+                        }
+                    },
                         {
                             "data": "id",
                             "render": function (data) {

@@ -264,6 +264,23 @@ li.nostyle {
     border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
+@media (max-width: 400px) {    
+    .ps {
+        padding: 0.4rem;
+    }
+    .fs {
+        font-size: 0.9em;
+    }
+}
+
+
+@media (max-width: 359px ){
+    .dtCookbooks {
+        font-size: .8rem;
+        width: inherit;
+    }
+}
+
 
 ol#list_selected_cookbook {
     list-style: none;
@@ -275,8 +292,34 @@ ol#list_selected_cookbook {
     }
         ol#list_selected_cookbook li span {
             display: inline-block;            
-            min-width: 250px !important;
+            min-width: 10em !important;
             padding-bottom: 5px;
+        }
+        @media (max-width: 800px) {
+            ol#list_selected_cookbook li span {
+                display: inline-block;
+                min-width: 7em !important;
+                padding-bottom: 5px;
+            }
+        }
+        @media (max-width: 400px) {
+            ol#list_selected_cookbook {                
+                padding: 0;
+            }
+            ol#list_selected_cookbook li span {
+                display: inline-block;        
+                padding-bottom: 5px;
+                font-size: 0.8em;
+            }
+            ol#list_selected_cookbook li::before {
+                width: 1.0rem;
+                height: 1.0rem;
+            }
+            ol#list_selected_cookbook li div {
+                /*text-shadow: 1 1 1px blue;*/
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                margin: 0.1rem;
+            }
         }
         
         ol#list_selected_cookbook li::before {
