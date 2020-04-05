@@ -27,7 +27,7 @@ namespace Eyon.Site.Areas.User.Controllers
     public class RecipeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private RecipeOrchestrator recipeOrchestrator;
+        private RecipeOrchestrator _recipeOrchestrator;
         private readonly RecipeSecurity _recipeSecurity;
         private readonly long _fileSizeLimit = 8388608;
         private readonly string[] _permittedExtensions = { ".jpg", ".jpeg", ".gif", ".png" };
@@ -40,8 +40,8 @@ namespace Eyon.Site.Areas.User.Controllers
         {
             this._config = config;
             this._unitOfWork = unitOfWork;
-            this._recipeSecurity = new RecipeSecurity(_unitOfWork);
-            this.recipeOrchestrator = new RecipeOrchestrator(_unitOfWork);
+            this._recipeSecurity = new RecipeSecurity(_unitOfWork, config);
+            //this._recipeOrchestrator = new RecipeOrchestrator(_unitOfWork);
             this._imageHelper = new ImageHelper(_config);
         }
 
@@ -107,8 +107,7 @@ namespace Eyon.Site.Areas.User.Controllers
                         return RedirectToAction("Denied", "Error");
                     }
                 }
-                var files = HttpContext.Request.Form.Files;
-                byte[] formFileContent = null;
+                var files = HttpContext.Request.Form.Files;                
 
                 List<byte[]> filesAsByteArrays = new List<byte[]>();
 
@@ -179,10 +178,12 @@ namespace Eyon.Site.Areas.User.Controllers
                     }
                     catch ( Eyon.Models.Errors.SafeException usEx )
                     {
-                        throw usEx;                        
+                        // TODO log exception
+                        throw usEx;
                     }
                     catch ( Exception ex )
                     {
+                        // TODO log exception
                         throw ex;
                     }
 
@@ -191,6 +192,7 @@ namespace Eyon.Site.Areas.User.Controllers
             }
             catch ( Exception ex )
             {
+                // TODO log exception
                 throw ex;                
             }
             recipeViewModel.UserImage = null;
@@ -211,10 +213,12 @@ namespace Eyon.Site.Areas.User.Controllers
                 ModelState.AddModelError("Recipe.Id", "An error occurred");
                 if ( exception.ErrorType == Models.Enums.ErrorType.Denied )
                     return RedirectToAction("Denied", "Error");
+                // TODO log exception
                 throw exception;
             }
             catch (Exception ex )
             {
+                // TODO log exception
                 throw ex;
             }
             return Json(new { success = true, message = "Delete successful." });

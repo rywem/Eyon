@@ -21,7 +21,7 @@ namespace Eyon.Site.Extensions
                 
 
                 var img = ms.ToImage();
-                var scaledImg = img.ScaleImage(400, 400);
+                var scaledImg = img.Scale(400, 400);
 
                 //Image newImg = null;
                 long newLength = ms.Length;

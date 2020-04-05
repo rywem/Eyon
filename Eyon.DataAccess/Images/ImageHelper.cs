@@ -39,7 +39,7 @@ namespace Eyon.DataAccess.Images
                     var sysImage = ms.ToImage();
                     //create the thumbnail image
                     var sysImageThumb = sysImage.Resize(128, 128);
-                    var sysImageScaled = sysImage.ScaleImage(1000, 1000);
+                    var sysImageScaled = sysImage.Scale(1000, 1000);
                     string guid = Guid.NewGuid().ToString();
                     image.FileType = "jpg";
                     image.FileName = $"{guid}.{image.FileType}";
@@ -59,7 +59,6 @@ namespace Eyon.DataAccess.Images
                                 await Task.WhenAll(tasks.ToArray());
                             }
                         }
-                        //ms.Position = 0;
                     }
                 }
             }

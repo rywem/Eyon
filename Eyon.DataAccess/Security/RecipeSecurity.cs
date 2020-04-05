@@ -3,10 +3,14 @@ using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
 using Eyon.Models.Errors;
 using Eyon.Models.ViewModels;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Eyon.Utilities.Extensions;
+using Eyon.Utilities.API;
+using System.Linq;
 
 namespace Eyon.DataAccess.Security
 {
@@ -14,11 +18,13 @@ namespace Eyon.DataAccess.Security
     {
         private readonly IUnitOfWork _unitOfWork;
         private RecipeOrchestrator _recipeOrchestrator;
-        private FeedSecurity _feedSecurity; 
-        public RecipeSecurity( IUnitOfWork unitOfWork )
+        private FeedSecurity _feedSecurity;
+        private IConfiguration _config;
+        public RecipeSecurity( IUnitOfWork unitOfWork, IConfiguration config )
         {
             this._unitOfWork = unitOfWork;
-            this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork);
+            this._config = config;
+            this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, config);
             this._feedSecurity = new FeedSecurity(this._unitOfWork);
         }
 
@@ -31,7 +37,17 @@ namespace Eyon.DataAccess.Security
                 if ( await _unitOfWork.Recipe.UserCanViewAsync(currentApplicationUserId, id) )
                 {
                     // determine if this is the current owner to render the correct UI components
-                    return await this._recipeOrchestrator.GetAsync(currentApplicationUserId, id);
+                    var recipeViewModel = await this._recipeOrchestrator.GetAsync(currentApplicationUserId, id);
+
+                    if ( recipeViewModel.UserImage != null && recipeViewModel.UserImage.Count > 0 )
+                    {
+                        using ( AmazonWebService service = new AmazonWebService(_config.GetValue<string>("AWS:AccessKey"), _config.GetValue<string>("AWS:SecretKey")) )
+                        {
+                            recipeViewModel.UserImage.GetImagesUrl(x => x.Image = service.GetPreSignedUrl(_config.GetValue<string>("AWS:Bucket"), x.FileName),
+                                                                   x => x.Thumb = service.GetPreSignedUrl(_config.GetValue<string>("AWS:Bucket"), x.FileNameThumb)).ToList();
+                        }
+                    }
+                    return recipeViewModel;
                 }
                 else
                     throw new SafeException(Models.Enums.ErrorType.Denied);

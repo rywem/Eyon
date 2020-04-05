@@ -9,7 +9,7 @@ namespace Eyon.Utilities.Extensions
 {
     public static class ImageExtensions
     {        
-        public static Image ScaleImage(this Image image, int maxWidth, int maxHeight )
+        public static Image Scale(this Image image, int maxWidth, int maxHeight )
         {
             var ratioX = (double)maxWidth / image.Width;
             var ratioY = (double)maxHeight / image.Height;

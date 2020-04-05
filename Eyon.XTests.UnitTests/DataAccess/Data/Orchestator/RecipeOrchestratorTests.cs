@@ -19,7 +19,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Orchestator
         public RecipeOrchestratorTests()
         {
             this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(RecipeOrchestratorTests));
-            this._orchestrator = new Eyon.DataAccess.Data.Orchestrators.RecipeOrchestrator(_unitOfWork);
+            this._orchestrator = new Eyon.DataAccess.Data.Orchestrators.RecipeOrchestrator(_unitOfWork, null);
             SeedDatabase();
         }
 

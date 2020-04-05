@@ -18,11 +18,13 @@ namespace Eyon.Utilities.Extensions
             }
         }
 
-        public static IEnumerable<T> GetImagesUrl<T>(this IEnumerable<T> list, Func<T, string> funcToGetUrl )
+        public static IEnumerable<T> GetImagesUrl<T>(this IEnumerable<T> list, Func<T, string> funcToGetUrl, Func<T, string> funcToGetNextUrl = null )
         {
             foreach ( var item in list )
             {
                 funcToGetUrl(item);
+                funcToGetNextUrl?.Invoke(item); // if delegate is not null, invoke
+
                 yield return item;
             }
         }

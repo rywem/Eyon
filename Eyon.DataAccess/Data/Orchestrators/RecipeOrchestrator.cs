@@ -14,15 +14,19 @@ using Eyon.Models.SiteObjects;
 using Eyon.DataAccess.Data.Caller;
 using Eyon.DataAccess.Data.Abstraction;
 using Eyon.DataAccess.Security;
+using Microsoft.Extensions.Configuration;
+using Eyon.DataAccess.Images;
 
 namespace Eyon.DataAccess.Data.Orchestrators
 {
     public class RecipeOrchestrator
     {
         private readonly IUnitOfWork _unitOfWork;
-        public RecipeOrchestrator( IUnitOfWork unitOfWork )
+        private readonly IConfiguration _config;
+        public RecipeOrchestrator( IUnitOfWork unitOfWork, IConfiguration config )
         {
             this._unitOfWork = unitOfWork;
+            this._config = config;
         }
 
         internal async Task<RecipeViewModel> GetAsync(string currentApplicationUserId, long id)
@@ -461,11 +465,16 @@ namespace Eyon.DataAccess.Data.Orchestrators
             }
             if ( recipe.RecipeUserImage != null )
             {
+                List<Task> tasks = new List<Task>();
+                ImageHelper helper = new ImageHelper(_config);
                 foreach ( var item in recipe.RecipeUserImage )
                 {
+                    tasks.Add(helper.TryDeleteAsync(item.UserImage.FileName));
+                    tasks.Add(helper.TryDeleteAsync(item.UserImage.FileNameThumb));
                     _unitOfWork.UserImage.Remove(item.UserImage);
                     _unitOfWork.RecipeUserImage.Remove(item);
                 }
+                await Task.WhenAll(tasks);
             }
 
             if ( recipe.RecipeCategory != null )
