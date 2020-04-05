@@ -339,3 +339,4 @@ Eyon.DataAccess/SeedData/Location/free-zipcode-database-Primary-sample.csv
 Eyon.Site/config.ini
 Eyon.XConsole/config.csv
 Eyon.Site/config.csv
+*.jpg
