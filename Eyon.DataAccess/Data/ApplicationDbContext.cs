@@ -384,7 +384,7 @@ namespace Eyon.DataAccess.Data
                 .HasOne(c => c.UserImage)
                 .WithMany(c => c.ApplicationUserOwner)
                 .HasForeignKey(c => c.ObjectId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ApplicationUserFeed>()
                 .HasKey(c => new { c.ObjectId, c.ApplicationUserId });
