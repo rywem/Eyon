@@ -6552,6 +6552,7 @@ a.close.disabled {
     outline: 0;
 }
 
+
 .modal-dialog {
     position: relative;
     width: auto;
@@ -6651,7 +6652,8 @@ a.close.disabled {
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    width: 100%;
+    /*width: 100%;*/
+    width: inherit;
     min-width: 600px;
     pointer-events: auto;
     background-color: #fff;
@@ -6698,6 +6700,7 @@ a.close.disabled {
     border-bottom: 1px solid #ddd;
     border-top-left-radius: calc(0.3rem - 1px);
     border-top-right-radius: calc(0.3rem - 1px);
+    width: inherit;
 }
 
     .modal-header .close {
@@ -6716,6 +6719,7 @@ a.close.disabled {
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
     padding: 1rem;
+    width: inherit;
 }
 
 .modal-footer {
@@ -6734,6 +6738,7 @@ a.close.disabled {
     border-top: 1px solid #ddd;
     border-bottom-right-radius: calc(0.3rem - 1px);
     border-bottom-left-radius: calc(0.3rem - 1px);
+    width: inherit;
 }
 
     .modal-footer > * {
@@ -6746,6 +6751,15 @@ a.close.disabled {
     width: 50px;
     height: 50px;
     overflow: scroll;
+}
+
+@media (max-width: 500px) {
+    .modal-dialog {
+        position: relative;
+        width: 400px;
+        margin: 0.5rem;
+        pointer-events: none;
+    }
 }
 
 @media (min-width: 576px) {
