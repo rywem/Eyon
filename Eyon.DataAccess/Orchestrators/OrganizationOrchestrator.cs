@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Eyon.DataAccess.Data.Repository;
 
-namespace Eyon.DataAccess.Data.Orchestrators
+namespace Eyon.DataAccess.Orchestrators
 {
     public class OrganizationOrchestrator
     {

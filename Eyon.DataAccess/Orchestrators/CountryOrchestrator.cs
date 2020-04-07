@@ -1,10 +1,7 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
-namespace Eyon.DataAccess.Data.Orchestrators
+namespace Eyon.DataAccess.Orchestrators
 {
     public class CountryOrchestrator
     {

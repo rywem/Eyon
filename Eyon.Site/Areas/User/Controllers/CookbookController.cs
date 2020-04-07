@@ -6,10 +6,11 @@ using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Models;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Eyon.DataAccess.Data.Orchestrators;
+using Eyon.DataAccess.Orchestrators;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Eyon.Utilities.Extensions;
+using Eyon.DataAccess.Security;
 
 namespace Eyon.Site.Areas.Seller.Controllers
 {
@@ -19,13 +20,15 @@ namespace Eyon.Site.Areas.Seller.Controllers
     public class CookbookController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private CookbookOrchestrator cookbookOrchestrator;
+        private CookbookOrchestrator _cookbookOrchestrator;
+        private CookbookSecurity _cookbookSecurity;
         [BindProperty]
         public CookbookViewModel cookbookViewModel { get; set; }
         public CookbookController(IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
-            this.cookbookOrchestrator = new CookbookOrchestrator(_unitOfWork);
+            this._cookbookOrchestrator = new CookbookOrchestrator(_unitOfWork);
+            this._cookbookSecurity = new CookbookSecurity(_unitOfWork);
         }
         public IActionResult Index()
         {
@@ -44,14 +47,14 @@ namespace Eyon.Site.Areas.Seller.Controllers
 
             if (id != null)
             {
-                cookbookViewModel = cookbookOrchestrator.GetCookbookViewModel(id.GetValueOrDefault());
+                cookbookViewModel = _cookbookOrchestrator.GetCookbookViewModel(id.GetValueOrDefault());
             }
             return View(cookbookViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert()
+        public async Task<IActionResult> Upsert()
         {
 
             try
@@ -59,38 +62,40 @@ namespace Eyon.Site.Areas.Seller.Controllers
                 var claimsIdentity = (ClaimsIdentity)this.User.Identity;
                 var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-                if( cookbookViewModel.Cookbook.Id != 0 )
-                {
-                    bool isOwner = _unitOfWork.Cookbook.IsOwner(claims.Value, cookbookViewModel.Cookbook.Id);
-                    if ( isOwner == false )
-                    {
-                        ModelState.AddModelError("Recipe.Id", "An error occurred.");
-                        return RedirectToAction("Denied", "Error");
-                    }
-                }
+                //if( cookbookViewModel.Cookbook.Id != 0 )
+                //{
+                //    bool isOwner = await _unitOfWork.Cookbook.IsOwnerAsync(claims.Value, cookbookViewModel.Cookbook.Id);
+                //    if ( isOwner == false )
+                //    {
+                //        ModelState.AddModelError("Recipe.Id", "An error occurred.");
+                //        return RedirectToAction("Denied", "Error");
+                //    }
+                //}
 
                 if ( ModelState.IsValid )
                 {
                     //todo validate the user submitting has permission to add or edit this cookbook.
                     try
                     {
-
                         if ( cookbookViewModel.Cookbook.Id == 0 ) //New cookbook
                         {
-                            cookbookOrchestrator.AddCookbookTransaction(claims.Value, cookbookViewModel);
+                            await _cookbookSecurity.AddAsync(claims.Value, cookbookViewModel);
                         }
                         else
                         {
-                            cookbookOrchestrator.UpdateCookbookTransaction(claims.Value, cookbookViewModel);
+                            //_cookbookOrchestrator.UpdateCookbookTransaction(claims.Value, cookbookViewModel);
+                            await _cookbookSecurity.UpdateAsync(claims.Value, cookbookViewModel);
                         }
                     }
                     catch ( Eyon.Models.Errors.SafeException usEx )
                     {
+                        // TODO log exception
                         ModelState.AddModelError("CategoryIds", usEx.Message);
                         return View(cookbookViewModel);
                     }
                     catch ( Exception ex )
                     {
+                        // TODO log exception
                         ModelState.AddModelError("CategoryIds", "An error occurred.");
                         return View(cookbookViewModel);
                     }
@@ -107,39 +112,49 @@ namespace Eyon.Site.Areas.Seller.Controllers
 
 
         [HttpDelete]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> Delete(long id)
         {
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefaultOwned(claims.Value, x => x.Id == id, includeProperties: "CommunityCookbook,CookbookCategory,ApplicationUserOwner");
 
-            if (objFromDb == null)
-                return Json(new { success = false, message = "An error occurred." });
 
-            using (var transaction = _unitOfWork.BeginTransaction())
-            {
-                try
-                {
-                    foreach (var item in objFromDb.CookbookCategory)
-                    {
-                        _unitOfWork.CookbookCategory.Remove(item);
+            bool result = await _cookbookSecurity.DeleteAsync(claims.Value, id);
+            
+            if ( result  )
+                return Json(new { success = result, message = "Delete successful." });
+            else
+                return Json(new { success = result, message = "An error occurred." });
 
-                    }
-                    foreach ( var item in objFromDb.ApplicationUserOwner )
-                    {
-                        _unitOfWork.ApplicationUserCookbook.Remove(item);
-                    }
-                    _unitOfWork.Save();
-                    _unitOfWork.Cookbook.Remove(objFromDb);
-                    _unitOfWork.Save();
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                }
-            }
-            return Json(new { success = true, message = "Delete successful." });
+            //var objFromDb = _unitOfWork.Cookbook.GetFirstOrDefaultOwned(claims.Value, x => x.Id == id, includeProperties: "CommunityCookbook,CookbookCategory,ApplicationUserOwner,FeedCookbook,FeedCookbook.Feed");
+
+            //if (objFromDb == null)
+            //    return Json(new { success = false, message = "An error occurred." });
+
+            //// TODO delete feed and topic related database entries
+            //using (var transaction = _unitOfWork.BeginTransaction())
+            //{
+            //    try
+            //    {
+            //        foreach (var item in objFromDb.CookbookCategory)
+            //        {
+            //            _unitOfWork.CookbookCategory.Remove(item);
+
+            //        }
+            //        foreach ( var item in objFromDb.ApplicationUserOwner )
+            //        {
+            //            _unitOfWork.ApplicationUserCookbook.Remove(item);
+            //        }
+            //        _unitOfWork.Save();
+            //        _unitOfWork.Cookbook.Remove(objFromDb);
+            //        _unitOfWork.Save();
+            //        transaction.Commit();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        transaction.Rollback();
+            //    }
+            //}
+            //return Json(new { success = true, message = "Delete successful." });
         }
 
 

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Eyon.DataAccess.Data.Orchestrators;
+using Eyon.DataAccess.Orchestrators;
 using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.DataAccess.Images;
 using Eyon.DataAccess.Security;

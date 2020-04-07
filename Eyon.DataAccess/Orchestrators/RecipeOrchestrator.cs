@@ -17,7 +17,7 @@ using Eyon.DataAccess.Security;
 using Microsoft.Extensions.Configuration;
 using Eyon.DataAccess.Images;
 
-namespace Eyon.DataAccess.Data.Orchestrators
+namespace Eyon.DataAccess.Orchestrators
 {
     public class RecipeOrchestrator
     {

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Eyon.Models.Enums;
 
-namespace Eyon.DataAccess.Data.Orchestrators
+namespace Eyon.DataAccess.Orchestrators
 {
     public class FeedOrchestrator
     {

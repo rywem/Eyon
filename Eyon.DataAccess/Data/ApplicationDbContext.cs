@@ -310,8 +310,8 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(c => c.FeedId);
             modelBuilder.Entity<FeedCookbook>()
                 .HasOne(c => c.Cookbook)
-                .WithMany(c => c.FeedCookbook)
-                .HasForeignKey(c => c.CookbookId);
+                .WithOne(c => c.FeedCookbook)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<FeedRecipe>()
                 .HasKey(c => new { c.FeedId, c.RecipeId });

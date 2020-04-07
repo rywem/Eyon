@@ -1,14 +1,15 @@
 ﻿@model Eyon.Models.ViewModels.CookbookViewModel
+@using  System.Web;
 @{
     var title = "Create Cookbook";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form method="post" asp-action="Upsert" >
+<form method="post" asp-action="Upsert">
     <div class="row px-2 mx-2 backgroundWhite border">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        @if (Model.Cookbook.Id != 0)
+        @if ( Model.Cookbook.Id != 0 )
         {
             <input type="hidden" asp-for="Cookbook.Id" />
             title = "Edit Cookbook";
@@ -66,37 +67,173 @@
                     <label>Add Categories</label>
                 </div>
                 <div class="col-2">
-                    <button class="btn btn-primary" id="addCategories">
+                    <button type="button" class="btn btn-primary" id="addCategories" data-toggle="modal" data-target="#categoriesModal">
                         <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
                     </button>
                 </div>
                 <div class="col-6" style="margin: 0; padding-bottom: 10px;">
-                    <span id="categoryNames" class="selectedCategoryNames">@Model.CategoryNames</span>
-                    <span asp-validation-for="CategoryIds" class="text-danger"></span>
-                    <input asp-for="CategoryIds" class="form-control" hidden="hidden" />
+                    @Html.HiddenFor(x => x.CategorySelector.ItemIds)
+                    <ol id="@Model.CategorySelector.GetListId()">
+                    </ol>
                 </div>
             </div>
             <div class="form-group row col-12">
                 <partial name="_SearchCategories" />
             </div>
-                <div class="form-group row">
-                    <div class="col-8 offset-4">
-                        @if (Model.Cookbook.Id != 0)
-                        {
-                            // Edit button and back to list button
-                            <partial name="_EditAndBackToListButton" model="Model.Cookbook.Id" />
-                        }
-                        else
-                        {
-                            // Create button and back to list button
-                            <partial name="_CreateAndBackToListButton" />
-                        }
-                    </div>
+            <div class="form-group row">
+                <div class="col-8 offset-4">
+                    @if ( Model.Cookbook.Id != 0 )
+                    {
+                        // Edit button and back to list button
+                        <partial name="_EditAndBackToListButton" model="Model.Cookbook.Id" />
+                    }
+                    else
+                    {
+                        // Create button and back to list button
+                        <partial name="_CreateAndBackToListButton" />
+                    }
                 </div>
             </div>
         </div>
-    
+    </div>
+
 </form>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="categoriesModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Click to select</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="dtCategories" class="table table-striped table-borderd table-sm" cellspacing="0" with="100%">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Image</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts{
-    <script src="~/js/search_categories.js"></script>
+    <script src="~/js/library/list_item_selector.js"></script>
+    <script>
+        // initialize categories data
+        var categorySelectorName;
+        var category_elementId_itemIds = 'CategorySelector_ItemIds';
+        var categoryInitialIdsArray = [];
+        var categoryInitialNamesArray = [];
+        var categoryDataTable;
+        var userCategoryData;
+         @{
+            <text>                
+                categorySelectorName = `@Model.CategorySelector.Name`;
+            </text>
+           
+
+            foreach ( var item in Model.CategorySelector.SelectedItems )
+            {
+                long id = 0;
+                if (long.TryParse(item.Value, out id) )
+                {
+                    <text>
+                        categoryInitialIdsArray.push(@id);
+                    </text>
+                    <text>
+                        categoryInitialNamesArray.push('@Html.Raw(HttpUtility.JavaScriptStringEncode(@item.Text))');
+                    </text>
+                }
+            }
+        }
+
+        categorySelector = new ListItemSelector(categorySelectorName, categoryInitialIdsArray, categoryInitialNamesArray, category_elementId_itemIds, function (id, name, btnId, li_class) {
+            return `<li><span>${name}</span><div id="${btnId}" ><i class="far fa-window-close"></i></div></li>`
+        });
+        categorySelector.buildUI();
+
+        $(document).ready(function () {
+
+            var ajaxCategory = getCategoryData();
+            ajaxCategory.then(() => createCategoryDataTable());
+
+            $("#addCategories").click(function () {
+                categoryDataTable.rows().invalidate().draw()
+            });
+        });
+
+         // Begin Region: Generate Category DataTable
+        
+        function createCategoryDataTable() {
+            categoryDataTable = $('#dtCategories').DataTable({
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "data": userCategoryData.data,
+                "columns": [
+                    { "data": "name" },
+                    {
+                        "data": "siteImage",
+                        "render": function (data) {
+                            return '<img src="' + data.thumb + '" style="max-width: 64px; max-height:64px" />';
+                        }
+                    },
+                        {
+                            "data": "id",
+                            "render": function (data) {
+                                if (categorySelector.containsId(data)) {
+                                    return removeCategoryButton(data);
+                                } else {
+                                    return addCategoryButton(data);
+                                }
+                            }
+                        },
+                    ],
+                 "language": {
+                    "emptyTable": "No records found"
+                },
+                "width": "100%",
+                "createdRow": function (row, data, dataIndex) {
+                    $(row).addClass("text-center");
+                }
+            });
+
+            $('#dtCategories tbody').on('click', 'button', function () {
+                var data = categoryDataTable.row( $(this).parents('tr') ).data();
+                categorySelector.updateSelected(data["id"], data["name"]);
+                $(this).toggleClass("btn-primary");
+                $(this).toggleClass("btn-danger");
+                $(this).children("#catIcon").toggleClass("far fa-window-close");
+                $(this).children("#catIcon").toggleClass("fa fa-plus-square-o");
+            });
+        }
+        function removeCategoryButton(id) {
+            return `<button type="button" class="btn btn-danger" /><i id="catIcon" class="far fa-window-close"></i></button>`
+        }
+        function addCategoryButton(id) {
+            return `<button type="button" class="btn btn-primary" /><i id="catIcon" class="fa fa-plus-square-o"></i></button>`
+        }
+        function getCategoryData() {
+            return $.ajax({
+                async: false,
+                url: "/user/category/GetAll",
+                type: "GET",
+                datatype: "json",
+                success: function (json) {
+                    userCategoryData = json;
+                }
+            });
+        }
+        
+        // End Region
+    </script>
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Eyon.DataAccess.Data.Orchestrators
+namespace Eyon.DataAccess.Orchestrators
 {
     public class StateOrchestrator
     {

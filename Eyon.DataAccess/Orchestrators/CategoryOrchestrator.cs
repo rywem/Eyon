@@ -12,7 +12,7 @@ using Eyon.Models.Relationship;
 using Eyon.Models.SiteObjects;
 using Eyon.DataAccess.Security;
 
-namespace Eyon.DataAccess.Data.Orchestrators
+namespace Eyon.DataAccess.Orchestrators
 {
     public class CategoryOrchestrator
     {

@@ -14,7 +14,6 @@ using Eyon.Site.WebUtilities;
 using Eyon.Models.SiteObjects;
 using Microsoft.Extensions.Configuration;
 using Eyon.DataAccess.Security;
-using Eyon.Site.Images;
 using Eyon.DataAccess.Images;
 
 namespace Eyon.Site.Areas.Admin.Controllers

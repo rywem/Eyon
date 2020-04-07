@@ -274,14 +274,6 @@ li.nostyle {
 }
 
 
-@media (max-width: 359px ){
-    .dtCookbooks {
-        font-size: .8rem;
-        width: inherit;
-    }
-}
-
-
 ol#list_selected_cookbook {
     list-style: none;
     counter-reset: cookbook-counter;

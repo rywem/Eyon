@@ -4,7 +4,7 @@ using Eyon.DataAccess.Data.Repository.IRepository;
 using Eyon.Utilities.Extensions;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Eyon.DataAccess.Data.Orchestrators;
+using Eyon.DataAccess.Orchestrators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.IO;

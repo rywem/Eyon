@@ -10,7 +10,7 @@ using Eyon.Models.Relationship;
 using System.Linq;
 using Eyon.DataAccess.SeedData.Location;
 
-namespace Eyon.DataAccess.Data.Orchestrators
+namespace Eyon.DataAccess.Orchestrators
 {
     public class CommunityOrchestrator
     {

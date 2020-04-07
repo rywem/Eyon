@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.InMemory;
 using Eyon.DataAccess.Data;
 using System;
 using Eyon.Models.ViewModels;
-using Eyon.DataAccess.Data.Orchestrators;
+using Eyon.DataAccess.Orchestrators;
 using System.Linq;
 
 namespace Eyon.XTests.UnitTests.DataAccess.Data.Orchestator
@@ -19,7 +19,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Orchestator
         public RecipeOrchestratorTests()
         {
             this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(RecipeOrchestratorTests));
-            this._orchestrator = new Eyon.DataAccess.Data.Orchestrators.RecipeOrchestrator(_unitOfWork, null);
+            this._orchestrator = new Eyon.DataAccess.Orchestrators.RecipeOrchestrator(_unitOfWork, null);
             SeedDatabase();
         }
 
