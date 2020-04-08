@@ -9,6 +9,7 @@ using Eyon.Models.Relationship;
 using Eyon.DataAccess.Data.Caller;
 using System.Threading.Tasks;
 using Eyon.Models;
+using Eyon.DataAccess.Security;
 
 namespace Eyon.DataAccess.Orchestrators
 {
@@ -150,6 +151,17 @@ namespace Eyon.DataAccess.Orchestrators
             var topic = _unitOfWork.Topic.AddFromITopicItem(cookbookViewModel.Cookbook);
             var feed = _unitOfWork.Feed.AddFromIFeedItem(cookbookViewModel.Cookbook);
             await _unitOfWork.SaveAsync();
+
+
+            FeedCookbook feedCookbook = new FeedCookbook()
+            {
+                CookbookId = cookbookViewModel.Cookbook.Id,
+                FeedId = feed.Id
+            };
+
+            _unitOfWork.FeedCookbook.Add(feedCookbook);
+            _unitOfWork.FeedTopic.AddFromEntities(feed, topic);
+            // todo delete extra feed items in database for cookbook   select * from feed
 
 
             if ( !string.IsNullOrEmpty(cookbookViewModel.CategorySelector.ItemIds) )
@@ -305,13 +317,14 @@ namespace Eyon.DataAccess.Orchestrators
                 _unitOfWork.CommunityCookbook.Remove(item);
             }
 
-            FeedCaller feedCaller = new FeedCaller(_unitOfWork);
             if ( objFromDb.FeedCookbook != null )
             {
-                if ( objFromDb.FeedCookbook.Feed != null )
-                    _unitOfWork.Feed.Remove(objFromDb.FeedCookbook.Feed);
-                feedCaller.RemoveFeedCookbook(objFromDb.FeedCookbook);
+                FeedSecurity feedSecurity = new FeedSecurity(_unitOfWork);
+                await feedSecurity.DeleteAsync(currentApplicationUserId, objFromDb.FeedCookbook.FeedId, false);
             }
+            // delete topic            
+            _unitOfWork.Topic.RemoveFromITopicItem(objFromDb);
+
             await _unitOfWork.SaveAsync();
             _unitOfWork.Cookbook.Remove(objFromDb);
             await _unitOfWork.SaveAsync();

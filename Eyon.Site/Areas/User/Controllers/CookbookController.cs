@@ -62,16 +62,6 @@ namespace Eyon.Site.Areas.Seller.Controllers
                 var claimsIdentity = (ClaimsIdentity)this.User.Identity;
                 var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-                //if( cookbookViewModel.Cookbook.Id != 0 )
-                //{
-                //    bool isOwner = await _unitOfWork.Cookbook.IsOwnerAsync(claims.Value, cookbookViewModel.Cookbook.Id);
-                //    if ( isOwner == false )
-                //    {
-                //        ModelState.AddModelError("Recipe.Id", "An error occurred.");
-                //        return RedirectToAction("Denied", "Error");
-                //    }
-                //}
-
                 if ( ModelState.IsValid )
                 {
                     //todo validate the user submitting has permission to add or edit this cookbook.
@@ -82,8 +72,7 @@ namespace Eyon.Site.Areas.Seller.Controllers
                             await _cookbookSecurity.AddAsync(claims.Value, cookbookViewModel);
                         }
                         else
-                        {
-                            //_cookbookOrchestrator.UpdateCookbookTransaction(claims.Value, cookbookViewModel);
+                        {                            
                             await _cookbookSecurity.UpdateAsync(claims.Value, cookbookViewModel);
                         }
                     }
