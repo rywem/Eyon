@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Eyon.DataAccess.Data.Caller
+namespace Eyon.DataAccess.Caller
 {
     public class CommunityCaller
     {

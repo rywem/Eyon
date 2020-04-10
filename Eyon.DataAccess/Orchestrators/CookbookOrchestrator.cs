@@ -6,7 +6,7 @@ using Eyon.Models.Errors;
 using Eyon.Models.ViewModels;
 using Eyon.DataAccess.Data.Repository;
 using Eyon.Models.Relationship;
-using Eyon.DataAccess.Data.Caller;
+using Eyon.DataAccess.Caller;
 using System.Threading.Tasks;
 using Eyon.Models;
 using Eyon.DataAccess.Security;
@@ -151,8 +151,7 @@ namespace Eyon.DataAccess.Orchestrators
             var topic = _unitOfWork.Topic.AddFromITopicItem(cookbookViewModel.Cookbook);
             var feed = _unitOfWork.Feed.AddFromIFeedItem(cookbookViewModel.Cookbook);
             await _unitOfWork.SaveAsync();
-
-
+            feedCaller.AddOwnerRelationship(currentUserId, feed);
             FeedCookbook feedCookbook = new FeedCookbook()
             {
                 CookbookId = cookbookViewModel.Cookbook.Id,

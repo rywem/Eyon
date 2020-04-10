@@ -11,7 +11,7 @@ using Eyon.Models.Errors;
 using Eyon.Models.Relationship;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Eyon.Models.SiteObjects;
-using Eyon.DataAccess.Data.Caller;
+using Eyon.DataAccess.Caller;
 using Eyon.DataAccess.Data.Abstraction;
 using Eyon.DataAccess.Security;
 using Microsoft.Extensions.Configuration;
@@ -439,11 +439,6 @@ namespace Eyon.DataAccess.Orchestrators
 
         internal async Task DeleteAsync( string currentApplicationUserId, Recipe recipe )
         {
-            //var recipe = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipe.Id, includeProperties: "ApplicationUserRecipe,CommunityRecipe,CommunityRecipe,Instruction,Ingredient,CookbookRecipe,RecipeUserImage,RecipeUserImage.UserImage,FeedRecipe,FeedRecipe.Feed,RecipeCategory", false);
-
-            //if ( recipeFromDb == null )
-                //throw new SafeException("An error occurred.", new Exception(string.Format("Owned item not found. Recipe ID {0},  Current application user ID {1}", recipe.Id, currentApplicationUserId)));
-
             if ( recipe.CommunityRecipe != null )
             {
                 _unitOfWork.CommunityRecipe.Remove(recipe.CommunityRecipe);
