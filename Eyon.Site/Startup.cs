@@ -32,10 +32,17 @@ namespace Eyon.Site
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
+            #region Scoped Dependency injection
             services.AddScoped<DataAccess.Data.Repository.IRepository.IUnitOfWork, DataAccess.Data.UnitOfWork>();
             services.AddScoped<DataAccess.Security.ISecurity.IRecipeSecurity, DataAccess.Security.RecipeSecurity>();
             services.AddScoped<DataAccess.Orchestrators.IOrchestrator.IRecipeOrchestrator, DataAccess.Orchestrators.RecipeOrchestrator>();
             services.AddScoped<DataAccess.DataCalls.IDataCall.IRecipeDataCall, DataAccess.DataCalls.RecipeDataCall>();
+            services.AddScoped<DataAccess.DataCalls.IDataCall.IFeedDataCall, DataAccess.DataCalls.FeedDataCall>();
+
+            services.AddScoped<DataAccess.Security.ISecurity.ICookbookSecurity, DataAccess.Security.CookbookSecurity>();
+            services.AddScoped<DataAccess.Orchestrators.IOrchestrator.ICookbookOrchestrator, DataAccess.Orchestrators.CookbookOrchestrator>();
+            //services.AddScoped<DataAccess.DataCalls.IDataCall.ICookbookDataCall, DataAccess.DataCalls.CookbookDataCall>();
+            #endregion
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(60);

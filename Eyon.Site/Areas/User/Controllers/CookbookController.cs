@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Eyon.Utilities.Extensions;
 using Eyon.DataAccess.Security;
+using Eyon.DataAccess.Security.ISecurity;
+using Eyon.DataAccess.Orchestrators.IOrchestrator;
 
 namespace Eyon.Site.Areas.Seller.Controllers
 {
@@ -20,15 +22,15 @@ namespace Eyon.Site.Areas.Seller.Controllers
     public class CookbookController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private CookbookOrchestrator _cookbookOrchestrator;
-        private CookbookSecurity _cookbookSecurity;
+        private ICookbookOrchestrator _cookbookOrchestrator;
+        private ICookbookSecurity _cookbookSecurity;
         [BindProperty]
         public CookbookViewModel cookbookViewModel { get; set; }
-        public CookbookController(IUnitOfWork unitOfWork)
+        public CookbookController(IUnitOfWork unitOfWork, ICookbookSecurity cookbookSecurity, ICookbookOrchestrator cookbookOrchestrator)
         {
             this._unitOfWork = unitOfWork;
-            this._cookbookOrchestrator = new CookbookOrchestrator(_unitOfWork);
-            this._cookbookSecurity = new CookbookSecurity(_unitOfWork);
+            this._cookbookOrchestrator = cookbookOrchestrator;
+            this._cookbookSecurity = cookbookSecurity;
         }
         public IActionResult Index()
         {
@@ -47,7 +49,7 @@ namespace Eyon.Site.Areas.Seller.Controllers
 
             if (id != null)
             {
-                cookbookViewModel = _cookbookOrchestrator.GetCookbookViewModel(id.GetValueOrDefault());
+                cookbookViewModel = _cookbookOrchestrator.Get(id.GetValueOrDefault());
             }
             return View(cookbookViewModel);
         }

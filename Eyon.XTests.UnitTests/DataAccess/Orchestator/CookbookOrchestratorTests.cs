@@ -8,6 +8,7 @@ using System;
 using Eyon.Models.ViewModels;
 using Eyon.DataAccess.Orchestrators;
 using System.Linq;
+using Eyon.DataAccess.DataCalls;
 
 namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
 {
@@ -18,7 +19,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
         public CookbookOrchestratorTests()
         {
             this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(CookbookOrchestratorTests));
-            this._orchestrator = new Eyon.DataAccess.Orchestrators.CookbookOrchestrator(_unitOfWork);
+            this._orchestrator = new Eyon.DataAccess.Orchestrators.CookbookOrchestrator(_unitOfWork, new FeedDataCall(this._unitOfWork));
             SeedDatabase();
         }
 
@@ -62,7 +63,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             var cookbookInDb = _unitOfWork.Cookbook.Get(1);           
             Assert.NotNull(cookbookInDb);
             // act
-            var cookbookViewModel = _orchestrator.GetCookbookViewModel(cookbookInDb.Id);
+            var cookbookViewModel = _orchestrator.Get(cookbookInDb.Id);
             Assert.NotNull(cookbookViewModel);
             Assert.NotNull(cookbookViewModel.Cookbook);
             Assert.True(cookbookViewModel.Cookbook.Id > 0);

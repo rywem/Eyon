@@ -10,17 +10,21 @@ using Eyon.DataAccess.DataCalls;
 using System.Threading.Tasks;
 using Eyon.Models;
 using Eyon.DataAccess.Security;
+using Eyon.DataAccess.DataCalls.IDataCall;
+using Eyon.DataAccess.Orchestrators.IOrchestrator;
 
 namespace Eyon.DataAccess.Orchestrators
 {
-    public class CookbookOrchestrator
+    public class CookbookOrchestrator : ICookbookOrchestrator
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CookbookOrchestrator(IUnitOfWork unitOfWork)
+        private readonly IFeedDataCall _feedDataCall;
+        public CookbookOrchestrator( IUnitOfWork unitOfWork, IFeedDataCall feedDataCall)
         {
             this._unitOfWork = unitOfWork;
+            this._feedDataCall = feedDataCall;
         }
-        public CookbookViewModel GetCookbookViewModel(long id)
+        public CookbookViewModel Get(long id)
         {
             CookbookViewModel cookbookViewModel = new CookbookViewModel();
             cookbookViewModel.Cookbook = _unitOfWork.Cookbook.GetFirstOrDefault(x => x.Id == id, includeProperties: "CommunityCookbook,CookbookCategory,CookbookCategory.Category");
@@ -45,81 +49,81 @@ namespace Eyon.DataAccess.Orchestrators
         /// </summary>
         /// <param name="cookbookViewModel">The CookbookViewModel </param>
         /// <returns>The cookbookviewmodel</returns>
-        public void AddCookbook(string currentUserId, CookbookViewModel cookbookViewModel)
-        {
-            if (cookbookViewModel.Cookbook.Id != 0) //New cookbook
-                throw new SafeException("Cookbook already exists.");
+        //public void AddCookbook(string currentUserId, CookbookViewModel cookbookViewModel)
+        //{
+        //    if (cookbookViewModel.Cookbook.Id != 0) //New cookbook
+        //        throw new SafeException("Cookbook already exists.");
 
-            FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
-            _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
-            _unitOfWork.Save();
-            _unitOfWork.Cookbook.AddOwnerRelationship(currentUserId, cookbookViewModel.Cookbook, new ApplicationUserCookbook());
-            _unitOfWork.Save();
-            var topic = _unitOfWork.Topic.AddFromITopicItem(cookbookViewModel.Cookbook);
-            var feed = _unitOfWork.Feed.AddFromIFeedItem(cookbookViewModel.Cookbook);
-            _unitOfWork.Save();
+        //    //FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
+        //    _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
+        //    _unitOfWork.Save();
+        //    _unitOfWork.Cookbook.AddOwnerRelationship(currentUserId, cookbookViewModel.Cookbook, new ApplicationUserCookbook());
+        //    _unitOfWork.Save();
+        //    var topic = _unitOfWork.Topic.AddFromITopicItem(cookbookViewModel.Cookbook);
+        //    var feed = _feedDataCall.AddFeedWithRelationship(currentUserId, cookbookViewModel.Cookbook);
+        //    _unitOfWork.Save();
 
 
-            if ( !string.IsNullOrEmpty(cookbookViewModel.CategorySelector.ItemIds) )
-            {
-                foreach ( var id in cookbookViewModel.CategorySelector.ParseItemIds() )
-                {
-                    var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == id);
+        //    if ( !string.IsNullOrEmpty(cookbookViewModel.CategorySelector.ItemIds) )
+        //    {
+        //        foreach ( var id in cookbookViewModel.CategorySelector.ParseItemIds() )
+        //        {
+        //            var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == id);
 
-                    if ( categoryFromDb != null )
-                    {
-                        _unitOfWork.CookbookCategory.AddFromEntities(cookbookViewModel.Cookbook, categoryFromDb);
-                        _unitOfWork.FeedCategory.AddFromEntities(feed, categoryFromDb);
-                    }
-                }
-            }
-            //if (!string.IsNullOrEmpty(cookbookViewModel.CategoryIds))
-            //{
-            //    string[] categories = cookbookViewModel.CategoryIds.Split(',');
+        //            if ( categoryFromDb != null )
+        //            {
+        //                _unitOfWork.CookbookCategory.AddFromEntities(cookbookViewModel.Cookbook, categoryFromDb);
+        //                _unitOfWork.FeedCategory.AddFromEntities(feed, categoryFromDb);
+        //            }
+        //        }
+        //    }
+        //    //if (!string.IsNullOrEmpty(cookbookViewModel.CategoryIds))
+        //    //{
+        //    //    string[] categories = cookbookViewModel.CategoryIds.Split(',');
 
-            //    if (categories.Length > 0)
-            //    {
+        //    //    if (categories.Length > 0)
+        //    //    {
 
-            //        for (int i = 0; i < categories.Length; i++)
-            //        {
-            //            long id = 0;
-            //            if (long.TryParse(categories[i], out id) && id != 0)
-            //            {
-            //                _unitOfWork.CookbookCategory.Add(new Eyon.Models.Relationship.CookbookCategory()
-            //                {
-            //                    CategoryId = id,
-            //                    CookbookId = cookbookViewModel.Cookbook.Id
-            //                });
-            //                _unitOfWork.Save();                            
-            //            }
-            //            else
-            //            {
-            //                throw new SafeException("Invalid category selected.");
-            //            }
-            //        }
-            //    }
-            //}
-            // Todo, add community
+        //    //        for (int i = 0; i < categories.Length; i++)
+        //    //        {
+        //    //            long id = 0;
+        //    //            if (long.TryParse(categories[i], out id) && id != 0)
+        //    //            {
+        //    //                _unitOfWork.CookbookCategory.Add(new Eyon.Models.Relationship.CookbookCategory()
+        //    //                {
+        //    //                    CategoryId = id,
+        //    //                    CookbookId = cookbookViewModel.Cookbook.Id
+        //    //                });
+        //    //                _unitOfWork.Save();                            
+        //    //            }
+        //    //            else
+        //    //            {
+        //    //                throw new SafeException("Invalid category selected.");
+        //    //            }
+        //    //        }
+        //    //    }
+        //    //}
+        //    // Todo, add community
 
-        }
+        //}
 
-        public void AddCookbookTransaction(string currentUserId, CookbookViewModel cookbookViewModel)
-        {
-            using (var transaction = _unitOfWork.BeginTransaction())
-            {
-                try
-                {
-                    AddCookbook(currentUserId, cookbookViewModel);
-                    // Todo, add community
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw ex;
-                }
-            }
-        }
+        //public void AddCookbookTransaction(string currentUserId, CookbookViewModel cookbookViewModel)
+        //{
+        //    using (var transaction = _unitOfWork.BeginTransaction())
+        //    {
+        //        try
+        //        {
+        //            AddCookbook(currentUserId, cookbookViewModel);
+        //            // Todo, add community
+        //            transaction.Commit();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            transaction.Rollback();
+        //            throw ex;
+        //        }
+        //    }
+        //}
         public async Task AddTransactionAsync( string currentUserId, CookbookViewModel cookbookViewModel )
         {
             using ( var transaction = _unitOfWork.BeginTransaction() )
@@ -128,40 +132,34 @@ namespace Eyon.DataAccess.Orchestrators
                 {
                     await AddAsync(currentUserId, cookbookViewModel);
                     // Todo, add community
-                    transaction.CommitAsync();
+                    await transaction.CommitAsync();
                 }
                 catch ( Exception ex )
                 {
-                    transaction.RollbackAsync();
+                    await transaction.RollbackAsync();
                     throw ex;
                 }
             }
         }
 
-        private async Task AddAsync( string currentUserId, CookbookViewModel cookbookViewModel )
+        public async Task AddAsync( string currentUserId, CookbookViewModel cookbookViewModel )
         {
             if ( cookbookViewModel.Cookbook.Id != 0 ) //New cookbook
                 throw new SafeException("Cookbook already exists.");
 
-            FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
+            //FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
             _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
             await _unitOfWork.SaveAsync();
             _unitOfWork.Cookbook.AddOwnerRelationship(currentUserId, cookbookViewModel.Cookbook, new ApplicationUserCookbook());
             await _unitOfWork.SaveAsync();
             var topic = _unitOfWork.Topic.AddFromITopicItem(cookbookViewModel.Cookbook);
-            var feed = _unitOfWork.Feed.AddFromIFeedItem(cookbookViewModel.Cookbook);
-            await _unitOfWork.SaveAsync();
-            feedCaller.AddOwnerRelationship(currentUserId, feed);
-            FeedCookbook feedCookbook = new FeedCookbook()
-            {
-                CookbookId = cookbookViewModel.Cookbook.Id,
-                FeedId = feed.Id
-            };
-
-            _unitOfWork.FeedCookbook.Add(feedCookbook);
-            _unitOfWork.FeedTopic.AddFromEntities(feed, topic);
-            // todo delete extra feed items in database for cookbook   select * from feed
-
+            
+            
+            var feed = await _feedDataCall.AddFeedWithRelationship(currentUserId, cookbookViewModel.Cookbook);            
+            _feedDataCall.AddFeedCookbook(feed, cookbookViewModel.Cookbook);
+            _feedDataCall.AddFeedTopic(feed, topic);
+            
+            
 
             if ( !string.IsNullOrEmpty(cookbookViewModel.CategorySelector.ItemIds) )
             {
@@ -179,24 +177,24 @@ namespace Eyon.DataAccess.Orchestrators
             await _unitOfWork.SaveAsync();
         }
 
-        public void UpdateCookbookTransaction(string currentUserId, CookbookViewModel cookbookViewModel)
-        {
-            using (var transaction = _unitOfWork.BeginTransaction())
-            {
-                try
-                {
+        //public void UpdateCookbookTransaction(string currentUserId, CookbookViewModel cookbookViewModel)
+        //{
+        //    using (var transaction = _unitOfWork.BeginTransaction())
+        //    {
+        //        try
+        //        {
 
-                    UpdateCookbook( currentUserId, cookbookViewModel);
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw ex;
-                }
+        //            UpdateCookbook( currentUserId, cookbookViewModel);
+        //            transaction.Commit();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            transaction.Rollback();
+        //            throw ex;
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
         public async Task UpdateTransactionAsync( string currentUserId, CookbookViewModel cookbookViewModel )
         {
@@ -216,14 +214,14 @@ namespace Eyon.DataAccess.Orchestrators
             }
         }
 
-        private async Task UpdateAsync( string currentUserId, CookbookViewModel cookbookViewModel )
+        public async Task UpdateAsync( string currentUserId, CookbookViewModel cookbookViewModel )
         {
             var objFromDb = await _unitOfWork.Cookbook.GetFirstOrDefaultAsync(x => x.Id == cookbookViewModel.Cookbook.Id, includeProperties: "CommunityCookbook,CookbookCategory,FeedCookbook,FeedCookbook.Feed");
             if ( objFromDb == null || objFromDb.Id == 0 )
                 throw new SafeException("Record not found in database");
 
-            FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
-            feedCaller.UpdateFeed(currentUserId, objFromDb.FeedCookbook.Feed, cookbookViewModel.Cookbook);
+            //FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
+            _feedDataCall.UpdateFeed(currentUserId, objFromDb.FeedCookbook.Feed, cookbookViewModel.Cookbook);
             // Update Categories
             List<long> categoryIdList = new List<long>();
 
@@ -259,7 +257,7 @@ namespace Eyon.DataAccess.Orchestrators
                     {
                         var feedCategoryFromDb = await _unitOfWork.FeedCategory.GetFirstOrDefaultAsync(x => x.FeedId == objFromDb.FeedCookbook.Feed.Id && x.CategoryId == item.CategoryId);
                         if ( feedCategoryFromDb != null )
-                            feedCaller.RemoveFeedCategory(feedCategoryFromDb);
+                            _feedDataCall.RemoveFeedCategory(feedCategoryFromDb);
 
                         _unitOfWork.CookbookCategory.Remove(item);
                     }
@@ -272,7 +270,7 @@ namespace Eyon.DataAccess.Orchestrators
             await _unitOfWork.SaveAsync();
         }
 
-        internal async Task DeleteTransactionAsync( string currentApplicationUserId, Cookbook objFromDb )
+        public async Task DeleteTransactionAsync( string currentApplicationUserId, Cookbook objFromDb )
         {
             using ( var transaction = _unitOfWork.BeginTransaction() )
             {
@@ -290,7 +288,7 @@ namespace Eyon.DataAccess.Orchestrators
             }
         }
 
-        private async Task DeleteAsync( string currentApplicationUserId, Cookbook objFromDb )
+        public async Task DeleteAsync( string currentApplicationUserId, Cookbook objFromDb )
         {
             foreach ( var item in objFromDb.CookbookCategory )
             {

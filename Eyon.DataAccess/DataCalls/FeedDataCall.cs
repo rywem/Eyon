@@ -1,4 +1,5 @@
 ﻿using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.DataAccess.DataCalls.IDataCall;
 using Eyon.Models;
 using Eyon.Models.Interfaces;
 using Eyon.Models.Relationship;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Eyon.DataAccess.DataCalls
 {
-    public class FeedDataCall
+    public class FeedDataCall : IFeedDataCall
     {
         private readonly IUnitOfWork _unitOfWork;
         public FeedDataCall( IUnitOfWork unitOfWork )
@@ -19,6 +20,19 @@ namespace Eyon.DataAccess.DataCalls
 
         #region Add
 
+
+        public async Task<Feed> AddFeedWithRelationship( string currentApplicationUserId, IFeedItem feedItem, bool saveOnRelationshipInsert = true )
+        {
+            var feed = AddFeed(feedItem);
+            await _unitOfWork.SaveAsync();
+            _unitOfWork.Feed.AddOwnerRelationship(currentApplicationUserId, feed, new ApplicationUserFeed());
+            
+            if ( saveOnRelationshipInsert == true )
+                await _unitOfWork.SaveAsync();
+
+            return feed;
+
+        }
         public Feed AddFeed(IFeedItem item )
         {
             return _unitOfWork.Feed.AddFromIFeedItem(item);
@@ -88,30 +102,41 @@ namespace Eyon.DataAccess.DataCalls
             }
         }
 
-        //public FeedCommunity AddFeedCommunity(Feed feed, Community community)
-        //{
-        //    return _unitOfWork.FeedCommunity.AddFromEntities(feed, community);
-        //}
+        public FeedCommunity AddFeedCommunity( Feed feed, Community community )
+        {
+            return _unitOfWork.FeedCommunity.AddFromEntities(feed, community);
+        }
 
-        //public FeedState AddFeedState(Feed feed, State state)
-        //{
-        //    return _unitOfWork.FeedState.AddFromEntities(feed, state);
-        //}
+        public FeedState AddFeedState( Feed feed, State state )
+        {
+            return _unitOfWork.FeedState.AddFromEntities(feed, state);
+        }
 
-        //public FeedCountry AddFeedCountry(Feed feed, Country country )
-        //{
-        //    return _unitOfWork.FeedCountry.AddFromEntities(feed, country);
-        //}
+        public FeedCountry AddFeedCountry( Feed feed, Country country )
+        {
+            return _unitOfWork.FeedCountry.AddFromEntities(feed, country);
+        }
 
-        //public FeedCookbook AddFeedCookbook(Feed feed, Cookbook cookbook )
-        //{
-        //    return _unitOfWork.FeedCookbook.AddFromEntities(feed, cookbook);
-        //}
+        public FeedCookbook AddFeedCookbook( Feed feed, Cookbook cookbook )
+        {
+            return _unitOfWork.FeedCookbook.AddFromEntities(feed, cookbook);
+        }
 
-        //public FeedCategory AddFeedCategory( Feed feed, Category category)
-        //{
-        //    return _unitOfWork.FeedCategory.AddFromEntities(feed, category);
-        //}
+        public FeedCategory AddFeedCategory( Feed feed, Category category )
+        {
+            return _unitOfWork.FeedCategory.AddFromEntities(feed, category);
+        }
+
+        public FeedTopic AddFeedTopic(Feed feed, Topic topic)
+        {
+            return _unitOfWork.FeedTopic.AddFromEntities(feed, topic);
+        }
+
+
+        public FeedRecipe AddFeedRecipe( Feed feed, Recipe recipe)
+        {
+            return _unitOfWork.FeedRecipe.AddFromEntities(feed, recipe);
+        }
 
         #endregion
 
@@ -220,6 +245,42 @@ namespace Eyon.DataAccess.DataCalls
         {
             _unitOfWork.FeedState.Remove(feedState);
         }
+
+        public void RemoveFeedTopic( FeedTopic feedTopic )
+        {
+            _unitOfWork.FeedTopic.Remove(feedTopic);
+        }
+
+        public void RemoveFeedTopic( Feed feed, Topic topic )
+        {
+            var feedTopic = _unitOfWork.FeedTopic.GetFirstOrDefault(x => x.FeedId == feed.Id && x.TopicId == topic.Id);
+            RemoveFeedTopic(feedTopic);
+        }
+
+        public async Task RemoveFeedTopicAsync( Feed feed, Topic topic )
+        {
+            var feedTopic = await _unitOfWork.FeedTopic.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.TopicId == topic.Id);
+            RemoveFeedTopic(feedTopic);
+        }
+
+
+        public void RemoveFeedRecipe( FeedRecipe feedRecipe )
+        {
+            _unitOfWork.FeedRecipe.Remove(feedRecipe);
+        }
+
+        public void RemoveFeedRecipe( Feed feed, Recipe recipe )
+        {
+            var feedRecipe = _unitOfWork.FeedRecipe.GetFirstOrDefault(x => x.FeedId == feed.Id && x.RecipeId == recipe.Id);
+            RemoveFeedRecipe(feedRecipe);
+        }
+
+        public async Task RemoveFeedRecipeAsync( Feed feed, Recipe recipe)
+        {
+            var feedRecipe = await _unitOfWork.FeedRecipe.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.RecipeId == recipe.Id);
+            RemoveFeedRecipe(feedRecipe);
+        }
+
         public void RemoveFeedCountry(Feed feed, Country country )
         {
             var feedCountry = _unitOfWork.FeedCountry.GetFirstOrDefault(x => x.FeedId == feed.Id && x.CountryId == country.Id);

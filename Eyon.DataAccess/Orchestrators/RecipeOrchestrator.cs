@@ -26,11 +26,13 @@ namespace Eyon.DataAccess.Orchestrators
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
         private IRecipeDataCall _recipeDataCall;
-        public RecipeOrchestrator( IUnitOfWork unitOfWork, IConfiguration config, IRecipeDataCall recipeDataCall )
+        private IFeedDataCall _feedDataCall;
+        public RecipeOrchestrator( IUnitOfWork unitOfWork, IConfiguration config, IRecipeDataCall recipeDataCall, IFeedDataCall feedDataCall )
         {
             this._unitOfWork = unitOfWork;
             this._config = config;
             this._recipeDataCall = recipeDataCall;
+            this._feedDataCall = feedDataCall;
         }
 
         public async Task<RecipeViewModel> GetAsync(string currentApplicationUserId, long id)
@@ -100,17 +102,20 @@ namespace Eyon.DataAccess.Orchestrators
 
             FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
 
-            await _recipeDataCall.AddRecipeWithRelationship(currentApplicationUserId, recipeViewModel.Recipe, false);
+            recipeViewModel.Recipe = await _recipeDataCall.AddRecipeWithRelationship(currentApplicationUserId, recipeViewModel.Recipe, false);
             //_unitOfWork.Recipe.Add(recipeViewModel.Recipe);
             //await _unitOfWork.SaveAsync();
             //_unitOfWork.Recipe.AddOwnerRelationship(currentApplicationUserId, recipeViewModel.Recipe, new ApplicationUserRecipe());            
-            //await _unitOfWork.SaveAsync();            
+            //await _unitOfWork.SaveAsync();
             var topic  = _unitOfWork.Topic.AddFromITopicItem(recipeViewModel.Recipe);
             await _unitOfWork.SaveAsync();
-            var feed = _unitOfWork.Feed.AddFromIFeedItem(recipeViewModel.Recipe);
-            await _unitOfWork.SaveAsync();
+
+
+            //var feed = _unitOfWork.Feed.AddFromIFeedItem(recipeViewModel.Recipe);
+            //await _unitOfWork.SaveAsync();
             // Add security relationship to feed record
-            feedCaller.AddOwnerRelationship(currentApplicationUserId, feed);
+            //feedCaller.AddOwnerRelationship(currentApplicationUserId, feed);
+            var feed = await _feedDataCall.AddFeedWithRelationship(currentApplicationUserId, recipeViewModel.Recipe, false);
             await _unitOfWork.SaveAsync();
             _unitOfWork.FeedTopic.AddFromEntities(feed, topic);            
             _unitOfWork.CommunityRecipe.AddFromEntities(communityFromDb, recipeViewModel.Recipe);

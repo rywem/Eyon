@@ -9,6 +9,6 @@ namespace Eyon.DataAccess.DataCalls.IDataCall
 {
     public interface IRecipeDataCall
     {
-        Task AddRecipeWithRelationship( string currentApplicationUserId, Recipe recipe, bool saveOnRelationshipInsert = false );
+        Task<Recipe> AddRecipeWithRelationship( string currentApplicationUserId, Recipe recipe, bool saveOnRelationshipInsert = false );
     }
 }

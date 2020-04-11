@@ -18,7 +18,7 @@ namespace Eyon.DataAccess.DataCalls
             this._unitOfWork = unitOfWork;
         }
 
-        public async Task AddRecipeWithRelationship( string currentApplicationUserId, Recipe recipe, bool saveOnRelationshipInsert = false )
+        public async Task<Recipe> AddRecipeWithRelationship( string currentApplicationUserId, Recipe recipe, bool saveOnRelationshipInsert = true )
         {
             _unitOfWork.Recipe.Add(recipe);
             await _unitOfWork.SaveAsync();
@@ -26,6 +26,8 @@ namespace Eyon.DataAccess.DataCalls
 
             if ( saveOnRelationshipInsert == true )
                 await _unitOfWork.SaveAsync();
+            
+            return recipe;
         }
     }
 }

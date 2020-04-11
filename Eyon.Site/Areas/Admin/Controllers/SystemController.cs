@@ -29,7 +29,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
             this._categoryOrchestrator = new CategoryOrchestrator(unitOfWork);
         }
  
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }

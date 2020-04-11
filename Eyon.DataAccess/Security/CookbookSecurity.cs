@@ -6,18 +6,20 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Eyon.Models.ViewModels;
+using Eyon.DataAccess.Orchestrators.IOrchestrator;
+using Eyon.DataAccess.Security.ISecurity;
 
 namespace Eyon.DataAccess.Security
 {
-    public class CookbookSecurity
+    public class CookbookSecurity : ICookbookSecurity
     {
         private readonly IUnitOfWork _unitOfWork;
-        private CookbookOrchestrator _cookbookOrchestrator;
+        private ICookbookOrchestrator _cookbookOrchestrator;
 
-        public CookbookSecurity( IUnitOfWork unitOfWork )
+        public CookbookSecurity( IUnitOfWork unitOfWork, ICookbookOrchestrator cookbookOrchestator  )
         {
             this._unitOfWork = unitOfWork;
-            this._cookbookOrchestrator = new CookbookOrchestrator(unitOfWork);
+            this._cookbookOrchestrator = cookbookOrchestator;
         }
 
         public async Task<bool> DeleteAsync( string currentApplicationUserId, long id )
@@ -43,7 +45,7 @@ namespace Eyon.DataAccess.Security
             bool isOwner = await _unitOfWork.Cookbook.IsOwnerAsync(currentApplicationUserId, cookbookViewModel.Cookbook.Id);
 
             if ( isOwner )
-                _cookbookOrchestrator.UpdateCookbookTransaction(currentApplicationUserId, cookbookViewModel);
+                await _cookbookOrchestrator.UpdateTransactionAsync(currentApplicationUserId, cookbookViewModel);
         }
     }
 }
