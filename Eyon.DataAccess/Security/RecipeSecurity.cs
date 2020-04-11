@@ -11,20 +11,22 @@ using System.Threading.Tasks;
 using Eyon.Utilities.Extensions;
 using Eyon.Utilities.API;
 using System.Linq;
+using Eyon.DataAccess.Security.ISecurity;
+using Eyon.DataAccess.Orchestrators.IOrchestrator;
 
 namespace Eyon.DataAccess.Security
 {
-    public class RecipeSecurity
+    public class RecipeSecurity : IRecipeSecurity
     {
         private readonly IUnitOfWork _unitOfWork;
-        private RecipeOrchestrator _recipeOrchestrator;
+        private IRecipeOrchestrator _recipeOrchestrator;
         private FeedSecurity _feedSecurity;
         private IConfiguration _config;
-        public RecipeSecurity( IUnitOfWork unitOfWork, IConfiguration config )
+        public RecipeSecurity( IUnitOfWork unitOfWork, IConfiguration config, IRecipeOrchestrator recipeOrchestrator )
         {
             this._unitOfWork = unitOfWork;
             this._config = config;
-            this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, config);
+            this._recipeOrchestrator = recipeOrchestrator;
             this._feedSecurity = new FeedSecurity(this._unitOfWork);
         }
 

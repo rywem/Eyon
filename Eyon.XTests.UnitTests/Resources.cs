@@ -27,7 +27,6 @@ namespace Eyon.XTests.UnitTests
             dbContext.Database.EnsureCreated();
             dbContext.Database.EnsureDeleted();
             return new UnitOfWork(dbContext);
-
         }
     }
 }

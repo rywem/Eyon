@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Eyon.DataAccess.Caller
+namespace Eyon.DataAccess.DataCalls
 {
-    public class FeedCaller
+    public class FeedDataCall
     {
         private readonly IUnitOfWork _unitOfWork;
-        public FeedCaller( IUnitOfWork unitOfWork )
+        public FeedDataCall( IUnitOfWork unitOfWork )
         {
             this._unitOfWork = unitOfWork;
         }

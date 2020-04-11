@@ -9,7 +9,7 @@ using Eyon.Models.ViewModels;
 using Eyon.DataAccess.Orchestrators;
 using System.Linq;
 
-namespace Eyon.XTests.UnitTests.DataAccess.Data.Orchestator
+namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
 {
     public class CookbookOrchestratorTests : IDisposable
     {

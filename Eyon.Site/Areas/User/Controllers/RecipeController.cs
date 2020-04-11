@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Eyon.DataAccess.Security.ISecurity;
 
 namespace Eyon.Site.Areas.User.Controllers
 {
@@ -28,7 +29,7 @@ namespace Eyon.Site.Areas.User.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private RecipeOrchestrator _recipeOrchestrator;
-        private readonly RecipeSecurity _recipeSecurity;
+        private readonly IRecipeSecurity _recipeSecurity;
         private readonly long _fileSizeLimit = 8388608;
         private readonly string[] _permittedExtensions = { ".jpg", ".jpeg", ".gif", ".png" };
         private readonly ImageHelper _imageHelper;
@@ -36,11 +37,12 @@ namespace Eyon.Site.Areas.User.Controllers
         [BindProperty]
         public RecipeViewModel recipeViewModel { get; set; }
 
-        public RecipeController( IUnitOfWork unitOfWork, IConfiguration config )
+        public RecipeController( IUnitOfWork unitOfWork, IConfiguration config, IRecipeSecurity recipeSecurity )
         {
             this._config = config;
             this._unitOfWork = unitOfWork;
-            this._recipeSecurity = new RecipeSecurity(_unitOfWork, config);
+            //this._recipeSecurity = new RecipeSecurity(_unitOfWork, config);
+            this._recipeSecurity = recipeSecurity;
             //this._recipeOrchestrator = new RecipeOrchestrator(_unitOfWork);
             this._imageHelper = new ImageHelper(_config);
         }

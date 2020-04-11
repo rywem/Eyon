@@ -33,7 +33,9 @@ namespace Eyon.Site
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
             services.AddScoped<DataAccess.Data.Repository.IRepository.IUnitOfWork, DataAccess.Data.UnitOfWork>();
-            
+            services.AddScoped<DataAccess.Security.ISecurity.IRecipeSecurity, DataAccess.Security.RecipeSecurity>();
+            services.AddScoped<DataAccess.Orchestrators.IOrchestrator.IRecipeOrchestrator, DataAccess.Orchestrators.RecipeOrchestrator>();
+            services.AddScoped<DataAccess.DataCalls.IDataCall.IRecipeDataCall, DataAccess.DataCalls.RecipeDataCall>();
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(60);

@@ -6,7 +6,7 @@ using Eyon.Models.Errors;
 using Eyon.Models.ViewModels;
 using Eyon.DataAccess.Data.Repository;
 using Eyon.Models.Relationship;
-using Eyon.DataAccess.Caller;
+using Eyon.DataAccess.DataCalls;
 using System.Threading.Tasks;
 using Eyon.Models;
 using Eyon.DataAccess.Security;
@@ -50,7 +50,7 @@ namespace Eyon.DataAccess.Orchestrators
             if (cookbookViewModel.Cookbook.Id != 0) //New cookbook
                 throw new SafeException("Cookbook already exists.");
 
-            FeedCaller feedCaller = new FeedCaller(_unitOfWork);
+            FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
             _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
             _unitOfWork.Save();
             _unitOfWork.Cookbook.AddOwnerRelationship(currentUserId, cookbookViewModel.Cookbook, new ApplicationUserCookbook());
@@ -143,7 +143,7 @@ namespace Eyon.DataAccess.Orchestrators
             if ( cookbookViewModel.Cookbook.Id != 0 ) //New cookbook
                 throw new SafeException("Cookbook already exists.");
 
-            FeedCaller feedCaller = new FeedCaller(_unitOfWork);
+            FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
             _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
             await _unitOfWork.SaveAsync();
             _unitOfWork.Cookbook.AddOwnerRelationship(currentUserId, cookbookViewModel.Cookbook, new ApplicationUserCookbook());
@@ -222,7 +222,7 @@ namespace Eyon.DataAccess.Orchestrators
             if ( objFromDb == null || objFromDb.Id == 0 )
                 throw new SafeException("Record not found in database");
 
-            FeedCaller feedCaller = new FeedCaller(_unitOfWork);
+            FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
             feedCaller.UpdateFeed(currentUserId, objFromDb.FeedCookbook.Feed, cookbookViewModel.Cookbook);
             // Update Categories
             List<long> categoryIdList = new List<long>();
@@ -339,7 +339,7 @@ namespace Eyon.DataAccess.Orchestrators
             if (objFromDb == null || objFromDb.Id == 0)
                 throw new SafeException("Record not found in database");
 
-            FeedCaller feedCaller = new FeedCaller(_unitOfWork);
+            FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
             feedCaller.UpdateFeed(currentUserId, objFromDb.FeedCookbook.Feed, cookbookViewModel.Cookbook);
             // Update Categories
             List<long> categoryIdList = new List<long>();

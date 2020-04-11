@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Eyon.DataAccess.Caller
+namespace Eyon.DataAccess.DataCalls
 {
-    public class CommunityCaller
+    public class CommunityDataCall
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CommunityCaller( IUnitOfWork unitOfWork )
+        public CommunityDataCall( IUnitOfWork unitOfWork )
         {
             this._unitOfWork = unitOfWork;
         }
