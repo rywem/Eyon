@@ -22,11 +22,8 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
         private RecipeOrchestrator _recipeOrchestrator;
         private IUnitOfWork _unitOfWork;
         private Mock<IConfiguration> _mockConfig;
-        private IRecipeDataCall _recipeDataCall;
-        //private IFeedSecurity _feedSecurity;
+        private IRecipeDataCall _recipeDataCall;        
         private Mock<IFeedSecurity> _feedSecurity;
-
-
         private List<Country> countries;
         private List<State> states;
         private List<Community> communities;
@@ -43,9 +40,10 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, this._mockConfig.Object, this._recipeDataCall, this._feedSecurity.Object);
             SeedDatabase();
         }
+
         
         [Fact]
-        public async Task AddAsync_RegularInsert_RecipeShouldNotBeNull()
+        public async Task AddAsync_InsertRecipe_RecipeShouldNotBeNull()
         {
             string currentUserId = applicationUsers[0].Id;
             RecipeViewModel recipeViewModel = GetRecipeViewModel();
@@ -55,6 +53,77 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             Assert.NotNull(recipe);
         }
 
+        #region Add Category
+        [Fact]
+        public async Task AddAsync_AddCategory_CountShouldBe1()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+
+            recipeViewModel.CategorySelector.ItemIds = categories[0].Id.ToString();
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+            var recipe = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "RecipeCategory");
+            Assert.Single(recipe.RecipeCategory);
+        }
+        [Fact]
+        public async Task AddAsync_Add2Categories_CountShouldBe2()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+
+            recipeViewModel.CategorySelector.ItemIds = categories[0].Id.ToString();
+            recipeViewModel.CategorySelector.ItemIds += "," + categories[1].Id.ToString();
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+            var recipe = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "RecipeCategory");
+            Assert.Equal(2, recipe.RecipeCategory.Count);
+        }
+
+        #endregion
+
+        #region Add Cookbook
+        [Fact]
+        public async Task AddAsync_AddCookbook_CountShouldBe1()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+
+            recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+            var recipe = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CookbookRecipe");
+            Assert.Single(recipe.CookbookRecipe);
+        }
+
+        [Fact]
+        public async Task AddAsync_Add2Cookbooks_CountShouldBe2()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+
+            recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+            recipeViewModel.CookbookSelector.ItemIds += "," + cookbooks[1].Id.ToString();
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+            var recipe = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CookbookRecipe");
+            Assert.Equal(2, recipe.CookbookRecipe.Count);
+        }
+
+        [Fact]
+        public async Task AddAsync_AddCookbookButNotCookbookOwner_ThrowSafeExceptionDenied()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+            recipeViewModel.CookbookSelector.ItemIds = cookbooks[2].Id.ToString();
+
+            Action action = async () => await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+            var ex = await Assert.ThrowsAsync<Models.Errors.SafeException>(async () => await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel));
+            Assert.Equal((int)ex.ErrorType, (int)Models.Enums.ErrorType.Denied);
+        }
+        #endregion 
+
+        #region Add Ingredients and Instructions
         [Fact]
         public async Task AddAsync_InsertInstructions_CountShouldBe6()
         {
@@ -148,8 +217,9 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             Assert.Equal(11, ingredients.Count);
         }
 
-
-        #region Ownership and Privacy
+        #endregion
+        
+        #region Add Ownership and Privacy
         [Fact]
         public async Task AddAsync_RegularInsert_RecipeShouldHaveCorrectOwner()
         {

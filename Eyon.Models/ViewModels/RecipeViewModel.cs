@@ -33,7 +33,7 @@ namespace Eyon.Models.ViewModels
         public ListItemSelector<Category> CategorySelector { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         
-        public string CookbookIds { get; set; }
+        //public string CookbookIds { get; set; }
         
         public RecipeViewModel()
         {

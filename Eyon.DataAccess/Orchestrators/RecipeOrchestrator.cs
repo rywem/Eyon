@@ -131,12 +131,11 @@ namespace Eyon.DataAccess.Orchestrators
                     if (cookbookFromDb != null)
                     {
                         _unitOfWork.CookbookRecipe.AddFromEntities(cookbookFromDb, recipeViewModel.Recipe);
-                        //_unitOfWork.FeedCookbook.AddFromEntities(feed, cookbookFromDb);
                         recipeViewModel.CookbookSelector.Items.Add(cookbookFromDb);
                     }
                     else
                     {
-                        throw new SafeException("An error occurred.", new Exception("Attempted to insert CookbookRecipe relation, but did not own cookbook or cookbook did not exist."));
+                        throw new SafeException(Models.Enums.ErrorType.Denied, new Exception("Attempted to insert CookbookRecipe relation, but did not own cookbook or cookbook did not exist."));
                     }
                 }
                 await _unitOfWork.SaveAsync();
