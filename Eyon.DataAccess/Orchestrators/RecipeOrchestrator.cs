@@ -109,13 +109,13 @@ namespace Eyon.DataAccess.Orchestrators
             _unitOfWork.CommunityRecipe.AddFromEntities(communityFromDb, recipeViewModel.Recipe);
             
             // Add instructions
-            foreach ( var item in recipeViewModel.Instruction )
+            foreach ( var item in recipeViewModel.ParseInstructions() )
             {
                 item.RecipeId = recipeViewModel.Recipe.Id;
                 _unitOfWork.Instruction.Add(item);
             }            
 
-            foreach ( var item in recipeViewModel.Ingredient )
+            foreach ( var item in recipeViewModel.ParseIngredients() )
             {
                 item.RecipeId = recipeViewModel.Recipe.Id;
                 _unitOfWork.Ingredient.Add(item);
@@ -237,6 +237,7 @@ namespace Eyon.DataAccess.Orchestrators
             feedCaller.UpdateFeed(currentApplicationUserId, recipeFromDb.FeedRecipe.Feed, recipeViewModel.Recipe);
             // instructions
             // remove instructions
+            recipeViewModel.ParseInstructions();
             if ( recipeViewModel.Instruction.Count < recipeFromDb.Instruction.Count )
             {
                 var dbInstructionsList = recipeFromDb.Instruction.ToList();
@@ -267,7 +268,7 @@ namespace Eyon.DataAccess.Orchestrators
             }
 
             // ingredients
-
+            recipeViewModel.ParseIngredients();
             // remove ingredients 
             if ( recipeViewModel.Ingredient.Count < recipeFromDb.Ingredient.Count )
             {

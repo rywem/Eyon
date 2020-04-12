@@ -81,7 +81,49 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             var ownedRecipe = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(differentOwner, x => x.Id == recipeViewModel.Recipe.Id);
             Assert.Null(ownedRecipe);
         }
+        [Fact]
+        public async Task AddAsync_PrivateAndPublicShouldBeAccessibleIfOwner_CountShouldBe2()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+            recipeViewModel.Recipe.Privacy = Models.Enums.Privacy.Public;
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+            
+            RecipeViewModel recipeViewModel2 = GetRecipeViewModel();
+            recipeViewModel2.Recipe.Privacy = Models.Enums.Privacy.Private;
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel2);
+            var publicAndPrivateRecipes = await _unitOfWork.Recipe.GetAllAvailableAsync(currentUserId);            
+            Assert.Equal(2, publicAndPrivateRecipes.Count());
+        }
 
+        [Fact]
+        public async Task AddAsync_PublicShouldBeAccessibleIfNotOwner_CountShouldBe1()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+            recipeViewModel.Recipe.Privacy = Models.Enums.Privacy.Public;
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+            string notOwnerUserId = applicationUsers[1].Id;
+            
+            var publicAndPrivateRecipes = await _unitOfWork.Recipe.GetAllAvailableAsync(notOwnerUserId);
+            Assert.Single(publicAndPrivateRecipes);
+        }
+
+        [Fact]
+        public async Task AddAsync_PrivateShouldNotBeAccessibleIfNotOwner_CountShouldBe0()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+            recipeViewModel.Recipe.Privacy = Models.Enums.Privacy.Private;
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+            string notOwnerUserId = applicationUsers[1].Id;
+            var publicAndPrivateRecipes = await _unitOfWork.Recipe.GetAllAvailableAsync(notOwnerUserId);            
+            Assert.Empty(publicAndPrivateRecipes);
+        }
+
+        #region Sample Data
         private RecipeViewModel GetRecipeViewModel()
         {
             RecipeViewModel recipeViewModel = new RecipeViewModel();
@@ -92,29 +134,26 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             recipeViewModel.Recipe.Cooktime = "10 mins";
             recipeViewModel.Recipe.Privacy = Models.Enums.Privacy.Public;
             recipeViewModel.CommunityId = communities[0].Id;
-            if ( recipeViewModel.Ingredient == null )
-                recipeViewModel.Ingredient = new List<Ingredient>();
-            recipeViewModel.Ingredient.Add(new Ingredient() { Number = 1, Text = "1 lb ground beef" } );
-            recipeViewModel.Ingredient.Add(new Ingredient() { Number = 2, Text = "1 medium onion" });
-            recipeViewModel.Ingredient.Add(new Ingredient() { Number = 3, Text = "3 cloves garlic" });
-            recipeViewModel.Ingredient.Add(new Ingredient() { Number = 4, Text = "1 can tomato sauce" });
-            recipeViewModel.Ingredient.Add(new Ingredient() { Number = 5, Text = "1 can pinto beans" });
-            recipeViewModel.Ingredient.Add(new Ingredient() { Number = 6, Text = "1 can corn" });
-            recipeViewModel.Ingredient.Add(new Ingredient() { Number = 7, Text = "1 can green beans" });
-            recipeViewModel.Ingredient.Add(new Ingredient() { Number = 8, Text = "1 can peas and carrots" });
-            recipeViewModel.Ingredient.Add(new Ingredient() { Number = 9, Text = "2-3 beef bouillon cubes" });
-            recipeViewModel.Ingredient.Add(new Ingredient() { Number = 10, Text = "1/2 tsp pepper" });
-            recipeViewModel.Ingredient.Add(new Ingredient() { Number = 11, Text = "1 cup cooked rice (optional)" });
 
-            if ( recipeViewModel.Instruction == null )
-                recipeViewModel.Instruction = new List<Instruction>();
+            recipeViewModel.IngredientsText = @"1 lb ground beef
+1 medium onion
+3 cloves garlic
+1 can tomato sauce
+1 can pinto beans
+1 can corn
+1 can green beans
+1 can peas and carrots
+2-3 beef bouillon cubes
+1/2 tsp pepper
+1 cup cooked rice (optional)";
 
-            recipeViewModel.Instruction.Add(new Instruction() { StepNumber = 1, Text = "In a medium pot, saute onions until soft." });
-            recipeViewModel.Instruction.Add(new Instruction() { StepNumber = 1, Text = "Add beef, brown until brown." });
-            recipeViewModel.Instruction.Add(new Instruction() { StepNumber = 1, Text = "Add garlic, until fragrant." });
-            recipeViewModel.Instruction.Add(new Instruction() { StepNumber = 1, Text = "Drain excess juices." });
-            recipeViewModel.Instruction.Add(new Instruction() { StepNumber = 1, Text = "Add all remaining ingredients, heat until warm. " });
-            recipeViewModel.Instruction.Add(new Instruction() { StepNumber = 1, Text = "Serve and enjoy!" });            
+            recipeViewModel.InstructionsText = @"In a medium pot, saute onions until soft.
+Add beef, brown until brown.
+Add garlic, until fragrant.
+Drain excess juices.
+Add all remaining ingredients, heat until warm. 
+Serve and enjoy!";
+
             return recipeViewModel;
         }
         private void SeedDatabase()
@@ -208,7 +247,25 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             _unitOfWork.ApplicationUserCookbook.AddFromEntities(user1, cookbook2);
             _unitOfWork.ApplicationUserCookbook.AddFromEntities(user2, cookbook3);
             _unitOfWork.Save();
-        }
 
+            Category category1 = new Category()
+            {
+                Name = "Dinner",
+                DisplayOrder = 0
+            };
+            _unitOfWork.Category.Add(category1);
+
+            Category category2 = new Category()
+            {
+                Name = "Beef",
+                DisplayOrder = 1
+            };
+            _unitOfWork.Category.Add(category2);
+            _unitOfWork.Save();
+            categories = new List<Category>();
+            categories.Add(category1);
+            categories.Add(category2);
+        }
+        #endregion
     }
 }

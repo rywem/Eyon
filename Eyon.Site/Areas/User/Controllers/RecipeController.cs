@@ -137,34 +137,34 @@ namespace Eyon.Site.Areas.User.Controllers
                         }
                     }
                     // Create Ingredients
-                    string[] ingredientsSplit = recipeViewModel.IngredientsText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    recipeViewModel.Ingredient = new List<Ingredient>();
-                    int step = 1;
-                    foreach ( var item in ingredientsSplit )
-                    {
-                        recipeViewModel.Ingredient.Add(new Ingredient()
-                        {
-                            Text = item,
-                            Number = step,
-                            RecipeId = recipeViewModel.Recipe.Id
-                        });
-                        step++;
-                    }
-                    // Create Instructions
-                    string[] instructionsSplit = recipeViewModel.InstructionsText.Split(new[] { Environment.NewLine },StringSplitOptions.RemoveEmptyEntries);
+                    //string[] ingredientsSplit = recipeViewModel.IngredientsText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                    //recipeViewModel.Ingredient = new List<Ingredient>();
+                    //int step = 1;
+                    //foreach ( var item in ingredientsSplit )
+                    //{
+                    //    recipeViewModel.Ingredient.Add(new Ingredient()
+                    //    {
+                    //        Text = item,
+                    //        Number = step,
+                    //        RecipeId = recipeViewModel.Recipe.Id
+                    //    });
+                    //    step++;
+                    //}
+                    //// Create Instructions
+                    //string[] instructionsSplit = recipeViewModel.InstructionsText.Split(new[] { Environment.NewLine },StringSplitOptions.RemoveEmptyEntries);
 
-                    step = 1;
-                    recipeViewModel.Instruction = new List<Instruction>();
-                    foreach ( var item in instructionsSplit )
-                    {
-                        recipeViewModel.Instruction.Add(new Instruction()
-                        {
-                            StepNumber = step,
-                            Text = item,
-                            RecipeId = recipeViewModel.Recipe.Id
-                        });
-                        step++;
-                    }                    
+                    //step = 1;
+                    //recipeViewModel.Instruction = new List<Instruction>();
+                    //foreach ( var item in instructionsSplit )
+                    //{
+                    //    recipeViewModel.Instruction.Add(new Instruction()
+                    //    {
+                    //        StepNumber = step,
+                    //        Text = item,
+                    //        RecipeId = recipeViewModel.Recipe.Id
+                    //    });
+                    //    step++;
+                    //}
                     
                     try
                     {

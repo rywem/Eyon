@@ -57,5 +57,42 @@ namespace Eyon.Models.ViewModels
             feedItemViewModel.UserImages = UserImage;
             return feedItemViewModel;
         }
+
+        public List<Ingredient> ParseIngredients()
+        {
+            string[] ingredientsSplit = this.IngredientsText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            Ingredient = new List<Ingredient>();
+            int step = 1;
+            foreach ( var item in ingredientsSplit )
+            {
+                Ingredient.Add(new Ingredient()
+                {
+                    Text = item,
+                    Number = step,
+                    RecipeId = Recipe.Id
+                });
+                step++;
+            }
+            return Ingredient;
+        }
+
+        public List<Instruction> ParseInstructions()
+        {
+            string[] instructionsSplit = InstructionsText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+            int step = 1;
+            Instruction = new List<Instruction>();
+            foreach ( var item in instructionsSplit )
+            {
+                Instruction.Add(new Instruction()
+                {
+                    StepNumber = step,
+                    Text = item,
+                    RecipeId = Recipe.Id
+                });
+                step++;
+            }
+            return Instruction;
+        }
     }
 }
