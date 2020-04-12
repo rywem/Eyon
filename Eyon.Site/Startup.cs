@@ -38,6 +38,8 @@ namespace Eyon.Site
             services.AddScoped<DataAccess.Orchestrators.IOrchestrator.IRecipeOrchestrator, DataAccess.Orchestrators.RecipeOrchestrator>();
             services.AddScoped<DataAccess.DataCalls.IDataCall.IRecipeDataCall, DataAccess.DataCalls.RecipeDataCall>();
             services.AddScoped<DataAccess.DataCalls.IDataCall.IFeedDataCall, DataAccess.DataCalls.FeedDataCall>();
+            services.AddScoped<DataAccess.Security.ISecurity.IFeedSecurity, DataAccess.Security.FeedSecurity>();
+            services.AddScoped<DataAccess.Orchestrators.IOrchestrator.IFeedOrchestrator, DataAccess.Orchestrators.FeedOrchestrator>();
 
             services.AddScoped<DataAccess.Security.ISecurity.ICookbookSecurity, DataAccess.Security.CookbookSecurity>();
             services.AddScoped<DataAccess.Orchestrators.IOrchestrator.ICookbookOrchestrator, DataAccess.Orchestrators.CookbookOrchestrator>();

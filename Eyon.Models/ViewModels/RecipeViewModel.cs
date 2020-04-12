@@ -6,10 +6,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Eyon.Models.SiteObjects;
+using Eyon.Models.Interfaces;
 
 namespace Eyon.Models.ViewModels
 {
-    public class RecipeViewModel
+    public class RecipeViewModel : IFeedItemViewModel
     {
         public Recipe Recipe { get; set; }        
         public bool IsOwner { get; set; }
@@ -42,6 +43,19 @@ namespace Eyon.Models.ViewModels
             this.CategorySelector = new ListItemSelector<Category>("Category");
             this.Ingredient = new List<Ingredient>();
             this.Instruction = new List<Instruction>();            
+        }
+
+        public FeedItemViewModel ToFeedItemViewModel()
+        {
+            FeedItemViewModel feedItemViewModel = new FeedItemViewModel();
+            if ( Community != null )
+                feedItemViewModel.Communities.Add(Community);
+            if ( CategorySelector.Items != null && CategorySelector.Items.Count > 0 )
+                feedItemViewModel.Categories.AddRange(CategorySelector.Items);
+            feedItemViewModel.Recipes.Add(this.Recipe);
+            feedItemViewModel.FeedItem = this.Recipe;
+            feedItemViewModel.UserImages = UserImage;
+            return feedItemViewModel;
         }
     }
 }

@@ -41,7 +41,7 @@ namespace Eyon.DataAccess.Data.Repository
             var dateTimeNow = DateTime.UtcNow;
             Feed feed = new Feed()
             {
-                Text = entity.Description,
+                Description = entity.Description,
                 CreationDateTime = entity.CreationDateTime,
                 ModifiedDateTime = entity.ModifiedDateTime,
                 Privacy = entity.Privacy
@@ -70,11 +70,7 @@ namespace Eyon.DataAccess.Data.Repository
                     feedViewModel.FeedItems = (from f in query
                                               select new FeedItemViewModel()
                                               {
-                                                  CreationDateTime = f.CreationDateTime,
-                                                  ModifiedDateTime = f.ModifiedDateTime,
-                                                  Description = f.Text,
-                                                  Privacy = f.Privacy,
-                                                  Id = f.Id,
+                                                  FeedItem = f,
                                                   Topics = ( f.FeedTopic != null && f.FeedTopic.Count > 0 ) ? f.FeedTopic.Select(x => x.Topic).ToList() : new List<Topic>()
                                               }).ToList();
 
@@ -101,7 +97,7 @@ namespace Eyon.DataAccess.Data.Repository
                     throw new SafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  recipe.Id {1}", currentUserId, feed.Id)));
 
             feed.Privacy = entity.Privacy;
-            objFromDb.Text = entity.Description;
+            objFromDb.Description = entity.Description;
             objFromDb.ModifiedDateTime = entity.ModifiedDateTime;
             dbSet.Update(objFromDb);
         }

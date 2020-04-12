@@ -23,6 +23,8 @@ namespace Eyon.Models
         public string FileNameThumb { get; set; }
         public ICollection<ApplicationUserUserImage> ApplicationUserOwner { get; set; }
 
+        public ICollection<FeedUserImage> FeedUserImage { get; set; }
+
         [NotMapped] 
         public string Thumb { get; set; }
         [NotMapped]

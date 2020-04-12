@@ -9,14 +9,14 @@ using System.Text;
 
 namespace Eyon.Models
 {
-    public class Feed : ICreated, IModified, IPrivacy, IHasOwners<ApplicationUserFeed>
+    public class Feed : IFeedItem, IHasOwners<ApplicationUserFeed>
     {
         [Key]
         public long Id { get; set; }
         
         [MaxLength(600)]
         [StringLength(600)]        
-        public string Text { get; set; }
+        public string Description { get; set; }
         public ICollection<ApplicationUserFeed> ApplicationUserOwner { get; set; }
         public DateTime CreationDateTime { get; set; }
         public DateTime ModifiedDateTime { get; set; }
@@ -29,6 +29,7 @@ namespace Eyon.Models
         public ICollection<FeedCountry> FeedCountry { get; set; }
         public ICollection<FeedCookbook> FeedCookbook { get; set; }
         public ICollection<FeedRecipe> FeedRecipe { get; set; }
+        public ICollection<FeedUserImage> FeedUserImage { get; set; }
         public ICollection<FeedProfile> FeedProfile { get; set; }
         public ICollection<FeedTopic> FeedTopic { get; set; }
 

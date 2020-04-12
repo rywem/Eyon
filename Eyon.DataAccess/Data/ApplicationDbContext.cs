@@ -258,6 +258,17 @@ namespace Eyon.DataAccess.Data
                 .WithMany(c => c.FeedState)
                 .HasForeignKey(c => c.StateId);
 
+            modelBuilder.Entity<FeedUserImage>()
+                .HasKey(c => new { c.FeedId, c.UserImageId });
+            modelBuilder.Entity<FeedUserImage>()
+                .HasOne(c => c.Feed)
+                .WithMany(c => c.FeedUserImage)
+                .HasForeignKey(c => c.FeedId);
+            modelBuilder.Entity<FeedUserImage>()
+                .HasOne(c => c.UserImage)
+                .WithMany(c => c.FeedUserImage)
+                .HasForeignKey(c => c.UserImageId);
+
             modelBuilder.Entity<FeedTopic>()
                 .HasKey(c => new { c.FeedId, c.TopicId });
             modelBuilder.Entity<FeedTopic>()
@@ -1124,6 +1135,7 @@ namespace Eyon.DataAccess.Data
         public DbSet<FeedProfile> FeedProfile { get; set; }
         public DbSet<FeedRecipe> FeedRecipe { get; set; }
         public DbSet<FeedState> FeedState { get; set; }
+        public DbSet<FeedUserImage> FeedUserImage { get; set; }
         public DbSet<FeedTopic> FeedTopic { get; set; }
         // NOTE: Start making these names NOT PLURAL
 

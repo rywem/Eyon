@@ -102,6 +102,10 @@ namespace Eyon.DataAccess.DataCalls
             }
         }
 
+        public FeedOrganization AddFeedOrganization( Feed feed, Organization organization )
+        {
+            return _unitOfWork.FeedOrganization.AddFromEntities(feed, organization);
+        }
         public FeedCommunity AddFeedCommunity( Feed feed, Community community )
         {
             return _unitOfWork.FeedCommunity.AddFromEntities(feed, community);
@@ -130,6 +134,11 @@ namespace Eyon.DataAccess.DataCalls
         public FeedTopic AddFeedTopic(Feed feed, Topic topic)
         {
             return _unitOfWork.FeedTopic.AddFromEntities(feed, topic);
+        }
+
+        public FeedProfile AddFeedProfile( Feed feed, Profile profile )
+        {
+            return _unitOfWork.FeedProfile.AddFromEntities(feed, profile);
         }
 
 
@@ -295,6 +304,23 @@ namespace Eyon.DataAccess.DataCalls
         public void RemoveFeedCountry(FeedCountry feedCountry )
         {
             _unitOfWork.FeedCountry.Remove(feedCountry);
+        }
+
+        public void RemoveFeedOrganization( FeedOrganization feedOrganization )
+        {
+            _unitOfWork.FeedOrganization.Add(feedOrganization);
+        }
+
+        public void RemoveFeedOrganization( Feed feed, Organization organization )
+        {
+            var feedOrganization = _unitOfWork.FeedOrganization.GetFirstOrDefault(x => x.FeedId == feed.Id && x.OrganizationId == organization.Id);
+            RemoveFeedOrganization(feedOrganization);
+        }
+
+        public async Task RemoveFeedOrganizationAsync( Feed feed, Organization organization )
+        {
+            var feedOrganization = await _unitOfWork.FeedOrganization.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.OrganizationId == organization.Id);
+            RemoveFeedOrganization(feedOrganization);
         }
 
         #endregion

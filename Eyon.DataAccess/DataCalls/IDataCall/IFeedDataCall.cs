@@ -17,9 +17,13 @@ namespace Eyon.DataAccess.DataCalls.IDataCall
         Feed UpdateFeed( string currentApplicationUserId, Feed feed, IFeedItem item );
         FeedCountry AddFeedCountry( Feed feed, Country country );
         FeedCookbook AddFeedCookbook( Feed feed, Cookbook cookbook );
+        FeedOrganization AddFeedOrganization( Feed feed, Organization organization );
         FeedCategory AddFeedCategory( Feed feed, Category category );
         FeedTopic AddFeedTopic( Feed feed, Topic topic );
         FeedRecipe AddFeedRecipe( Feed feed, Recipe recipe );
+        FeedProfile AddFeedProfile( Feed feed, Profile profile  );
+        void AddFeedCommunityStateCountryRelationships( Feed feed, Community community );
+        Task AddFeedCommunityStateCountryRelationshipsAsync( Feed feed, Community community );
         void RemoveFeedCategory( Feed feed, Category category );
 
         void RemoveFeedCommunityStateCountryRelationships( Feed feed, Community community );
@@ -34,5 +38,9 @@ namespace Eyon.DataAccess.DataCalls.IDataCall
         void RemoveFeedRecipe( FeedRecipe feedRecipe );
         void RemoveFeedRecipe( Feed feed, Recipe recipe );
         Task RemoveFeedRecipeAsync( Feed feed, Recipe recipe );
+
+        void RemoveFeedOrganization( FeedOrganization feedOrganization );
+        void RemoveFeedOrganization( Feed feed, Organization organization);
+        Task RemoveFeedOrganizationAsync( Feed feed, Organization organization);
     }
 }

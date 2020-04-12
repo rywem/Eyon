@@ -9,28 +9,107 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Eyon.Models.Enums;
+using Eyon.DataAccess.Orchestrators.IOrchestrator;
+using Eyon.DataAccess.DataCalls.IDataCall;
 
 namespace Eyon.DataAccess.Orchestrators
 {
-    public class FeedOrchestrator
+    public class FeedOrchestrator : IFeedOrchestrator
     {
 
         private readonly IUnitOfWork _unitOfWork;
-        public FeedOrchestrator( IUnitOfWork unitOfWork )
+        private readonly IFeedDataCall _feedDataCall;
+        public FeedOrchestrator( IUnitOfWork unitOfWork, IFeedDataCall feedDataCall )
         {
             this._unitOfWork = unitOfWork;
+            this._feedDataCall = feedDataCall;
         }
         public async Task<FeedViewModel> GetPublicFeedViewModel( FeedSortBy sortBy = FeedSortBy.New, int skip = 0, int take = 0 )
         {
             return await _unitOfWork.Feed.GetPublicFeedList(sortBy, skip, take );
         }
 
+
+        public async Task AddTransactionAsync( string currentApplicationUserId, FeedItemViewModel feedViewModel )
+        {
+            using ( var transaction = _unitOfWork.BeginTransaction() )
+            {
+                try
+                {
+                    await AddAsync(currentApplicationUserId, feedViewModel);
+                    await transaction.CommitAsync();
+                }
+                catch ( Exception ex )
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+            }
+        }
+
+        public async Task AddAsync( string currentApplicationUserId, FeedItemViewModel feedViewModel )
+        {
+            var feed = await _feedDataCall.AddFeedWithRelationship(currentApplicationUserId, feedViewModel.FeedItem, false);
+
+            if ( feedViewModel.Categories != null && feedViewModel.Categories.Count > 0 )
+            {
+                foreach ( var item in feedViewModel.Categories )
+                {
+                    _feedDataCall.AddFeedCategory(feed, item);
+                }
+            }
+
+            if ( feedViewModel.Communities != null && feedViewModel.Communities.Count > 0 )
+            {
+                foreach ( var item in feedViewModel.Communities )
+                {
+                    await _feedDataCall.AddFeedCommunityStateCountryRelationshipsAsync(feed, item);
+                }
+            }
+
+            if ( feedViewModel.Cookbooks != null && feedViewModel.Cookbooks.Count > 0 )
+            {
+                foreach ( var item in feedViewModel.Cookbooks )
+                {
+                    _feedDataCall.AddFeedCookbook(feed, item);
+                }
+            }
+
+            if ( feedViewModel.Organizations != null && feedViewModel.Organizations.Count > 0 )
+            {
+                foreach ( var item in feedViewModel.Organizations )
+                {
+                    _feedDataCall.AddFeedOrganization(feed, item);
+                }
+            }
+            if ( feedViewModel.Profiles != null && feedViewModel.Profiles.Count > 0 )
+            {
+                foreach ( var item in feedViewModel.Profiles )
+                {
+                    _feedDataCall.AddFeedProfile(feed, item);
+                }
+            }
+
+            if ( feedViewModel.Recipes != null && feedViewModel.Recipes.Count > 0 )
+            {
+                foreach ( var item in feedViewModel.Recipes )
+                {
+                    _feedDataCall.AddFeedRecipe(feed, item);
+                }
+            }
+
+            if ( feedViewModel.Topics != null && feedViewModel.Topics.Count > 0 )
+            {
+                foreach ( var item in feedViewModel.Topics )
+                {
+                    _feedDataCall.AddFeedTopic(feed, item);
+                }
+            }
+            await _unitOfWork.SaveAsync();
+        }
+
         public async Task DeleteAsync( Feed feed )
         {
-            //var feed = await _unitOfWork.Feed.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == feed.Id, includeProperties: "ApplicationUserOwner,FeedCommunity,FeedState,FeedOrganization,FeedCategory,FeedCountry,FeedCookbook,FeedRecipe,FeedProfile,FeedTopic");
-
-            //if ( feedFromDb == null )
-            //  throw new SafeException("An error occurred.", new Exception(string.Format("Owned feed item not found. Feed ID {0},  Current application user ID {1}", feed.Id, currentApplicationUserId)));
 
             if ( feed.FeedCommunity != null )
             {
@@ -131,5 +210,6 @@ namespace Eyon.DataAccess.Orchestrators
                 }
             }
         }
+
     }
 }

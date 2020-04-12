@@ -398,6 +398,15 @@ namespace Eyon.DataAccess.Data{
                 return _FeedState.Value;
             }
         }
+
+        private Lazy<IFeedUserImageRepository> _FeedUserImage;
+        public IFeedUserImageRepository FeedUserImage
+        {
+            get
+            {
+                return _FeedUserImage.Value;
+            }
+        }
         private Lazy<IFeedTopicRepository> _FeedTopic;
         public IFeedTopicRepository FeedTopic
         {
@@ -451,6 +460,7 @@ namespace Eyon.DataAccess.Data{
             this._FeedCookbook = new Lazy<IFeedCookbookRepository>(() => new FeedCookbookRepository(this._db));
             this._FeedCommunity = new Lazy<IFeedCommunityRepository>(() => new FeedCommunityRepository(this._db));
             this._FeedCategory = new Lazy<IFeedCategoryRepository>(() => new FeedCategoryRepository(this._db));
+            this._FeedUserImage = new Lazy<IFeedUserImageRepository>(() => new FeedUserImageRepository(this._db));
             this._ApplicationUserFeed = new Lazy<IApplicationUserFeedRepository>(() => new ApplicationUserFeedRepository(this._db));
             this._RecipeCategory = new Lazy<IRecipeCategoryRepository>(() => new RecipeCategoryRepository(this._db));
             this._CookbookRecipe = new Lazy<ICookbookRecipeRepository>(() => new CookbookRecipeRepository(this._db));

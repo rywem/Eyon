@@ -20,14 +20,14 @@ namespace Eyon.DataAccess.Security
     {
         private readonly IUnitOfWork _unitOfWork;
         private IRecipeOrchestrator _recipeOrchestrator;
-        private FeedSecurity _feedSecurity;
+        private IFeedSecurity _feedSecurity;
         private IConfiguration _config;
-        public RecipeSecurity( IUnitOfWork unitOfWork, IConfiguration config, IRecipeOrchestrator recipeOrchestrator )
+        public RecipeSecurity( IUnitOfWork unitOfWork, IConfiguration config, IRecipeOrchestrator recipeOrchestrator, IFeedSecurity feedSecurity )
         {
             this._unitOfWork = unitOfWork;
             this._config = config;
             this._recipeOrchestrator = recipeOrchestrator;
-            this._feedSecurity = new FeedSecurity(this._unitOfWork);
+            this._feedSecurity = feedSecurity;
         }
 
         public async Task<RecipeViewModel> GetAsync(string currentApplicationUserId, long id )

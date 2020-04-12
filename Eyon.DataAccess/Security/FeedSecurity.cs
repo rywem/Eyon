@@ -8,17 +8,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Eyon.DataAccess.Orchestrators.IOrchestrator;
+using Eyon.DataAccess.Security.ISecurity;
 
 namespace Eyon.DataAccess.Security
 {
-    public class FeedSecurity
+    public class FeedSecurity : IFeedSecurity
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly FeedOrchestrator _feedOrchestrator;
-        public FeedSecurity( IUnitOfWork unitOfWork )
+        private readonly IFeedOrchestrator _feedOrchestrator;
+        public FeedSecurity( IUnitOfWork unitOfWork, IFeedOrchestrator feedOrchestrator )
         {
             this._unitOfWork = unitOfWork;
-            this._feedOrchestrator = new FeedOrchestrator(this._unitOfWork);
+            this._feedOrchestrator = feedOrchestrator;
         }
 
         public async Task<FeedViewModel> GetFeedAsync(string currentApplicationUserId = null, FeedSortBy sortBy = FeedSortBy.New, int skip = 0, int take = 0)
@@ -29,6 +31,17 @@ namespace Eyon.DataAccess.Security
             }
             else
                 throw new NotImplementedException();
+        }
+
+        public async Task AddAsync( string currentApplicationUserId, FeedItemViewModel feedItemViewModel, bool useTransaction = true )
+        {
+            if ( string.IsNullOrEmpty(currentApplicationUserId) )
+                throw new SafeException(ErrorType.AnErrorOccurred, new Exception("Current Application User ID is empty FeedSecurity.AddAsync()"));
+
+            if ( useTransaction )
+                await _feedOrchestrator.AddTransactionAsync(currentApplicationUserId, feedItemViewModel);
+            else
+                await _feedOrchestrator.AddAsync(currentApplicationUserId, feedItemViewModel);
         }
 
         public async Task DeleteAsync(string currentApplicationUserId, long feedId, bool useTransaction = true)

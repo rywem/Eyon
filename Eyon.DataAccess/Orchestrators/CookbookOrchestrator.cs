@@ -12,6 +12,7 @@ using Eyon.Models;
 using Eyon.DataAccess.Security;
 using Eyon.DataAccess.DataCalls.IDataCall;
 using Eyon.DataAccess.Orchestrators.IOrchestrator;
+using Eyon.DataAccess.Security.ISecurity;
 
 namespace Eyon.DataAccess.Orchestrators
 {
@@ -19,10 +20,12 @@ namespace Eyon.DataAccess.Orchestrators
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFeedDataCall _feedDataCall;
-        public CookbookOrchestrator( IUnitOfWork unitOfWork, IFeedDataCall feedDataCall)
+        private readonly IFeedSecurity _feedSecurity;
+        public CookbookOrchestrator( IUnitOfWork unitOfWork, IFeedDataCall feedDataCall, IFeedSecurity feedSecurity)
         {
             this._unitOfWork = unitOfWork;
             this._feedDataCall = feedDataCall;
+            this._feedSecurity = feedSecurity;
         }
         public CookbookViewModel Get(long id)
         {
@@ -146,18 +149,18 @@ namespace Eyon.DataAccess.Orchestrators
         {
             if ( cookbookViewModel.Cookbook.Id != 0 ) //New cookbook
                 throw new SafeException("Cookbook already exists.");
-
-            //FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
+            
             _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
             await _unitOfWork.SaveAsync();
             _unitOfWork.Cookbook.AddOwnerRelationship(currentUserId, cookbookViewModel.Cookbook, new ApplicationUserCookbook());
             await _unitOfWork.SaveAsync();
             var topic = _unitOfWork.Topic.AddFromITopicItem(cookbookViewModel.Cookbook);
-            
-            
-            var feed = await _feedDataCall.AddFeedWithRelationship(currentUserId, cookbookViewModel.Cookbook);            
-            _feedDataCall.AddFeedCookbook(feed, cookbookViewModel.Cookbook);
-            _feedDataCall.AddFeedTopic(feed, topic);
+
+
+            //var feed = await _feedDataCall.AddFeedWithRelationship(currentUserId, cookbookViewModel.Cookbook);
+
+            //_feedDataCall.AddFeedCookbook(feed, cookbookViewModel.Cookbook);
+            //_feedDataCall.AddFeedTopic(feed, topic);
             
             
 
@@ -170,11 +173,16 @@ namespace Eyon.DataAccess.Orchestrators
                     if ( categoryFromDb != null )
                     {
                         _unitOfWork.CookbookCategory.AddFromEntities(cookbookViewModel.Cookbook, categoryFromDb);
-                        _unitOfWork.FeedCategory.AddFromEntities(feed, categoryFromDb);
+                        cookbookViewModel.CategorySelector.Items.Add(categoryFromDb);
                     }
                 }
             }
             await _unitOfWork.SaveAsync();
+
+            var feedItemViewModel = cookbookViewModel.ToFeedItemViewModel();
+            feedItemViewModel.Topics.Add(topic);
+            //feedItemViewModel.Communities.Add(communityFromDb);
+            await _feedSecurity.AddAsync(currentUserId, feedItemViewModel, false);
         }
 
         //public void UpdateCookbookTransaction(string currentUserId, CookbookViewModel cookbookViewModel)
@@ -315,9 +323,8 @@ namespace Eyon.DataAccess.Orchestrators
             }
 
             if ( objFromDb.FeedCookbook != null )
-            {
-                FeedSecurity feedSecurity = new FeedSecurity(_unitOfWork);
-                await feedSecurity.DeleteAsync(currentApplicationUserId, objFromDb.FeedCookbook.FeedId, false);
+            {                
+                await _feedSecurity.DeleteAsync(currentApplicationUserId, objFromDb.FeedCookbook.FeedId, false);
             }
             // delete topic            
             _unitOfWork.Topic.RemoveFromITopicItem(objFromDb);

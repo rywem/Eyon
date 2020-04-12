@@ -51,6 +51,7 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         IFeedProfileRepository FeedProfile { get; }
         IFeedRecipeRepository FeedRecipe { get; }
         IFeedStateRepository FeedState { get; }
+        IFeedUserImageRepository FeedUserImage { get; }
         IFeedTopicRepository FeedTopic { get; }
 
 
