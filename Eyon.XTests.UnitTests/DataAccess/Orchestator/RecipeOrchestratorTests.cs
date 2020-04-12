@@ -45,7 +45,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
         }
         
         [Fact]
-        public async Task AddAsync_RegularInsert_RecipeShouldInsert()
+        public async Task AddAsync_RegularInsert_RecipeShouldNotBeNull()
         {
             string currentUserId = applicationUsers[0].Id;
             RecipeViewModel recipeViewModel = GetRecipeViewModel();
@@ -53,13 +53,103 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
 
             var recipe = _unitOfWork.Recipe.Get(recipeViewModel.Recipe.Id);
             Assert.NotNull(recipe);
+        }
 
-            var ingredients = _unitOfWork.Ingredient.GetAll(x => x.RecipeId == recipe.Id).ToList();
-            Assert.Equal(11, ingredients.Count);
-
-            var instruction = _unitOfWork.Instruction.GetAll(x => x.RecipeId == recipe.Id).ToList();
+        [Fact]
+        public async Task AddAsync_InsertInstructions_CountShouldBe6()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+            
+            var instruction = _unitOfWork.Instruction.GetAll(x => x.RecipeId == recipeViewModel.Recipe.Id).ToList();
             Assert.Equal(6, instruction.Count);
         }
+
+        [Fact]
+        public async Task AddAsync_InsertInstructions_ShouldBeInsertedInOrder()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+            var instruction = _unitOfWork.Instruction.GetAll(x => x.RecipeId == recipeViewModel.Recipe.Id).OrderBy(x => x.StepNumber).ToList();
+            
+            Assert.Equal("In a medium pot, saute onions until soft.", instruction[0].Text);
+            Assert.Equal(1, instruction[0].StepNumber);
+
+            Assert.Equal("Add beef, brown until brown.", instruction[1].Text);
+            Assert.Equal(2, instruction[1].StepNumber);
+
+            Assert.Equal("Add garlic, until fragrant.", instruction[2].Text);
+            Assert.Equal(3, instruction[2].StepNumber);
+
+            Assert.Equal("Drain excess juices.", instruction[3].Text);
+            Assert.Equal(4, instruction[3].StepNumber);
+
+            Assert.Equal("Add all remaining ingredients, heat until warm.", instruction[4].Text);
+            Assert.Equal(5, instruction[4].StepNumber);
+
+            Assert.Equal("Serve and enjoy!", instruction[5].Text);
+            Assert.Equal(6, instruction[5].StepNumber);
+        }
+
+        [Fact]
+        public async Task AddAsync_InsertIngredients_ShouldBeInsertedInOrder()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+            var ingredients = _unitOfWork.Ingredient.GetAll(x => x.RecipeId == recipeViewModel.Recipe.Id).OrderBy(x => x.Number).ToList();
+
+            Assert.Equal("1 lb ground beef", ingredients[0].Text);
+            Assert.Equal(1, ingredients[0].Number);
+
+            Assert.Equal("1 medium onion", ingredients[1].Text);
+            Assert.Equal(2, ingredients[1].Number);
+
+            Assert.Equal("3 cloves garlic", ingredients[2].Text);
+            Assert.Equal(3, ingredients[2].Number);
+
+            Assert.Equal("1 can tomato sauce", ingredients[3].Text);
+            Assert.Equal(4, ingredients[3].Number);
+
+            Assert.Equal("1 can pinto beans", ingredients[4].Text);
+            Assert.Equal(5, ingredients[4].Number);
+
+            Assert.Equal("1 can corn", ingredients[5].Text);
+            Assert.Equal(6, ingredients[5].Number);
+
+            Assert.Equal("1 can green beans", ingredients[6].Text);
+            Assert.Equal(7, ingredients[6].Number);
+
+            Assert.Equal("1 can peas and carrots", ingredients[7].Text);
+            Assert.Equal(8, ingredients[7].Number);
+
+            Assert.Equal("2-3 beef bouillon cubes", ingredients[8].Text);
+            Assert.Equal(9, ingredients[8].Number);
+
+            Assert.Equal("1/2 tsp pepper", ingredients[9].Text);
+            Assert.Equal(10, ingredients[9].Number);
+
+            Assert.Equal("1 cup cooked rice (optional)", ingredients[10].Text);
+            Assert.Equal(11, ingredients[10].Number);
+        }
+
+        [Fact]
+        public async Task AddAsync_InsertIngredients_CountShouldBe11()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+            var ingredients = _unitOfWork.Ingredient.GetAll(x => x.RecipeId == recipeViewModel.Recipe.Id).ToList();
+            Assert.Equal(11, ingredients.Count);
+        }
+
+
+        #region Ownership and Privacy
         [Fact]
         public async Task AddAsync_RegularInsert_RecipeShouldHaveCorrectOwner()
         {
@@ -82,18 +172,26 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             Assert.Null(ownedRecipe);
         }
         [Fact]
-        public async Task AddAsync_PrivateAndPublicShouldBeAccessibleIfOwner_CountShouldBe2()
+        public async Task AddAsync_PrivateShouldBeAccessibleIfOwner_CountShouldBe1()
+        {
+            string currentUserId = applicationUsers[0].Id;
+            RecipeViewModel recipeViewModel = GetRecipeViewModel();
+            recipeViewModel.Recipe.Privacy = Models.Enums.Privacy.Private;
+            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);            
+            var recipeEnumerable = await _unitOfWork.Recipe.GetAllAvailableAsync(currentUserId);            
+            Assert.Single(recipeEnumerable);
+        }
+
+        [Fact]
+        public async Task AddAsync_PublicShouldBeAccessibleIfOwner_CountShouldBe1()
         {
             string currentUserId = applicationUsers[0].Id;
             RecipeViewModel recipeViewModel = GetRecipeViewModel();
             recipeViewModel.Recipe.Privacy = Models.Enums.Privacy.Public;
             await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
             
-            RecipeViewModel recipeViewModel2 = GetRecipeViewModel();
-            recipeViewModel2.Recipe.Privacy = Models.Enums.Privacy.Private;
-            await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel2);
-            var publicAndPrivateRecipes = await _unitOfWork.Recipe.GetAllAvailableAsync(currentUserId);            
-            Assert.Equal(2, publicAndPrivateRecipes.Count());
+            var recipeEnumerable = await _unitOfWork.Recipe.GetAllAvailableAsync(currentUserId);
+            Assert.Single(recipeEnumerable);
         }
 
         [Fact]
@@ -106,8 +204,8 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
 
             string notOwnerUserId = applicationUsers[1].Id;
             
-            var publicAndPrivateRecipes = await _unitOfWork.Recipe.GetAllAvailableAsync(notOwnerUserId);
-            Assert.Single(publicAndPrivateRecipes);
+            var recipeEnumerable = await _unitOfWork.Recipe.GetAllAvailableAsync(notOwnerUserId);
+            Assert.Single(recipeEnumerable);
         }
 
         [Fact]
@@ -119,9 +217,10 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
 
             string notOwnerUserId = applicationUsers[1].Id;
-            var publicAndPrivateRecipes = await _unitOfWork.Recipe.GetAllAvailableAsync(notOwnerUserId);            
-            Assert.Empty(publicAndPrivateRecipes);
+            var recipeEnumerable = await _unitOfWork.Recipe.GetAllAvailableAsync(notOwnerUserId);            
+            Assert.Empty(recipeEnumerable);
         }
+        #endregion
 
         #region Sample Data
         private RecipeViewModel GetRecipeViewModel()
@@ -151,7 +250,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
 Add beef, brown until brown.
 Add garlic, until fragrant.
 Drain excess juices.
-Add all remaining ingredients, heat until warm. 
+Add all remaining ingredients, heat until warm.
 Serve and enjoy!";
 
             return recipeViewModel;
