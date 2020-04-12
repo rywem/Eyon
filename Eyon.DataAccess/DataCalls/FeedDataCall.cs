@@ -23,7 +23,7 @@ namespace Eyon.DataAccess.DataCalls
 
         public async Task<Feed> AddFeedWithRelationship( string currentApplicationUserId, IFeedItem feedItem, bool saveOnRelationshipInsert = true )
         {
-            var feed = AddFeed(feedItem);
+            var feed = _unitOfWork.Feed.AddFromIFeedItem(feedItem);
             await _unitOfWork.SaveAsync();
             _unitOfWork.Feed.AddOwnerRelationship(currentApplicationUserId, feed, new ApplicationUserFeed());
             
@@ -33,15 +33,15 @@ namespace Eyon.DataAccess.DataCalls
             return feed;
 
         }
-        public Feed AddFeed(IFeedItem item )
-        {
-            return _unitOfWork.Feed.AddFromIFeedItem(item);
-        }
+        //private Feed AddFeed(IFeedItem item )
+        //{
+        //    return _unitOfWork.Feed.AddFromIFeedItem(item);
+        //}
 
-        public void AddOwnerRelationship(string currentApplicationUserId, Feed feed )
-        {
-            _unitOfWork.Feed.AddOwnerRelationship(currentApplicationUserId, feed, new ApplicationUserFeed());
-        }
+        //private void AddOwnerRelationship(string currentApplicationUserId, Feed feed )
+        //{
+        //    _unitOfWork.Feed.AddOwnerRelationship(currentApplicationUserId, feed, new ApplicationUserFeed());
+        //}
 
         //public FeedTopic AddFeedTopic(Feed feed, Topic topic)
         //{

@@ -26,15 +26,13 @@ namespace Eyon.DataAccess.Orchestrators
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
-        private IRecipeDataCall _recipeDataCall;
-        private IFeedDataCall _feedDataCall;
+        private IRecipeDataCall _recipeDataCall;        
         private IFeedSecurity _feedSecurity;
-        public RecipeOrchestrator( IUnitOfWork unitOfWork, IConfiguration config, IRecipeDataCall recipeDataCall, IFeedDataCall feedDataCall, IFeedSecurity feedSecurity )
+        public RecipeOrchestrator( IUnitOfWork unitOfWork, IConfiguration config, IRecipeDataCall recipeDataCall, IFeedSecurity feedSecurity )
         {
             this._unitOfWork = unitOfWork;
             this._config = config;
-            this._recipeDataCall = recipeDataCall;
-            this._feedDataCall = feedDataCall;
+            this._recipeDataCall = recipeDataCall;            
             this._feedSecurity = feedSecurity;
         }
 

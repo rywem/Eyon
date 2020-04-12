@@ -91,6 +91,7 @@ namespace Eyon.DataAccess.Data
                     where k.ApplicationUserId.Equals(ownerId)
                     select e;
             return await ApplyQueryFilters(query, filter, includeProperties, tracking).FirstOrDefaultAsync();
+            
         }
         public bool IsOwner( string userIdToCheck, long entityId )
         {                    
