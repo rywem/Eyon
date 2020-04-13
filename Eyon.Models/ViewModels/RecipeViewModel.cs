@@ -67,7 +67,7 @@ namespace Eyon.Models.ViewModels
             {
                 Ingredient.Add(new Ingredient()
                 {
-                    Text = item,
+                    Text = item.Trim(),
                     Number = step,
                     RecipeId = Recipe.Id
                 });
@@ -87,7 +87,7 @@ namespace Eyon.Models.ViewModels
                 Instruction.Add(new Instruction()
                 {
                     StepNumber = step,
-                    Text = item,
+                    Text = item.Trim(),
                     RecipeId = Recipe.Id
                 });
                 step++;
