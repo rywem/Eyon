@@ -19,6 +19,11 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
 {
     public class RecipeOrchestratorTests
     {
+
+        public RecipeOrchestratorTests()
+        {
+
+        }
         
         public class AddAsyncTests
         {
@@ -40,7 +45,13 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 this._recipeDataCall = new RecipeDataCall(this._unitOfWork);
                 this._feedSecurity = new Mock<IFeedSecurity>();
                 this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, this._mockConfig.Object, this._recipeDataCall, this._feedSecurity.Object);
-                SeedDatabase(this._unitOfWork, out this.countries, out this.states, out this.communities, out this.applicationUsers, out this.cookbooks, out this.categories);
+                countries = new List<Country>();
+                states =new List<State>();
+                communities = new List<Community>();
+                cookbooks = new List<Cookbook>();
+                categories = new List<Category>();
+                applicationUsers = new List<ApplicationUser>();
+                SeedDatabase(this._unitOfWork, this.countries, this.states, this.communities, this.applicationUsers, this.cookbooks, this.categories);
             }
 
             [Fact]
@@ -327,7 +338,13 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 this._recipeDataCall = new RecipeDataCall(this._unitOfWork);
                 this._feedSecurity = new Mock<IFeedSecurity>();
                 this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, this._mockConfig.Object, this._recipeDataCall, this._feedSecurity.Object);
-                SeedDatabase(this._unitOfWork, out this.countries, out this.states, out this.communities, out this.applicationUsers, out this.cookbooks, out this.categories);
+                countries = new List<Country>();
+                states = new List<State>();
+                communities = new List<Community>();
+                cookbooks = new List<Cookbook>();
+                categories = new List<Category>();
+                applicationUsers = new List<ApplicationUser>();
+                SeedDatabase(this._unitOfWork, this.countries, this.states, this.communities, this.applicationUsers, this.cookbooks, this.categories);
             }
             [Fact]
             public async Task Recipe_ShouldNotBeNull()
@@ -341,7 +358,94 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 Assert.NotNull(recipeViewModelFromDb);
                 Assert.Equal(recipeViewModel.Recipe.Id, recipeViewModelFromDb.Recipe.Id);
                 Assert.Equal(recipeViewModel.Recipe.Name, recipeViewModelFromDb.Recipe.Name);
-            } 
+            }
+
+            [Fact]
+            public async Task Community_ShouldNotBeNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.NotNull(recipeViewModelFromDb.Community);
+                Assert.Equal(communities[0].Id, recipeViewModelFromDb.Community.Id);
+            }
+
+            [Fact]
+            public async Task CommunityName_ShouldEqualExpected()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                string expected = "Quincy, CA (United States)";
+                Assert.Equal(expected, recipeViewModelFromDb.CommunityName);
+            }
+
+            [Fact]
+            public async Task CommunityId_ShouldEqualInputId()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                Assert.Equal(recipeViewModelFromDb.CommunityId, recipeViewModelFromDb.Community.Id);
+            }
+
+            [Fact]
+            public async Task IsNotOwner_IsOwnerShouldBeFalse()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                string otherUserId = applicationUsers[1].Id;
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(otherUserId, recipeViewModel.Recipe.Id);
+
+                Assert.False(recipeViewModelFromDb.IsOwner);                
+            }
+
+            [Fact]
+            public async Task IsOwner_IsOwnerShouldBeTrue()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.True(recipeViewModelFromDb.IsOwner);
+            }
+
+            [Fact]
+            public async Task Instructions_CountShouldEqual6()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);                
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.Equal(6, recipeViewModelFromDb.Instruction.Count);
+            }
+
+            [Fact]
+            public async Task InstructionsTxt_ShouldEqualExpectedString()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);                
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                
+                string expected = @"In a medium pot, saute onions until soft.
+Add beef, brown until brown.
+Add garlic, until fragrant.
+Drain excess juices.
+Add all remaining ingredients, heat until warm.
+Serve and enjoy!";
+                Assert.Equal(expected, recipeViewModelFromDb.InstructionsText);
+            }
         }
 
         #region Sample Data
@@ -377,8 +481,8 @@ Serve and enjoy!";
 
             return recipeViewModel;
         }
-        public static void SeedDatabase(IUnitOfWork unitOfWork, out List<Country> countries, out List<State> states, out List<Community> communities,
-            out List<ApplicationUser> applicationUsers, out List<Cookbook> cookbooks, out List<Category> categories)
+        public static void SeedDatabase(IUnitOfWork unitOfWork, List<Country> countries, List<State> states, List<Community> communities,
+            List<ApplicationUser> applicationUsers, List<Cookbook> cookbooks, List<Category> categories)
         {
             Country country = new Country()
             {
@@ -386,8 +490,7 @@ Serve and enjoy!";
                 Name = "UNITED STATES"
             };
             unitOfWork.Country.Add(country);
-            unitOfWork.Save();
-            countries = new List<Country>();
+            unitOfWork.Save();            
             countries.Add(country);
 
             State state = new State()
@@ -399,14 +502,12 @@ Serve and enjoy!";
                 CountryId = country.Id
             };
             unitOfWork.State.Add(state);
-            unitOfWork.Save();
-            states = new List<State>();
+            unitOfWork.Save();            
             states.Add(state);
 
             Community community = new Community() { Name = "QUINCY", Active = true, CountryId = country.Id };
             unitOfWork.Community.Add(community);
-            unitOfWork.Save();
-            communities = new List<Community>();
+            unitOfWork.Save();            
             communities.Add(community);
             unitOfWork.CommunityState.AddFromEntities(community, state);
 
@@ -425,8 +526,7 @@ Serve and enjoy!";
             unitOfWork.ApplicationUser.Add(user1);
             unitOfWork.ApplicationUser.Add(user2);
             unitOfWork.Save();
-
-            applicationUsers = new List<ApplicationUser>();
+            
             applicationUsers.Add(user1);
             applicationUsers.Add(user2);
             // add cookbooks
@@ -440,7 +540,7 @@ Serve and enjoy!";
                 Privacy = Models.Enums.Privacy.Public
             };
             unitOfWork.Cookbook.Add(cookbook1);
-            cookbooks = new List<Cookbook>();
+            
 
             Cookbook cookbook2 = new Cookbook()
             {
@@ -483,8 +583,7 @@ Serve and enjoy!";
                 DisplayOrder = 1
             };
             unitOfWork.Category.Add(category2);
-            unitOfWork.Save();
-            categories = new List<Category>();
+            unitOfWork.Save();            
             categories.Add(category1);
             categories.Add(category2);
         }
