@@ -933,6 +933,7 @@ Serve and enjoy!";
             }
             #endregion
 
+            #region Category
             [Fact]
             public async Task AddAnotherCategory_CountEqual3()
             {
@@ -1040,7 +1041,27 @@ Serve and enjoy!";
                 Assert.Equal(categories[1].Id, recipeViewModelFromDb.CategorySelector.Items[0].Id);
                 Assert.Equal(categories[2].Id, recipeViewModelFromDb.CategorySelector.Items[1].Id);
             }
+            #endregion
 
+            #region Community
+            [Fact]
+            public async Task ChangeCommunity_ShouldEqualInput()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CommunityId = communities[1].Id;
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModelForUpdating.Recipe.Id);
+
+                Assert.Equal(communities[1].Id, recipeViewModelFromDb.CommunityId);
+                Assert.Equal(communities[1].Id, recipeViewModelFromDb.Community.Id);
+            }
+
+            #endregion
         }
 
         #region Sample Data
@@ -1105,6 +1126,10 @@ Serve and enjoy!";
             unitOfWork.Save();            
             communities.Add(community);
             unitOfWork.CommunityState.AddFromEntities(community, state);
+            Community community2 = new Community() { Name = "SANTA MARIA", Active = true, CountryId = country.Id };
+            unitOfWork.Community.Add(community2);
+            communities.Add(community2);
+            unitOfWork.CommunityState.AddFromEntities(community2, state);
 
             ApplicationUser user1 = new ApplicationUser()
             {
