@@ -38,10 +38,93 @@ namespace Eyon.DataAccess.Security
             if ( string.IsNullOrEmpty(currentApplicationUserId) )
                 throw new SafeException(ErrorType.AnErrorOccurred, new Exception("Current Application User ID is empty FeedSecurity.AddAsync()"));
 
+            if ( feedItemViewModel.Cookbooks != null && feedItemViewModel.Cookbooks.Count > 0 )
+            {
+                foreach ( var item in feedItemViewModel.Cookbooks )
+                {
+                    if ( !await _unitOfWork.Cookbook.IsOwnerAsync(currentApplicationUserId, item.Id) )
+                    {
+                        throw new SafeException(ErrorType.Denied, new Exception("Current Application User ID does not own cookbook FeedSecurity.UpdateAsync()"));
+                    }
+                }
+            }
+            if ( feedItemViewModel.Recipes != null && feedItemViewModel.Recipes.Count > 0 )
+            {
+                foreach ( var item in feedItemViewModel.Recipes )
+                {
+                    if ( !await _unitOfWork.Recipe.IsOwnerAsync(currentApplicationUserId, item.Id) )
+                    {
+                        throw new SafeException(ErrorType.Denied, new Exception("Current Application User ID does not own recipe FeedSecurity.UpdateAsync()"));
+                    }
+                }
+            }
+
+            if ( feedItemViewModel.Organizations != null && feedItemViewModel.Organizations.Count > 0 )
+            {
+                foreach ( var item in feedItemViewModel.Organizations )
+                {
+                    if ( !await _unitOfWork.Organization.IsOwnerAsync(currentApplicationUserId, item.Id) )
+                    {
+                        throw new SafeException(ErrorType.Denied, new Exception("Current Application User ID does not own orgnization FeedSecurity.UpdateAsync()"));
+                    }
+                }
+            }
+
             if ( useTransaction )
                 await _feedOrchestrator.AddTransactionAsync(currentApplicationUserId, feedItemViewModel);
             else
                 await _feedOrchestrator.AddAsync(currentApplicationUserId, feedItemViewModel);
+        }
+
+        public async Task UpdateAsync( string currentApplicationUserId, FeedItemViewModel feedItemViewModel, bool useTransaction = true )
+        {
+            if ( string.IsNullOrEmpty(currentApplicationUserId) )
+                throw new SafeException(ErrorType.AnErrorOccurred, new Exception("Current Application User ID is empty FeedSecurity.UpdateAsync()"));
+            
+            if ( feedItemViewModel.Feed != null )
+            {
+                if ( !await _unitOfWork.Feed.IsOwnerAsync(currentApplicationUserId, feedItemViewModel.Feed.Id) )
+                {
+                    throw new SafeException(ErrorType.Denied, new Exception("Current Application User ID does not own Feed FeedSecurity.UpdateAsync()"));
+                }
+            }
+
+            if ( feedItemViewModel.Cookbooks != null && feedItemViewModel.Cookbooks.Count > 0 )
+            {
+                foreach ( var item in feedItemViewModel.Cookbooks )
+                {
+                    if ( ! await _unitOfWork.Cookbook.IsOwnerAsync(currentApplicationUserId, item.Id) )
+                    {
+                        throw new SafeException(ErrorType.Denied, new Exception("Current Application User ID does not own cookbook FeedSecurity.UpdateAsync()"));
+                    }
+                }
+            }
+            if ( feedItemViewModel.Recipes != null && feedItemViewModel.Recipes.Count > 0 )
+            {
+                foreach ( var item in feedItemViewModel.Recipes )
+                {
+                    if ( !await _unitOfWork.Recipe.IsOwnerAsync(currentApplicationUserId, item.Id) )
+                    {
+                        throw new SafeException(ErrorType.Denied, new Exception("Current Application User ID does not own recipe FeedSecurity.UpdateAsync()"));
+                    }
+                }
+            }
+
+            if ( feedItemViewModel.Organizations != null && feedItemViewModel.Organizations.Count > 0 )
+            {
+                foreach ( var item in feedItemViewModel.Organizations )
+                {
+                    if ( !await _unitOfWork.Organization.IsOwnerAsync(currentApplicationUserId, item.Id) )
+                    {
+                        throw new SafeException(ErrorType.Denied, new Exception("Current Application User ID does not own orgnization FeedSecurity.UpdateAsync()"));
+                    }
+                }
+            }
+
+            if ( useTransaction )
+                await _feedOrchestrator.UpdateTransactionAsync(currentApplicationUserId, feedItemViewModel);
+            else
+                await _feedOrchestrator.UpdateAsync(currentApplicationUserId, feedItemViewModel);
         }
 
         public async Task DeleteAsync(string currentApplicationUserId, long feedId, bool useTransaction = true)

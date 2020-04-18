@@ -42,19 +42,25 @@ namespace Eyon.Models.ViewModels
             this.CookbookSelector = new ListItemSelector<Cookbook>("Cookbook");
             this.CategorySelector = new ListItemSelector<Category>("Category");
             this.Ingredient = new List<Ingredient>();
-            this.Instruction = new List<Instruction>();            
+            this.Instruction = new List<Instruction>();
         }
 
-        public FeedItemViewModel ToFeedItemViewModel()
+        public FeedItemViewModel ToFeedItemViewModel(Feed feed = null)
         {
             FeedItemViewModel feedItemViewModel = new FeedItemViewModel();
             if ( Community != null )
                 feedItemViewModel.Communities.Add(Community);
             if ( CategorySelector.Items != null && CategorySelector.Items.Count > 0 )
                 feedItemViewModel.Categories.AddRange(CategorySelector.Items);
+            if ( CookbookSelector.Items != null && CookbookSelector.Items.Count > 0 )
+                feedItemViewModel.Cookbooks.AddRange(CookbookSelector.Items);
+
             feedItemViewModel.Recipes.Add(this.Recipe);
             feedItemViewModel.FeedItem = this.Recipe;
             feedItemViewModel.UserImages = UserImage;
+
+            if ( feed != null )
+                feedItemViewModel.Feed = feed;
             return feedItemViewModel;
         }
 

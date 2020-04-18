@@ -21,6 +21,8 @@ namespace Eyon.Models
         public ICollection<ApplicationUserCookbook> ApplicationUserCookbook { get; set; }
         public ICollection<ApplicationUserUserImage> ApplicationUserUserImage { get; set; }
         public ICollection<ApplicationUserOrganization> ApplicationUserOrganization { get; set; }
+
+        public ICollection<ApplicationUserProfile> ApplicationUserProfile { get; set; }
         /// <summary>
         /// Security access
         /// </summary>

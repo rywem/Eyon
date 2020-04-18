@@ -229,7 +229,7 @@ namespace Eyon.DataAccess.Orchestrators
                 throw new SafeException("Record not found in database");
 
             //FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
-            _feedDataCall.UpdateFeed(currentUserId, objFromDb.FeedCookbook.Feed, cookbookViewModel.Cookbook);
+            //_feedDataCall.UpdateFeed(currentUserId, objFromDb.FeedCookbook.Feed, cookbookViewModel.Cookbook);
             // Update Categories
             List<long> categoryIdList = new List<long>();
 
@@ -246,7 +246,8 @@ namespace Eyon.DataAccess.Orchestrators
                         if ( categoryFromDb != null )
                         {
                             _unitOfWork.CookbookCategory.AddFromEntities(objFromDb, categoryFromDb);
-                            _unitOfWork.FeedCategory.AddFromEntities(objFromDb.FeedCookbook.Feed, categoryFromDb);
+                            //_unitOfWork.FeedCategory.AddFromEntities(objFromDb.FeedCookbook.Feed, categoryFromDb);
+                            cookbookViewModel.CategorySelector.Items.Add(categoryFromDb);
                         }
                         else
                         {
@@ -264,8 +265,8 @@ namespace Eyon.DataAccess.Orchestrators
                     if ( !categoryIdList.Any(x => x == item.CategoryId) )
                     {
                         var feedCategoryFromDb = await _unitOfWork.FeedCategory.GetFirstOrDefaultAsync(x => x.FeedId == objFromDb.FeedCookbook.Feed.Id && x.CategoryId == item.CategoryId);
-                        if ( feedCategoryFromDb != null )
-                            _feedDataCall.RemoveFeedCategory(feedCategoryFromDb);
+                        //if ( feedCategoryFromDb != null )
+                        //    _feedDataCall.RemoveFeedCategory(feedCategoryFromDb);
 
                         _unitOfWork.CookbookCategory.Remove(item);
                     }
@@ -276,6 +277,7 @@ namespace Eyon.DataAccess.Orchestrators
             
             _unitOfWork.Cookbook.UpdateIfOwner(currentUserId, cookbookViewModel.Cookbook);
             await _unitOfWork.SaveAsync();
+            await _feedSecurity.UpdateAsync(currentUserId, cookbookViewModel.ToFeedItemViewModel(objFromDb.FeedCookbook.Feed));
         }
 
         public async Task DeleteTransactionAsync( string currentApplicationUserId, Cookbook objFromDb )

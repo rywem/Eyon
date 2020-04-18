@@ -361,6 +361,18 @@ namespace Eyon.DataAccess.Data
                 .HasForeignKey(c => c.ObjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<ApplicationUserProfile>()
+                .HasKey(c => new { c.ObjectId, c.ApplicationUserId });
+            modelBuilder.Entity<ApplicationUserProfile>()
+                .HasOne(c => c.ApplicationUser)
+                .WithMany(c => c.ApplicationUserProfile)
+                .HasForeignKey(c => c.ApplicationUserId);
+            modelBuilder.Entity<ApplicationUserProfile>()
+                .HasOne(c => c.Profile)
+                .WithMany(c => c.ApplicationUserOwner)
+                .HasForeignKey(c => c.ObjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<ApplicationUserOrganization>()
                 .HasKey(c => new { c.ObjectId, c.ApplicationUserId });
             modelBuilder.Entity<ApplicationUserOrganization>()
@@ -414,19 +426,6 @@ namespace Eyon.DataAccess.Data
             #endregion
 
             #region Seed Data
-
-            #region Seed Images 
-
-            //modelBuilder.Entity<SiteImage>().HasData(
-            //    SeedData.Images.SeedImages()[0],
-            //    SeedData.Images.SeedImages()[1],
-            //    SeedData.Images.SeedImages()[2],
-            //    SeedData.Images.SeedImages()[3],
-            //    SeedData.Images.SeedImages()[4],
-            //    SeedData.Images.SeedImages()[5],
-            //    SeedData.Images.SeedImages()[6]
-            //    );
-            #endregion
 
             #region Seed Categories
 
@@ -1094,6 +1093,7 @@ namespace Eyon.DataAccess.Data
         public DbSet<UserImage> UserImage { get; set; }
         public DbSet<Feed> Feed { get; set; }
         public DbSet<Topic> Topic { get; set; }
+        public DbSet<Profile> Profile { get; set; }
 
         #region location tables
         public DbSet<Community> Community { get; set; }
@@ -1126,6 +1126,7 @@ namespace Eyon.DataAccess.Data
         public DbSet<ApplicationUserCookbook> ApplicationUserCookbook { get; set; }
         public DbSet<ApplicationUserUserImage> ApplicationUserUserImage { get; set; }
         public DbSet<ApplicationUserFeed> ApplicationUserFeed { get; set; }
+        public DbSet<ApplicationUserProfile> ApplicationUserProfile { get; set; }
 
         public DbSet<FeedCategory> FeedCategory { get; set; }
         public DbSet<FeedCommunity> FeedCommunity { get; set; }

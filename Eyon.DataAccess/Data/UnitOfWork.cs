@@ -415,6 +415,24 @@ namespace Eyon.DataAccess.Data{
                 return _FeedTopic.Value;
             }
         }
+
+        private Lazy<IProfileRepository> _Profile;
+        public IProfileRepository Profile
+        {
+            get
+            {
+                return _Profile.Value;
+            }
+        }
+
+        private Lazy<IApplicationUserProfileRepository> _ApplicationUserProfile;
+        public IApplicationUserProfileRepository ApplicationUserProfile
+        {
+            get
+            {
+                return _ApplicationUserProfile.Value;
+            }
+        }
         /*
         private Lazy<IXRepository> _X;
         public IXRepository X
@@ -431,6 +449,7 @@ namespace Eyon.DataAccess.Data{
             this._db = db;
             #region model constructors
             //this._x = new Lazy<IXRepository>(() => new XRepository(this._db));
+            this._Profile = new Lazy<IProfileRepository>(() => new ProfileRepository(this._db));
             this._Topic = new Lazy<ITopicRepository>(() => new TopicRepository(this._db));
             this._Feed = new Lazy<IFeedRepository>(() => new FeedRepository(this._db));
             this._Category = new Lazy<ICategoryRepository>(() => new CategoryRepository(_db));
@@ -479,6 +498,7 @@ namespace Eyon.DataAccess.Data{
             this._CommunityRecipe = new Lazy<ICommunityRecipeRepository>(() => new CommunityRecipeRepository(this._db));
             this._ApplicationUserCookbook = new Lazy<IApplicationUserCookbookRepository>(() => new ApplicationUserCookbookRepository(this._db));
             this._ApplicationUserRecipe = new Lazy<IApplicationUserRecipeRepository>(() => new ApplicationUserRecipeRepository(this._db));
+            this._ApplicationUserProfile = new Lazy<IApplicationUserProfileRepository>(() => new ApplicationUserProfileRepository(this._db));
             #endregion
         }
 

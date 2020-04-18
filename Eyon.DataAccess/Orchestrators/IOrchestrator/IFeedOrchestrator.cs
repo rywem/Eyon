@@ -16,5 +16,7 @@ namespace Eyon.DataAccess.Orchestrators.IOrchestrator
         Task AddAsync( string currentApplicationUserId, FeedItemViewModel feedViewModel);
         Task DeleteTransactionAsync( Feed feed );
         Task DeleteAsync( Feed feed );
+        Task UpdateAsync( string currentApplicationUserId, FeedItemViewModel feedItemViewModel );
+        Task UpdateTransactionAsync( string currentApplicationUserId, FeedItemViewModel feedItemViewModel );
     }
 }

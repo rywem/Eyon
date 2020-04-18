@@ -21,12 +21,14 @@ namespace Eyon.DataAccess.Data.Repository.IRepository
         IOrganizationCommunityRepository OrganizationCommunity { get; }
         IOrganizationCookbookRepository OrganizationCookbook { get; }       
         IRecipeRepository Recipe { get; }
+        IProfileRepository Profile { get; }
         IRecipeCategoryRepository RecipeCategory { get; }
         IRecipeUserImageRepository RecipeUserImage { get; }
         IUserImageRepository UserImage { get; }
         IApplicationUserRecipeRepository ApplicationUserRecipe { get; }
         IApplicationUserUserImageRepository ApplicationUserUserImage { get; }
         IApplicationUserCookbookRepository ApplicationUserCookbook { get; }
+        IApplicationUserProfileRepository ApplicationUserProfile { get; }
         IIngredientRepository Ingredient { get; }
         IInstructionRepository Instruction { get; }
         ICookbookRecipeRepository CookbookRecipe { get; }

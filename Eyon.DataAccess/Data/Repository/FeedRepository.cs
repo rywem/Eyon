@@ -86,7 +86,20 @@ namespace Eyon.DataAccess.Data.Repository
             return feedViewModel;
         }
 
-        public void Update( string currentUserId, Feed feed, IFeedItem entity )
+        public void Update( Feed feed, IFeedItem entity )
+        {
+            var objFromDb = _db.Feed.FirstOrDefault(s => s.Id == feed.Id);
+            if ( objFromDb == null )
+                throw new SafeException("An error ocurred.", new Exception(string.Format("Object not found Feed.Update() Feed ID: {0}", feed.Id)));
+
+            feed.Privacy = entity.Privacy;
+            objFromDb.Description = entity.Description;
+            objFromDb.ModifiedDateTime = entity.ModifiedDateTime;
+            dbSet.Update(objFromDb);
+        }
+
+
+        public void UpdateIfOwner( string currentUserId, Feed feed, IFeedItem entity )
         {
             var objFromDb = ( from r in _db.Feed
                               join a in _db.ApplicationUserFeed on r.Id equals a.ObjectId

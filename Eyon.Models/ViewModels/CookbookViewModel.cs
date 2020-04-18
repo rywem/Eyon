@@ -18,16 +18,18 @@ namespace Eyon.Models.ViewModels
             this.CategorySelector = new ListItemSelector<Category>("Category");
         }
 
-        public FeedItemViewModel ToFeedItemViewModel()
+        public FeedItemViewModel ToFeedItemViewModel( Feed feed = null )
         {
             FeedItemViewModel feedItemViewModel = new FeedItemViewModel();
             if ( Community != null && Community.Count > 0 )
                 feedItemViewModel.Communities.AddRange(Community);
             if ( CategorySelector.Items != null && CategorySelector.Items.Count > 0 )
                 feedItemViewModel.Categories.AddRange(CategorySelector.Items);
-            feedItemViewModel.Cookbooks.Add(this.Cookbook);            
-
+            feedItemViewModel.Cookbooks.Add(this.Cookbook);
             feedItemViewModel.FeedItem = this.Cookbook;
+            if ( feed != null )
+                feedItemViewModel.Feed = feed;
+
             return feedItemViewModel;
         }
     }

@@ -10,6 +10,6 @@ namespace Eyon.Models.Interfaces
     /// </summary>
     public interface IFeedItemViewModel
     {
-        FeedItemViewModel ToFeedItemViewModel();
+        FeedItemViewModel ToFeedItemViewModel( Feed feed = null );
     }
 }

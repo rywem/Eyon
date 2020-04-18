@@ -130,7 +130,10 @@ namespace Eyon.DataAccess.DataCalls
         {
             return _unitOfWork.FeedCategory.AddFromEntities(feed, category);
         }
-
+        public FeedUserImage AddFeedUserImage( Feed feed, UserImage userImage )
+        {
+            return _unitOfWork.FeedUserImage.AddFromEntities(feed, userImage);
+        }
         public FeedTopic AddFeedTopic(Feed feed, Topic topic)
         {
             return _unitOfWork.FeedTopic.AddFromEntities(feed, topic);
@@ -152,7 +155,7 @@ namespace Eyon.DataAccess.DataCalls
         #region Update
         public Feed UpdateFeed(string currentApplicationUserId, Feed feed, IFeedItem item )
         {
-            _unitOfWork.Feed.Update(currentApplicationUserId, feed, item);
+            _unitOfWork.Feed.UpdateIfOwner(currentApplicationUserId, feed, item);
             return feed;
         }
         #endregion
@@ -163,7 +166,8 @@ namespace Eyon.DataAccess.DataCalls
         public void RemoveFeedCategory( Feed feed, Category category )
         {
             var feedCategory = _unitOfWork.FeedCategory.GetFirstOrDefault(x => x.FeedId == feed.Id && x.CategoryId == category.Id);
-            RemoveFeedCategory(feedCategory);
+            if( feedCategory != null )
+                RemoveFeedCategory(feedCategory);
         }
         public void RemoveFeedCategory( FeedCategory feedCategory )
         {
@@ -173,13 +177,15 @@ namespace Eyon.DataAccess.DataCalls
         public void RemoveFeedCommunity( Feed feed, Community community )
         {
             var feedCommunity = _unitOfWork.FeedCommunity.GetFirstOrDefault(x => x.FeedId == feed.Id && x.CommunityId == community.Id);
-            RemoveFeedCommunity(feedCommunity);
+            if ( feedCommunity != null )
+                RemoveFeedCommunity(feedCommunity);
         }
 
         public async Task RemoveFeedCommunityAsync( Feed feed, Community community )
         {
             var feedCommunity = await _unitOfWork.FeedCommunity.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.CommunityId == community.Id);
-            RemoveFeedCommunity(feedCommunity);
+            if (feedCommunity != null )
+                RemoveFeedCommunity(feedCommunity);
         }
 
         public void RemoveFeedCommunity(FeedCommunity feedCommunity)
@@ -225,11 +231,14 @@ namespace Eyon.DataAccess.DataCalls
         public void RemoveFeedCookbook( Feed feed, Cookbook cookbook )
         {
             var feedCookbook = _unitOfWork.FeedCookbook.GetFirstOrDefault(x => x.FeedId == feed.Id && x.CookbookId == cookbook.Id);
-            RemoveFeedCookbook(feedCookbook);
+            if ( feedCookbook != null )
+                RemoveFeedCookbook(feedCookbook);
         }
         public async Task RemoveFeedCookbookAsync( Feed feed, Cookbook cookbook )
         {
             var feedCookbook = await _unitOfWork.FeedCookbook.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.CookbookId == cookbook.Id);
+            
+            if ( feedCookbook != null )
             RemoveFeedCookbook(feedCookbook);
         }
 
@@ -241,13 +250,16 @@ namespace Eyon.DataAccess.DataCalls
         public void RemoveFeedState(Feed feed, State state )
         {
             var feedState = _unitOfWork.FeedState.GetFirstOrDefault(x => x.FeedId == feed.Id && x.StateId == state.Id);
-            RemoveFeedState(feedState);
+            
+            if ( feedState != null )
+                RemoveFeedState(feedState);
         }
 
         public async Task RemoveFeedStateAsync( Feed feed, State state )
         {
             var feedState = await _unitOfWork.FeedState.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.StateId == state.Id);
-            RemoveFeedState(feedState);
+            if(feedState != null )
+                RemoveFeedState(feedState);
         }
 
         public void RemoveFeedState( FeedState feedState )
@@ -263,13 +275,16 @@ namespace Eyon.DataAccess.DataCalls
         public void RemoveFeedTopic( Feed feed, Topic topic )
         {
             var feedTopic = _unitOfWork.FeedTopic.GetFirstOrDefault(x => x.FeedId == feed.Id && x.TopicId == topic.Id);
-            RemoveFeedTopic(feedTopic);
+            
+            if(feedTopic != null )
+                RemoveFeedTopic(feedTopic);
         }
 
         public async Task RemoveFeedTopicAsync( Feed feed, Topic topic )
         {
             var feedTopic = await _unitOfWork.FeedTopic.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.TopicId == topic.Id);
-            RemoveFeedTopic(feedTopic);
+            if ( feedTopic != null )
+                RemoveFeedTopic(feedTopic);
         }
 
 
@@ -281,25 +296,29 @@ namespace Eyon.DataAccess.DataCalls
         public void RemoveFeedRecipe( Feed feed, Recipe recipe )
         {
             var feedRecipe = _unitOfWork.FeedRecipe.GetFirstOrDefault(x => x.FeedId == feed.Id && x.RecipeId == recipe.Id);
-            RemoveFeedRecipe(feedRecipe);
+            if ( feedRecipe != null )
+                RemoveFeedRecipe(feedRecipe);
         }
 
         public async Task RemoveFeedRecipeAsync( Feed feed, Recipe recipe)
         {
             var feedRecipe = await _unitOfWork.FeedRecipe.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.RecipeId == recipe.Id);
-            RemoveFeedRecipe(feedRecipe);
+            if ( feedRecipe != null )
+                RemoveFeedRecipe(feedRecipe);
         }
 
         public void RemoveFeedCountry(Feed feed, Country country )
         {
             var feedCountry = _unitOfWork.FeedCountry.GetFirstOrDefault(x => x.FeedId == feed.Id && x.CountryId == country.Id);
-            RemoveFeedCountry(feedCountry);
+            if ( feedCountry != null )
+                RemoveFeedCountry(feedCountry);
         }
 
         public async Task RemoveFeedCountryAsync( Feed feed, Country country )
         {
             var feedCountry = await _unitOfWork.FeedCountry.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.CountryId == country.Id);
-            RemoveFeedCountry(feedCountry);
+            if ( feedCountry != null )
+                RemoveFeedCountry(feedCountry);
         }
         public void RemoveFeedCountry(FeedCountry feedCountry )
         {
@@ -314,13 +333,53 @@ namespace Eyon.DataAccess.DataCalls
         public void RemoveFeedOrganization( Feed feed, Organization organization )
         {
             var feedOrganization = _unitOfWork.FeedOrganization.GetFirstOrDefault(x => x.FeedId == feed.Id && x.OrganizationId == organization.Id);
-            RemoveFeedOrganization(feedOrganization);
+            if ( feedOrganization != null )
+                RemoveFeedOrganization(feedOrganization);
         }
 
         public async Task RemoveFeedOrganizationAsync( Feed feed, Organization organization )
         {
             var feedOrganization = await _unitOfWork.FeedOrganization.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.OrganizationId == organization.Id);
-            RemoveFeedOrganization(feedOrganization);
+            if ( feedOrganization != null )
+                RemoveFeedOrganization(feedOrganization);
+        }
+
+        public void RemoveFeedProfile( FeedProfile feedProfile )
+        {
+            _unitOfWork.FeedProfile.Add(feedProfile);
+        }
+
+        public void RemoveFeedProfile( Feed feed, Profile profile )
+        {
+            var feedProfile = _unitOfWork.FeedProfile.GetFirstOrDefault(x => x.FeedId == feed.Id && x.ProfileId == profile.Id);
+            if ( feedProfile != null )
+                RemoveFeedProfile(feedProfile);
+        }
+
+        public async Task RemoveFeedProfileAsync( Feed feed, Profile profile )
+        {
+            var feedProfile = await _unitOfWork.FeedProfile.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.ProfileId == profile.Id);
+            if ( feedProfile != null )
+                RemoveFeedProfile(feedProfile);
+        }
+
+        public void RemoveFeedUserImage( FeedUserImage feedUserImage )
+        {
+            _unitOfWork.FeedUserImage.Add(feedUserImage);
+        }
+
+        public void RemoveFeedUserImage( Feed feed, UserImage userImage )
+        {
+            var feedUserImage = _unitOfWork.FeedUserImage.GetFirstOrDefault(x => x.FeedId == feed.Id && x.UserImageId == userImage.Id);
+            if ( feedUserImage != null )
+                RemoveFeedUserImage(feedUserImage);
+        }
+
+        public async Task RemoveFeedUserImageAsync( Feed feed, UserImage userImage )
+        {
+            var feedUserImage = await _unitOfWork.FeedUserImage.GetFirstOrDefaultAsync(x => x.FeedId == feed.Id && x.UserImageId == userImage.Id);
+            if ( feedUserImage != null )
+                RemoveFeedUserImage(feedUserImage);
         }
 
         #endregion

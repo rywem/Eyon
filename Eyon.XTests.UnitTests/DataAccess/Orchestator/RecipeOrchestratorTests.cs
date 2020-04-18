@@ -19,12 +19,6 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
 {
     public class RecipeOrchestratorTests
     {
-
-        public RecipeOrchestratorTests()
-        {
-
-        }
-        
         public class AddAsyncTests
         {
             private RecipeOrchestrator _recipeOrchestrator;
@@ -65,6 +59,33 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 Assert.NotNull(recipe);
             }
 
+            #region UserImage
+            
+            [Fact]
+            public async Task AddUserImage_ShouldNotBeNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+
+                string guid = Guid.NewGuid().ToString();
+                UserImage userImage = new UserImage()
+                {
+                    FileName = guid + ".jpg",
+                    FileNameThumb = guid + "_thumb.jpg",
+                    FileType = "jpg",
+                    Privacy = Models.Enums.Privacy.Public
+                };
+                recipeViewModel.UserImage = new List<UserImage>();
+                recipeViewModel.UserImage.Add(userImage);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipe = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "RecipeUserImage,RecipeUserImage.UserImage");
+
+                Assert.NotNull(recipe.RecipeUserImage.FirstOrDefault().UserImage);
+            }
+            #endregion 
+
+            #region Community, State, Country
             [Fact]
             public async Task AddCommunity_CountShouldBe1()
             {
@@ -75,7 +96,34 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
 
                 Assert.NotNull(recipe.CommunityRecipe);
                 Assert.NotNull(recipe.CommunityRecipe.Community);
+                Assert.Equal(communities[0].Id,recipe.CommunityRecipe.Community.Id);
             }
+
+            [Fact]
+            public async Task AddCommunity_StateShouldBeSet_IdsShouldBeEqual()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipe = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,CommunityRecipe.Community,CommunityRecipe.Community.CommunityState,CommunityRecipe.Community.CommunityState.State");
+                
+                Assert.NotNull(recipe.CommunityRecipe.Community.CommunityState);
+                Assert.NotNull(recipe.CommunityRecipe.Community.CommunityState.State);
+                Assert.Equal(states[0].Id, recipe.CommunityRecipe.Community.CommunityState.State.Id);
+            }
+            [Fact]
+            public async Task AddCommunity_CountryShouldBeSet_IdsShouldBeEqual()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipe = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,CommunityRecipe.Community,CommunityRecipe.Community.Country");
+
+                Assert.NotNull(recipe.CommunityRecipe.Community.Country);                
+                Assert.Equal(countries[0].Id, recipe.CommunityRecipe.Community.Country.Id);
+            }
+
+            #endregion 
 
             #region Category
             [Fact]
@@ -330,7 +378,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             private List<Community> communities;
             private List<Cookbook> cookbooks;
             private List<Category> categories;
-            private List<ApplicationUser> applicationUsers;
+            private List<ApplicationUser> applicationUsers;            
             public GetAsyncTests()
             {
                 this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(GetAsyncTests));
@@ -352,7 +400,6 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 string currentUserId = applicationUsers[0].Id;
                 RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
-
                 var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
 
                 Assert.NotNull(recipeViewModelFromDb);
@@ -360,13 +407,74 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 Assert.Equal(recipeViewModel.Recipe.Name, recipeViewModelFromDb.Recipe.Name);
             }
 
+            #region UserImage
+
+            [Fact]
+            public async Task GetUserImages_CountShouldBe1()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+
+                string guid = Guid.NewGuid().ToString();
+                UserImage userImage = new UserImage()
+                {
+                    FileName = guid + ".jpg",
+                    FileNameThumb = guid + "_thumb.jpg",
+                    FileType = "jpg",
+                    Privacy = Models.Enums.Privacy.Public
+                };
+                recipeViewModel.UserImage = new List<UserImage>();
+                recipeViewModel.UserImage.Add(userImage);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.Single(recipeViewModelFromDb.UserImage);
+            }
+            #endregion
+
+            #region Cookbook
+
+            [Fact]
+            public async Task CookbookSelector_CountShouldBe2()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+
+                recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+                recipeViewModel.CookbookSelector.ItemIds += "," + cookbooks[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                Assert.Equal(2, recipeViewModelFromDb.CookbookSelector.Items.Count);
+            }
+
+            #endregion
+
+            #region Category
+
+            [Fact]
+            public async Task CategorySelector_CountShouldBe2()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+
+                recipeViewModel.CategorySelector.ItemIds = categories[0].Id.ToString();
+                recipeViewModel.CategorySelector.ItemIds += "," + categories[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                Assert.Equal(2, recipeViewModelFromDb.CategorySelector.Items.Count);
+            }
+
+            #endregion 
+
+            #region Community
             [Fact]
             public async Task Community_ShouldNotBeNull()
             {
                 string currentUserId = applicationUsers[0].Id;
                 RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
-
                 var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
 
                 Assert.NotNull(recipeViewModelFromDb.Community);
@@ -379,7 +487,6 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 string currentUserId = applicationUsers[0].Id;
                 RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
-
                 var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
 
                 string expected = "Quincy, CA (United States)";
@@ -395,6 +502,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
                 Assert.Equal(recipeViewModelFromDb.CommunityId, recipeViewModelFromDb.Community.Id);
             }
+            #endregion
 
             [Fact]
             public async Task IsNotOwner_IsOwnerShouldBeFalse()
@@ -419,6 +527,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 Assert.True(recipeViewModelFromDb.IsOwner);
             }
 
+            #region Instructions and Ingredients
             [Fact]
             public async Task Instructions_CountShouldEqual6()
             {
@@ -431,13 +540,13 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             }
 
             [Fact]
-            public async Task InstructionsTxt_ShouldEqualExpectedString()
+            public async Task InstructionsText_ShouldEqualExpectedString()
             {
                 string currentUserId = applicationUsers[0].Id;
                 RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
-                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);                
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
                 var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
-                
+
                 string expected = @"In a medium pot, saute onions until soft.
 Add beef, brown until brown.
 Add garlic, until fragrant.
@@ -446,6 +555,95 @@ Add all remaining ingredients, heat until warm.
 Serve and enjoy!";
                 Assert.Equal(expected, recipeViewModelFromDb.InstructionsText);
             }
+
+            
+            [Fact]
+            public async Task Ingredients_CountShouldEqual11()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.Equal(11, recipeViewModelFromDb.Ingredient.Count);
+            }
+
+            [Fact]
+            public async Task IngredientsText_ShouldEqualExpectedString()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                string expected = @"1 lb ground beef
+1 medium onion
+3 cloves garlic
+1 can tomato sauce
+1 can pinto beans
+1 can corn
+1 can green beans
+1 can peas and carrots
+2-3 beef bouillon cubes
+1/2 tsp pepper
+1 cup cooked rice (optional)";
+                Assert.Equal(expected, recipeViewModelFromDb.IngredientsText);
+            }
+            #endregion
+        }
+
+        public class UpdateAsyncTests
+        {
+            private RecipeOrchestrator _recipeOrchestrator;
+            private IUnitOfWork _unitOfWork;
+            private Mock<IConfiguration> _mockConfig;
+            private IRecipeDataCall _recipeDataCall;
+            private Mock<IFeedSecurity> _feedSecurity;
+            private List<Country> countries;
+            private List<State> states;
+            private List<Community> communities;
+            private List<Cookbook> cookbooks;
+            private List<Category> categories;
+            private List<ApplicationUser> applicationUsers;
+            public UpdateAsyncTests()
+            {
+                this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(UpdateAsyncTests));
+                this._mockConfig = new Mock<IConfiguration>();
+                this._recipeDataCall = new RecipeDataCall(this._unitOfWork);
+                this._feedSecurity = new Mock<IFeedSecurity>();
+                this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, this._mockConfig.Object, this._recipeDataCall, this._feedSecurity.Object);
+                countries = new List<Country>();
+                states = new List<State>();
+                communities = new List<Community>();
+                cookbooks = new List<Cookbook>();
+                categories = new List<Category>();
+                applicationUsers = new List<ApplicationUser>();
+                SeedDatabase(this._unitOfWork, this.countries, this.states, this.communities, this.applicationUsers, this.cookbooks, this.categories);
+            }
+
+            #region Instructions and Ingredients
+            [Fact]
+            public async Task RemoveInstruction_InstructionsShouldBe5()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelJustAddedToDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelJustAddedToDb.InstructionsText = @"Add beef, brown until brown.
+Add garlic, until fragrant.
+Drain excess juices.
+Add all remaining ingredients, heat until warm.
+Serve and enjoy!";
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelJustAddedToDb);
+
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.Equal(5, recipeViewModelFromDb.Instruction.Count);
+
+            }
+            #endregion
         }
 
         #region Sample Data
@@ -468,7 +666,7 @@ Serve and enjoy!";
 1 can corn
 1 can green beans
 1 can peas and carrots
-2-3 beef bouillon cubes 
+2-3 beef bouillon cubes
 1/2 tsp pepper
 1 cup cooked rice (optional)";
 
