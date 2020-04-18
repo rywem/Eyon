@@ -289,13 +289,7 @@ namespace Eyon.DataAccess.Orchestrators
             if ( recipeFromDb.CommunityRecipe == null && recipeViewModel.CommunityId > 0 )
             {
                 var newCommunityFromDb = await _unitOfWork.Community.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.CommunityId);
-                var communityRecipe = new CommunityRecipe()
-                {
-                    CommunityId = newCommunityFromDb.Id,
-                    RecipeId = recipeFromDb.Id
-                };
-                _unitOfWork.CommunityRecipe.Add(communityRecipe);
-                recipeViewModel.Community = newCommunityFromDb;
+                _recipeDataCall.AddCommunityRecipe(newCommunityFromDb, recipeFromDb);
                 await _unitOfWork.SaveAsync();
             }
             else if ( recipeFromDb.CommunityRecipe != null && recipeViewModel.CommunityId != recipeFromDb.CommunityRecipe.CommunityId )
@@ -303,9 +297,9 @@ namespace Eyon.DataAccess.Orchestrators
                 var newCommunityFromDb = await _unitOfWork.Community.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.CommunityId);
                 if ( newCommunityFromDb == null )
                     throw new SafeException("An error occurred");
-
-                _unitOfWork.CommunityRecipe.Remove(recipeFromDb.CommunityRecipe);                
-                _unitOfWork.CommunityRecipe.Add(new CommunityRecipe() { RecipeId = recipeFromDb.Id, CommunityId = newCommunityFromDb.Id });                
+                
+                _recipeDataCall.RemoveCommunityRecipe(recipeFromDb.CommunityRecipe);
+                _recipeDataCall.AddCommunityRecipe(newCommunityFromDb, recipeFromDb);
                 recipeViewModel.Community = newCommunityFromDb;
                 await _unitOfWork.SaveAsync();
             }
@@ -329,7 +323,7 @@ namespace Eyon.DataAccess.Orchestrators
                         }
                         else
                         {
-                            throw new SafeException("An error occurred.", new Exception("Attempted to insert CookbookRecipe relation, but did not own cookbook or cookbook did not exist."));
+                            throw new SafeException(Models.Enums.ErrorType.Denied, new Exception("Attempted to insert CookbookRecipe relation, but did not own cookbook or cookbook did not exist."));
                         }
                     }
                 }
