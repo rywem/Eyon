@@ -21,7 +21,7 @@ namespace Eyon.DataAccess.Data.Repository
 
             if ( objFromDb == null )
                 throw new SafeException("An error occurred.");
-            objFromDb.Number = ingredient.Number;
+            objFromDb.Count = ingredient.Count;
             objFromDb.Text = ingredient.Text;
             dbSet.Update(objFromDb);
         }

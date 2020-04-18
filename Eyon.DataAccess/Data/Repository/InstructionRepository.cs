@@ -20,7 +20,7 @@ namespace Eyon.DataAccess.Data.Repository
         public void Update( Instruction instruction )
         {
             var objFromDb = _db.Instruction.FirstOrDefault(s => s.Id == instruction.Id);
-            objFromDb.StepNumber = instruction.StepNumber;
+            objFromDb.Count = instruction.Count;
             objFromDb.Text = instruction.Text;
             dbSet.Update(instruction);
         }

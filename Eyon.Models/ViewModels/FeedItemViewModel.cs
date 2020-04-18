@@ -25,6 +25,7 @@ namespace Eyon.Models.ViewModels
 
         public FeedItemViewModel()
         {
+            this.Feed = new Feed();
             this.Communities = new List<Community>();
             //this.States = new List<State>();
             this.Organizations = new List<Organization>();

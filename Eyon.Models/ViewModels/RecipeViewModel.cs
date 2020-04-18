@@ -17,11 +17,11 @@ namespace Eyon.Models.ViewModels
         [Required]
         [DisplayName("Ingredients")]
         [MaxLength(5000)]
-        public string IngredientsText { get; set; }
+        public string IngredientText { get; set; }
         [Required]
         [DisplayName("Instructions")]
         [MaxLength(5000)]
-        public string InstructionsText { get;set; }
+        public string InstructionText { get;set; }
 
         public long CommunityId { get; set; }
         public string CommunityName { get; set; }
@@ -32,9 +32,6 @@ namespace Eyon.Models.ViewModels
         public ListItemSelector<Cookbook> CookbookSelector { get; set; }
         public ListItemSelector<Category> CategorySelector { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
-        
-        //public string CookbookIds { get; set; }
-        
         public RecipeViewModel()
         {
             this.IsOwner = false;
@@ -66,7 +63,7 @@ namespace Eyon.Models.ViewModels
 
         public List<Ingredient> ParseIngredients()
         {
-            string[] ingredientsSplit = this.IngredientsText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            string[] ingredientsSplit = this.IngredientText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             Ingredient = new List<Ingredient>();
             int step = 1;
             foreach ( var item in ingredientsSplit )
@@ -74,7 +71,7 @@ namespace Eyon.Models.ViewModels
                 Ingredient.Add(new Ingredient()
                 {
                     Text = item.Trim(),
-                    Number = step,
+                    Count = step,
                     RecipeId = Recipe.Id
                 });
                 step++;
@@ -84,7 +81,7 @@ namespace Eyon.Models.ViewModels
 
         public List<Instruction> ParseInstructions()
         {
-            string[] instructionsSplit = InstructionsText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            string[] instructionsSplit = InstructionText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
             int step = 1;
             Instruction = new List<Instruction>();
@@ -92,7 +89,7 @@ namespace Eyon.Models.ViewModels
             {
                 Instruction.Add(new Instruction()
                 {
-                    StepNumber = step,
+                    Count = step,
                     Text = item.Trim(),
                     RecipeId = Recipe.Id
                 });

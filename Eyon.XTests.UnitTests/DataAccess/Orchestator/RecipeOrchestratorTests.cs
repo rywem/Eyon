@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Eyon.Models.ViewModels;
 using Xunit;
 using System.Linq;
+using Eyon.DataAccess.Orchestrators.IOrchestrator;
 
 namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
 {
@@ -214,25 +215,25 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
 
-                var instruction = _unitOfWork.Instruction.GetAll(x => x.RecipeId == recipeViewModel.Recipe.Id).OrderBy(x => x.StepNumber).ToList();
+                var instruction = _unitOfWork.Instruction.GetAll(x => x.RecipeId == recipeViewModel.Recipe.Id).OrderBy(x => x.Count).ToList();
 
                 Assert.Equal("In a medium pot, saute onions until soft.", instruction[0].Text);
-                Assert.Equal(1, instruction[0].StepNumber);
+                Assert.Equal(1, instruction[0].Count);
 
-                Assert.Equal("Add beef, brown until brown.", instruction[1].Text);
-                Assert.Equal(2, instruction[1].StepNumber);
+                Assert.Equal("Add beef, cook until brown.", instruction[1].Text);
+                Assert.Equal(2, instruction[1].Count);
 
                 Assert.Equal("Add garlic, until fragrant.", instruction[2].Text);
-                Assert.Equal(3, instruction[2].StepNumber);
+                Assert.Equal(3, instruction[2].Count);
 
                 Assert.Equal("Drain excess juices.", instruction[3].Text);
-                Assert.Equal(4, instruction[3].StepNumber);
+                Assert.Equal(4, instruction[3].Count);
 
                 Assert.Equal("Add all remaining ingredients, heat until warm.", instruction[4].Text);
-                Assert.Equal(5, instruction[4].StepNumber);
+                Assert.Equal(5, instruction[4].Count);
 
                 Assert.Equal("Serve and enjoy!", instruction[5].Text);
-                Assert.Equal(6, instruction[5].StepNumber);
+                Assert.Equal(6, instruction[5].Count);
             }
 
             [Fact]
@@ -242,40 +243,40 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
 
-                var ingredients = _unitOfWork.Ingredient.GetAll(x => x.RecipeId == recipeViewModel.Recipe.Id).OrderBy(x => x.Number).ToList();
+                var ingredients = _unitOfWork.Ingredient.GetAll(x => x.RecipeId == recipeViewModel.Recipe.Id).OrderBy(x => x.Count).ToList();
 
                 Assert.Equal("1 lb ground beef", ingredients[0].Text);
-                Assert.Equal(1, ingredients[0].Number);
+                Assert.Equal(1, ingredients[0].Count);
 
                 Assert.Equal("1 medium onion", ingredients[1].Text);
-                Assert.Equal(2, ingredients[1].Number);
+                Assert.Equal(2, ingredients[1].Count);
 
                 Assert.Equal("3 cloves garlic", ingredients[2].Text);
-                Assert.Equal(3, ingredients[2].Number);
+                Assert.Equal(3, ingredients[2].Count);
 
                 Assert.Equal("1 can tomato sauce", ingredients[3].Text);
-                Assert.Equal(4, ingredients[3].Number);
+                Assert.Equal(4, ingredients[3].Count);
 
                 Assert.Equal("1 can pinto beans", ingredients[4].Text);
-                Assert.Equal(5, ingredients[4].Number);
+                Assert.Equal(5, ingredients[4].Count);
 
                 Assert.Equal("1 can corn", ingredients[5].Text);
-                Assert.Equal(6, ingredients[5].Number);
+                Assert.Equal(6, ingredients[5].Count);
 
                 Assert.Equal("1 can green beans", ingredients[6].Text);
-                Assert.Equal(7, ingredients[6].Number);
+                Assert.Equal(7, ingredients[6].Count);
 
                 Assert.Equal("1 can peas and carrots", ingredients[7].Text);
-                Assert.Equal(8, ingredients[7].Number);
+                Assert.Equal(8, ingredients[7].Count);
 
                 Assert.Equal("2-3 beef bouillon cubes", ingredients[8].Text);
-                Assert.Equal(9, ingredients[8].Number);
+                Assert.Equal(9, ingredients[8].Count);
 
                 Assert.Equal("1/2 tsp pepper", ingredients[9].Text);
-                Assert.Equal(10, ingredients[9].Number);
+                Assert.Equal(10, ingredients[9].Count);
 
                 Assert.Equal("1 cup cooked rice (optional)", ingredients[10].Text);
-                Assert.Equal(11, ingredients[10].Number);
+                Assert.Equal(11, ingredients[10].Count);
             }
 
             [Fact]
@@ -548,12 +549,12 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
                 var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
 
                 string expected = @"In a medium pot, saute onions until soft.
-Add beef, brown until brown.
+Add beef, cook until brown.
 Add garlic, until fragrant.
 Drain excess juices.
 Add all remaining ingredients, heat until warm.
 Serve and enjoy!";
-                Assert.Equal(expected, recipeViewModelFromDb.InstructionsText);
+                Assert.Equal(expected, recipeViewModelFromDb.InstructionText);
             }
 
             
@@ -587,7 +588,7 @@ Serve and enjoy!";
 2-3 beef bouillon cubes
 1/2 tsp pepper
 1 cup cooked rice (optional)";
-                Assert.Equal(expected, recipeViewModelFromDb.IngredientsText);
+                Assert.Equal(expected, recipeViewModelFromDb.IngredientText);
             }
             #endregion
         }
@@ -598,19 +599,21 @@ Serve and enjoy!";
             private IUnitOfWork _unitOfWork;
             private Mock<IConfiguration> _mockConfig;
             private IRecipeDataCall _recipeDataCall;
-            private Mock<IFeedSecurity> _feedSecurity;
+            private Mock<IFeedSecurity> _feedSecurity;            
             private List<Country> countries;
             private List<State> states;
             private List<Community> communities;
             private List<Cookbook> cookbooks;
             private List<Category> categories;
             private List<ApplicationUser> applicationUsers;
+            private List<Recipe> recipes { get; set; }
             public UpdateAsyncTests()
             {
                 this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(UpdateAsyncTests));
                 this._mockConfig = new Mock<IConfiguration>();
                 this._recipeDataCall = new RecipeDataCall(this._unitOfWork);
                 this._feedSecurity = new Mock<IFeedSecurity>();
+                
                 this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, this._mockConfig.Object, this._recipeDataCall, this._feedSecurity.Object);
                 countries = new List<Country>();
                 states = new List<State>();
@@ -620,7 +623,7 @@ Serve and enjoy!";
                 applicationUsers = new List<ApplicationUser>();
                 SeedDatabase(this._unitOfWork, this.countries, this.states, this.communities, this.applicationUsers, this.cookbooks, this.categories);
             }
-
+            
             #region Instructions and Ingredients
             [Fact]
             public async Task RemoveInstruction_InstructionsShouldBe5()
@@ -628,21 +631,92 @@ Serve and enjoy!";
                 string currentUserId = applicationUsers[0].Id;
                 RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
-
                 var recipeViewModelJustAddedToDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
-                recipeViewModelJustAddedToDb.InstructionsText = @"Add beef, brown until brown.
+                recipeViewModelJustAddedToDb.InstructionText = @"Add beef, cook until brown.
 Add garlic, until fragrant.
 Drain excess juices.
 Add all remaining ingredients, heat until warm.
 Serve and enjoy!";
-
                 await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelJustAddedToDb);
-
                 var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
-
                 Assert.Equal(5, recipeViewModelFromDb.Instruction.Count);
-
             }
+            [Fact]
+            public async Task RemoveInstructionText_ShouldEqualExpected()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelChanged = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelChanged.InstructionText = @"Add beef, cook until brown.
+Add garlic, until fragrant.
+Drain excess juices.
+Add all remaining ingredients, heat until warm.
+Serve and enjoy!";
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelChanged);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                Assert.Equal(recipeViewModelChanged.InstructionText, recipeViewModelFromDb.InstructionText);
+            }
+
+            [Fact]
+            public async Task RearrageInstructionText_ShouldEqualExpected()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelChanged = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelChanged.InstructionText = @"Add beef, cook until brown.
+In a medium pot, saute onions until soft.
+Add garlic, until fragrant.
+Drain excess juices.
+Add all remaining ingredients, heat until warm.
+Serve and enjoy!";
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelChanged);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                Assert.Equal(recipeViewModelChanged.InstructionText, recipeViewModelFromDb.InstructionText);
+            }
+
+            [Fact]
+            public async Task ReplaceInstructionText_ShouldEqualExpected()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelChanged = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelChanged.InstructionText = @"In a medium pot, saute onions until soft.
+Add ground beef, browning.
+Add garlic, until fragrant.
+Drain excess juices.
+Add all remaining ingredients, heat until warm.
+Serve and enjoy!";
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelChanged);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                Assert.Equal(recipeViewModelChanged.InstructionText, recipeViewModelFromDb.InstructionText);
+            }
+
+
+            [Fact]
+            public async Task RemoveIngredeitn_InstructionsShouldBe10()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.IngredientText = @"1 lb ground beef
+3 cloves garlic
+1 can tomato sauce
+1 can pinto beans
+1 can corn
+1 can green beans
+1 can peas and carrots
+2-3 beef bouillon cubes
+1/2 tsp pepper
+1 cup cooked rice (optional)";
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                Assert.Equal(10, recipeViewModelFromDb.Ingredient.Count);
+            }
+
             #endregion
         }
 
@@ -658,7 +732,7 @@ Serve and enjoy!";
             recipeViewModel.Recipe.Privacy = Models.Enums.Privacy.Public;
             recipeViewModel.CommunityId = community.Id;
 
-            recipeViewModel.IngredientsText = @"1 lb ground beef
+            recipeViewModel.IngredientText = @"1 lb ground beef
 1 medium onion
 3 cloves garlic
 1 can tomato sauce
@@ -670,8 +744,8 @@ Serve and enjoy!";
 1/2 tsp pepper
 1 cup cooked rice (optional)";
 
-            recipeViewModel.InstructionsText = @"In a medium pot, saute onions until soft.
-Add beef, brown until brown.
+            recipeViewModel.InstructionText = @"In a medium pot, saute onions until soft.
+Add beef, cook until brown.
 Add garlic, until fragrant.
 Drain excess juices.
 Add all remaining ingredients, heat until warm.

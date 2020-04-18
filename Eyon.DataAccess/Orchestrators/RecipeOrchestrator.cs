@@ -56,13 +56,13 @@ namespace Eyon.DataAccess.Orchestrators
                 if ( recipeViewModel.Recipe.Instruction != null && recipeViewModel.Recipe.Instruction.Count > 0 )
                 { 
                     recipeViewModel.Instruction = recipeViewModel.Recipe.Instruction.ToList();                    
-                    recipeViewModel.InstructionsText = string.Join(Environment.NewLine, recipeViewModel.Instruction.OrderBy(x => x.StepNumber).Select(x => x.Text));                    
+                    recipeViewModel.InstructionText = string.Join(Environment.NewLine, recipeViewModel.Instruction.OrderBy(x => x.Count).Select(x => x.Text));                    
                 }
 
                 if ( recipeViewModel.Recipe.Ingredient != null && recipeViewModel.Recipe.Ingredient.Count > 0 )
                 {
                     recipeViewModel.Ingredient = recipeViewModel.Recipe.Ingredient.ToList();
-                    recipeViewModel.IngredientsText = string.Join(Environment.NewLine, recipeViewModel.Recipe.Ingredient.ToList().Select(x => x.Text));
+                    recipeViewModel.IngredientText = string.Join(Environment.NewLine, recipeViewModel.Recipe.Ingredient.ToList().Select(x => x.Text));
                 }
 
                 if ( recipeViewModel.Recipe.RecipeUserImage != null && recipeViewModel.Recipe.RecipeUserImage.Count > 0 )
@@ -243,7 +243,7 @@ namespace Eyon.DataAccess.Orchestrators
             // add or update new instructions
             foreach ( var item in recipeViewModel.Instruction )
             {
-                var instructionFromDb = recipeFromDb.Instruction.FirstOrDefault(x => x.StepNumber == item.StepNumber);
+                var instructionFromDb = recipeFromDb.Instruction.FirstOrDefault(x => x.Count == item.Count);
 
                 if(instructionFromDb == null ) // add
                 {
@@ -278,7 +278,7 @@ namespace Eyon.DataAccess.Orchestrators
             // add or update ingredients            
             foreach ( var item in recipeViewModel.Ingredient )
             {
-                var ingredientFromDb = recipeFromDb.Ingredient.FirstOrDefault(x => x.Number == item.Number );
+                var ingredientFromDb = recipeFromDb.Ingredient.FirstOrDefault(x => x.Count == item.Count );
                 if ( ingredientFromDb == null )
                 {
                     item.RecipeId = recipeFromDb.Id;
@@ -400,7 +400,9 @@ namespace Eyon.DataAccess.Orchestrators
             }
 
             await _unitOfWork.SaveAsync();
-            await _feedSecurity.UpdateAsync(currentApplicationUserId, recipeViewModel.ToFeedItemViewModel(recipeFromDb.FeedRecipe.Feed), false);
+
+            if ( recipeFromDb.FeedRecipe != null && recipeFromDb.FeedRecipe.Feed != null)
+                await _feedSecurity.UpdateAsync(currentApplicationUserId, recipeViewModel.ToFeedItemViewModel(recipeFromDb.FeedRecipe.Feed), false);
         }
 
         public async Task DeleteTransactionAsync( string currentApplicationUserId, Recipe recipe )

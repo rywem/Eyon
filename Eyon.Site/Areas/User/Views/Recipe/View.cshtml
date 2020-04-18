@@ -98,7 +98,7 @@
                     </div>
                     <div class="card-body d-flex flex-column align-items-start">
                         <ol>
-                            @foreach ( var instruction in Model.Instruction.OrderBy(x => x.StepNumber) )
+                            @foreach ( var instruction in Model.Instruction.OrderBy(x => x.Count) )
                             {
                                 <li>@instruction.Text</li>
                             }

@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Eyon.Models
 {
-    public class Instruction
+    public class Instruction : Interfaces.ICount
     {
         [Key]
         public long Id { get; set; }        
         [Required]
-        public int StepNumber { get; set; }
+        public int Count { get; set; }
         [Required]
         [MaxLength(3000)]
         [StringLength(3000)]

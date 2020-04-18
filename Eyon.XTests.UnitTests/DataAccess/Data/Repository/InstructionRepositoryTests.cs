@@ -22,7 +22,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
             var newEntity = new Instruction()
             {
                 Text = "Boil water",
-                StepNumber = 1
+                Count = 1
             };
             _unitOfWork.Instruction.Add(newEntity);
             _unitOfWork.Save();
@@ -35,14 +35,14 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
             var newEntity = new Instruction()
             {
                 Text = "Boil water",
-                StepNumber = 1
+                Count = 1
             };
 
             _unitOfWork.Instruction.Add(newEntity);
             _unitOfWork.Save();
             var objFromDb = _unitOfWork.Instruction.Get(newEntity.Id);
             Assert.Equal(newEntity.Text, objFromDb.Text);
-            Assert.Equal(newEntity.StepNumber, objFromDb.StepNumber);
+            Assert.Equal(newEntity.Count, objFromDb.Count);
         }
 
         [Theory, InlineData("Chop Veggies", 2),
@@ -54,7 +54,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
             var newEntity = new Instruction()
             {
                 Text = startingText,
-                StepNumber = startingStep
+                Count = startingStep
             };
 
             _unitOfWork.Instruction.Add(newEntity);
@@ -62,12 +62,12 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
             var objFromDb = _unitOfWork.Instruction.Get(newEntity.Id);
 
             objFromDb.Text = newText;
-            objFromDb.StepNumber = newStep;
+            objFromDb.Count = newStep;
             _unitOfWork.Instruction.Update(objFromDb);
             _unitOfWork.Save();
             var objFromDbUpdated = _unitOfWork.Instruction.Get(newEntity.Id);
             Assert.Equal(newText, objFromDbUpdated.Text);
-            Assert.Equal(newStep, objFromDbUpdated.StepNumber);
+            Assert.Equal(newStep, objFromDbUpdated.Count);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
             var newEntity = new Instruction()
             {
                 Text = startingText,
-                StepNumber = startingStep
+                Count = startingStep
             };
             _unitOfWork.Instruction.Add(newEntity);
             _unitOfWork.Save();
@@ -98,7 +98,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Data.Repository
             var newEntity = new Instruction()
             {
                 Text = startingText,
-                StepNumber = startingStep
+                Count = startingStep
             };
 
             _unitOfWork.Instruction.Add(newEntity);
