@@ -1004,6 +1004,43 @@ Serve and enjoy!";
                 Assert.Equal(categories[0].Id, recipeViewModelFromDb.CategorySelector.Items[0].Id);
             }
 
+            [Fact]
+            public async Task ReplaceACategory_2Categories_CountShouldBe2()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CategorySelector.ItemIds = categories[0].Id.ToString() +
+                    "," + categories[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CategorySelector.ItemIds = categories[1].Id.ToString() + "," + categories[2].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModelForUpdating.Recipe.Id);
+
+                Assert.Equal(2, recipeViewModelFromDb.CategorySelector.Items.Count);
+            }
+
+            [Fact]
+            public async Task ReplaceACategory_2Categories_2IdsShouldEqual2Inputs()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CategorySelector.ItemIds = categories[0].Id.ToString() +
+                    "," + categories[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CategorySelector.ItemIds = categories[1].Id.ToString() + "," + categories[2].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModelForUpdating.Recipe.Id);
+
+                Assert.Equal(categories[1].Id, recipeViewModelFromDb.CategorySelector.Items[0].Id);
+                Assert.Equal(categories[2].Id, recipeViewModelFromDb.CategorySelector.Items[1].Id);
+            }
+
         }
 
         #region Sample Data
