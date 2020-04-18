@@ -624,7 +624,7 @@ Serve and enjoy!";
                 SeedDatabase(this._unitOfWork, this.countries, this.states, this.communities, this.applicationUsers, this.cookbooks, this.categories);
             }
             
-            #region Instructions and Ingredients
+            #region Instructions
             [Fact]
             public async Task RemoveInstruction_InstructionsShouldBe5()
             {
@@ -641,6 +641,25 @@ Serve and enjoy!";
                 var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
                 Assert.Equal(5, recipeViewModelFromDb.Instruction.Count);
             }
+            [Fact]
+            public async Task AddInstruction_ShouldBe7()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelJustAddedToDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelJustAddedToDb.InstructionText = @"In a medium pot, saute onions until soft.
+Add beef, cook until brown.
+Add garlic, until fragrant.
+Drain excess juices.
+Add all remaining ingredients, heat until warm.
+Do not boil
+Serve and enjoy!";
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelJustAddedToDb);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                Assert.Equal(7, recipeViewModelFromDb.Instruction.Count);
+            }
+
             [Fact]
             public async Task RemoveInstructionText_ShouldEqualExpected()
             {
@@ -693,10 +712,10 @@ Serve and enjoy!";
                 var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
                 Assert.Equal(recipeViewModelChanged.InstructionText, recipeViewModelFromDb.InstructionText);
             }
-
-
+            #endregion
+            #region Ingredients
             [Fact]
-            public async Task RemoveIngredeitn_InstructionsShouldBe10()
+            public async Task RemoveIngredient_CountShouldBe10()
             {
                 string currentUserId = applicationUsers[0].Id;
                 RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
@@ -717,7 +736,101 @@ Serve and enjoy!";
                 Assert.Equal(10, recipeViewModelFromDb.Ingredient.Count);
             }
 
+            [Fact]
+            public async Task AddIngredient_CountShouldBe12()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.IngredientText = @"1 lb ground beef
+1 medium onion
+3 cloves garlic
+1 can tomato sauce
+1 can pinto beans
+1 can corn
+1 can green beans
+1 can peas and carrots
+2-3 beef bouillon cubes
+1/2 tsp pepper
+1 cup cooked rice (optional)
+1 shallot";
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                Assert.Equal(12, recipeViewModelFromDb.Ingredient.Count);
+            }
+
+            [Fact]
+            public async Task RearrageIngredient_ShouldEqualExpected()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);                
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.IngredientText = @"1 lb ground beef
+1 can corn
+1 can green beans
+1 can peas and carrots
+2-3 beef bouillon cubes
+1 medium onion
+3 cloves garlic
+1 can tomato sauce
+1 can pinto beans
+1/2 tsp pepper
+1 cup cooked rice (optional)"; 
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                Assert.Equal(recipeViewModelForUpdating.IngredientText, recipeViewModelFromDb.IngredientText);
+            }
+            [Fact]
+            public async Task ReplaceIngredient_ShouldEqualExpected()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.IngredientText = @"1 lb ground beef
+1 can corn
+1 can green beans
+1 can peas and carrots
+2-3 beef bouillon cubes
+1 shallot
+3 cloves garlic
+1 can tomato sauce
+1 can pinto beans
+1/2 tsp pepper
+1 cup cooked rice (optional)";
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                Assert.Equal(recipeViewModelForUpdating.IngredientText, recipeViewModelFromDb.IngredientText);
+            }
             #endregion
+            #region Cookbook
+            [Fact]
+            public async Task AddCookbook_CountShouldBe3()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+
+                Cookbook cookbook4 = new Cookbook()
+                {
+                    Author = "Ryan Wemmer",
+                    Copyright = "2017",
+                    Name = "Just Cookies",
+                    Description = "Ryan's Best Cookies",
+                    Privacy = Models.Enums.Privacy.Public
+                };
+                _unitOfWork.Cookbook.Add(cookbook4);
+                await _unitOfWork.SaveAsync();
+                //CookbookRecipe 
+
+
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+            }
+
+            #endregion 
+
         }
 
         #region Sample Data

@@ -106,19 +106,18 @@ namespace Eyon.DataAccess.Orchestrators
             recipeViewModel.Recipe = await _recipeDataCall.AddRecipeWithRelationship(currentApplicationUserId, recipeViewModel.Recipe, false);            
             var topic  = _unitOfWork.Topic.AddFromITopicItem(recipeViewModel.Recipe);
             await _unitOfWork.SaveAsync();
-            _unitOfWork.CommunityRecipe.AddFromEntities(communityFromDb, recipeViewModel.Recipe);
-            
+            //_unitOfWork.CommunityRecipe.AddFromEntities(communityFromDb, recipeViewModel.Recipe);
+            _recipeDataCall.AddCommunityRecipe(communityFromDb, recipeViewModel.Recipe);
+            recipeViewModel.Community = communityFromDb;
             // Add instructions
             foreach ( var item in recipeViewModel.ParseInstructions() )
             {
-                item.RecipeId = recipeViewModel.Recipe.Id;
-                _unitOfWork.Instruction.Add(item);
-            }            
+                _recipeDataCall.AddInstruction(item, recipeViewModel.Recipe);                
+            }
 
             foreach ( var item in recipeViewModel.ParseIngredients() )
             {
-                item.RecipeId = recipeViewModel.Recipe.Id;
-                _unitOfWork.Ingredient.Add(item);
+                _recipeDataCall.AddIngredient(item, recipeViewModel.Recipe);
             }
 
             if (!string.IsNullOrEmpty(recipeViewModel.CookbookSelector.ItemIds))
@@ -129,8 +128,8 @@ namespace Eyon.DataAccess.Orchestrators
                     var cookbookFromDb = await _unitOfWork.Cookbook.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == id);
 
                     if (cookbookFromDb != null)
-                    {
-                        _unitOfWork.CookbookRecipe.AddFromEntities(cookbookFromDb, recipeViewModel.Recipe);
+                    {                        
+                        _recipeDataCall.AddCookbookRecipe(cookbookFromDb, recipeViewModel.Recipe);
                         recipeViewModel.CookbookSelector.Items.Add(cookbookFromDb);
                     }
                     else
@@ -146,11 +145,9 @@ namespace Eyon.DataAccess.Orchestrators
                 foreach ( var id in recipeViewModel.CategorySelector.ParseItemIds() )
                 {
                     var categoryFromDb = await _unitOfWork.Category.GetFirstOrDefaultAsync(x => x.Id == id);
-
                     if ( categoryFromDb != null )
                     {
-                        _unitOfWork.RecipeCategory.AddFromEntities(recipeViewModel.Recipe, categoryFromDb);
-                        //_unitOfWork.FeedCategory.AddFromEntities(feed, categoryFromDb);
+                        _recipeDataCall.AddRecipeCategory(recipeViewModel.Recipe, categoryFromDb);
                         recipeViewModel.CategorySelector.Items.Add(categoryFromDb);
                     }
                 }
@@ -160,7 +157,6 @@ namespace Eyon.DataAccess.Orchestrators
 
             var feedItemViewModel = recipeViewModel.ToFeedItemViewModel();
             feedItemViewModel.Topics.Add(topic);
-            feedItemViewModel.Communities.Add(communityFromDb);
             await _feedSecurity.AddAsync(currentApplicationUserId, feedItemViewModel, false);
         }
 
@@ -224,20 +220,16 @@ namespace Eyon.DataAccess.Orchestrators
                 return;
             }
             _unitOfWork.Recipe.UpdateIfOwner(currentApplicationUserId, recipeViewModel.Recipe);
-            await _unitOfWork.SaveAsync();
-            // Update Feed
-            //FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
-            //feedCaller.UpdateFeed(currentApplicationUserId, recipeFromDb.FeedRecipe.Feed, recipeViewModel.Recipe);            
+            await _unitOfWork.SaveAsync();            
             // instructions
-            // remove instructions1
+            // remove instructions
             recipeViewModel.ParseInstructions();
             if ( recipeViewModel.Instruction.Count < recipeFromDb.Instruction.Count )
             {
                 var dbInstructionsList = recipeFromDb.Instruction.ToList();
                 for ( int i = recipeViewModel.Instruction.Count; i < recipeFromDb.Instruction.Count; i++ )
                 {
-                    var itemToRemove = dbInstructionsList[i];
-                    _unitOfWork.Instruction.Remove(itemToRemove.Id);
+                    _recipeDataCall.RemoveInstruction(dbInstructionsList[i]);
                 }
             }
             // add or update new instructions
@@ -246,16 +238,14 @@ namespace Eyon.DataAccess.Orchestrators
                 var instructionFromDb = recipeFromDb.Instruction.FirstOrDefault(x => x.Count == item.Count);
 
                 if(instructionFromDb == null ) // add
-                {
-                    item.RecipeId = recipeFromDb.Id;
-                    _unitOfWork.Instruction.Add(item);                    
+                {                    
+                    _recipeDataCall.AddInstruction(item, recipeFromDb);
                 }
                 else
                 {
                     if ( !instructionFromDb.Text.Equals(item.Text) )
                     {
-                        instructionFromDb.Text = item.Text;
-                        _unitOfWork.Instruction.Update(instructionFromDb);
+                        _recipeDataCall.UpdateInstruction(instructionFromDb, item.Text);
                     }
                 }
             }
@@ -269,8 +259,7 @@ namespace Eyon.DataAccess.Orchestrators
                 
                 for ( int i = recipeViewModel.Ingredient.Count; i < recipeFromDb.Ingredient.Count; i++ )
                 {
-                    var itemToRemove = dbIngredientsList[i];
-                    _unitOfWork.Ingredient.Remove(itemToRemove.Id);                    
+                    _recipeDataCall.RemoveIngredient(dbIngredientsList[i]);
                 }
             }
             int ingredientCounter = 0;
@@ -280,16 +269,14 @@ namespace Eyon.DataAccess.Orchestrators
             {
                 var ingredientFromDb = recipeFromDb.Ingredient.FirstOrDefault(x => x.Count == item.Count );
                 if ( ingredientFromDb == null )
-                {
-                    item.RecipeId = recipeFromDb.Id;
-                    _unitOfWork.Ingredient.Add(item);
+                {                    
+                    _recipeDataCall.AddIngredient(item, recipeFromDb);
                 }
                 else
                 {
                     if ( !ingredientFromDb.Text.Equals(item.Text) )
-                    {
-                        ingredientFromDb.Text = item.Text;
-                        _unitOfWork.Ingredient.Update(ingredientFromDb);
+                    {                        
+                        _recipeDataCall.UpdateIngredient(ingredientFromDb, item.Text);
                     }
                 }
                 ingredientCounter++;
@@ -336,10 +323,9 @@ namespace Eyon.DataAccess.Orchestrators
                         // Only add the relation if the current user owns the target cookbook and the cookbook exists.
                         var cookbookFromDb = await _unitOfWork.Cookbook.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == id);
                         if (cookbookFromDb != null)
-                        {
-                            _unitOfWork.CookbookRecipe.AddFromEntities(cookbookFromDb, recipeViewModel.Recipe);
-                            recipeViewModel.CookbookSelector.Items.Add(cookbookFromDb); // fill out the recipeViewModel so that the feedItemViewModel will have accurate data.
-                            //_unitOfWork.FeedCookbook.AddFromEntities(recipeFromDb.FeedRecipe.Feed, cookbookFromDb);
+                        {                            
+                            _recipeDataCall.AddCookbookRecipe(cookbookFromDb, recipeViewModel.Recipe);
+                            recipeViewModel.CookbookSelector.Items.Add(cookbookFromDb); // fill out the recipeViewModel so that the feedItemViewModel will have accurate data.                            
                         }
                         else
                         {
@@ -355,7 +341,7 @@ namespace Eyon.DataAccess.Orchestrators
                 {
                     if (!cookbookIdList.Any(x => x == item.CookbookId))
                     {
-                        _unitOfWork.CookbookRecipe.Remove(item);
+                        _recipeDataCall.RemoveCookbookRecipe(item);
                     }
                 }
             }
@@ -375,8 +361,8 @@ namespace Eyon.DataAccess.Orchestrators
                         // Only add the relation if the category exists
                         var categoryFromDb = await _unitOfWork.Category.GetFirstOrDefaultAsync(x => x.Id == id);
                         if ( categoryFromDb != null )
-                        {                            
-                            _unitOfWork.RecipeCategory.AddFromEntities(recipeFromDb, categoryFromDb);                            
+                        {
+                            _recipeDataCall.AddRecipeCategory(recipeFromDb, categoryFromDb);
                             recipeViewModel.CategorySelector.Items.Add(categoryFromDb);
                         }
                         else
@@ -394,7 +380,7 @@ namespace Eyon.DataAccess.Orchestrators
                 {
                     if ( !categoryIdList.Any(x => x == item.CategoryId) )
                     {
-                        _unitOfWork.RecipeCategory.Remove(item);
+                        _recipeDataCall.RemoveRecipeCategory(item);
                     }
                 }
             }
