@@ -807,29 +807,202 @@ Serve and enjoy!";
             #endregion
             #region Cookbook
             [Fact]
-            public async Task AddCookbook_CountShouldBe3()
+            public async Task AddAnotherCookbook_CountShouldBe3()
             {
                 string currentUserId = applicationUsers[0].Id;
                 RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
-
-                Cookbook cookbook4 = new Cookbook()
-                {
-                    Author = "Ryan Wemmer",
-                    Copyright = "2017",
-                    Name = "Just Cookies",
-                    Description = "Ryan's Best Cookies",
-                    Privacy = Models.Enums.Privacy.Public
-                };
-                _unitOfWork.Cookbook.Add(cookbook4);
-                await _unitOfWork.SaveAsync();
-                //CookbookRecipe 
-
-
+                recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+                recipeViewModel.CookbookSelector.ItemIds += "," + cookbooks[1].Id.ToString();
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
                 var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CookbookSelector.ItemIds  += "," + cookbooks[3].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.Equal(3, recipeViewModelFromDb.CookbookSelector.Items.Count);
             }
 
-            #endregion 
+            [Fact]
+            public async Task AddAnotherCookbook_2Cookbooks_2IdsShouldBe2Inputs()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();                
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CookbookSelector.ItemIds += "," + cookbooks[1].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.Equal(cookbooks[0].Id, recipeViewModelFromDb.CookbookSelector.Items[0].Id);
+                Assert.Equal(cookbooks[1].Id, recipeViewModelFromDb.CookbookSelector.Items[1].Id);
+                
+            }
+
+            [Fact]
+            public async Task Remove2Cookbooks_CountShouldBe1()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+                recipeViewModel.CookbookSelector.ItemIds += "," + cookbooks[1].Id.ToString() + "," + cookbooks[3].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.Single(recipeViewModelFromDb.CookbookSelector.Items);
+            }
+            [Fact]
+            public async Task Remove2Cookbooks_OneCookbookRemaining_IdShouldEqualInput()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+                recipeViewModel.CookbookSelector.ItemIds += "," + cookbooks[1].Id.ToString() + "," + cookbooks[3].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.Equal(cookbooks[0].Id, recipeViewModelFromDb.CookbookSelector.Items[0].Id);
+            }
+
+
+            [Fact]
+            public async Task ReplaceCookbook_CountShouldBe2()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+                recipeViewModel.CookbookSelector.ItemIds += "," + cookbooks[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CookbookSelector.ItemIds = cookbooks[0].Id.ToString() + "," + cookbooks[3].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.Equal(2, recipeViewModelFromDb.CookbookSelector.Items.Count);
+            }
+
+            [Fact]
+            public async Task ReplaceCookbook_TwoCookbooks_2IdsShouldEqual2Inputs()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+                recipeViewModel.CookbookSelector.ItemIds += "," + cookbooks[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CookbookSelector.ItemIds = cookbooks[0].Id.ToString() + "," + cookbooks[3].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.Equal(cookbooks[0].Id, recipeViewModelFromDb.CookbookSelector.Items[0].Id);
+                Assert.Equal(cookbooks[3].Id, recipeViewModelFromDb.CookbookSelector.Items[1].Id);
+            }
+
+            [Fact]
+            public async Task ReplaceCookbook_NotOwnerOfOneReplacement_ShouldThrowException()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+                recipeViewModel.CookbookSelector.ItemIds += "," + cookbooks[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CookbookSelector.ItemIds = cookbooks[0].Id.ToString() + "," + cookbooks[2].Id.ToString();
+
+                var ex = await Assert.ThrowsAsync<Models.Errors.SafeException>(async () => await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating));
+                Assert.Equal((int)ex.ErrorType, (int)Models.Enums.ErrorType.Denied);
+            }
+            #endregion
+
+            [Fact]
+            public async Task AddAnotherCategory_CountEqual3()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CategorySelector.ItemIds = categories[0].Id.ToString() + "," + categories[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CategorySelector.ItemIds += "," + categories[2].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModelForUpdating.Recipe.Id);
+
+                Assert.Equal(3, recipeViewModelFromDb.CategorySelector.Items.Count);
+            }
+
+            [Fact]
+            public async Task AddAnotherCategory_Has2Categories_2IdsShouldEqual2Inputs()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CategorySelector.ItemIds = categories[0].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CategorySelector.ItemIds += "," + categories[1].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModelForUpdating.Recipe.Id);
+
+                Assert.Equal(categories[0].Id, recipeViewModelFromDb.CategorySelector.Items[0].Id);
+                Assert.Equal(categories[1].Id, recipeViewModelFromDb.CategorySelector.Items[1].Id);
+            }
+
+            [Fact]
+            public async Task RemoveACategory_CountEqual1()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CategorySelector.ItemIds = categories[0].Id.ToString() + 
+                    "," + categories[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CategorySelector.ItemIds = categories[0].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModelForUpdating.Recipe.Id);
+
+                Assert.Single(recipeViewModelFromDb.CategorySelector.Items);
+            }
+
+            [Fact]
+            public async Task RemoveACategory_IdShouldEqualInput()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CategorySelector.ItemIds = categories[0].Id.ToString() +
+                    "," + categories[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelForUpdating = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+                recipeViewModelForUpdating.CategorySelector.ItemIds = categories[0].Id.ToString();
+
+                await _recipeOrchestrator.UpdateAsync(currentUserId, recipeViewModelForUpdating);
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModelForUpdating.Recipe.Id);
+
+                Assert.Equal(categories[0].Id, recipeViewModelFromDb.CategorySelector.Items[0].Id);
+            }
 
         }
 
@@ -945,14 +1118,26 @@ Serve and enjoy!";
                 Privacy = Models.Enums.Privacy.Public
             };
             unitOfWork.Cookbook.Add(cookbook3);
+            Cookbook cookbook4 = new Cookbook()
+            {
+                Author = "Ryan Wemmer",
+                Copyright = "2017",
+                Name = "Just Cookies",
+                Description = "Ryan's Best Cookies",
+                Privacy = Models.Enums.Privacy.Public
+            };
+            
+            unitOfWork.Cookbook.Add(cookbook4);
             unitOfWork.Save();
             cookbooks.Add(cookbook1);
             cookbooks.Add(cookbook2);
             cookbooks.Add(cookbook3);
+            cookbooks.Add(cookbook4);
 
             unitOfWork.ApplicationUserCookbook.AddFromEntities(user1, cookbook1);
             unitOfWork.ApplicationUserCookbook.AddFromEntities(user1, cookbook2);
             unitOfWork.ApplicationUserCookbook.AddFromEntities(user2, cookbook3);
+            unitOfWork.ApplicationUserCookbook.AddFromEntities(user1, cookbook4);
             unitOfWork.Save();
 
             Category category1 = new Category()
@@ -967,10 +1152,18 @@ Serve and enjoy!";
                 Name = "Beef",
                 DisplayOrder = 1
             };
+
             unitOfWork.Category.Add(category2);
+            Category category3 = new Category()
+            {
+                Name = "Quick and Easy",
+                DisplayOrder = 2
+            };
+            unitOfWork.Category.Add(category3);
             unitOfWork.Save();            
             categories.Add(category1);
             categories.Add(category2);
+            categories.Add(category3);
         }
         #endregion
     }
