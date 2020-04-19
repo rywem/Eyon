@@ -15,6 +15,7 @@ using Eyon.Models.ViewModels;
 using Xunit;
 using System.Linq;
 using Eyon.DataAccess.Orchestrators.IOrchestrator;
+using Eyon.DataAccess.Images;
 
 namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
 {
@@ -24,9 +25,9 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
         {
             private RecipeOrchestrator _recipeOrchestrator;
             private IUnitOfWork _unitOfWork;
-            private Mock<IConfiguration> _mockConfig;
             private IRecipeDataCall _recipeDataCall;
             private Mock<IFeedSecurity> _feedSecurity;
+            private Mock<IImageHelper> _imageHelper;
             private List<Country> countries;
             private List<State> states;
             private List<Community> communities;
@@ -36,10 +37,10 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             public AddAsyncTests()
             {
                 this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(AddAsyncTests));
-                this._mockConfig = new Mock<IConfiguration>();
                 this._recipeDataCall = new RecipeDataCall(this._unitOfWork);
                 this._feedSecurity = new Mock<IFeedSecurity>();
-                this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, this._mockConfig.Object, this._recipeDataCall, this._feedSecurity.Object);
+                this._imageHelper = new Mock<IImageHelper>();
+                this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, this._recipeDataCall, this._feedSecurity.Object, this._imageHelper.Object);
                 countries = new List<Country>();
                 states =new List<State>();
                 communities = new List<Community>();
@@ -371,7 +372,7 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
         {
             private RecipeOrchestrator _recipeOrchestrator;
             private IUnitOfWork _unitOfWork;
-            private Mock<IConfiguration> _mockConfig;
+            private Mock<IImageHelper> _imageHelper;
             private IRecipeDataCall _recipeDataCall;
             private Mock<IFeedSecurity> _feedSecurity;
             private List<Country> countries;
@@ -383,10 +384,10 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
             public GetAsyncTests()
             {
                 this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(GetAsyncTests));
-                this._mockConfig = new Mock<IConfiguration>();
                 this._recipeDataCall = new RecipeDataCall(this._unitOfWork);
                 this._feedSecurity = new Mock<IFeedSecurity>();
-                this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, this._mockConfig.Object, this._recipeDataCall, this._feedSecurity.Object);
+                this._imageHelper = new Mock<IImageHelper>();
+                this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork,  this._recipeDataCall, this._feedSecurity.Object, this._imageHelper.Object);
                 countries = new List<Country>();
                 states = new List<State>();
                 communities = new List<Community>();
@@ -465,6 +466,28 @@ namespace Eyon.XTests.UnitTests.DataAccess.Orchestator
 
                 var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
                 Assert.Equal(2, recipeViewModelFromDb.CategorySelector.Items.Count);
+            }
+
+            [Fact]
+            public async Task UserImage_CountShouldBe1()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                string guid = Guid.NewGuid().ToString();
+                UserImage userImage = new UserImage()
+                {
+                    FileName = guid + ".jpg",
+                    FileNameThumb = guid + "_thumb.jpg",
+                    FileType = "jpg",
+                    Privacy = Models.Enums.Privacy.Public
+                };
+                recipeViewModel.UserImage = new List<UserImage>();
+                recipeViewModel.UserImage.Add(userImage);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
+
+                Assert.Single(recipeViewModelFromDb.UserImage);
             }
 
             #endregion 
@@ -597,9 +620,9 @@ Serve and enjoy!";
         {
             private RecipeOrchestrator _recipeOrchestrator;
             private IUnitOfWork _unitOfWork;
-            private Mock<IConfiguration> _mockConfig;
             private IRecipeDataCall _recipeDataCall;
-            private Mock<IFeedSecurity> _feedSecurity;            
+            private Mock<IImageHelper> _imageHelper;
+            private Mock<IFeedSecurity> _feedSecurity;
             private List<Country> countries;
             private List<State> states;
             private List<Community> communities;
@@ -610,11 +633,10 @@ Serve and enjoy!";
             public UpdateAsyncTests()
             {
                 this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(UpdateAsyncTests));
-                this._mockConfig = new Mock<IConfiguration>();
+                this._imageHelper = new Mock<IImageHelper>();
                 this._recipeDataCall = new RecipeDataCall(this._unitOfWork);
-                this._feedSecurity = new Mock<IFeedSecurity>();
-                
-                this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, this._mockConfig.Object, this._recipeDataCall, this._feedSecurity.Object);
+                this._feedSecurity = new Mock<IFeedSecurity>();                
+                this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, this._recipeDataCall, this._feedSecurity.Object, this._imageHelper.Object);
                 countries = new List<Country>();
                 states = new List<State>();
                 communities = new List<Community>();
@@ -713,6 +735,7 @@ Serve and enjoy!";
                 Assert.Equal(recipeViewModelChanged.InstructionText, recipeViewModelFromDb.InstructionText);
             }
             #endregion
+            
             #region Ingredients
             [Fact]
             public async Task RemoveIngredient_CountShouldBe10()
@@ -805,6 +828,7 @@ Serve and enjoy!";
                 Assert.Equal(recipeViewModelForUpdating.IngredientText, recipeViewModelFromDb.IngredientText);
             }
             #endregion
+            
             #region Cookbook
             [Fact]
             public async Task AddAnotherCookbook_CountShouldBe3()
@@ -1060,10 +1084,151 @@ Serve and enjoy!";
                 Assert.Equal(communities[1].Id, recipeViewModelFromDb.CommunityId);
                 Assert.Equal(communities[1].Id, recipeViewModelFromDb.Community.Id);
             }
-
             #endregion
         }
 
+        public class DeleteAsyncTests
+        {
+            private RecipeOrchestrator _recipeOrchestrator;
+            private IUnitOfWork _unitOfWork;
+            private IRecipeDataCall _recipeDataCall;
+            private Mock<IFeedSecurity> _feedSecurity;
+            private Mock<IImageHelper> _imageHelper;
+            private List<Country> countries;
+            private List<State> states;
+            private List<Community> communities;
+            private List<Cookbook> cookbooks;
+            private List<Category> categories;
+            private List<ApplicationUser> applicationUsers;
+            private List<Recipe> recipes { get; set; }
+            public DeleteAsyncTests()
+            {
+                this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(DeleteAsyncTests));
+                this._recipeDataCall = new RecipeDataCall(this._unitOfWork);
+                this._feedSecurity = new Mock<IFeedSecurity>();
+                this._imageHelper = new Mock<IImageHelper>();
+                _imageHelper.Setup(x => x.TryDeleteAsync(It.IsAny<string>())).Returns(Task.Run(() => true));
+                this._recipeOrchestrator = new RecipeOrchestrator(this._unitOfWork, this._recipeDataCall, this._feedSecurity.Object, _imageHelper.Object);
+                countries = new List<Country>();
+                states = new List<State>();
+                communities = new List<Community>();
+                cookbooks = new List<Cookbook>();
+                categories = new List<Category>();
+                applicationUsers = new List<ApplicationUser>();
+                SeedDatabase(this._unitOfWork, this.countries, this.states, this.communities, this.applicationUsers, this.cookbooks, this.categories);
+            }
+            [Fact]
+            public async Task DeleteRecipe_RecipeShouldBeNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipe = _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id);
+                Assert.True(recipe.Id > 0);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                var recipeDeleted = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id);
+                Assert.Null(recipeDeleted);
+            }
+            [Fact]
+            public async Task DeleteRecipe_HasCommunity_ShouldBeRemoved()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipe = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id, includeProperties: "CommunityRecipe,CommunityRecipe.Community");
+                var communityId = recipe.CommunityRecipe.CommunityId;
+                var recipeId = recipe.CommunityRecipe.RecipeId;
+                Assert.NotNull(recipe.CommunityRecipe);
+                Assert.NotNull(recipe.CommunityRecipe.Community);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                var recipeDeleted = await _unitOfWork.CommunityRecipe.GetFirstOrDefaultAsync(x => x.CommunityId == communityId && x.RecipeId == recipeId);
+                Assert.Null(recipeDeleted);
+            }
+
+            [Fact]
+            public async Task DeleteRecipe_HadInstruction_ShouldBeNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+
+                var recipeId = recipeViewModel.Recipe.Id;
+                var instructionNotDeleted = await _unitOfWork.Instruction.GetFirstOrDefaultAsync(x => x.RecipeId == recipeId);
+                Assert.NotNull(instructionNotDeleted);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                var instructionDeleted = await _unitOfWork.Instruction.GetFirstOrDefaultAsync(x => x.RecipeId == recipeId);
+                Assert.Null(instructionDeleted);
+            }
+
+            [Fact]
+            public async Task DeleteRecipe_HadIngredient_ShouldBeNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);                
+                var recipeId = recipeViewModel.Recipe.Id;
+                var ingredientNotDeleted= await _unitOfWork.Ingredient.GetFirstOrDefaultAsync(x => x.RecipeId == recipeId);
+                Assert.NotNull(ingredientNotDeleted);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                var ingredientDeleted = await _unitOfWork.Ingredient.GetFirstOrDefaultAsync(x => x.RecipeId == recipeId);
+                Assert.Null(ingredientDeleted);
+            }
+
+            [Fact]
+            public async Task DeleteRecipe_HadImage_ShouldBeNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                string guid = Guid.NewGuid().ToString();
+                UserImage userImage = new UserImage()
+                {
+                    FileName = guid + ".jpg",
+                    FileNameThumb = guid + "_thumb.jpg",
+                    FileType = "jpg",
+                    Privacy = Models.Enums.Privacy.Public
+                };
+                recipeViewModel.UserImage = new List<UserImage>();
+                recipeViewModel.UserImage.Add(userImage);
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var recipeId = recipeViewModel.Recipe.Id;
+                var imageNotDeleted = await _unitOfWork.UserImage.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.UserImage.First().Id);
+                Assert.NotNull(imageNotDeleted);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                var imageDeleted = await _unitOfWork.UserImage.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.UserImage.First().Id);
+                Assert.Null(imageDeleted);
+            }
+
+            [Fact]
+            public async Task DeleteRecipe_Had2Categories_ShouldBeNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+
+                recipeViewModel.CategorySelector.ItemIds = categories[0].Id.ToString();
+                recipeViewModel.CategorySelector.ItemIds += "," + categories[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var categoryNotDeleted = await _unitOfWork.RecipeCategory.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
+                Assert.NotNull(categoryNotDeleted);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                var categoryDeleted = await _unitOfWork.RecipeCategory.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
+                Assert.Null(categoryDeleted);
+            }
+            [Fact]
+            public async Task DeleteRecipe_Had1Category_ShouldBeNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+
+                recipeViewModel.CategorySelector.ItemIds = categories[0].Id.ToString();                
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var categoryNotDeleted = await _unitOfWork.RecipeCategory.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
+                Assert.NotNull(categoryNotDeleted);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                var categoryDeleted = await _unitOfWork.RecipeCategory.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
+                Assert.Null(categoryDeleted);
+            }
+        }
         #region Sample Data
         public static RecipeViewModel GetRecipeViewModel(Community community)
         {
