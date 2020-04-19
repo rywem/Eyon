@@ -25,15 +25,17 @@ namespace Eyon.DataAccess.Orchestrators
     public class RecipeOrchestrator : IRecipeOrchestrator
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IConfiguration _config;
+        //private readonly IConfiguration _config;
         private IRecipeDataCall _recipeDataCall;
         private IFeedSecurity _feedSecurity;
-        public RecipeOrchestrator( IUnitOfWork unitOfWork, IConfiguration config, IRecipeDataCall recipeDataCall, IFeedSecurity feedSecurity )
+        private IImageHelper _imageHelper;
+        public RecipeOrchestrator( IUnitOfWork unitOfWork, IRecipeDataCall recipeDataCall, IFeedSecurity feedSecurity, IImageHelper imageHelper )
         {
             this._unitOfWork = unitOfWork;
-            this._config = config;
+            //this._config = config;
             this._recipeDataCall = recipeDataCall;
             this._feedSecurity = feedSecurity;
+            this._imageHelper = imageHelper;
         }
 
         public async Task<RecipeViewModel> GetAsync(string currentApplicationUserId, long id)
@@ -339,8 +341,6 @@ namespace Eyon.DataAccess.Orchestrators
                     }
                 }
             }
-
-
             // Update Categories
             List<long> categoryIdList = new List<long>();
 
@@ -427,11 +427,11 @@ namespace Eyon.DataAccess.Orchestrators
             if ( recipeFromDb.RecipeUserImage != null )
             {
                 List<Task> tasks = new List<Task>();
-                ImageHelper helper = new ImageHelper(_config);
+                //ImageHelper helper = new ImageHelper(_config);
                 foreach ( var item in recipeFromDb.RecipeUserImage )
                 {
-                    tasks.Add(helper.TryDeleteAsync(item.UserImage.FileName));
-                    tasks.Add(helper.TryDeleteAsync(item.UserImage.FileNameThumb));
+                    tasks.Add(_imageHelper.TryDeleteAsync(item.UserImage.FileName));
+                    tasks.Add(_imageHelper.TryDeleteAsync(item.UserImage.FileNameThumb));
                     _unitOfWork.UserImage.Remove(item.UserImage);
                     _unitOfWork.RecipeUserImage.Remove(item);
                 }

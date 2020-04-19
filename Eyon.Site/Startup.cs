@@ -44,6 +44,7 @@ namespace Eyon.Site
             services.AddScoped<DataAccess.Security.ISecurity.ICookbookSecurity, DataAccess.Security.CookbookSecurity>();
             services.AddScoped<DataAccess.Orchestrators.IOrchestrator.ICookbookOrchestrator, DataAccess.Orchestrators.CookbookOrchestrator>();
             //services.AddScoped<DataAccess.DataCalls.IDataCall.ICookbookDataCall, DataAccess.DataCalls.CookbookDataCall>();
+            services.AddScoped<DataAccess.Images.IImageHelper, DataAccess.Images.ImageHelper>();
             #endregion
             services.AddSession(options =>
             {

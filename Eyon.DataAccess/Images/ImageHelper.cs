@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Eyon.DataAccess.Images
 {
-    public class ImageHelper
+    public class ImageHelper : IImageHelper
     {
         private readonly IConfiguration _config;
         public ImageHelper( IConfiguration config )

@@ -27,13 +27,13 @@ namespace Eyon.Site.Areas.Admin.Controllers
         private readonly string[] _permittedExtensions = { ".jpg", ".jpeg", ".gif", ".png" };
         private readonly IConfiguration _config;
         private readonly CategorySecurity _categorySecurity;
-        private readonly ImageHelper _imageHelper;
-        public CategoryController(IUnitOfWork unitOfWork, IConfiguration config)
+        private readonly IImageHelper _imageHelper;
+        public CategoryController(IUnitOfWork unitOfWork, IConfiguration config, IImageHelper imageHelper)
         {
             this._config = config;
             this._unitOfWork = unitOfWork;
             this._categorySecurity = new CategorySecurity(_unitOfWork, _config);
-            this._imageHelper = new ImageHelper(_config);
+            this._imageHelper = imageHelper;
         }
         public IActionResult Index()
         {            
