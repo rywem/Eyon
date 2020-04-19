@@ -80,7 +80,7 @@ namespace Eyon.DataAccess.Security
 
         public async Task DeleteAsync(string currentApplicationUserId, long id )
         {
-            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == id, includeProperties: "ApplicationUserOwner,CommunityRecipe,CommunityRecipe,Instruction,Ingredient,CookbookRecipe,RecipeUserImage,RecipeUserImage.UserImage,FeedRecipe,RecipeCategory", false);
+            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == id, tracking: false);
 
             if ( recipeFromDb == null )
                 throw new SafeException(Models.Enums.ErrorType.Denied, new Exception(string.Format("Owned item not found. Recipe ID {0},  Current application user ID {1}", id, currentApplicationUserId)));

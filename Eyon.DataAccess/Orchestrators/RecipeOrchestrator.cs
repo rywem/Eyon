@@ -404,30 +404,31 @@ namespace Eyon.DataAccess.Orchestrators
 
         public async Task DeleteAsync( string currentApplicationUserId, Recipe recipe )
         {
-            if ( recipe.CommunityRecipe != null )
+            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipe.Id, includeProperties: "ApplicationUserOwner,CommunityRecipe,CommunityRecipe,Instruction,Ingredient,CookbookRecipe,RecipeUserImage,RecipeUserImage.UserImage,FeedRecipe,RecipeCategory", false);
+            if ( recipeFromDb.CommunityRecipe != null )
             {
-                _unitOfWork.CommunityRecipe.Remove(recipe.CommunityRecipe);
+                _unitOfWork.CommunityRecipe.Remove(recipeFromDb.CommunityRecipe);
             }
 
-            if ( recipe.Instruction != null )
+            if ( recipeFromDb.Instruction != null )
             {
-                foreach ( var item in recipe.Instruction )
+                foreach ( var item in recipeFromDb.Instruction )
                 {
                     _unitOfWork.Instruction.Remove(item);
                 }
             }
-            if ( recipe.Ingredient != null )
+            if ( recipeFromDb.Ingredient != null )
             {
-                foreach ( var item in recipe.Ingredient )
+                foreach ( var item in recipeFromDb.Ingredient )
                 {
                     _unitOfWork.Ingredient.Remove(item);
                 }
             }
-            if ( recipe.RecipeUserImage != null )
+            if ( recipeFromDb.RecipeUserImage != null )
             {
                 List<Task> tasks = new List<Task>();
                 ImageHelper helper = new ImageHelper(_config);
-                foreach ( var item in recipe.RecipeUserImage )
+                foreach ( var item in recipeFromDb.RecipeUserImage )
                 {
                     tasks.Add(helper.TryDeleteAsync(item.UserImage.FileName));
                     tasks.Add(helper.TryDeleteAsync(item.UserImage.FileNameThumb));
@@ -437,41 +438,41 @@ namespace Eyon.DataAccess.Orchestrators
                 await Task.WhenAll(tasks);
             }
 
-            if ( recipe.RecipeCategory != null )
+            if ( recipeFromDb.RecipeCategory != null )
             {
-                foreach ( var item in recipe.RecipeCategory )
+                foreach ( var item in recipeFromDb.RecipeCategory )
                 {
                     _unitOfWork.RecipeCategory.Remove(item);
                 }
             }
 
-            if ( recipe.CookbookRecipe != null )
+            if ( recipeFromDb.CookbookRecipe != null )
             {
-                foreach ( var item in recipe.CookbookRecipe )
+                foreach ( var item in recipeFromDb.CookbookRecipe )
                 {
                     _unitOfWork.CookbookRecipe.Remove(item);
                 }
             }
             
-            var topic = await _unitOfWork.Topic.GetFirstOrDefaultAsync(x => x.ObjectId == recipe.Id && x.TopicType == recipe.TopicType);
+            var topic = await _unitOfWork.Topic.GetFirstOrDefaultAsync(x => x.ObjectId == recipeFromDb.Id && x.TopicType == recipeFromDb.TopicType);
             if ( topic != null )
                 _unitOfWork.Topic.Remove(topic);
 
             await _unitOfWork.SaveAsync();
-            if ( recipe.FeedRecipe != null )
+            if ( recipeFromDb.FeedRecipe != null )
             {
-                await _feedSecurity.DeleteAsync(currentApplicationUserId, recipe.FeedRecipe.FeedId, false);
+                await _feedSecurity.DeleteAsync(currentApplicationUserId, recipeFromDb.FeedRecipe.FeedId, false);
             }
 
-            if ( recipe.ApplicationUserOwner != null )
+            if ( recipeFromDb.ApplicationUserOwner != null )
             {
-                foreach ( var item in recipe.ApplicationUserOwner )
+                foreach ( var item in recipeFromDb.ApplicationUserOwner )
                 {
                     _unitOfWork.ApplicationUserRecipe.Remove(item);
                 }
             }
 
-            _unitOfWork.Recipe.Remove(recipe);
+            _unitOfWork.Recipe.Remove(recipeFromDb);
             await _unitOfWork.SaveAsync();
         }
     }
