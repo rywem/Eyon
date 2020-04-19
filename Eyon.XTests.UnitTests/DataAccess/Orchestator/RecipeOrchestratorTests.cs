@@ -1228,6 +1228,48 @@ Serve and enjoy!";
                 var categoryDeleted = await _unitOfWork.RecipeCategory.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
                 Assert.Null(categoryDeleted);
             }
+
+            [Fact]
+            public async Task DeleteRecipe_Had2Cookbooks_ShouldBeNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+
+                recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();
+                recipeViewModel.CookbookSelector.ItemIds += "," + cookbooks[1].Id.ToString();
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var cookbookNotDeleted = await _unitOfWork.CookbookRecipe.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
+                Assert.NotNull(cookbookNotDeleted);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                var cookbookDeleted = await _unitOfWork.CookbookRecipe.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
+                Assert.Null(cookbookDeleted);
+            }
+            [Fact]
+            public async Task DeleteRecipe_Had1Cookbook_ShouldBeNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);
+                recipeViewModel.CookbookSelector.ItemIds = cookbooks[0].Id.ToString();                
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var cookbookNotDeleted = await _unitOfWork.CookbookRecipe.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
+                Assert.NotNull(cookbookNotDeleted);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                var cookbookDeleted = await _unitOfWork.CookbookRecipe.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
+                Assert.Null(cookbookDeleted);
+            }
+
+            [Fact]
+            public async Task DeleteRecipe_HadOwner_ShouldBeNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                RecipeViewModel recipeViewModel = GetRecipeViewModel(communities[0]);                
+                await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
+                var applicationUserRecipeNotDeleted = await _unitOfWork.ApplicationUserRecipe.GetFirstOrDefaultAsync(x => x.ObjectId == recipeViewModel.Recipe.Id);
+                Assert.NotNull(applicationUserRecipeNotDeleted);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                var applicationUserRecipeDeleted = await _unitOfWork.ApplicationUserRecipe.GetFirstOrDefaultAsync(x => x.ObjectId == recipeViewModel.Recipe.Id);
+                Assert.Null(applicationUserRecipeDeleted);
+            }
         }
         #region Sample Data
         public static RecipeViewModel GetRecipeViewModel(Community community)
