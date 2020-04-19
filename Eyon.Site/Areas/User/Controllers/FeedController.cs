@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Eyon.DataAccess.Data.Repository.IRepository;
-using Eyon.DataAccess.Security;
-using Eyon.DataAccess.Security.ISecurity;
+using Eyon.Core.Data.Repository.IRepository;
+using Eyon.Core.Security;
+using Eyon.Core.Security.ISecurity;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

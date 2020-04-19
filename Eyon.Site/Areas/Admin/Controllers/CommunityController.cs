@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Core.Data.Repository.IRepository;
 using Eyon.Utilities.Extensions;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Eyon.DataAccess.Orchestrators;
+using Eyon.Core.Orchestrators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.IO;
@@ -91,7 +91,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
                 }
                 using (var stream = new MemoryStream(formFileContent))
                 {                    
-                    var records = Eyon.DataAccess.SeedData.Location.ZipCodeFile.LoadZipcodesFromStream(stream, true);
+                    var records = Eyon.Core.SeedData.Location.ZipCodeFile.LoadZipcodesFromStream(stream, true);
                     await _communityOrchestrator.UploadCommunities(records, 192);
                 }
             }

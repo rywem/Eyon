@@ -1,4 +1,4 @@
-﻿using Eyon.DataAccess.Data.Repository.IRepository;
+﻿using Eyon.Core.Data.Repository.IRepository;
 using Moq;
 using System;
 using System.Collections.Generic;

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Eyon.DataAccess.Data;
-using Eyon.DataAccess.Data.Repository;
-using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Core.Data;
+using Eyon.Core.Data.Repository;
+using Eyon.Core.Data.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
 namespace Eyon.XTests.UnitTests
@@ -19,8 +19,8 @@ namespace Eyon.XTests.UnitTests
         /// <returns>The UnitOfWork</returns>
         public IUnitOfWork GetInMemoryUnitOfWork(string inMemoryDatabaseName)
         {
-            DbContextOptions<Eyon.DataAccess.Data.ApplicationDbContext> options;
-            var builder = new DbContextOptionsBuilder<Eyon.DataAccess.Data.ApplicationDbContext>();
+            DbContextOptions<Eyon.Core.Data.ApplicationDbContext> options;
+            var builder = new DbContextOptionsBuilder<Eyon.Core.Data.ApplicationDbContext>();
             builder.UseInMemoryDatabase(inMemoryDatabaseName);
             options = builder.Options;
             ApplicationDbContext dbContext = new ApplicationDbContext(options);

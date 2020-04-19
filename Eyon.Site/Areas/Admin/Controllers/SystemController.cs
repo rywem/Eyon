@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Eyon.DataAccess.Orchestrators;
-using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Core.Orchestrators;
+using Eyon.Core.Data.Repository.IRepository;
 using Eyon.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

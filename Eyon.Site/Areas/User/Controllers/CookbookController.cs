@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Core.Data.Repository.IRepository;
 using Eyon.Models;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Eyon.DataAccess.Orchestrators;
+using Eyon.Core.Orchestrators;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Eyon.Utilities.Extensions;
-using Eyon.DataAccess.Security;
-using Eyon.DataAccess.Security.ISecurity;
-using Eyon.DataAccess.Orchestrators.IOrchestrator;
+using Eyon.Core.Security;
+using Eyon.Core.Security.ISecurity;
+using Eyon.Core.Orchestrators.IOrchestrator;
 
 namespace Eyon.Site.Areas.Seller.Controllers
 {

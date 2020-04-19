@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Eyon.DataAccess.Data.Repository.IRepository;
+using Eyon.Core.Data.Repository.IRepository;
 using Eyon.Models;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -13,8 +13,8 @@ using Microsoft.AspNetCore.Authorization;
 using Eyon.Site.WebUtilities;
 using Eyon.Models.SiteObjects;
 using Microsoft.Extensions.Configuration;
-using Eyon.DataAccess.Security;
-using Eyon.DataAccess.Images;
+using Eyon.Core.Security;
+using Eyon.Core.Images;
 
 namespace Eyon.Site.Areas.Admin.Controllers
 {

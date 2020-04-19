@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
-using Eyon.DataAccess.Data;
+using Eyon.Core.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
-using Eyon.DataAccess.Data.Initializers;
+using Eyon.Core.Data.Initializers;
 
 namespace Eyon.Site
 {
@@ -33,18 +33,18 @@ namespace Eyon.Site
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
             #region Scoped Dependency injection
-            services.AddScoped<DataAccess.Data.Repository.IRepository.IUnitOfWork, DataAccess.Data.UnitOfWork>();
-            services.AddScoped<DataAccess.Security.ISecurity.IRecipeSecurity, DataAccess.Security.RecipeSecurity>();
-            services.AddScoped<DataAccess.Orchestrators.IOrchestrator.IRecipeOrchestrator, DataAccess.Orchestrators.RecipeOrchestrator>();
-            services.AddScoped<DataAccess.DataCalls.IDataCall.IRecipeDataCall, DataAccess.DataCalls.RecipeDataCall>();
-            services.AddScoped<DataAccess.DataCalls.IDataCall.IFeedDataCall, DataAccess.DataCalls.FeedDataCall>();
-            services.AddScoped<DataAccess.Security.ISecurity.IFeedSecurity, DataAccess.Security.FeedSecurity>();
-            services.AddScoped<DataAccess.Orchestrators.IOrchestrator.IFeedOrchestrator, DataAccess.Orchestrators.FeedOrchestrator>();
+            services.AddScoped<Core.Data.Repository.IRepository.IUnitOfWork, Core.Data.UnitOfWork>();
+            services.AddScoped<Core.Security.ISecurity.IRecipeSecurity, Core.Security.RecipeSecurity>();
+            services.AddScoped<Core.Orchestrators.IOrchestrator.IRecipeOrchestrator, Core.Orchestrators.RecipeOrchestrator>();
+            services.AddScoped<Core.DataCalls.IDataCall.IRecipeDataCall, Core.DataCalls.RecipeDataCall>();
+            services.AddScoped<Core.DataCalls.IDataCall.IFeedDataCall, Core.DataCalls.FeedDataCall>();
+            services.AddScoped<Core.Security.ISecurity.IFeedSecurity, Core.Security.FeedSecurity>();
+            services.AddScoped<Core.Orchestrators.IOrchestrator.IFeedOrchestrator, Core.Orchestrators.FeedOrchestrator>();
 
-            services.AddScoped<DataAccess.Security.ISecurity.ICookbookSecurity, DataAccess.Security.CookbookSecurity>();
-            services.AddScoped<DataAccess.Orchestrators.IOrchestrator.ICookbookOrchestrator, DataAccess.Orchestrators.CookbookOrchestrator>();
-            //services.AddScoped<DataAccess.DataCalls.IDataCall.ICookbookDataCall, DataAccess.DataCalls.CookbookDataCall>();
-            services.AddScoped<DataAccess.Images.IImageHelper, DataAccess.Images.ImageHelper>();
+            services.AddScoped<Core.Security.ISecurity.ICookbookSecurity, Core.Security.CookbookSecurity>();
+            services.AddScoped<Core.Orchestrators.IOrchestrator.ICookbookOrchestrator, Core.Orchestrators.CookbookOrchestrator>();
+            //services.AddScoped<Core.DataCalls.IDataCall.ICookbookDataCall, Core.DataCalls.CookbookDataCall>();
+            services.AddScoped<Core.Images.IImageHelper, Core.Images.ImageHelper>();
             #endregion
             services.AddSession(options =>
             {

@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Eyon.DataAccess\Eyon.DataAccess.csproj" />
+    <ProjectReference Include="..\Eyon.Core\Eyon.Core.csproj" />
   </ItemGroup>
 
 </Project>

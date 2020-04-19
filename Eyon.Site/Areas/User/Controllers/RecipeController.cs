@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Eyon.DataAccess.Orchestrators;
-using Eyon.DataAccess.Data.Repository.IRepository;
-using Eyon.DataAccess.Images;
-using Eyon.DataAccess.Security;
+using Eyon.Core.Orchestrators;
+using Eyon.Core.Data.Repository.IRepository;
+using Eyon.Core.Images;
+using Eyon.Core.Security;
 using Eyon.Models;
 using Eyon.Models.Errors;
 using Eyon.Models.SiteObjects;
@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Eyon.DataAccess.Security.ISecurity;
+using Eyon.Core.Security.ISecurity;
 
 namespace Eyon.Site.Areas.User.Controllers
 {

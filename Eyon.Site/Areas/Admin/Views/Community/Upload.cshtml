@@ -1,12 +1,12 @@
 ﻿@model Eyon.Models.SiteObjects.FileUpload;
-@using Eyon.DataAccess.SeedData.Location;
+@using Eyon.Core.SeedData.Location;
 @{
     var title = "Upload Communities";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var selectItems = new List<SelectListItem>();
     selectItems.Add(new SelectListItem() {
-        Text = nameof(Eyon.DataAccess.SeedData.Location.ZipCodeFile),
+        Text = nameof(Eyon.Core.SeedData.Location.ZipCodeFile),
         Value = "0"
     });
 }

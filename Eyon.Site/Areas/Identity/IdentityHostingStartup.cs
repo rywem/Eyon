@@ -1,5 +1,5 @@
 ﻿using System;
-using Eyon.DataAccess.Data;
+using Eyon.Core.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
