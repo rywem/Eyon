@@ -385,13 +385,13 @@ namespace Eyon.DataAccess.Orchestrators
                 await _feedSecurity.UpdateAsync(currentApplicationUserId, recipeViewModel.ToFeedItemViewModel(recipeFromDb.FeedRecipe.Feed), false);
         }
 
-        public async Task DeleteTransactionAsync( string currentApplicationUserId, Recipe recipe )
+        public async Task DeleteTransactionAsync( string currentApplicationUserId, long recipeId )
         {
             using ( var transaction = _unitOfWork.BeginTransaction() )
             {
                 try
                 {
-                    await DeleteAsync( currentApplicationUserId, recipe);
+                    await DeleteAsync( currentApplicationUserId, recipeId);
                     await transaction.CommitAsync();
                 }
                 catch ( Exception ex )
@@ -402,9 +402,9 @@ namespace Eyon.DataAccess.Orchestrators
             }
         }
 
-        public async Task DeleteAsync( string currentApplicationUserId, Recipe recipe )
+        public async Task DeleteAsync( string currentApplicationUserId, long recipeId )
         {
-            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipe.Id, includeProperties: "ApplicationUserOwner,CommunityRecipe,CommunityRecipe,Instruction,Ingredient,CookbookRecipe,RecipeUserImage,RecipeUserImage.UserImage,FeedRecipe,RecipeCategory", false);
+            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == recipeId, includeProperties: "ApplicationUserOwner,CommunityRecipe,CommunityRecipe,Instruction,Ingredient,CookbookRecipe,RecipeUserImage,RecipeUserImage.UserImage,FeedRecipe,RecipeCategory", false);
             if ( recipeFromDb.CommunityRecipe != null )
             {
                 _unitOfWork.CommunityRecipe.Remove(recipeFromDb.CommunityRecipe);

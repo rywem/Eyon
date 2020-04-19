@@ -1125,7 +1125,7 @@ Serve and enjoy!";
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
                 var recipe = _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id);
                 Assert.True(recipe.Id > 0);
-                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe.Id);
                 var recipeDeleted = await _unitOfWork.Recipe.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.Recipe.Id);
                 Assert.Null(recipeDeleted);
             }
@@ -1141,7 +1141,7 @@ Serve and enjoy!";
                 var recipeId = recipe.CommunityRecipe.RecipeId;
                 Assert.NotNull(recipe.CommunityRecipe);
                 Assert.NotNull(recipe.CommunityRecipe.Community);
-                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe.Id);
                 var recipeDeleted = await _unitOfWork.CommunityRecipe.GetFirstOrDefaultAsync(x => x.CommunityId == communityId && x.RecipeId == recipeId);
                 Assert.Null(recipeDeleted);
             }
@@ -1156,7 +1156,7 @@ Serve and enjoy!";
                 var recipeId = recipeViewModel.Recipe.Id;
                 var instructionNotDeleted = await _unitOfWork.Instruction.GetFirstOrDefaultAsync(x => x.RecipeId == recipeId);
                 Assert.NotNull(instructionNotDeleted);
-                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe.Id);
                 var instructionDeleted = await _unitOfWork.Instruction.GetFirstOrDefaultAsync(x => x.RecipeId == recipeId);
                 Assert.Null(instructionDeleted);
             }
@@ -1170,7 +1170,7 @@ Serve and enjoy!";
                 var recipeId = recipeViewModel.Recipe.Id;
                 var ingredientNotDeleted= await _unitOfWork.Ingredient.GetFirstOrDefaultAsync(x => x.RecipeId == recipeId);
                 Assert.NotNull(ingredientNotDeleted);
-                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe.Id);
                 var ingredientDeleted = await _unitOfWork.Ingredient.GetFirstOrDefaultAsync(x => x.RecipeId == recipeId);
                 Assert.Null(ingredientDeleted);
             }
@@ -1194,7 +1194,7 @@ Serve and enjoy!";
                 var recipeId = recipeViewModel.Recipe.Id;
                 var imageNotDeleted = await _unitOfWork.UserImage.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.UserImage.First().Id);
                 Assert.NotNull(imageNotDeleted);
-                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe.Id);
                 var imageDeleted = await _unitOfWork.UserImage.GetFirstOrDefaultAsync(x => x.Id == recipeViewModel.UserImage.First().Id);
                 Assert.Null(imageDeleted);
             }
@@ -1210,7 +1210,7 @@ Serve and enjoy!";
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
                 var categoryNotDeleted = await _unitOfWork.RecipeCategory.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
                 Assert.NotNull(categoryNotDeleted);
-                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe.Id);
                 var categoryDeleted = await _unitOfWork.RecipeCategory.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
                 Assert.Null(categoryDeleted);
             }
@@ -1224,7 +1224,7 @@ Serve and enjoy!";
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
                 var categoryNotDeleted = await _unitOfWork.RecipeCategory.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
                 Assert.NotNull(categoryNotDeleted);
-                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe.Id);
                 var categoryDeleted = await _unitOfWork.RecipeCategory.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
                 Assert.Null(categoryDeleted);
             }
@@ -1240,7 +1240,7 @@ Serve and enjoy!";
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
                 var cookbookNotDeleted = await _unitOfWork.CookbookRecipe.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
                 Assert.NotNull(cookbookNotDeleted);
-                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe.Id);
                 var cookbookDeleted = await _unitOfWork.CookbookRecipe.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
                 Assert.Null(cookbookDeleted);
             }
@@ -1253,7 +1253,7 @@ Serve and enjoy!";
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
                 var cookbookNotDeleted = await _unitOfWork.CookbookRecipe.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
                 Assert.NotNull(cookbookNotDeleted);
-                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe.Id);
                 var cookbookDeleted = await _unitOfWork.CookbookRecipe.GetFirstOrDefaultAsync(x => x.RecipeId == recipeViewModel.Recipe.Id);
                 Assert.Null(cookbookDeleted);
             }
@@ -1266,7 +1266,7 @@ Serve and enjoy!";
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
                 var applicationUserRecipeNotDeleted = await _unitOfWork.ApplicationUserRecipe.GetFirstOrDefaultAsync(x => x.ObjectId == recipeViewModel.Recipe.Id);
                 Assert.NotNull(applicationUserRecipeNotDeleted);
-                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe);
+                await _recipeOrchestrator.DeleteAsync(currentUserId, recipeViewModel.Recipe.Id);
                 var applicationUserRecipeDeleted = await _unitOfWork.ApplicationUserRecipe.GetFirstOrDefaultAsync(x => x.ObjectId == recipeViewModel.Recipe.Id);
                 Assert.Null(applicationUserRecipeDeleted);
             }

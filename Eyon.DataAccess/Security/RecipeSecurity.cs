@@ -80,12 +80,12 @@ namespace Eyon.DataAccess.Security
 
         public async Task DeleteAsync(string currentApplicationUserId, long id )
         {
-            var recipeFromDb = await _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(currentApplicationUserId, x => x.Id == id, tracking: false);
-
-            if ( recipeFromDb == null )
+            if (!await _unitOfWork.Recipe.IsOwnerAsync(currentApplicationUserId, id) )
+            {
                 throw new SafeException(Models.Enums.ErrorType.Denied, new Exception(string.Format("Owned item not found. Recipe ID {0},  Current application user ID {1}", id, currentApplicationUserId)));
+            }            
 
-            await this._recipeOrchestrator.DeleteTransactionAsync(currentApplicationUserId, recipeFromDb);            
+            await this._recipeOrchestrator.DeleteTransactionAsync(currentApplicationUserId, id);            
         }
     }
 }
