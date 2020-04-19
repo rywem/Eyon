@@ -264,12 +264,38 @@ li.nostyle {
     border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
+@media (min-width: 500px ) {
+    .model-width-lookup {
+        width: 100%;
+        min-width: 500px !important;
+    }
+}
+
+@media (min-width: 400px) {
+    div .dataTables_wrapper div.dataTables_filter input {
+        margin-left: 0.5em;
+        display: inline-block;
+        width: 160px;
+    }
+}
+
+@media (min-width: 800px ) {
+    .model-width-lookup {
+        width: 100%;
+        min-width: 600px !important;
+    }
+}
+
 @media (max-width: 400px) {    
     .ps {
         padding: 0.4rem;
     }
     .fs {
         font-size: 0.9em;
+    }
+
+    .modal-width-lookup {
+        max-width: 400px !important;
     }
 }
 
