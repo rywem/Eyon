@@ -12,7 +12,6 @@ using Eyon.Models;
 using Eyon.Models.Errors;
 using Eyon.Models.SiteObjects;
 using Eyon.Models.ViewModels;
-using Eyon.Site.Extensions;
 using Eyon.Site.WebUtilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -28,23 +27,19 @@ namespace Eyon.Site.Areas.User.Controllers
     public class RecipeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private RecipeOrchestrator _recipeOrchestrator;
         private readonly IRecipeSecurity _recipeSecurity;
         private readonly long _fileSizeLimit = 8388608;
         private readonly string[] _permittedExtensions = { ".jpg", ".jpeg", ".gif", ".png" };
-        private readonly ImageHelper _imageHelper;
-        private readonly IConfiguration _config;
+        private readonly IImageHelper _imageHelper;
+        
         [BindProperty]
         public RecipeViewModel recipeViewModel { get; set; }
 
-        public RecipeController( IUnitOfWork unitOfWork, IConfiguration config, IRecipeSecurity recipeSecurity )
+        public RecipeController( IUnitOfWork unitOfWork, IRecipeSecurity recipeSecurity, IImageHelper imageHelper )
         {
-            this._config = config;
             this._unitOfWork = unitOfWork;
-            //this._recipeSecurity = new RecipeSecurity(_unitOfWork, config);
             this._recipeSecurity = recipeSecurity;
-            //this._recipeOrchestrator = new RecipeOrchestrator(_unitOfWork);
-            this._imageHelper = new ImageHelper(_config);
+            this._imageHelper = imageHelper;
         }
 
         public IActionResult Index()
@@ -136,35 +131,6 @@ namespace Eyon.Site.Areas.User.Controllers
                             }
                         }
                     }
-                    // Create Ingredients
-                    //string[] ingredientsSplit = recipeViewModel.IngredientsText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    //recipeViewModel.Ingredient = new List<Ingredient>();
-                    //int step = 1;
-                    //foreach ( var item in ingredientsSplit )
-                    //{
-                    //    recipeViewModel.Ingredient.Add(new Ingredient()
-                    //    {
-                    //        Text = item,
-                    //        Number = step,
-                    //        RecipeId = recipeViewModel.Recipe.Id
-                    //    });
-                    //    step++;
-                    //}
-                    //// Create Instructions
-                    //string[] instructionsSplit = recipeViewModel.InstructionsText.Split(new[] { Environment.NewLine },StringSplitOptions.RemoveEmptyEntries);
-
-                    //step = 1;
-                    //recipeViewModel.Instruction = new List<Instruction>();
-                    //foreach ( var item in instructionsSplit )
-                    //{
-                    //    recipeViewModel.Instruction.Add(new Instruction()
-                    //    {
-                    //        StepNumber = step,
-                    //        Text = item,
-                    //        RecipeId = recipeViewModel.Recipe.Id
-                    //    });
-                    //    step++;
-                    //}
                     
                     try
                     {

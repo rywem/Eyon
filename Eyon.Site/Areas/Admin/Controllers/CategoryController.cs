@@ -8,7 +8,6 @@ using Eyon.Models;
 using Eyon.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Eyon.Site.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Eyon.Site.WebUtilities;
 using Eyon.Models.SiteObjects;

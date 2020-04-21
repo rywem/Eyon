@@ -55,8 +55,8 @@ div.dataTables_wrapper div.dataTables_filter {
     div .dataTables_wrapper div.dataTables_filter input {
         margin-left: 0.5em;
         display: inline-block;
-        width: 160px;
-    }
+        width: auto;
+    }    
 
 div.dataTables_wrapper div.dataTables_info {
     padding-top: 0.85em;
