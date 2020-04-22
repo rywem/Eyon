@@ -1,27 +1,25 @@
 ﻿using Eyon.Core.Data.Repository.IRepository;
 using Eyon.Core.DataCalls;
-using Eyon.Core.DataCalls.IDataCall;
 using Eyon.Models;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Eyon.XTests.UnitTests.Core.DataCall
+namespace Eyon.XTests.UnitTests.Core.DataCalls
 {
-    public class RecipeDataCallTests
+    public class FeedDataCallTests
     {
-        private RecipeDataCall _recipeDataCall;
+        private FeedDataCall _feedDataCall;
         private IUnitOfWork _unitOfWork;
-        public RecipeDataCallTests()
+        public FeedDataCallTests()
         {
-            this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(RecipeDataCallTests));
-            this._recipeDataCall = new RecipeDataCall(_unitOfWork);
+            this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(FeedDataCallTests));
+            this._feedDataCall = new FeedDataCall(_unitOfWork);
         }
         [Fact]
-        public async Task AddRecipeWithRelationship_Test()
+        public async Task AddFeedItemWithRelationship_Test()
         {
             Recipe recipe = new Recipe()
             {
@@ -40,11 +38,11 @@ namespace Eyon.XTests.UnitTests.Core.DataCall
             };
             _unitOfWork.ApplicationUser.Add(applicationUser);
             await _unitOfWork.SaveAsync();
-            await _recipeDataCall.AddRecipeWithRelationship(userId, recipe, true);
+            var feed = await _feedDataCall.AddFeedWithRelationship(userId, recipe, true);
 
-            var recipeFromDb = _unitOfWork.Recipe.GetFirstOrDefaultOwnedAsync(userId, x => x.Id == recipe.Id);
-            var recipeOwnerRelationship = _unitOfWork.ApplicationUserRecipe.GetFirstOrDefaultAsync(x => x.ApplicationUserId == userId);
-            Assert.NotNull(recipeFromDb);
+            var feedFromDb = _unitOfWork.Feed.GetFirstOrDefaultOwnedAsync(userId, x => x.Id == feed.Id);
+            var recipeOwnerRelationship = _unitOfWork.ApplicationUserFeed.GetFirstOrDefaultAsync(x => x.ApplicationUserId == userId);
+            Assert.NotNull(feedFromDb);
             Assert.NotNull(recipeOwnerRelationship);
         }
     }

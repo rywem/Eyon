@@ -17,7 +17,7 @@ using System.Linq;
 using Eyon.Core.Orchestrators.IOrchestrator;
 using Eyon.Core.Images;
 
-namespace Eyon.XTests.UnitTests.Core.Orchestator
+namespace Eyon.XTests.UnitTests.Core.Orchestators
 {
     public class RecipeOrchestratorTests
     {

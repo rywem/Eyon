@@ -10,7 +10,7 @@ using Eyon.Core.Orchestrators;
 using System.Linq;
 using Eyon.Core.DataCalls;
 
-namespace Eyon.XTests.UnitTests.Core.Orchestator
+namespace Eyon.XTests.UnitTests.Core.Orchestators
 {
     public class CookbookOrchestratorTests : IDisposable
     {
