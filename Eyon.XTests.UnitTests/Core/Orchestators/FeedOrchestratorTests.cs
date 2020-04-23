@@ -1,148 +1,79 @@
 ﻿using Eyon.Core.Data.Repository.IRepository;
+using Eyon.Core.DataCalls;
+using Eyon.Core.DataCalls.IDataCall;
+using Eyon.Core.Orchestrators;
+using Eyon.Core.Orchestrators.IOrchestrator;
 using Eyon.Models;
 using Eyon.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Eyon.XTests.UnitTests.Core.Orchestators
 {
     public class FeedOrchestratorTests
     {
-
-        public static FeedItemViewModel GetFeedItemViewModel()
+        public IFeedOrchestrator _feedOrchestrator;
+        public IFeedDataCall _feedDataCall;
+        public IUnitOfWork _unitOfWork;
+        public List<Country> countries;
+        public List<State> states;
+        public List<Community> communities;
+        public List<Cookbook> cookbooks;
+        public List<Category> categories;
+        public List<ApplicationUser> applicationUsers;
+        public FeedOrchestratorTests()
         {
-
+            this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(FeedOrchestratorTests));
+            this._feedDataCall = new FeedDataCall(this._unitOfWork);
+            this._feedOrchestrator = new FeedOrchestrator(this._unitOfWork, this._feedDataCall);
+            countries = new List<Country>();
+            states = new List<State>();
+            communities = new List<Community>();
+            cookbooks = new List<Cookbook>();
+            categories = new List<Category>();
+            applicationUsers = new List<ApplicationUser>();
+            SampleData.SeedDatabase(this._unitOfWork, this.countries, this.states, this.communities, this.applicationUsers, this.cookbooks, this.categories);
         }
-        public static void SeedDatabase( IUnitOfWork unitOfWork, List<Country> countries, List<State> states, List<Community> communities,
-           List<ApplicationUser> applicationUsers, List<Cookbook> cookbooks, List<Category> categories )
+
+        public FeedItemViewModel GetFeedItemViewModel()
         {
-            Country country = new Country()
-            {
-                Code = "US",
-                Name = "UNITED STATES"
-            };
-            unitOfWork.Country.Add(country);
-            unitOfWork.Save();
-            countries.Add(country);
+            var feedItemViewModel = new FeedItemViewModel();
+            feedItemViewModel.FeedItem = cookbooks[0];
+            return feedItemViewModel;
+        }
 
-            State state = new State()
+        public class AddAsync : FeedOrchestratorTests
+        {
+            [Fact]
+            public async Task AddFeedItem_ResultNotNull()
             {
-                Name = "California",
-                LocalName = "California",
-                Code = "CA",
-                Type = "State",
-                CountryId = country.Id
-            };
-            unitOfWork.State.Add(state);
-            unitOfWork.Save();
-            states.Add(state);
+                string currentUserId = applicationUsers[0].Id;
+                var feedItemViewModel = GetFeedItemViewModel();
+                await _feedOrchestrator.AddAsync(currentUserId, feedItemViewModel);
 
-            Community community = new Community() { Name = "QUINCY", Active = true, CountryId = country.Id };
-            unitOfWork.Community.Add(community);
-            unitOfWork.Save();
-            communities.Add(community);
-            unitOfWork.CommunityState.AddFromEntities(community, state);
-            Community community2 = new Community() { Name = "SANTA MARIA", Active = true, CountryId = country.Id };
-            unitOfWork.Community.Add(community2);
-            communities.Add(community2);
-            unitOfWork.CommunityState.AddFromEntities(community2, state);
+                var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id);
 
-            ApplicationUser user1 = new ApplicationUser()
+                Assert.NotNull(feedFromDb);
+            }
+
+            [Fact]
+            public async Task AddFeedItem_HasCategory_IdsAreEqual()
             {
-                Id = Guid.NewGuid().ToString(),
-                FirstName = "Ryan",
-                LastName = "Wemmer"
-            };
-            ApplicationUser user2 = new ApplicationUser()
-            {
-                Id = Guid.NewGuid().ToString(),
-                FirstName = "Kelly",
-                LastName = "Wemmer"
-            };
-            unitOfWork.ApplicationUser.Add(user1);
-            unitOfWork.ApplicationUser.Add(user2);
-            unitOfWork.Save();
+                string currentUserId = applicationUsers[0].Id;
+                var feedItemViewModel = GetFeedItemViewModel();
 
-            applicationUsers.Add(user1);
-            applicationUsers.Add(user2);
-            // add cookbooks
-            // add categories
-            Cookbook cookbook1 = new Cookbook()
-            {
-                Author = "Ryan Wemmer",
-                Copyright = "2020",
-                Name = "Breakfast Time",
-                Description = "Ryan's Breakfast Favorites",
-                Privacy = Models.Enums.Privacy.Public
-            };
-            unitOfWork.Cookbook.Add(cookbook1);
+                feedItemViewModel.Categories.Add(categories[0]);
 
+                await _feedOrchestrator.AddAsync(currentUserId, feedItemViewModel);
 
-            Cookbook cookbook2 = new Cookbook()
-            {
-                Author = "Ryan Wemmer",
-                Copyright = "2018",
-                Name = "Dinner Explorer",
-                Description = "Exploring the greatness that can be dinner.",
-                Privacy = Models.Enums.Privacy.Private
-            };
-            unitOfWork.Cookbook.Add(cookbook2);
-            Cookbook cookbook3 = new Cookbook()
-            {
-                Author = "Kelly Wemmer",
-                Copyright = "2019",
-                Name = "Sweets and Treats",
-                Description = "My favorite desserts and sweets.",
-                Privacy = Models.Enums.Privacy.Public
-            };
-            unitOfWork.Cookbook.Add(cookbook3);
-            Cookbook cookbook4 = new Cookbook()
-            {
-                Author = "Ryan Wemmer",
-                Copyright = "2017",
-                Name = "Just Cookies",
-                Description = "Ryan's Best Cookies",
-                Privacy = Models.Enums.Privacy.Public
-            };
+                var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedCategory");
 
-            unitOfWork.Cookbook.Add(cookbook4);
-            unitOfWork.Save();
-            cookbooks.Add(cookbook1);
-            cookbooks.Add(cookbook2);
-            cookbooks.Add(cookbook3);
-            cookbooks.Add(cookbook4);
-
-            unitOfWork.ApplicationUserCookbook.AddFromEntities(user1, cookbook1);
-            unitOfWork.ApplicationUserCookbook.AddFromEntities(user1, cookbook2);
-            unitOfWork.ApplicationUserCookbook.AddFromEntities(user2, cookbook3);
-            unitOfWork.ApplicationUserCookbook.AddFromEntities(user1, cookbook4);
-            unitOfWork.Save();
-
-            Category category1 = new Category()
-            {
-                Name = "Dinner",
-                DisplayOrder = 0
-            };
-            unitOfWork.Category.Add(category1);
-
-            Category category2 = new Category()
-            {
-                Name = "Beef",
-                DisplayOrder = 1
-            };
-
-            unitOfWork.Category.Add(category2);
-            Category category3 = new Category()
-            {
-                Name = "Quick and Easy",
-                DisplayOrder = 2
-            };
-            unitOfWork.Category.Add(category3);
-            unitOfWork.Save();
-            categories.Add(category1);
-            categories.Add(category2);
-            categories.Add(category3);
+                Assert.Equal(categories[0].Id, feedFromDb.FeedCategory.First().CategoryId);
+            }
         }
     }
 }

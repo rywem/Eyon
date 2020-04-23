@@ -31,10 +31,11 @@ namespace Eyon.Core.Data.Repository
             this._db = db;
         }
 
-        public override void Add( Feed entity )
-        {
-            base.Add(entity);
-        }
+        //public override void Add( Feed entity )
+        //{
+        //    entity.CreationDateTime = DateTime.Now.
+        //    base.Add(entity);
+        //}
 
         public Feed AddFromIFeedItem( IFeedItem entity )
         {

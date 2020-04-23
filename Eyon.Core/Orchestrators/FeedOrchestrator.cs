@@ -50,7 +50,7 @@ namespace Eyon.Core.Orchestrators
         public async Task AddAsync( string currentApplicationUserId, FeedItemViewModel feedViewModel )
         {
             var feed = await _feedDataCall.AddFeedWithRelationship(currentApplicationUserId, feedViewModel.FeedItem, false);
-
+            feedViewModel.Feed = feed;
             if ( feedViewModel.Categories != null && feedViewModel.Categories.Count > 0 )
             {
                 foreach ( var item in feedViewModel.Categories )
