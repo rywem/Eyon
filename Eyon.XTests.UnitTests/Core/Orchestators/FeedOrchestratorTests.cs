@@ -65,14 +65,25 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
             {
                 string currentUserId = applicationUsers[0].Id;
                 var feedItemViewModel = GetFeedItemViewModel();
-
                 feedItemViewModel.Categories.Add(categories[0]);
 
                 await _feedOrchestrator.AddAsync(currentUserId, feedItemViewModel);
-
                 var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedCategory");
 
                 Assert.Equal(categories[0].Id, feedFromDb.FeedCategory.First().CategoryId);
+            }
+            [Fact]
+            public async Task AddFeedItem_HasCommunity_IdsAreEqual()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                var feedItemViewModel = GetFeedItemViewModel();
+
+                feedItemViewModel.Communities.Add(communities[0]);
+
+                await _feedOrchestrator.AddAsync(currentUserId, feedItemViewModel);
+                var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedCommunity");
+
+                Assert.Equal(communities[0].Id, feedFromDb.FeedCommunity.First().CommunityId);
             }
         }
     }
