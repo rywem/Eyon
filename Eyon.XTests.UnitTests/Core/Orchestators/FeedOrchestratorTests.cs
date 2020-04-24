@@ -85,6 +85,20 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
 
                 Assert.Equal(communities[0].Id, feedFromDb.FeedCommunity.First().CommunityId);
             }
+
+            [Fact]
+            public async Task AddFeedItem_HasCoobook_IdsAreEqual()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                var feedItemViewModel = GetFeedItemViewModel();
+
+                feedItemViewModel.Cookbooks.Add(cookbooks[0]);
+
+                await _feedOrchestrator.AddAsync(currentUserId, feedItemViewModel);
+                var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedCookbook");
+
+                Assert.Equal(cookbooks[0].Id, feedFromDb.FeedCookbook.First().CookbookId);
+            }
         }
     }
 }
