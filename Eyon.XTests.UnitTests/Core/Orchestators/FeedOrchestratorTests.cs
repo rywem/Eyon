@@ -25,6 +25,7 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
         public List<Cookbook> cookbooks;
         public List<Category> categories;
         public List<ApplicationUser> applicationUsers;
+        public List<Organization> organizations;
         public FeedOrchestratorTests()
         {
             this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(FeedOrchestratorTests));
@@ -36,7 +37,8 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
             cookbooks = new List<Cookbook>();
             categories = new List<Category>();
             applicationUsers = new List<ApplicationUser>();
-            SampleData.SeedDatabase(this._unitOfWork, this.countries, this.states, this.communities, this.applicationUsers, this.cookbooks, this.categories);
+            organizations = new List<Organization>();
+            SampleData.SeedDatabase(this._unitOfWork, this.countries, this.states, this.communities, this.applicationUsers, this.cookbooks, this.categories, this.organizations);
         }
 
         public FeedItemViewModel GetFeedItemViewModel()
@@ -98,6 +100,19 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
                 var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedCookbook");
 
                 Assert.Equal(cookbooks[0].Id, feedFromDb.FeedCookbook.First().CookbookId);
+            }
+
+            [Fact]
+            public async Task AddFeedItem_HasOrganization_IdsAreEqual()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                var feedItemViewModel = GetFeedItemViewModel();
+
+                feedItemViewModel.Organizations.Add(organizations[0]);
+                await _feedOrchestrator.AddAsync(currentUserId, feedItemViewModel);
+
+                var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedOrganization");
+                Assert.Equal(organizations[0].Id, feedFromDb.FeedOrganization.First().OrganizationId);
             }
         }
     }

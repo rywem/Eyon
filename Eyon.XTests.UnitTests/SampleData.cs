@@ -10,7 +10,7 @@ namespace Eyon.XTests.UnitTests
     {
 
         public static void SeedDatabase( IUnitOfWork unitOfWork, List<Country> countries, List<State> states, List<Community> communities,
-           List<ApplicationUser> applicationUsers, List<Cookbook> cookbooks, List<Category> categories )
+           List<ApplicationUser> applicationUsers, List<Cookbook> cookbooks, List<Category> categories, List<Organization> organizations )
         {
             Country country = new Country()
             {
@@ -138,6 +138,18 @@ namespace Eyon.XTests.UnitTests
             categories.Add(category1);
             categories.Add(category2);
             categories.Add(category3);
+
+            Organization organization = new Organization()
+            {
+                Name = "Cooks and Co",
+                Privacy = Models.Enums.Privacy.Public,
+                Description = "Organization for cooks.",
+                Type = "Group"
+            };
+            unitOfWork.Organization.Add(organization);
+            unitOfWork.Save();
+
+            organizations.Add(organization);
         }
     }
 }
