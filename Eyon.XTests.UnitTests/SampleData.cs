@@ -1,5 +1,6 @@
 ﻿using Eyon.Core.Data.Repository.IRepository;
 using Eyon.Models;
+using Eyon.Models.Relationship;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,8 @@ namespace Eyon.XTests.UnitTests
     {
 
         public static void SeedDatabase( IUnitOfWork unitOfWork, List<Country> countries, List<State> states, List<Community> communities,
-           List<ApplicationUser> applicationUsers, List<Cookbook> cookbooks, List<Category> categories, List<Organization> organizations )
+           List<ApplicationUser> applicationUsers, List<Cookbook> cookbooks, List<Category> categories, List<Organization> organizations,
+           List<Profile> profiles)
         {
             Country country = new Country()
             {
@@ -61,6 +63,28 @@ namespace Eyon.XTests.UnitTests
 
             applicationUsers.Add(user1);
             applicationUsers.Add(user2);
+
+            Profile profile = new Profile()
+            {
+                Name = "rwem",
+                Privacy = Models.Enums.Privacy.Public,
+                Description = "Home Chef and Software Engineer"
+            };
+
+            unitOfWork.Profile.Add(profile);
+            unitOfWork.Save();
+
+            profiles.Add(profile);
+
+            ApplicationUserProfile applicationUserProfile = new ApplicationUserProfile()
+            {
+                ApplicationUserId = user1.Id,
+                ObjectId = profile.Id
+            };
+
+            unitOfWork.ApplicationUserProfile.Add(applicationUserProfile);
+            unitOfWork.Save();
+
             // add cookbooks
             // add categories
             Cookbook cookbook1 = new Cookbook()
