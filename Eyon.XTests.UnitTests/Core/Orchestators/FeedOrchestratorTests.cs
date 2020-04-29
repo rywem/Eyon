@@ -26,6 +26,7 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
         public List<Category> categories;
         public List<ApplicationUser> applicationUsers;
         public List<Organization> organizations;
+        public List<Profile> profiles;
         public FeedOrchestratorTests()
         {
             this._unitOfWork = new Resources().GetInMemoryUnitOfWork(nameof(FeedOrchestratorTests));
@@ -38,7 +39,8 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
             categories = new List<Category>();
             applicationUsers = new List<ApplicationUser>();
             organizations = new List<Organization>();
-            SampleData.SeedDatabase(this._unitOfWork, this.countries, this.states, this.communities, this.applicationUsers, this.cookbooks, this.categories, this.organizations);
+            profiles = new List<Profile>();
+            SampleData.SeedDatabase(this._unitOfWork, this.countries, this.states, this.communities, this.applicationUsers, this.cookbooks, this.categories, this.organizations, this.profiles);
         }
 
         public FeedItemViewModel GetFeedItemViewModel()
@@ -114,6 +116,72 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
                 var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedOrganization");
                 Assert.Equal(organizations[0].Id, feedFromDb.FeedOrganization.First().OrganizationId);
             }
+
+            [Fact]
+            public async Task AddFeedItem_HasProfile_IdsAreEqual()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                var feedItemViewModel = GetFeedItemViewModel();
+                feedItemViewModel.Profiles.Add(profiles[0]);
+
+                await _feedOrchestrator.AddAsync(currentUserId, feedItemViewModel);
+
+                var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedProfile");
+                Assert.Equal(profiles[0].Id, feedFromDb.FeedProfile.First().ProfileId);
+            }
+
+            [Fact]
+            public async Task AddFeedItem_HasRecipe_IdsAreEqual()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                var feedItemViewModel = GetFeedItemViewModel();
+                Recipe recipe = new Recipe()
+                {
+                    Name = "Ham and Rice Dinner",
+                    Description = "Ham and rice for a wonderful dinner.",
+                    PrepTime = "10 mins",
+                    Cooktime = "15 mins",
+                    Servings = "Serves 6"
+                };
+                _unitOfWork.Recipe.Add(recipe);
+                await _unitOfWork.SaveAsync();
+
+                feedItemViewModel.Recipes.Add(recipe);
+
+                await _feedOrchestrator.AddAsync(currentUserId, feedItemViewModel);
+
+                var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedRecipe");
+                Assert.Equal(recipe.Id, feedFromDb.FeedRecipe.First().RecipeId);
+            }
+
+
+            [Fact]
+            public async Task AddFeedItem_HasTopic_IdsAreEqual()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                var feedItemViewModel = GetFeedItemViewModel();
+                Recipe recipe = new Recipe()
+                {
+                    Name = "Ham and Rice Dinner",
+                    Description = "Ham and rice for a wonderful dinner.",
+                    PrepTime = "10 mins",
+                    Cooktime = "15 mins",
+                    Servings = "Serves 6"
+                };
+                _unitOfWork.Recipe.Add(recipe);
+                await _unitOfWork.SaveAsync();
+
+                var topic = _unitOfWork.Topic.AddFromITopicItem(recipe);
+                await _unitOfWork.SaveAsync();
+                feedItemViewModel.Topics.Add(topic);
+
+                await _feedOrchestrator.AddAsync(currentUserId, feedItemViewModel);
+
+                var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedTopic");
+                Assert.Equal(topic.Id, feedFromDb.FeedTopic.First().TopicId);
+            }
+
+
         }
     }
 }
