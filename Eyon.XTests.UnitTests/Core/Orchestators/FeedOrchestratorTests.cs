@@ -191,5 +191,22 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
 
 
         }
+        
+        public class UpdateAsync : FeedOrchestratorTests
+        {
+            [Fact]
+            public async Task AddFeedItem_UpdateFeedItem_ResultNotNull()
+            {
+                string currentUserId = applicationUsers[0].Id;
+                var feedItemViewModel = GetFeedItemViewModel();
+                await _feedOrchestrator.AddAsync(currentUserId, feedItemViewModel);
+
+                var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id);
+
+                Assert.NotNull(feedFromDb);
+                Assert.True(feedFromDb.Id > 0);
+            }
+        }
+    
     }
 }

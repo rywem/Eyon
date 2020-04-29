@@ -94,6 +94,8 @@ namespace Eyon.Core.Data.Repository
                 throw new SafeException("An error ocurred.", new Exception(string.Format("Object not found Feed.Update() Feed ID: {0}", feed.Id)));
 
             feed.Privacy = entity.Privacy;
+            objFromDb.Privacy = entity.Privacy;
+            objFromDb.Name = entity.Name;
             objFromDb.Description = entity.Description;
             objFromDb.ModifiedDateTime = entity.ModifiedDateTime;
             dbSet.Update(objFromDb);
@@ -111,6 +113,8 @@ namespace Eyon.Core.Data.Repository
                     throw new SafeException("An error ocurred.", new Exception(string.Format("Ownership relationship not found on record. currentUserId {0},  recipe.Id {1}", currentUserId, feed.Id)));
 
             feed.Privacy = entity.Privacy;
+            objFromDb.Privacy = entity.Privacy;
+            objFromDb.Name = entity.Name;
             objFromDb.Description = entity.Description;
             objFromDb.ModifiedDateTime = entity.ModifiedDateTime;
             dbSet.Update(objFromDb);

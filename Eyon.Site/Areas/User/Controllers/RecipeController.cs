@@ -127,6 +127,7 @@ namespace Eyon.Site.Areas.User.Controllers
                                     recipeViewModel.UserImage = new List<UserImage>();
                                 UserImage img = (UserImage)await _imageHelper.ProcessIImageFile(filesAsByteArrays[i], new UserImage());
                                 img.Description = recipeViewModel.Recipe.Description;
+                                img.Name = recipeViewModel.Recipe.Name;
                                 recipeViewModel.UserImage.Add(img);
                             }
                         }

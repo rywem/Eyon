@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Eyon.Models.Interfaces
 {
-    public interface IFeedItem : IRecord, ICreated, IModified, IPrivacy, IDescription
+    public interface IFeedItem : IRecord, ICreated, IModified, IPrivacy, IDescription, INamed
     {
     }
 }

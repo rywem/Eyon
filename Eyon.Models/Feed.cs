@@ -14,6 +14,8 @@ namespace Eyon.Models
         [Key]
         public long Id { get; set; }
         
+        public string Name { get; set; }
+
         [MaxLength(600)]
         [StringLength(600)]        
         public string Description { get; set; }
