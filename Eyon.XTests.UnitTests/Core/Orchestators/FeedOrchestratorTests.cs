@@ -62,6 +62,7 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
                 var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id);
 
                 Assert.NotNull(feedFromDb);
+                Assert.True(feedFromDb.Id > 0);
             }
 
             [Fact]
@@ -75,6 +76,7 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
                 var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedCategory");
 
                 Assert.Equal(categories[0].Id, feedFromDb.FeedCategory.First().CategoryId);
+                Assert.True(feedFromDb.FeedCategory.First().CategoryId > 0);
             }
             [Fact]
             public async Task AddFeedItem_HasCommunity_IdsAreEqual()
@@ -88,6 +90,7 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
                 var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedCommunity");
 
                 Assert.Equal(communities[0].Id, feedFromDb.FeedCommunity.First().CommunityId);
+                Assert.True(feedFromDb.FeedCommunity.First().CommunityId > 0);
             }
 
             [Fact]
@@ -102,6 +105,7 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
                 var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedCookbook");
 
                 Assert.Equal(cookbooks[0].Id, feedFromDb.FeedCookbook.First().CookbookId);
+                Assert.True(feedFromDb.FeedCookbook.First().CookbookId > 0);
             }
 
             [Fact]
@@ -115,6 +119,7 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
 
                 var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedOrganization");
                 Assert.Equal(organizations[0].Id, feedFromDb.FeedOrganization.First().OrganizationId);
+                Assert.True(feedFromDb.FeedOrganization.First().OrganizationId > 0);
             }
 
             [Fact]
@@ -128,6 +133,7 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
 
                 var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedProfile");
                 Assert.Equal(profiles[0].Id, feedFromDb.FeedProfile.First().ProfileId);
+                Assert.True(feedFromDb.FeedProfile.First().ProfileId > 0);
             }
 
             [Fact]
@@ -152,6 +158,7 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
 
                 var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedRecipe");
                 Assert.Equal(recipe.Id, feedFromDb.FeedRecipe.First().RecipeId);
+                Assert.True(feedFromDb.FeedRecipe.First().RecipeId > 0);
             }
 
 
@@ -178,6 +185,7 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
                 await _feedOrchestrator.AddAsync(currentUserId, feedItemViewModel);
 
                 var feedFromDb = await _unitOfWork.Feed.GetFirstOrDefaultAsync(x => x.Id == feedItemViewModel.Feed.Id, includeProperties: "FeedTopic");
+                Assert.True(feedFromDb.FeedTopic.First().TopicId > 0);
                 Assert.Equal(topic.Id, feedFromDb.FeedTopic.First().TopicId);
             }
 
