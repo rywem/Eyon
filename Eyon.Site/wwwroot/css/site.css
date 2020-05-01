@@ -366,11 +366,11 @@ ol#list_selected_category {
 
 }
     ol#list_selected_category li {
-        border: 1px hidden rgb(35, 68, 186);
+        border: 1px hidden;
         border-radius: 5px;
         display: inline;
-        background-color: rgb(181, 216, 255);
-        color: rgb(35, 68, 186);
+        background-color: var(--success);
+        color: var(--light);
         margin-right: 0.3em;
         padding-left: 0.3em;
         font-weight: 200;

@@ -11,14 +11,20 @@
         @foreach ( var item in Model.FeedItems )
         {
 
-            <div class="row" style="border: 1px solid black; 
-                                    padding: 0 0 0 0;">
+            <div class="row" style="padding: 0 0 0 0;">
                 <div class="col-sm-8">
                     <div class="card feed-item">
                         @if ( item.Topics != null && item.Topics.Count > 0 )
                         {
                             <div class="card-header">
-                                @item.Topics[0].Name
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        @item.Topics[0].Name
+                                    </div>
+                                    <div class="col-sm-3 offset-5">
+                                        @item.FeedItem.CreationDateTime.ToString("MM/dd/yyyy")
+                                    </div>
+                                </div>
                             </div>
                         }
                         <div class="card-body">
