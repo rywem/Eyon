@@ -15,10 +15,7 @@ namespace Eyon.Models
         [MaxLength(200)]
         [StringLength(200)]
         [Display(Name = "Category Name")]
-        public string Name { get; set; }
-        [Required]
-        [Display(Name = "Display Order")]
-        public int DisplayOrder { get; set; }        
+        public string Name { get; set; }                
         public long SiteImageId { get; set; }
         [ForeignKey("SiteImageId")]
         public SiteImage SiteImage { get; set; }

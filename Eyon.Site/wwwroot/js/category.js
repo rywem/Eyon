@@ -13,8 +13,7 @@ function loadDataTable() {
             "datatype": "json"
         },
         "columns": [
-            { "data": "name", "width": "30%" },
-            { "data": "displayOrder", "width": "20%" },
+            { "data": "name", "width": "30%" },            
             { "data": "siteImage.thumb", 
                "render": function (data) {
                    return ` <div class="img-thumbnail">

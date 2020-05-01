@@ -239,8 +239,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
             var x = ( from p in _unitOfWork.Category.Search(filter, includeProperties: "SiteImage")
                       select new
                       {
-                          name = p.Name,
-                          displayOrder = p.DisplayOrder,
+                          name = p.Name,                          
                           id = p.Id,
                           imageTitle = p.SiteImage.Description,
                           imageAlt = p.SiteImage.Alt,

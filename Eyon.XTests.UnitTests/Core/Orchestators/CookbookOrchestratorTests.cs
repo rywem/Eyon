@@ -31,14 +31,13 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
             // arrange           
             var category = new Models.Category()
             {
-                DisplayOrder = 1,
+
                 Name = "Test Category"
             };
             _unitOfWork.Category.Add(category);
             _unitOfWork.Save();
             var category2 = new Models.Category()
             {
-                DisplayOrder = 2,
                 Name = "Test Category2"
             };
             _unitOfWork.Category.Add(category2);

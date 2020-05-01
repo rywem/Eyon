@@ -1411,22 +1411,19 @@ Serve and enjoy!";
 
             Category category1 = new Category()
             {
-                Name = "Dinner",
-                DisplayOrder = 0
+                Name = "Dinner"
             };
             unitOfWork.Category.Add(category1);
 
             Category category2 = new Category()
             {
-                Name = "Beef",
-                DisplayOrder = 1
+                Name = "Beef"          
             };
 
             unitOfWork.Category.Add(category2);
             Category category3 = new Category()
             {
-                Name = "Quick and Easy",
-                DisplayOrder = 2
+                Name = "Quick and Easy"
             };
             unitOfWork.Category.Add(category3);
             unitOfWork.Save();            

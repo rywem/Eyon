@@ -24,7 +24,6 @@ namespace Eyon.XTests.UnitTests.Core.Data.Repository
             //Setup
             var category = new Models.Category()
             {
-                DisplayOrder = 1,
                 Name = "Test Category"                
             };
             _unitOfWork.Category.Add(category);
@@ -38,7 +37,6 @@ namespace Eyon.XTests.UnitTests.Core.Data.Repository
             // arrange           
             var category = new Models.Category()
             {
-                DisplayOrder = 1,
                 Name = "Test Category"
             };
             
@@ -60,23 +58,18 @@ namespace Eyon.XTests.UnitTests.Core.Data.Repository
             var firstDisplayOrder = 1;
             var category = new Models.Category()
             {
-                DisplayOrder = firstDisplayOrder,
                 Name = firstName
             };
             var id = category.Id;
             _unitOfWork.Category.Add(category);
             Assert.Equal(category.Name, firstName);
-            Assert.Equal(category.DisplayOrder, firstDisplayOrder);
             Assert.True(category.Id > 0);
             var currentId = category.Id;
             var secondName = "New Name";
-            var secondDisplayOrder = 2;
             category.Name = secondName;
-            category.DisplayOrder = secondDisplayOrder;
             _unitOfWork.Category.Add(category);
             var categoryFromDb = _unitOfWork.Category.Get(currentId);
-            Assert.Equal(categoryFromDb.Name, secondName);
-            Assert.Equal(categoryFromDb.DisplayOrder, secondDisplayOrder);
+            Assert.Equal(categoryFromDb.Name, secondName);            
             Assert.Equal(category.Id, currentId);
         }
         [Fact]
@@ -84,8 +77,7 @@ namespace Eyon.XTests.UnitTests.Core.Data.Repository
         {
             // arrange           
             var category = new Models.Category()
-            {
-                DisplayOrder = 1,
+            {                
                 Name = "Test Category"
             };
 

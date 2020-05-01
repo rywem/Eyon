@@ -430,13 +430,13 @@ namespace Eyon.Core.Data
             #region Seed Categories
 
             modelBuilder.Entity<Category>().HasData(
-                new Category() { Id = 1, Name = "Cookies", DisplayOrder = 0, SiteImageId = 1 },
-                new Category() { Id = 2, Name = "Holiday Cookies", DisplayOrder = 1, SiteImageId = 2 },
-                new Category() { Id = 3, Name = "Dinner", DisplayOrder = 2, SiteImageId = 3 },
-                new Category() { Id = 4, Name = "Breakfast", DisplayOrder = 3, SiteImageId = 4 },
-                new Category() { Id = 5, Name = "Salads", DisplayOrder = 4, SiteImageId = 5 },
-                new Category() { Id = 6, Name = "Soups and Stews", DisplayOrder = 5, SiteImageId = 6 },
-                new Category() { Id = 7, Name = "Poultry", DisplayOrder = 6, SiteImageId = 7 }
+                new Category() { Id = 1, Name = "Cookies", SiteImageId = 1 },
+                new Category() { Id = 2, Name = "Holiday Cookies",  SiteImageId = 2 },
+                new Category() { Id = 3, Name = "Dinner", SiteImageId = 3 },
+                new Category() { Id = 4, Name = "Breakfast", SiteImageId = 4 },
+                new Category() { Id = 5, Name = "Salads", SiteImageId = 5 },
+                new Category() { Id = 6, Name = "Soups and Stews",  SiteImageId = 6 },
+                new Category() { Id = 7, Name = "Poultry", SiteImageId = 7 }
                 );
 
             #endregion
