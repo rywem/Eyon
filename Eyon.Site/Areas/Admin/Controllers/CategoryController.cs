@@ -206,7 +206,7 @@ namespace Eyon.Site.Areas.Admin.Controllers
                     }
                     await _imageHelper.TryDeleteAsync(imageFromDb.FileName);
                     await _imageHelper.TryDeleteAsync(imageFromDb.FileNameThumb);
-
+                    _unitOfWork.Topic.RemoveFromITopicItem(categoryFromDb);
                     _unitOfWork.Category.Remove(categoryFromDb);
                     _unitOfWork.Save();
                     _unitOfWork.SiteImage.Remove(imageFromDb);
