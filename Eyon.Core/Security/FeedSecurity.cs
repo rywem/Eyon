@@ -10,6 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Eyon.Core.Orchestrators.IOrchestrator;
 using Eyon.Core.Security.ISecurity;
+using Microsoft.Extensions.Configuration;
+using Eyon.Utilities.API;
+using Eyon.Utilities.Extensions;
+using System.Linq;
 
 namespace Eyon.Core.Security
 {
@@ -17,9 +21,11 @@ namespace Eyon.Core.Security
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFeedOrchestrator _feedOrchestrator;
-        public FeedSecurity( IUnitOfWork unitOfWork, IFeedOrchestrator feedOrchestrator )
+        private IConfiguration _config;
+        public FeedSecurity( IUnitOfWork unitOfWork, IConfiguration config, IFeedOrchestrator feedOrchestrator)
         {
             this._unitOfWork = unitOfWork;
+            this._config = config;
             this._feedOrchestrator = feedOrchestrator;
         }
 
@@ -27,7 +33,16 @@ namespace Eyon.Core.Security
         {
             if ( currentApplicationUserId == null )
             {
-                return await this._feedOrchestrator.GetPublicFeedViewModel(sortBy, skip, take );
+                var feedViewModel = await this._feedOrchestrator.GetPublicFeedViewModel(sortBy, skip, take);
+                using ( AmazonWebService service = new AmazonWebService(_config.GetValue<string>("AWS:AccessKey"), _config.GetValue<string>("AWS:SecretKey")) )
+                {
+                    foreach ( var feedItemViewModel in feedViewModel.FeedItems )
+                    {
+                        feedItemViewModel.UserImages.GetImagesUrl(x => x.Image = service.GetPreSignedUrl(_config.GetValue<string>("AWS:Bucket"), x.FileName),
+                                                                   x => x.Thumb = service.GetPreSignedUrl(_config.GetValue<string>("AWS:Bucket"), x.FileNameThumb)).ToList();
+                    }
+                }                
+                return feedViewModel;
             }
             else
                 throw new NotImplementedException();

@@ -31,12 +31,6 @@ namespace Eyon.Core.Data.Repository
             this._db = db;
         }
 
-        //public override void Add( Feed entity )
-        //{
-        //    entity.CreationDateTime = DateTime.Now.
-        //    base.Add(entity);
-        //}
-
         public Feed AddFromIFeedItem( IFeedItem entity )
         {
             var dateTimeNow = DateTime.UtcNow;
@@ -67,13 +61,16 @@ namespace Eyon.Core.Data.Repository
             switch ( sortBy )
             {
                 case FeedSortBy.New:
-                    var query = await GetAllAsync(x => x.Privacy == Privacy.Public, r => r.OrderByDescending(x => x.CreationDateTime), includeProperties: "FeedTopic,FeedTopic.Topic", additionalQueryable);
+                    var query = await GetAllAsync(x => x.Privacy == Privacy.Public, r => r.OrderByDescending(x => x.CreationDateTime), includeProperties: "FeedTopic,FeedTopic.Topic,FeedRecipe,FeedRecipe.Recipe,FeedRecipe.Recipe.RecipeUserImage.UserImage", additionalQueryable);
+                    
                     feedViewModel.FeedItems = (from f in query
                                               select new FeedItemViewModel()
                                               {
                                                   FeedItem = f,
-                                                  Topics = ( f.FeedTopic != null && f.FeedTopic.Count > 0 ) ? f.FeedTopic.Select(x => x.Topic).ToList() : new List<Topic>()
-                                              }).ToList();
+                                                  Topics = ( f.FeedTopic != null && f.FeedTopic.Count > 0 ) ? f.FeedTopic.Select(x => x.Topic).ToList() : new List<Topic>(),
+                                                  Recipes = (f.FeedRecipe != null && f.FeedRecipe.Count > 0 ) ? f.FeedRecipe.Select(x => x.Recipe).ToList() : new List<Recipe>(),
+                                                  UserImages = ( f.FeedRecipe != null && f.FeedRecipe.Count > 0 ) ? GetRecipeUserImages(f.FeedRecipe).ToList() : new List<UserImage>()
+                                              } ).ToList();
 
                     break;
                 case FeedSortBy.Popular:
@@ -85,6 +82,17 @@ namespace Eyon.Core.Data.Repository
             
 
             return feedViewModel;
+        }
+
+        private IEnumerable<UserImage> GetRecipeUserImages(ICollection<FeedRecipe> feedRecipes )
+        {
+            foreach ( var feedRecipe in feedRecipes )
+            {
+                foreach ( var recipeUserImage in feedRecipe.Recipe.RecipeUserImage )
+                {
+                    yield return recipeUserImage.UserImage;
+                }
+            }
         }
 
         public void Update( Feed feed, IFeedItem entity )

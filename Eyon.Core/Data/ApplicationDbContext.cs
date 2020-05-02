@@ -42,6 +42,7 @@ namespace Eyon.Core.Data
 
             #endregion
 
+
             #region Indexes
             // Indexes: https://stackoverflow.com/questions/18889218/unique-key-constraints-for-multiple-columns-in-entity-framework
             //modelBuilder.Entity<Community>()
