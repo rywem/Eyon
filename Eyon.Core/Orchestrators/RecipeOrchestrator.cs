@@ -381,6 +381,9 @@ namespace Eyon.Core.Orchestrators
 
             await _unitOfWork.SaveAsync();
 
+            await AddRecipeUserImageAsync(currentApplicationUserId, recipeViewModel);
+            //TODO remove images
+
             if ( recipeFromDb.FeedRecipe != null && recipeFromDb.FeedRecipe.Feed != null)
                 await _feedSecurity.UpdateAsync(currentApplicationUserId, recipeViewModel.ToFeedItemViewModel(recipeFromDb.FeedRecipe.Feed), false);
         }
