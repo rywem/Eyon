@@ -49,8 +49,8 @@ namespace Eyon.Core.Data.Initializers
             // Create Users
             _userManager.CreateAsync(new ApplicationUser
             {
-                UserName = "ryan.wemmer@gmail.com",
-                Email = "ryan.wemmer@gmail.com",
+                UserName = "admin1@eyon.site",
+                Email = "admin2@eyon.site",
                 EmailConfirmed  = true,  
                 FirstName = "Ryan",
                 LastName = "Wemmer",
@@ -58,8 +58,8 @@ namespace Eyon.Core.Data.Initializers
 
             _userManager.CreateAsync(new ApplicationUser
             {
-                UserName = "cybervoid41@gmail.com",
-                Email = "cybervoid41@gmail.com",
+                UserName = "admin2@eyon.site",
+                Email = "admin2@eyon.site",
                 EmailConfirmed = true,
                 FirstName = "Ryan",
                 LastName = "Wemmer",
