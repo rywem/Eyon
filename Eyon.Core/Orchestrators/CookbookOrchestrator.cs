@@ -46,87 +46,7 @@ namespace Eyon.Core.Orchestrators
             }
             return cookbookViewModel;
         }
-
-        /// <summary>
-        /// Handles adding new cookbooks and their relationships
-        /// </summary>
-        /// <param name="cookbookViewModel">The CookbookViewModel </param>
-        /// <returns>The cookbookviewmodel</returns>
-        //public void AddCookbook(string currentUserId, CookbookViewModel cookbookViewModel)
-        //{
-        //    if (cookbookViewModel.Cookbook.Id != 0) //New cookbook
-        //        throw new SafeException("Cookbook already exists.");
-
-        //    //FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
-        //    _unitOfWork.Cookbook.Add(cookbookViewModel.Cookbook);
-        //    _unitOfWork.Save();
-        //    _unitOfWork.Cookbook.AddOwnerRelationship(currentUserId, cookbookViewModel.Cookbook, new ApplicationUserCookbook());
-        //    _unitOfWork.Save();
-        //    var topic = _unitOfWork.Topic.AddFromITopicItem(cookbookViewModel.Cookbook);
-        //    var feed = _feedDataCall.AddFeedWithRelationship(currentUserId, cookbookViewModel.Cookbook);
-        //    _unitOfWork.Save();
-
-
-        //    if ( !string.IsNullOrEmpty(cookbookViewModel.CategorySelector.ItemIds) )
-        //    {
-        //        foreach ( var id in cookbookViewModel.CategorySelector.ParseItemIds() )
-        //        {
-        //            var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == id);
-
-        //            if ( categoryFromDb != null )
-        //            {
-        //                _unitOfWork.CookbookCategory.AddFromEntities(cookbookViewModel.Cookbook, categoryFromDb);
-        //                _unitOfWork.FeedCategory.AddFromEntities(feed, categoryFromDb);
-        //            }
-        //        }
-        //    }
-        //    //if (!string.IsNullOrEmpty(cookbookViewModel.CategoryIds))
-        //    //{
-        //    //    string[] categories = cookbookViewModel.CategoryIds.Split(',');
-
-        //    //    if (categories.Length > 0)
-        //    //    {
-
-        //    //        for (int i = 0; i < categories.Length; i++)
-        //    //        {
-        //    //            long id = 0;
-        //    //            if (long.TryParse(categories[i], out id) && id != 0)
-        //    //            {
-        //    //                _unitOfWork.CookbookCategory.Add(new Eyon.Models.Relationship.CookbookCategory()
-        //    //                {
-        //    //                    CategoryId = id,
-        //    //                    CookbookId = cookbookViewModel.Cookbook.Id
-        //    //                });
-        //    //                _unitOfWork.Save();                            
-        //    //            }
-        //    //            else
-        //    //            {
-        //    //                throw new SafeException("Invalid category selected.");
-        //    //            }
-        //    //        }
-        //    //    }
-        //    //}
-        //    // Todo, add community
-
-        //}
-
-        //public void AddCookbookTransaction(string currentUserId, CookbookViewModel cookbookViewModel)
-        //{
-        //    using (var transaction = _unitOfWork.BeginTransaction())
-        //    {
-        //        try
-        //        {
-        //            AddCookbook(currentUserId, cookbookViewModel);
-        //            // Todo, add community
-        //            transaction.Commit();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            transaction.Rollback();
-        //            throw ex;
-        //        }
-        //    }
-        //}
+        
         public async Task AddTransactionAsync( string currentUserId, CookbookViewModel cookbookViewModel )
         {
             using ( var transaction = _unitOfWork.BeginTransaction() )
@@ -155,15 +75,7 @@ namespace Eyon.Core.Orchestrators
             _unitOfWork.Cookbook.AddOwnerRelationship(currentUserId, cookbookViewModel.Cookbook, new ApplicationUserCookbook());
             await _unitOfWork.SaveAsync();
             var topic = _unitOfWork.Topic.AddFromITopicItem(cookbookViewModel.Cookbook);
-
-
-            //var feed = await _feedDataCall.AddFeedWithRelationship(currentUserId, cookbookViewModel.Cookbook);
-
-            //_feedDataCall.AddFeedCookbook(feed, cookbookViewModel.Cookbook);
-            //_feedDataCall.AddFeedTopic(feed, topic);
             
-            
-
             if ( !string.IsNullOrEmpty(cookbookViewModel.CategorySelector.ItemIds) )
             {
                 foreach ( var id in cookbookViewModel.CategorySelector.ParseItemIds() )
@@ -180,29 +92,9 @@ namespace Eyon.Core.Orchestrators
             await _unitOfWork.SaveAsync();
 
             var feedItemViewModel = cookbookViewModel.ToFeedItemViewModel();
-            feedItemViewModel.Topics.Add(topic);
-            //feedItemViewModel.Communities.Add(communityFromDb);
+            feedItemViewModel.Topics.Add(topic);            
             await _feedSecurity.AddAsync(currentUserId, feedItemViewModel, false);
-        }
-
-        //public void UpdateCookbookTransaction(string currentUserId, CookbookViewModel cookbookViewModel)
-        //{
-        //    using (var transaction = _unitOfWork.BeginTransaction())
-        //    {
-        //        try
-        //        {
-
-        //            UpdateCookbook( currentUserId, cookbookViewModel);
-        //            transaction.Commit();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            transaction.Rollback();
-        //            throw ex;
-        //        }
-
-        //    }
-        //}
+        }       
 
         public async Task UpdateTransactionAsync( string currentUserId, CookbookViewModel cookbookViewModel )
         {
@@ -224,12 +116,12 @@ namespace Eyon.Core.Orchestrators
 
         public async Task UpdateAsync( string currentUserId, CookbookViewModel cookbookViewModel )
         {
+            // TODO Refactor with SOLID in mind.
+
             var objFromDb = await _unitOfWork.Cookbook.GetFirstOrDefaultAsync(x => x.Id == cookbookViewModel.Cookbook.Id, includeProperties: "CommunityCookbook,CookbookCategory,FeedCookbook,FeedCookbook.Feed");
             if ( objFromDb == null || objFromDb.Id == 0 )
                 throw new SafeException("Record not found in database");
-
-            //FeedDataCall feedCaller = new FeedDataCall(_unitOfWork);
-            //_feedDataCall.UpdateFeed(currentUserId, objFromDb.FeedCookbook.Feed, cookbookViewModel.Cookbook);
+            
             // Update Categories
             List<long> categoryIdList = new List<long>();
 
@@ -245,8 +137,7 @@ namespace Eyon.Core.Orchestrators
                         var categoryFromDb = await _unitOfWork.Category.GetFirstOrDefaultAsync(x => x.Id == id);
                         if ( categoryFromDb != null )
                         {
-                            _unitOfWork.CookbookCategory.AddFromEntities(objFromDb, categoryFromDb);
-                            //_unitOfWork.FeedCategory.AddFromEntities(objFromDb.FeedCookbook.Feed, categoryFromDb);
+                            _unitOfWork.CookbookCategory.AddFromEntities(objFromDb, categoryFromDb);                            
                             cookbookViewModel.CategorySelector.Items.Add(categoryFromDb);
                         }
                         else
@@ -264,16 +155,12 @@ namespace Eyon.Core.Orchestrators
                 {
                     if ( !categoryIdList.Any(x => x == item.CategoryId) )
                     {
-                        var feedCategoryFromDb = await _unitOfWork.FeedCategory.GetFirstOrDefaultAsync(x => x.FeedId == objFromDb.FeedCookbook.Feed.Id && x.CategoryId == item.CategoryId);
-                        //if ( feedCategoryFromDb != null )
-                        //    _feedDataCall.RemoveFeedCategory(feedCategoryFromDb);
-
+                        var feedCategoryFromDb = await _unitOfWork.FeedCategory.GetFirstOrDefaultAsync(x => x.FeedId == objFromDb.FeedCookbook.Feed.Id && x.CategoryId == item.CategoryId);                        
                         _unitOfWork.CookbookCategory.Remove(item);
                     }
                 }
             }
-            // TODO CookbookOrganization
-            // 
+            // TODO CookbookOrganization            
             
             _unitOfWork.Cookbook.UpdateIfOwner(currentUserId, cookbookViewModel.Cookbook);
             await _unitOfWork.SaveAsync();
@@ -388,53 +275,7 @@ namespace Eyon.Core.Orchestrators
                         _unitOfWork.CookbookCategory.Remove(item);
                     }
                 }
-            }
-            //if (!string.IsNullOrEmpty(cookbookViewModel.CategoryIds))
-            //{
-            //    string[] categories = cookbookViewModel.CategoryIds.Split(',');
-
-            //    if (categories.Length > 0)
-            //    {
-            //        List<long> newCategories = new List<long>();
-            //        for (int i = 0; i < categories.Length; i++)
-            //        {
-            //            long id = 0;
-            //            if (long.TryParse(categories[i], out id))
-            //            {
-            //                newCategories.Add(id);
-            //            }
-            //            else
-            //            {
-            //                throw new SafeException("Invalid category selected.");
-            //            }
-            //        }
-
-            //        // find existing categories to remove
-            //        foreach (var item in objFromDb.CookbookCategory)
-            //        {
-            //            if (newCategories.Contains(item.CategoryId))
-            //                continue;
-            //            else
-            //                _unitOfWork.CookbookCategory.Remove(item);
-            //        }
-            //        _unitOfWork.Save();
-
-            //        //Find new categories to add
-            //        foreach (var item in newCategories)
-            //        {
-            //            var exist = objFromDb.CookbookCategory.FirstOrDefault(x => x.CategoryId == item);
-            //            if (exist == null)
-            //            {
-            //                _unitOfWork.CookbookCategory.Add(new Eyon.Models.Relationship.CookbookCategory()
-            //                {
-            //                    CategoryId = item,
-            //                    CookbookId = objFromDb.Id
-            //                });
-            //            }
-            //        }
-            //        _unitOfWork.Save();
-            //    }
-            //}
+            }           
             //Todo add other relationship updates
             _unitOfWork.Cookbook.UpdateIfOwner(currentUserId, cookbookViewModel.Cookbook);
             _unitOfWork.Save();

@@ -433,16 +433,6 @@ namespace Eyon.Core.Data{
                 return _ApplicationUserProfile.Value;
             }
         }
-        /*
-        private Lazy<IXRepository> _X;
-        public IXRepository X
-        {
-            get
-            {
-                return _X.Value;
-            }
-        }
-        */
         #endregion
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -468,8 +458,7 @@ namespace Eyon.Core.Data{
             this._Instruction = new Lazy<IInstructionRepository>(() => new InstructionRepository(this._db));
             this._WebReference = new Lazy<IWebReferenceRepository>(() => new WebReferenceRepository(this._db));
             #endregion
-            #region relationship constructors
-            //this._x = new Lazy<IXRepository>(() => new XRepository(this._db));
+            #region relationship constructors            
             this._FeedTopic = new Lazy<IFeedTopicRepository>(() => new FeedTopicRepository(this._db));
             this._FeedState = new Lazy<IFeedStateRepository>(() => new FeedStateRepository(this._db));
             this._FeedRecipe = new Lazy<IFeedRecipeRepository>(() => new FeedRecipeRepository(this._db));

@@ -41,9 +41,5 @@ namespace Eyon.Models
 
         [NotMapped]
         public TopicType TopicType { get => TopicType.Cookbook; }
-        //public ICollection<CookbookApplicationUsers> CookbookApplicationUsers { get; set; }
-        //public ICollection<CookbookSiteImages> CookbookSiteImages { get; set; }
-
-
     }
 }

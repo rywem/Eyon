@@ -45,10 +45,7 @@ namespace Eyon.Core.Data
 
             #region Indexes
             // Indexes: https://stackoverflow.com/questions/18889218/unique-key-constraints-for-multiple-columns-in-entity-framework
-            //modelBuilder.Entity<Community>()
-            //    .HasIndex(u => u.WikipediaURL)
-            //    .IsUnique();
-
+            
             modelBuilder.Entity<Recipe>()
                 .HasIndex(x => x.CreationDateTime)
                 .IsClustered(false);

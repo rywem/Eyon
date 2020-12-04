@@ -513,7 +513,7 @@ namespace Eyon.XTests.UnitTests.Core.Orchestators
                 await _recipeOrchestrator.AddAsync(currentUserId, recipeViewModel);
                 var recipeViewModelFromDb = await _recipeOrchestrator.GetAsync(currentUserId, recipeViewModel.Recipe.Id);
 
-                string expected = "Quincy, CA (United States)";
+                string expected = "Sacramento, CA (United States)";
                 Assert.Equal(expected, recipeViewModelFromDb.CommunityName);
             }
 
@@ -1328,7 +1328,7 @@ Serve and enjoy!";
             unitOfWork.Save();            
             states.Add(state);
 
-            Community community = new Community() { Name = "QUINCY", Active = true, CountryId = country.Id };
+            Community community = new Community() { Name = "SACRAMENTO", Active = true, CountryId = country.Id };
             unitOfWork.Community.Add(community);
             unitOfWork.Save();            
             communities.Add(community);

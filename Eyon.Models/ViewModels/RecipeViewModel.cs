@@ -48,9 +48,7 @@ namespace Eyon.Models.ViewModels
             if ( Community != null )
                 feedItemViewModel.Communities.Add(Community);
             if ( CategorySelector.Items != null && CategorySelector.Items.Count > 0 )
-                feedItemViewModel.Categories.AddRange(CategorySelector.Items);
-            //if ( CookbookSelector.Items != null && CookbookSelector.Items.Count > 0 )
-            //    feedItemViewModel.Cookbooks.AddRange(CookbookSelector.Items);
+                feedItemViewModel.Categories.AddRange(CategorySelector.Items);            
 
             feedItemViewModel.Recipes.Add(this.Recipe);
             feedItemViewModel.FeedItem = this.Recipe;

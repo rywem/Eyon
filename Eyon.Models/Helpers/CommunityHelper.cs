@@ -10,7 +10,7 @@ namespace Eyon.Models.Helpers
         /// <summary>
         /// Formats the communtiy name.
         /// </summary>        
-        /// <returns>ex Quincy, CA (United States)</returns>
+        /// <returns>ex Sacramento, CA (United States)</returns>
         public static string FullNameFormatter(Community community)
         {
             return CommunityFullNameFormatter(community.Name, community.CommunityState != null && community.CommunityState.State != null ? community.CommunityState.State.Name : string.Empty,

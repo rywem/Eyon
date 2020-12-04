@@ -91,8 +91,7 @@ namespace Eyon.Core.Orchestrators
                 {                    
                     postal = community.CommunityPostalCode.ToList().Select(x => x.PostalCode).Where(x => x.Text.Equals(zipText)).FirstOrDefault();
                 }
-                
-                //postal = community.CommunityPostalCodes.ToList().Select(x => x.PostalCode).Where(x => x.Text.Equals(zipText)).FirstOrDefault();
+                                
                 if ( postal != null )
                     commmunityPostalCode = community.CommunityPostalCode.FirstOrDefault(x => x.PostalCodeId == postal.Id);
                 else
@@ -127,8 +126,7 @@ namespace Eyon.Core.Orchestrators
                 string longi = zip.Long.ToUpper();
                 if ( community.CommunityGeocode != null )
                 {
-                    // check if the postal code exists:
-                    //geocode = await _unitOfWork.Geocode.GetFirstOrDefaultAsync(x => x.Latitude.Equals(lati) && x.Longitude.Equals(longi));
+                    // check if the postal code exists:                    
                     geocode = community.CommunityGeocode.ToList().Select(x => x.Geocode).Where(x => x.Latitude.Equals(lati) && x.Longitude.Equals(longi)).FirstOrDefault();
                 }
                                     
@@ -190,35 +188,12 @@ namespace Eyon.Core.Orchestrators
 
         public async Task RunSync()
         {
-            var communities = await _unitOfWork.Community.GetAllAsync();
-            //List<Community> communities = coms.ToList();
-            
-            //int skip = 0;
-            //int take = 500;
-
-            //for ( int i = 0; i < communities.Count; i++ )
-            //{
-            //    Community currentCommunity = communities[i];
-            //    if ( currentCommunity.FeedCommunity != null && currentCommunity.FeedCommunity.Count > 0 )
-            //        continue;
-            //    else
-            //    {
-            //        tasks.Add(Task.Factory.StartNew(() =>
-            //        {
-            //            _unitOfWork.Topic.AddFromEntity(currentCommunity);
-            //            _unitOfWork.Save();
-            //        }));
-            //    }
-            //}
-            //Task.WaitAll(tasks.ToArray());
-
+            var communities = await _unitOfWork.Community.GetAllAsync();            
             
             foreach ( var community in communities )
             {
                 try
                 {
-                    //if ( community.FeedCommunity != null && community.FeedCommunity.Count > 0 )
-                    //    continue;
 
                     if ( _unitOfWork.Topic.Any(x => x.ObjectId == community.Id && x.TopicType == community.TopicType) )
                         continue;
@@ -314,26 +289,7 @@ namespace Eyon.Core.Orchestrators
                 communityViewModel.Community.CountryId = communityFromDb.CountryId;
 
 
-            _unitOfWork.Community.Update(communityViewModel.Community);
-            // At this time, do not allow updates to states or country. 
-            //var hasStates = _unitOfWork.State.Any(x => x.CountryId == communityViewModel.Community.CountryId);
-            //if ( hasStates )
-            //{
-            //    if ( communityViewModel.Community.CommunityState != null )
-            //    {
-            //        if ( communityViewModel.Community.CommunityState.StateId == communityViewModel.StateId.GetValueOrDefault() || communityViewModel.StateId.GetValueOrDefault() == 0 )
-            //            return;
-            //        else
-            //        {
-            //            _unitOfWork.CommunityState.Remove(communityViewModel.Community.CommunityState);
-            //            _unitOfWork.Save();
-            //        }
-            //    }
-            //    if ( communityViewModel.Community.CommunityState.StateId != communityViewModel.StateId.GetValueOrDefault() && communityViewModel.StateId != 0 )
-            //    {
-            //        CreateStateRelationship(communityViewModel);
-            //    }
-            //}
+            _unitOfWork.Community.Update(communityViewModel.Community);            
         }
         private void CreateStateRelationship( CommunityViewModel communityViewModel )
         {           

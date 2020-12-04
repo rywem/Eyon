@@ -20,8 +20,6 @@ namespace Eyon.Core.Orchestrators
             var states = await _unitOfWork.State.GetAllAsync();
             foreach ( var state in states)
             {
-                //if ( state.FeedState != null && state.FeedState.Count > 0 )
-                //    continue;
                 if ( _unitOfWork.Topic.Any(x => x.ObjectId == state.Id && x.TopicType == state.TopicType) )
                     continue;
 

@@ -18,9 +18,6 @@ namespace Eyon.Core.Orchestrators
 
             foreach ( var country in countries.ToList() )
             {
-                //if ( country.FeedCountry != null && country.FeedCountry.Count > 0 )
-                //    continue;
-
                 if ( _unitOfWork.Topic.Any(x => x.ObjectId == country.Id && x.TopicType == country.TopicType) )
                     continue;
 

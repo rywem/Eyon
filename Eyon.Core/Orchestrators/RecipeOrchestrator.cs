@@ -24,15 +24,13 @@ namespace Eyon.Core.Orchestrators
 {
     public class RecipeOrchestrator : IRecipeOrchestrator
     {
-        private readonly IUnitOfWork _unitOfWork;
-        //private readonly IConfiguration _config;
+        private readonly IUnitOfWork _unitOfWork;        
         private IRecipeDataCall _recipeDataCall;
         private IFeedSecurity _feedSecurity;
         private IImageHelper _imageHelper;
         public RecipeOrchestrator( IUnitOfWork unitOfWork, IRecipeDataCall recipeDataCall, IFeedSecurity feedSecurity, IImageHelper imageHelper )
         {
             this._unitOfWork = unitOfWork;
-            //this._config = config;
             this._recipeDataCall = recipeDataCall;
             this._feedSecurity = feedSecurity;
             this._imageHelper = imageHelper;
@@ -108,7 +106,6 @@ namespace Eyon.Core.Orchestrators
             recipeViewModel.Recipe = await _recipeDataCall.AddRecipeWithRelationship(currentApplicationUserId, recipeViewModel.Recipe, false);            
             var topic  = _unitOfWork.Topic.AddFromITopicItem(recipeViewModel.Recipe);
             await _unitOfWork.SaveAsync();
-            //_unitOfWork.CommunityRecipe.AddFromEntities(communityFromDb, recipeViewModel.Recipe);
             _recipeDataCall.AddCommunityRecipe(communityFromDb, recipeViewModel.Recipe);
             recipeViewModel.Community = communityFromDb;
             // Add instructions

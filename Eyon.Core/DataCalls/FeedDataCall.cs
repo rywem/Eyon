@@ -33,25 +33,6 @@ namespace Eyon.Core.DataCalls
             return feed;
 
         }
-        //private Feed AddFeed(IFeedItem item )
-        //{
-        //    return _unitOfWork.Feed.AddFromIFeedItem(item);
-        //}
-
-        //private void AddOwnerRelationship(string currentApplicationUserId, Feed feed )
-        //{
-        //    _unitOfWork.Feed.AddOwnerRelationship(currentApplicationUserId, feed, new ApplicationUserFeed());
-        //}
-
-        //public FeedTopic AddFeedTopic(Feed feed, Topic topic)
-        //{
-        //    return _unitOfWork.FeedTopic.AddFromEntities(feed, topic);
-        //}
-
-        //public FeedRecipe AddFeedRecipe(Feed feed, Recipe recipe )
-        //{            
-        //    return _unitOfWork.FeedRecipe.AddFromEntities(feed, recipe );
-        //}
 
         /// <summary>
         /// Adds the FeedCommunity, FeedState, and FeedCountry relationships

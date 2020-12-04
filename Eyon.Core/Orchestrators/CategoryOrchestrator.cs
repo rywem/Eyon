@@ -27,8 +27,6 @@ namespace Eyon.Core.Orchestrators
             var categories = await _unitOfWork.Category.GetAllAsync();
             foreach ( var category in categories )
             {
-                //if ( state.FeedState != null && state.FeedState.Count > 0 )
-                //    continue;
                 if ( _unitOfWork.Topic.Any(x => x.ObjectId == category.Id && x.TopicType == category.TopicType) )
                     continue;
 
@@ -58,7 +56,6 @@ namespace Eyon.Core.Orchestrators
         {
             if ( category.SiteImage != null )
             {
-                //_unitOfWork.SiteImage.Remove(category.SiteImageId);
                 _unitOfWork.SiteImage.Update(category.SiteImage);
                 await _unitOfWork.SaveAsync();
                 category.SiteImageId = category.SiteImage.Id;
