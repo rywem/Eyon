@@ -84,20 +84,16 @@
         }
     }
     addOnClickListeners() {
-        for (var i = 0; i < this.itemIdsArray.length; i++) {
-            var id = this.itemIdsArray[i];
-            var btnId = this.getListItemId(this.itemIdsArray[i]);
-            var name = this.itemNamesArray[i];            
-            
-            var self = this;
-            var btn = $('#' + btnId);
+        var self = this;
+        $.each(this.itemIdsArray, function (key, value) {           
+            var btnId = self.getListItemId(value);
+            var id = self.itemIdsArray[key];
+            var name = self.itemNamesArray[key];
             var data = { id: id, name: name }
-            if (this.containsId(id)) {
-                $(document).on('click', '#' + btnId, data, function () {
-                    self.updateSelected(data.id, data.name);                    
-                });
-            }            
-        }
+            $(document).on('click', '#' + btnId, data, function () {
+                self.updateSelected(data.id, data.name);
+            });
+        });
     }
 
     getListId() {
